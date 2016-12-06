@@ -1,4 +1,3 @@
-FROM luisalejandro/python:3.5
+FROM luisalejandro/python:2.6
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
-
 RUN pip install pypirazzi
