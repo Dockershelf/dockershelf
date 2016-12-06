@@ -17,7 +17,7 @@ TARGET="${BASEDIR}/base"
 # Packages to install at the end
 DPKG_DEPENDS="iproute2 iputils-ping locales dialog whiptail wget \
     ca-certificates"
-
+apt-get install debootstrap
 # Create a minimal sistem with debootstrap
 mkdir -pv ${TARGET}
 debootstrap --verbose --no-check-gpg --no-check-certificate \
