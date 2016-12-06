@@ -24,7 +24,7 @@ apt-get install -y debootstrap
 # Create a minimal sistem with debootstrap
 mkdir -pv ${TARGET}
 debootstrap --verbose --no-check-gpg --no-check-certificate \
-    --variant="${VARIANT}" --arch="${ARCH}" --merged-usr \
+    --variant="${VARIANT}" --arch="${ARCH}" \
     "${SUITE}" "${TARGET}" "${MIRROR}"
 
 # Configure this locale please
