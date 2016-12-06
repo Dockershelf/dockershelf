@@ -1,0 +1,6 @@
+env:
+    global:
+        - secure: "qGsajbBBIwvBWM7RKQmrtW/XpVDGlxG7HJe+1GmOQX6KzvYZPtmmVzKugAOPLOCGQCSznsJDn15zk8rcIC22EOb07qGiCNwZMKuBd997imLLIq/grt6uGKNKYdRuDa/NIM2YCu669TUPOlDOkZLsbZisSleeY/YmyRc0Ixc8Ff5qniT2j6aOO3Pl1ma08IQCSXrLona63uYhZpEcPH3LL7R7KqWOHa/Uy+HPwcj7WHpOLTZLE9b5lJuNZUhUqxNWdA+iKlLfPnnix7cmX43T08l8atcJ3bMr2p0bhHZY25jwQFLL16OyRtR2QOX8GOkMcyxUdVz9KjNDL9+IqmqDDzGNH8j/FEFVBgbPcyEmuH2fpKL0in7HugcxpH5+1hanzfOerppzx4zqzS8B4z42YhCzyzYp1Z0cTxFjrrelgOi+KGGNPswjhJfDpdAGKQzCcJ941Jx9H3NqAH1rBnOUbvFHuS7c417WWca616JJl01IwWQjdsDLRFkTuPiWptYhiTFL0+MxaW0Tn0p9AT/ohazosewzM3LN/BH8VhjWJurj56ViQdAkcOHfLH9bCfCMmgQ1Fb0q/3ia3ZVVmo1AJKEiOLSuVLUZ+PP5pF1ybkXCPUF6OA3Hc8ZA8sdxU8I292sC4n6eke7BUKE1tuYJalFMVyvSKIA4mZI4MbrWUQI="
+script:
+    - |
+        curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${APIEND}
