@@ -20,11 +20,11 @@ PIP_VER="$( wget -qO- "https://pypi.python.org/pypi/pip/json" \
 PY_PKGS="${PY_VER_STR} ${PY_VER_STR}-minimal lib${PY_VER_STR} \
     lib${PY_VER_STR}-stdlib lib${PY_VER_STR}-minimal"
 
-# This are the folders of a debian python installation that we won't need.
+# These are the folders of a debian python installation that we won't need.
 PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
     usr/share/doc usr/share/applications"
 
-# Some tools are needed
+# Some tools are needed.
 DPKG_PRE_DEPENDS="aptitude deborphan devscripts equivs debian-keyring dpkg-dev"
 
 # These options are passed to make because we need to speedup the build.
@@ -32,10 +32,10 @@ DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
 
 # Apt: Install pre depends
 # ------------------------------------------------------------------------------
-
 # We need to install the packages defined at ${DPKG_PRE_DEPENDS} because
 # some commands are needed to download the source code before installing the
 # build dependencies.
+
 echo -e "\nInstalling pre dependencies ...\n"
 apt-get update
 apt-get upgrade

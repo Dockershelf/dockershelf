@@ -1,8 +1,10 @@
 env:
     global:
-        - secure: "qGsajbBBIwvBWM7RKQmrtW/XpVDGlxG7HJe+1GmOQX6KzvYZPtmmVzKugAOPLOCGQCSznsJDn15zk8rcIC22EOb07qGiCNwZMKuBd997imLLIq/grt6uGKNKYdRuDa/NIM2YCu669TUPOlDOkZLsbZisSleeY/YmyRc0Ixc8Ff5qniT2j6aOO3Pl1ma08IQCSXrLona63uYhZpEcPH3LL7R7KqWOHa/Uy+HPwcj7WHpOLTZLE9b5lJuNZUhUqxNWdA+iKlLfPnnix7cmX43T08l8atcJ3bMr2p0bhHZY25jwQFLL16OyRtR2QOX8GOkMcyxUdVz9KjNDL9+IqmqDDzGNH8j/FEFVBgbPcyEmuH2fpKL0in7HugcxpH5+1hanzfOerppzx4zqzS8B4z42YhCzyzYp1Z0cTxFjrrelgOi+KGGNPswjhJfDpdAGKQzCcJ941Jx9H3NqAH1rBnOUbvFHuS7c417WWca616JJl01IwWQjdsDLRFkTuPiWptYhiTFL0+MxaW0Tn0p9AT/ohazosewzM3LN/BH8VhjWJurj56ViQdAkcOHfLH9bCfCMmgQ1Fb0q/3ia3ZVVmo1AJKEiOLSuVLUZ+PP5pF1ybkXCPUF6OA3Hc8ZA8sdxU8I292sC4n6eke7BUKE1tuYJalFMVyvSKIA4mZI4MbrWUQI="
+        - secure: "Hh1zZ45EV2VErCJkhhtxJmSfVO5cG/FiXI4VrEwwkqlUsBF9MM3313TyZPUdd/KEjZLTNfN/MefIYFnGLssihU56A7lz8PmR0HnqT9oonzJ7HWbSNj1mRGAvYCue8hpBmetpLvRyP+LJVmHxAOLI96czJohsB/V3HX55vF41VMuZtcfgLSLQXrZxgPV8hBmxxEoTKz757dZdHdqyJ+BZ3jAwVyE5SFGhkSMR+gqDapJ1YC4idul1VmCZy6RTrO96c8JPY2FPaU/dhKmH4Iw3af6xtakhCT5+rwN2WlyhmL3wxJ+oL5gN9Y8xoBdoWpckcib2mHqTlzvSAjVvgXMn+/+BYkLSm2p++h/kHtuF1xuOC/LrcGqIfHliQUmd/3/nPk1RZbV+E3JS09gH8JoJUQBrO1P501IHlI3u7qaAZnkKqVpP82p3ZeedtrZ7r1YqjXOu4B05UHePPj6IYOpvuziv3HaWAnCIFLQ0iyG8TF1eoNy8TA7a69RXy7gOe5fYhHXQAKqmxpyFSk89gFRwvXVVu9ZiXUAD6O9uSOTal+8TPcBNF7wRcHPjziKrutquSg+8qvAilYxU6in2MwBHJFfOoFQxG8WCd9YedLgJ8E+nUatrkAiHmVvGGZrvvtdQpzdMv+W1MxiubWhx4iLDyxvLJiiBaQ3XcUOxg9ROE58="
+        - secure: "sdzbVr3TwJDucV1LOsMnGNG+JFZczDBuPvEmP7AnGEMw9TTkFg1qkXtHeooEaZsQ8I69rUj1jBbSd71oc04LoFW7qPCoVp6caa7Fqo+pbvVL/iKvzdywSN2VUgVnSkxWmzZuz5+j324TQpz1z5hhl3wZaz191c2z3OUMifd7Byw+uSkPqS0O30Ez4TSkwt3IK6CfSGUNt9D9Zlt4X+wo9etrtQKk0U/O0U0ZbpgJ2P/49VOpvoS2OO90sVKQG90a0j8ZhgU2gsonFnjEK+NUcnqwBpWTUjZRSvieUvTNMRALbyYAqvUsflFfIJjfe2550b7IuDBbJHs4rs1aLnla09S0QqYz646pG4qC+tgXUVHYzxk83eV6lxZDmI6YkL+SBOEL00hqACP37wu9vDy279oOr/wAg7vucK4mSmvv+59f2LCYZHDsQZoACl9OTVYwQuNjyAxIquY/+kB+bT94TFhqAUFpK1e/7ixibcuKljQz3lW/IOY2w2uhut2Y06IITTnqPRJ5b6G34g2h0SOLhXuRmPKbbSZ5CGyBl99Xjn9HCqAffO069MYo0NfljW2PYSpuZ0GrV5w1rmF4DMy63/r4vQp0nLCkIisj1JqTnTDNvJTJa0MDLiMPJPpI0RxbQp/88Kibg8Me9r5hKLK7aITelSem8VJdmD/hpO87ljw="
 script:
     - |
         if [ "${TRAVIS_EVENT_TYPE}" == "cron" ]; then 
-            curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${APIEND}
+            curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${DH_API_END}
+            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_API_END}
         fi

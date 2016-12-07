@@ -1,11 +1,21 @@
-.. image:: https://gitcdn.xyz/repo/LuisAlejandro/dockerfiles/master/banner.svg
+![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockerfiles/master/banner.svg)
 
 
+# Debian images
 
-Made with :heart: and :hamburger:
-=================================
 
-.. image:: http://huntingbears.com.ve/static/img/site/banner.svg
+# Python images
+
+# PyPIContents images
+
+# Latex images
+
+&nbsp;
+&nbsp;
+
+# Made with :heart: and :hamburger:
+
+![Banner](http://huntingbears.com.ve/static/img/site/banner.svg)
 
 .. _Patreon: https://www.patreon.com/luisalejandro
 .. _Flattr: https://flattr.com/profile/luisalejandro
@@ -14,20 +24,19 @@ Made with :heart: and :hamburger:
 .. _LuisAlejandroGitHub: https://github.com/LuisAlejandro
 .. _huntingbears.com.ve: http://huntingbears.com.ve
 
-|
+&nbsp;
+&nbsp;
 
-My name is Luis (`@LuisAlejandro`__) and I'm a Free and
+My name is Luis ([@LuisAlejandro](https://github.com/LuisAlejandro)) and I'm a Free and
 Open-Source Software developer living in Maracay, Venezuela.
 
-__ LuisAlejandroTwitter_
-
-If you like what I do, please support me on Patreon_, Flattr_, or donate via PayPal_,
+If you like what I do, please support me on
+[Patreon](https://www.patreon.com/luisalejandro), 
+[Flattr](https://flattr.com/profile/luisalejandro), or donate via 
+[PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B8LPXHQY8QE8Y),
 so that I can continue doing what I love.
 
-    Blog huntingbears.com.ve_ · GitHub `@LuisAlejandro`__ · Twitter `@LuisAlejandro`__
+    Blog [huntingbears.com.ve]()· GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
 
-__ LuisAlejandroGitHub_
-__ LuisAlejandroTwitter_
-
-|
-|
+&nbsp;
+&nbsp;

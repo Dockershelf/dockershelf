@@ -22,4 +22,6 @@ RUN apt-get update && \
         devscripts \
         build-essential \
         lsb-release \
-        debootstrap
+        debootstrap \
+        fakeroot \
+        fakechroot
