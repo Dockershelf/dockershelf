@@ -21,4 +21,5 @@ RUN apt-get update && \
         dpkg-dev \
         devscripts \
         build-essential \
-        lsb-release
+        lsb-release \
+        debootstrap
