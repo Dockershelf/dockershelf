@@ -1,10 +1,23 @@
+sudo: required
+dist: trusty
+group: edge
 env:
     global:
         - secure: "Hh1zZ45EV2VErCJkhhtxJmSfVO5cG/FiXI4VrEwwkqlUsBF9MM3313TyZPUdd/KEjZLTNfN/MefIYFnGLssihU56A7lz8PmR0HnqT9oonzJ7HWbSNj1mRGAvYCue8hpBmetpLvRyP+LJVmHxAOLI96czJohsB/V3HX55vF41VMuZtcfgLSLQXrZxgPV8hBmxxEoTKz757dZdHdqyJ+BZ3jAwVyE5SFGhkSMR+gqDapJ1YC4idul1VmCZy6RTrO96c8JPY2FPaU/dhKmH4Iw3af6xtakhCT5+rwN2WlyhmL3wxJ+oL5gN9Y8xoBdoWpckcib2mHqTlzvSAjVvgXMn+/+BYkLSm2p++h/kHtuF1xuOC/LrcGqIfHliQUmd/3/nPk1RZbV+E3JS09gH8JoJUQBrO1P501IHlI3u7qaAZnkKqVpP82p3ZeedtrZ7r1YqjXOu4B05UHePPj6IYOpvuziv3HaWAnCIFLQ0iyG8TF1eoNy8TA7a69RXy7gOe5fYhHXQAKqmxpyFSk89gFRwvXVVu9ZiXUAD6O9uSOTal+8TPcBNF7wRcHPjziKrutquSg+8qvAilYxU6in2MwBHJFfOoFQxG8WCd9YedLgJ8E+nUatrkAiHmVvGGZrvvtdQpzdMv+W1MxiubWhx4iLDyxvLJiiBaQ3XcUOxg9ROE58="
         - secure: "sdzbVr3TwJDucV1LOsMnGNG+JFZczDBuPvEmP7AnGEMw9TTkFg1qkXtHeooEaZsQ8I69rUj1jBbSd71oc04LoFW7qPCoVp6caa7Fqo+pbvVL/iKvzdywSN2VUgVnSkxWmzZuz5+j324TQpz1z5hhl3wZaz191c2z3OUMifd7Byw+uSkPqS0O30Ez4TSkwt3IK6CfSGUNt9D9Zlt4X+wo9etrtQKk0U/O0U0ZbpgJ2P/49VOpvoS2OO90sVKQG90a0j8ZhgU2gsonFnjEK+NUcnqwBpWTUjZRSvieUvTNMRALbyYAqvUsflFfIJjfe2550b7IuDBbJHs4rs1aLnla09S0QqYz646pG4qC+tgXUVHYzxk83eV6lxZDmI6YkL+SBOEL00hqACP37wu9vDy279oOr/wAg7vucK4mSmvv+59f2LCYZHDsQZoACl9OTVYwQuNjyAxIquY/+kB+bT94TFhqAUFpK1e/7ixibcuKljQz3lW/IOY2w2uhut2Y06IITTnqPRJ5b6G34g2h0SOLhXuRmPKbbSZ5CGyBl99Xjn9HCqAffO069MYo0NfljW2PYSpuZ0GrV5w1rmF4DMy63/r4vQp0nLCkIisj1JqTnTDNvJTJa0MDLiMPJPpI0RxbQp/88Kibg8Me9r5hKLK7aITelSem8VJdmD/hpO87ljw="
+        - secure: "TdLbV0QjjBHI94M3f6u34ECNt/jZ6ClmbxUohV9OlCBW8rg54/bE+3ZWynsJWlrCyJyKJjHiNxlXOpdzBdvkYG6LnjHE4ij2mDsyhRzRoXHKh77CMkQmrxY9aOEBVoI0qeWEN+dERWEnl9Njc7jK/QynQjJkMFWTmZSLhhkca18qyMnjwSeEvEOmlA+9nJqbadyTLqqZdfLyTjcnDbSm6yExx3Ufv7dF1koW35MzBIhGH0GVZ212uQ/pgZU5R9MC4jQB+oqcicuUWS7Y7ERqtu1mxoCPH4yS9wN2SOay3g3cx/Y/geaVsKZdK9ikd7XUcYZ9iVuQjN+762DMDBE3nTUoeNMaFeu/BztExhS3rgb44bXEmYiFzebBW00b6kZsuDJ8lgKZUQDMj4bDoCD1WeJAFaJOWicQhf2LHtQwu2YQQHtRnYSnc1womrrgFsnqMY6xgEQ6DtSUkcMi8AqGjT1aQRb8xLne2fr3zA6dRGizV3+iaQvHcQ3BHZf8QLH0hQQxumvbmdTz6NAXpLv/iPY3a1+VGpyZjKhGwf91ScBJqOjY1jVLHpaKPn6tk/IAk2ngr2MppfTIaFrFWK3aL7uShChyZAkSdPDjpGH4yV3kvJcpEawTdv7wG5LdGZASofkJJeZW9laflt9XOkThwvVum7ivImHBBRBMuDHTlAc="
+before_install:
+    - sudo apt-get install -y debootstrap
 script:
     - |
-        if [ "${TRAVIS_EVENT_TYPE}" == "cron" ]; then 
-            curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${DH_API_END}
-            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_API_END}
-        fi
+        cd debian/sid-min && sudo bash build-base.sh | tee base.log
+after_success:
+    - |        
+        git checkout master
+        git config --global user.name "${GITUSERNAME}"
+        git config --global user.email "${GITUSERMAIL}"
+        git add debian/sid-min/base.tar.xz debian/sid-min/base.log
+        git commit -m "[ci skip] Updating base tarball." debian/sid-min/base.tar.xz debian/sid-min/base.log
+        git push -q "https://${GHTOKEN}@${GHREPO#*//}" master > /dev/null 2>&1
+        curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${DH_API_END}
+        curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_API_END}

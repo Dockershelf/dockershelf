@@ -1,3 +1,11 @@
 #!/usr/bin/env bash
 
-docker run -v ${PWD}:${PWD} -w ${PWD} luisalejandro/debian:sid-build bash build-base.sh
+set -ex
+
+docker run debian:sid-slim bash
+docker export debian:sid-slim > base.tar
+
+mkdir base
+tar -xf base.tar -C base
+
+ls -lah

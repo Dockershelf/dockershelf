@@ -7,13 +7,11 @@ set -ex
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Some default values.
+DEFAULT_SUITE="sid"
+DEFAULT_MIRROR="http://deb.debian.org/debian"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
-
-# Give me the last pip version.
-PIP_VER="$( wget -qO- "https://pypi.python.org/pypi/pip/json" \
-                | awk -F'"' '$2 == "version" { print $4 }' )"
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
@@ -26,6 +24,9 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
 
 # Some tools are needed.
 DPKG_PRE_DEPENDS="aptitude deborphan devscripts equivs debian-keyring dpkg-dev"
+DPKG_DEPENDS="mime-support libbz2-1.0 libc6 libdb5.3 libexpat1 libffi6 \
+              libncursesw5 libreadline7 libsqlite3-0 libssl1.1 libtinfo5 \
+              zlib1g curl ca-certificates"
 
 # These options are passed to make because we need to speedup the build.
 DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
@@ -52,8 +53,8 @@ apt-get install ${DPKG_PRE_DEPENDS}
 
 echo -e "\nDownloading python source ...\n"
 cat > /etc/apt/sources.list << EOF
-deb http://cdn.debian.net/debian ${PY_DEBIAN_SUITE} main
-deb-src http://cdn.debian.net/debian ${PY_DEBIAN_SUITE} main
+deb ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
+deb-src ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
 apt-get update
@@ -73,7 +74,7 @@ echo -e "\nInstalling build dependencies ...\n"
 cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
 
 cat > /etc/apt/sources.list << EOF
-deb http://cdn.debian.net/debian sid main
+deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
 EOF
 
 apt-get update
@@ -88,9 +89,9 @@ apt-get install ${PY_SOURCE_TEMPDIR}/*.deb
 
 echo -e "\nCompiling python ...\n"
 cd "${PY_SOURCE_DIR}" && \
-    DPKG_BUILD_OPTIONS="${DPKG_BUILD_OPTIONS}" make -f debian/rules clean
+    DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS}" make -f debian/rules clean
 cd "${PY_SOURCE_DIR}" && \
-    DPKG_BUILD_OPTIONS="${DPKG_BUILD_OPTIONS}" make -f debian/rules install
+    DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS}" make -f debian/rules install
 
 # Apt: Remove build depends
 # ------------------------------------------------------------------------------
@@ -113,6 +114,13 @@ apt-get autoremove
 apt-get purge ${DPKG_PRE_DEPENDS}
 apt-get autoremove
 
+# Apt: Install runtime dependencies
+# ------------------------------------------------------------------------------
+# Now we will install the libraries python needs to properly function.
+
+apt-get update
+apt-get install ${DPKG_DEPENDS}
+
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will copy only the minimal python installation files that are within the
@@ -126,13 +134,16 @@ for PKG in ${PY_PKGS}; do
     (cd ${PY_SOURCE_DIR}/debian/${PKG} && tar c .) | (cd / && tar xf -)
 done
 
+# Linking to make this the default version of python
+ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
+
 # Pip: Installation
 # ------------------------------------------------------------------------------
 # Let's bring in the old reliable pip guy.
 
 echo -e "\nInstalling pip ...\n"
-wget -qO- https://bootstrap.pypa.io/get-pip.py | python
-pip install --no-cache-dir --upgrade --force-reinstall "pip==${PIP_VER}"
+curl -fsSL https://bootstrap.pypa.io/get-pip.py | python
+pip install --no-cache-dir --upgrade --force-reinstall pip
 
 ln -sfv /usr/local/bin/easy_install \
         /usr/local/bin/easy_install${PY_VER_NUM}
