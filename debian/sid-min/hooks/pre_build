@@ -8,10 +8,10 @@ export TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
        LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8"
 
 # Some initial configuration
-SUITE="sid"
-MIRROR="http://deb.debian.org/debian"
 BASEDIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) )"
 TARGET="${BASEDIR}/base"
+MIRROR="http://deb.debian.org/debian"
+SUITE="sid"
 
 # Packages to install at the end
 DPKG_DEPENDS="iproute2 iputils-ping locales curl ca-certificates"
