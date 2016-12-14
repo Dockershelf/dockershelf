@@ -18,6 +18,7 @@ DPKG_DEPENDS="iproute2 iputils-ping locales curl ca-certificates"
 
 # Let's import tianon/docker-brew-debian to build our base
 mkdir -pv "${TARGET}"
+docker rm debian_sid_slim
 docker run --name debian_sid_slim debian:sid-slim bash
 docker export -o "${BASEDIR}/base.tar" debian_sid_slim
 tar -xf "${BASEDIR}/base.tar" -C "${TARGET}"
