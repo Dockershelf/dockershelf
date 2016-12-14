@@ -10,7 +10,7 @@ export TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
 # Some initial configuration
 BASEDIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) )"
 TARGET="${BASEDIR}/base"
-MIRROR="http://deb.debian.org/debian"
+MIRROR="http://cdn.debian.net/debian"
 SUITE="wheezy"
 
 # Packages to install at the end

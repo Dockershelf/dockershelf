@@ -8,7 +8,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Some default values.
 DEFAULT_SUITE="sid"
-DEFAULT_MIRROR="http://deb.debian.org/debian"
+DEFAULT_MIRROR="http://cdn.debian.net/debian"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
@@ -26,7 +26,7 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
 DPKG_PRE_DEPENDS="aptitude deborphan devscripts equivs debian-keyring dpkg-dev"
 DPKG_DEPENDS="mime-support libbz2-1.0 libc6 libdb5.3 libexpat1 libffi6 \
               libncursesw5 libreadline7 libsqlite3-0 libssl1.1 libtinfo5 \
-              zlib1g curl ca-certificates"
+              zlib1g"
 
 # These options are passed to make because we need to speedup the build.
 DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"

@@ -8,7 +8,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Some default values.
 DEFAULT_SUITE="sid"
-DEFAULT_MIRROR="http://deb.debian.org/debian"
+DEFAULT_MIRROR="http://cdn.debian.net/debian"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
