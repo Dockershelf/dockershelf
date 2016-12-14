@@ -1,4 +1,4 @@
-FROM luisalejandro/debian:wheezy-min
+FROM scratch
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE
@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
-      ve.com.huntingbears.name="python3.2" \
-      ve.com.huntingbears.description="A Python 3.2 image based on Debian Sid." \
+      ve.com.huntingbears.name="debian-wheezy-minimal" \
+      ve.com.huntingbears.description="A Debian Wheezy minimal image built from scratch." \
       ve.com.huntingbears.url="https://github.com/LuisAlejandro/dockerfiles" \
       ve.com.huntingbears.vcs-ref=${VCS_REF} \
       ve.com.huntingbears.vcs-url="https://github.com/LuisAlejandro/dockerfiles" \
@@ -15,7 +15,7 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.version=${VERSION} \
       ve.com.huntingbears.schema-version="1.0"
 
-ENV PY_VER_NUM="3.2" PY_DEBIAN_SUITE="wheezy"
+ADD base.tar.xz /
 
-COPY build-image.sh /usr/share/docker/python/3.2/
-RUN bash /usr/share/docker/python/3.2/build-image.sh
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive"

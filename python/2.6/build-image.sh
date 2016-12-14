@@ -26,7 +26,7 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
 DPKG_PRE_DEPENDS="aptitude deborphan devscripts equivs debian-keyring dpkg-dev"
 DPKG_DEPENDS="mime-support libbz2-1.0 libc6 libdb5.3 libexpat1 libffi6 \
               libncursesw5 libreadline7 libsqlite3-0 libssl1.1 libtinfo5 \
-              zlib1g curl ca-certificates"
+              zlib1g"
 
 # These options are passed to make because we need to speedup the build.
 DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
@@ -74,7 +74,6 @@ echo -e "\nInstalling build dependencies ...\n"
 cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
 
 cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
 deb ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
@@ -117,9 +116,16 @@ apt-get autoremove
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
-# Now we will install the libraries python needs to properly function.
+# Now we will install the libraries python needs to properly function, and also 
+# update the distro to ${DEFAULT_SUITE}
+
+cat > /etc/apt/sources.list << EOF
+deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
+EOF
 
 apt-get update
+apt-get upgrade
+apt-get dist-upgrade
 apt-get install ${DPKG_DEPENDS}
 
 # Python: Installation

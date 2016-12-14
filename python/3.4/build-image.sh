@@ -74,7 +74,7 @@ echo -e "\nInstalling build dependencies ...\n"
 cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
 
 cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
+deb ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
 apt-get update
@@ -116,9 +116,16 @@ apt-get autoremove
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
-# Now we will install the libraries python needs to properly function.
+# Now we will install the libraries python needs to properly function, and also 
+# update the distro to ${DEFAULT_SUITE}
+
+cat > /etc/apt/sources.list << EOF
+deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
+EOF
 
 apt-get update
+apt-get upgrade
+apt-get dist-upgrade
 apt-get install ${DPKG_DEPENDS}
 
 # Python: Installation
