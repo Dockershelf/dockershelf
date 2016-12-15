@@ -1,4 +1,4 @@
-FROM luisalejandro/debian:sid
+FROM luisalejandro/debian:stretch
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE

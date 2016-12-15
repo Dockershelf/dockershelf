@@ -7,8 +7,8 @@ set -ex
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Some default values.
-DEFAULT_SUITE="sid"
-DEFAULT_MIRROR="http://httpredir.debian.org/debian"
+SUITE="sid"
+MIRROR="http://httpredir.debian.org/debian"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
@@ -53,8 +53,7 @@ apt-get install ${DPKG_PRE_DEPENDS}
 
 echo -e "\nDownloading python source ...\n"
 cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
-deb-src ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
+deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
 apt-get update
@@ -74,7 +73,8 @@ echo -e "\nInstalling build dependencies ...\n"
 cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
 
 cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
+deb ${MIRROR} ${SUITE} main
+deb ${MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
 apt-get update
@@ -133,10 +133,10 @@ ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
 # Now we will install the libraries python needs to properly function, and also 
-# update the distro to ${DEFAULT_SUITE}
+# update the distro to ${SUITE}
 
 cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
+deb ${MIRROR} ${SUITE} main
 EOF
 
 apt-get update

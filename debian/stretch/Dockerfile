@@ -6,7 +6,7 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
-      ve.com.huntingbears.name="debian-stretchimal" \
+      ve.com.huntingbears.name="debian-stretch" \
       ve.com.huntingbears.description="A Debian Stretch minimal image built from scratch." \
       ve.com.huntingbears.url="https://github.com/LuisAlejandro/dockerfiles" \
       ve.com.huntingbears.vcs-ref=${VCS_REF} \

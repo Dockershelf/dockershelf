@@ -1,10 +1,25 @@
 env:
     global:
-        - secure: "Hh1zZ45EV2VErCJkhhtxJmSfVO5cG/FiXI4VrEwwkqlUsBF9MM3313TyZPUdd/KEjZLTNfN/MefIYFnGLssihU56A7lz8PmR0HnqT9oonzJ7HWbSNj1mRGAvYCue8hpBmetpLvRyP+LJVmHxAOLI96czJohsB/V3HX55vF41VMuZtcfgLSLQXrZxgPV8hBmxxEoTKz757dZdHdqyJ+BZ3jAwVyE5SFGhkSMR+gqDapJ1YC4idul1VmCZy6RTrO96c8JPY2FPaU/dhKmH4Iw3af6xtakhCT5+rwN2WlyhmL3wxJ+oL5gN9Y8xoBdoWpckcib2mHqTlzvSAjVvgXMn+/+BYkLSm2p++h/kHtuF1xuOC/LrcGqIfHliQUmd/3/nPk1RZbV+E3JS09gH8JoJUQBrO1P501IHlI3u7qaAZnkKqVpP82p3ZeedtrZ7r1YqjXOu4B05UHePPj6IYOpvuziv3HaWAnCIFLQ0iyG8TF1eoNy8TA7a69RXy7gOe5fYhHXQAKqmxpyFSk89gFRwvXVVu9ZiXUAD6O9uSOTal+8TPcBNF7wRcHPjziKrutquSg+8qvAilYxU6in2MwBHJFfOoFQxG8WCd9YedLgJ8E+nUatrkAiHmVvGGZrvvtdQpzdMv+W1MxiubWhx4iLDyxvLJiiBaQ3XcUOxg9ROE58="
-        - secure: "sdzbVr3TwJDucV1LOsMnGNG+JFZczDBuPvEmP7AnGEMw9TTkFg1qkXtHeooEaZsQ8I69rUj1jBbSd71oc04LoFW7qPCoVp6caa7Fqo+pbvVL/iKvzdywSN2VUgVnSkxWmzZuz5+j324TQpz1z5hhl3wZaz191c2z3OUMifd7Byw+uSkPqS0O30Ez4TSkwt3IK6CfSGUNt9D9Zlt4X+wo9etrtQKk0U/O0U0ZbpgJ2P/49VOpvoS2OO90sVKQG90a0j8ZhgU2gsonFnjEK+NUcnqwBpWTUjZRSvieUvTNMRALbyYAqvUsflFfIJjfe2550b7IuDBbJHs4rs1aLnla09S0QqYz646pG4qC+tgXUVHYzxk83eV6lxZDmI6YkL+SBOEL00hqACP37wu9vDy279oOr/wAg7vucK4mSmvv+59f2LCYZHDsQZoACl9OTVYwQuNjyAxIquY/+kB+bT94TFhqAUFpK1e/7ixibcuKljQz3lW/IOY2w2uhut2Y06IITTnqPRJ5b6G34g2h0SOLhXuRmPKbbSZ5CGyBl99Xjn9HCqAffO069MYo0NfljW2PYSpuZ0GrV5w1rmF4DMy63/r4vQp0nLCkIisj1JqTnTDNvJTJa0MDLiMPJPpI0RxbQp/88Kibg8Me9r5hKLK7aITelSem8VJdmD/hpO87ljw="
+        # luisalejandro/debian Docker Hub API end
+        - secure: "rSP5OtETB4JlNSMRnxQhhcvKEHOfRtjZZq37Cj1QeoF0pDnMzKng7c17uDl7J0OvOxk6YR53k1r+f8XqkQ7yhoFOOWDL0wl2VcD2o/Q1FYNflpz5TuGw0H6HmcsU5eHeFz+unk8XzWgJS+i2Ovpz2hE+Prwx+y9ztqkVWblqKtMGDrLxCi6WjQNMQp8X6cxMIY1DcsBdV4IPlXG1vwLI6kCZj+D0ckG4FN3uim3DZnk+coPU6fbt2uKhA0Yp+cYyEL0AGk6Dfp/YnWTsUJeM3iN8IuoQ/mG0m9bDAVtRPv48oTbKypfhZCU9ypVZFlcwiwnKqRkoPpDgh0ygCQaSyaRG5OMK6b5HD54biV6BPfabuyCiY5uoYBs1i+nO33XIx/PVrGJPUdDGesd0ztRyPsQ1ClahwVpkNlFp/znw47Ie1DsBcGllniPlIPP+FLb2tFdT6M2qXvf3VWohtjTra5gJwsxw/R3x0j06IrnU+4w2ri5tUqT0bKDhy1IFUvCX/dX+BsAQVRgvFFs8Q4Q5jqKvNMrmydzL+dp8xZOimISbzyYZ08DTWooSqlsdm7CwHsiX4QiAXb6PBXxc64m1g9gRC8qLZDoGevPo/nYHm4IGbowmhH0w+8X7mmGccWndSsHgCWawcABQIrnTH9iHizorZLfcbFTYQehhCKACAW8="
+        # luisalejandro/debian MicroBadger API end
+        - secure: "fvEcXAkKptvKSrR0nVKT0meXdUzxnNBFMxbHwdpsnqT92Re6IUYCdVnyexdyXEmtZH30pagnwVMSdPyHZ+Nmk1fcMi9kQE/JzItH5plrIOfZdXw4BsVYOtfgxOayVUc6Hw8RlLz9sPDmNp3lzXjJ6npf78vKIXJfhZWrZdTvfd2wMwTLdofTx7aT5Pj4xSmZWQlJxHDXjNtC7fwv8s9ZMzWVNG++2zwKPnuZAhzRrOmgLpLCkOagT2VE1ms++BNiEuQi0JzpjvHA+J3uLtapmelS2JKA7urDsYltvyQqjfsCC1hd8uJ9474OaJf/vi31VnBqxFR/9f2SRpTlBRUrUMiCyqghPTVOBS/sCpCWqUx5O2x2mfKi6wTsgdlxpyewAewICH0m4zRiMc48uHIkvH1PJoqywWbQTvJikYH3CzCuvCiXCn+bQdlE7Kfh4KubrEJkq4+nUU1MhzH5KZWsQ4LI2Z9oj8WAbyEGpMvk0S/f7VSwykKyDFSq6gkFbzZFXuruzwfRo0E3a2s2/THTaCq3E1rXvqr5QZ0IiJwAy5jmBYDVePZO07g+fk61+hSBYkosFhT5f98wCDHod+dLI2CTVGf1zsn9+EMjFa36yc64G89TzGd++J+/r8KwuxKiZwvvJn7yPwLC0eKpzFMNvhtcEMAdgxUhAraPyjioMIY="
+        # luisalejandro/python MicroBadger API end
+        - secure: "Ie55dMoe4lmjeDJtezVofKHD/Ir65p1amt5sq7dZ15sB+YdmiMcK6F8zAUPLvZrMb8I015pjcexz9mlL51SlAPm3AS6mO9akpDLJrMKJTZKxYAGv25+kCLZGsPMQ/nLtZfrLLOyKPgM+qAIxrk4EKFefjyb82S1DRY+M+kX2VpIYg1vJOlvIdBSVFUM5po9YIbtBqnw3kLQF1NuycsIt2mjr8mhV0oRYOwQax/V7AQIjPe4EGecTB03SR1JdF/PaBhWR7yAaxrYetNxovLOFxfTBxeJjrGFzYV3rC3chVnSyY92ex+2MQkrQg8bHmKhO1sMfRmW0TuinCDkH8rwixtJK9pbaZY4vm4bC3ULhrsdYbE/bLYJwXtIqKeyndC1Z3pUYYtvTTSUYHuiWeE3rfqGkwgKg4GjL4PBXy6P9W0TVcC+KBGKAiPP9JosOAF2A56rc//zpbTSNtuF3vWfHDfdPHtXipcR2EpH6U1m4OThYh5uB9RjZdED6afAswRFjf5twNCvSGFpAsMZiZhevNLPZBKJUEc/hPHdHpuqKaaQDty6Y8Xt1KCPVGaGVLzJYb+JQYDEfDkGKY0hgxOXd99fBvfLFLG3YkporG2Ux6FLGju7pXq13ovHXzyke6n7pUtUN5ouUH2MYX+TbaUy/FSg5NSa8cf8Oq1T7nCaET2A="
+        # luisalejandro/pypicontents MicroBadger API end
+        #- secure: 
+        # luisalejandro/latex MicroBadger API end
+        #- secure: 
 script:
     - |
-        if [ "${TRAVIS_EVENT_TYPE}" == "cron" ] && [ "$(date +%w)" == "0" ]; then 
-            curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${DH_API_END}
-            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_API_END}
-        fi
+        #if [ "${TRAVIS_EVENT_TYPE}" == "cron" ] && [ "$(date +%w)" == "0" ]; then
+            # luisalejandro/debian
+            curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${DH_DEBIAN_API_END}
+            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_DEBIAN_API_END}
+            # luisalejandro/python
+            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_PYTHON_API_END}
+            # luisalejandro/pypicontents
+            #curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_PYPICONTENTS_API_END}
+            # luisalejandro/latex
+            #curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_LATEX_API_END}
+        #fi

@@ -5,6 +5,7 @@ set -ex
 
 # Some initial configuration
 BASEDIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) )"
+SECMIRROR="http://security.debian.org"
 MIRROR="http://httpredir.debian.org/debian"
 SUITE="stretch"
 
@@ -28,7 +29,11 @@ rm -rfv "/etc/apt/apt.conf.d/docker-clean" \
 echo "en_US.UTF-8 UTF-8" > "/etc/locale.gen"
 
 # Configure apt sources
-echo "deb ${MIRROR} ${SUITE} main" > "/etc/apt/sources.list"
+{
+    echo "deb ${MIRROR} ${SUITE} main"
+    echo "deb ${MIRROR} ${SUITE}-updates main"
+    echo "deb ${SECMIRROR} ${SUITE}/updates main"
+} | tee "/etc/apt/sources.list" > /dev/null
 
 # Dpkg, please always install configurations from upstream and be fast.
 # Also, exclude all these paths from ever installing as I don't need them.

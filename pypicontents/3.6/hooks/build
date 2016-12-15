@@ -1,1 +1,17 @@
-../../../debian/sid-min/hooks/build
+#!/usr/bin/env bash
+
+set -ex
+
+VCS_REF="$( git rev-parse --short HEAD )"
+BUILD_DATE="$( date -u +"%Y-%m-%dT%H:%M:%SZ" )"
+
+if git describe --tags ${VCS_REF} >/dev/null 2>&1; then
+	VERSION="$( git describe --tags ${VCS_REF} )"
+else
+	VERSION="${VCS_REF}"
+fi
+
+docker build --build-arg BUILD_DATE="${BUILD_DATE}" \
+             --build-arg VCS_REF="${VCS_REF}" \
+             --build-arg VERSION="${VERSION}" \
+			 -t ${IMAGE_NAME} .
