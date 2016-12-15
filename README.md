@@ -13,6 +13,8 @@ These are images similar to the official, but with some slightly different confi
 ### luisalejandro/debian:jessie [![](https://img.shields.io/badge/Dockerfile-debian:jessie-yellow.svg)](debian/jessie/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:jessie.svg)](https://microbadger.com/images/luisalejandro/debian:jessie)
 ### luisalejandro/debian:wheezy [![](https://img.shields.io/badge/Dockerfile-debian:wheezy-yellow.svg)](debian/wheezy/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:wheezy.svg)](https://microbadger.com/images/luisalejandro/debian:wheezy)
 
+&nbsp;
+
 # Python images
 
 These are python images compiled from source, using the `debian/rules` makefile from debian's python source. These images are then updated to Debian Sid. Check out their Dockerfiles for more details.
@@ -24,7 +26,11 @@ These are python images compiled from source, using the `debian/rules` makefile 
 ### luisalejandro/python:3.5 [![](https://img.shields.io/badge/Dockerfile-python:3.5-yellow.svg)](python/3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.5.svg)](https://microbadger.com/images/luisalejandro/python:3.5)
 ### luisalejandro/python:3.6 [![](https://img.shields.io/badge/Dockerfile-python:3.6-yellow.svg)](python/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.6.svg)](https://microbadger.com/images/luisalejandro/python:3.6)
 
+&nbsp;
+
 # PyPIContents images
+
+These are images based on `luisalejandro/python` images and are used to build the [PyPIContents Index](https://github.com/LuisAlejandro/pypicontents). Check out their Dockerfiles for more details.
 
 ### luisalejandro/pypicontents:2.6 [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.6-yellow.svg)](pypicontents/2.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.6.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.6)
 ### luisalejandro/pypicontents:2.7 [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7-yellow.svg)](pypicontents/2.7/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.7.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.7)
@@ -33,10 +39,13 @@ These are python images compiled from source, using the `debian/rules` makefile 
 ### luisalejandro/pypicontents:3.5 [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.5-yellow.svg)](pypicontents/3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.5.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.5)
 ### luisalejandro/pypicontents:3.6 [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.6-yellow.svg)](pypicontents/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.6.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.6)
 
+&nbsp;
+
 # Latex image
 
 This is an image based on [`luisalejandro/debian:sid`](https://microbadger.com/images/luisalejandro/debian:sid) with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor` packages installed. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion.
 
+### luisalejandro/latex:sid [![](https://img.shields.io/badge/Dockerfile-latex:sid-yellow.svg)](latex/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/latex:sid.svg)](https://microbadger.com/images/luisalejandro/latex:sid)
 
 &nbsp;
 &nbsp;

@@ -23,7 +23,8 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
     usr/share/doc usr/share/applications"
 
 # Some tools are needed.
-DPKG_PRE_DEPENDS="aptitude deborphan devscripts equivs debian-keyring dpkg-dev"
+DPKG_PRE_DEPENDS="aptitude deborphan gcc devscripts equivs debian-keyring \
+                  dpkg-dev"
 DPKG_DEPENDS="mime-support libbz2-1.0 libc6 libdb5.3 libexpat1 libffi6 \
               libncursesw5 libreadline7 libsqlite3-0 libssl1.1 libtinfo5 \
               zlib1g"
@@ -78,7 +79,8 @@ deb ${MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
 apt-get update
-apt-get install ${PY_SOURCE_TEMPDIR}/*.deb
+dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb
+apt-get install -f
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
