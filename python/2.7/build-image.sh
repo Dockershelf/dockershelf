@@ -74,7 +74,7 @@ echo -e "\nInstalling build dependencies ...\n"
 cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
 
 cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${PY_DEBIAN_SUITE} main
+deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
 EOF
 
 apt-get update
