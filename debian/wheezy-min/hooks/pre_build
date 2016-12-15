@@ -14,7 +14,7 @@ MIRROR="http://httpredir.debian.org/debian"
 SUITE="wheezy"
 
 # Packages to install at the end
-DPKG_DEPENDS="iproute2 iputils-ping locales curl ca-certificates"
+DPKG_DEPENDS="iproute iputils-ping locales curl ca-certificates"
 
 # Let's import tianon/docker-brew-debian to build our base
 mkdir -pv "${TARGET}"
