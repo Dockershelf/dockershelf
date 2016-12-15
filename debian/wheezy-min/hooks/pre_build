@@ -28,7 +28,13 @@ rm -rfv "${TARGET}/etc/apt/apt.conf.d/docker-clean" \
         "${TARGET}/etc/apt/apt.conf.d/docker-gzip-indexes" \
         "${TARGET}/etc/apt/apt.conf.d/docker-autoremove-suggests" \
         "${TARGET}/etc/apt/apt.conf.d/docker-no-languages" \
-        "${TARGET}/etc/dpkg/dpkg.cfg.d/docker-apt-speedup" 
+        "${TARGET}/etc/dpkg/dpkg.cfg.d/docker-apt-speedup"
+
+# Configuring DNS
+{
+    echo "nameserver 8.8.8.8"
+    echo "nameserver 8.8.4.4"
+} | tee "${TARGET}/etc/resolv.conf" > /dev/null
 
 # Configure this locale please
 echo "en_US.UTF-8 UTF-8" > "${TARGET}/etc/locale.gen"

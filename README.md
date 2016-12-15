@@ -1,6 +1,6 @@
 ![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockerfiles/master/banner.svg)
 
-Dockerfiles is a repository that serves as a collector for docker recipes that I've found useful for specific cases. All docker images are rebuilt and uploaded weekly (on sundays) via a Travis cron.
+*Dockerfiles* is a repository that serves as a collector for docker recipes that I've found useful for specific cases. All docker images are rebuilt and uploaded weekly (on sundays) via a Travis cron.
 
 Here you can find instructions on how to use them. Enjoy!
 
