@@ -9,7 +9,7 @@ MIRROR="http://httpredir.debian.org/debian"
 SUITE="jessie"
 
 # Packages to install at the end
-DPKG_DEPENDS="iproute2 iputils-ping locales curl ca-certificates"
+DPKG_DEPENDS="iproute2 inetutils-ping locales curl ca-certificates"
 
 # Remove tianon's config
 rm -rfv "/etc/apt/apt.conf.d/docker-clean" \
@@ -31,20 +31,12 @@ echo "en_US.UTF-8 UTF-8" > "/etc/locale.gen"
 echo "deb ${MIRROR} ${SUITE} main" > "/etc/apt/sources.list"
 
 # Dpkg, please always install configurations from upstream and be fast.
-# Also, exclude all these paths from ever installing as I don't need them.
 {
     echo "force-confmiss"
     echo "force-confdef"
     echo "force-confnew"
     echo "force-overwrite"
     echo "force-unsafe-io"
-    echo "path-exclude /usr/share/doc/*"
-    echo "path-exclude /usr/share/groff/*"
-    echo "path-exclude /usr/share/info/*"
-    echo "path-exclude /usr/share/linda/*"
-    echo "path-exclude /usr/share/lintian/*"
-    echo "path-exclude /usr/share/locale/*"
-    echo "path-exclude /usr/share/man/*"
 } | tee "/etc/dpkg/dpkg.cfg.d/100-dpkg" > /dev/null
 
 # Apt, don't give me translations, assume always a positive answer,

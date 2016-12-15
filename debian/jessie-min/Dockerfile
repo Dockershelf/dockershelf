@@ -15,5 +15,8 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.version=${VERSION} \
       ve.com.huntingbears.schema-version="1.0"
 
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive"
+
 COPY *.sh /usr/share/docker/debian/jessie-min/
 RUN bash /usr/share/docker/debian/jessie-min/build-image.sh
