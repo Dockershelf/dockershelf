@@ -114,20 +114,6 @@ apt-get autoremove
 apt-get purge ${DPKG_PRE_DEPENDS}
 apt-get autoremove
 
-# Apt: Install runtime dependencies
-# ------------------------------------------------------------------------------
-# Now we will install the libraries python needs to properly function, and also 
-# update the distro to ${DEFAULT_SUITE}
-
-cat > /etc/apt/sources.list << EOF
-deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
-EOF
-
-apt-get update
-apt-get upgrade
-apt-get dist-upgrade
-apt-get install ${DPKG_DEPENDS}
-
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will copy only the minimal python installation files that are within the
@@ -143,6 +129,20 @@ done
 
 # Linking to make this the default version of python
 ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
+
+# Apt: Install runtime dependencies
+# ------------------------------------------------------------------------------
+# Now we will install the libraries python needs to properly function, and also 
+# update the distro to ${DEFAULT_SUITE}
+
+cat > /etc/apt/sources.list << EOF
+deb ${DEFAULT_MIRROR} ${DEFAULT_SUITE} main
+EOF
+
+apt-get update
+apt-get upgrade
+apt-get dist-upgrade
+apt-get install ${DPKG_DEPENDS}
 
 # Pip: Installation
 # ------------------------------------------------------------------------------
@@ -171,9 +171,6 @@ ln -sfv /usr/local/bin/pip \
 echo -e "\nRemoving unnecessary files ...\n"
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
-rm -rfv $(ls -1 /usr/share/i18n/locales/* | grep -v en_US) \
-        $(ls -1 /usr/share/i18n/charmaps/* | grep -v UTF-8) \
-        $(find /usr/share/zoneinfo -type l -o -type f | grep -v UTC) \
-        /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
+rm -rfv /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
         /var/cache/debconf/* /var/cache/apt/* /var/tmp/* /var/log/* \
         /var/lib/apt/lists/* ${PY_SOURCE_TEMPDIR}
