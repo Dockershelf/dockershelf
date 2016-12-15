@@ -18,7 +18,7 @@ DPKG_DEPENDS="iproute2 iputils-ping locales curl ca-certificates"
 
 # Let's import tianon/docker-brew-debian to build our base
 mkdir -pv "${TARGET}"
-docker rm debian_jessie_slim
+docker rm debian_jessie_slim || true
 docker run --name debian_jessie_slim debian:jessie-slim bash
 docker export -o "${BASEDIR}/base.tar" debian_jessie_slim
 tar -xf "${BASEDIR}/base.tar" -C "${TARGET}"
