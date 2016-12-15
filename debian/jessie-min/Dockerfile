@@ -15,5 +15,5 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.version=${VERSION} \
       ve.com.huntingbears.schema-version="1.0"
 
-COPY *.sh /usr/share/docker/debian/sid-min/
-RUN bash /usr/share/docker/debian/sid-min/build-image.sh
+COPY *.sh /usr/share/docker/debian/jessie-min/
+RUN bash /usr/share/docker/debian/jessie-min/build-image.sh
