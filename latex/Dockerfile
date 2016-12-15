@@ -1,4 +1,4 @@
-FROM luisalejandro/debian:sid-min
+FROM luisalejandro/debian:sid
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 RUN apt-get update && \

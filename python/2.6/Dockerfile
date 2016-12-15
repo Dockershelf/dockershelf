@@ -1,4 +1,4 @@
-FROM luisalejandro/debian:wheezy-min
+FROM luisalejandro/debian:wheezy
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE

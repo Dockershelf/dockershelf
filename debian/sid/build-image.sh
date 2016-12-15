@@ -6,7 +6,7 @@ set -ex
 # Some initial configuration
 BASEDIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) )"
 MIRROR="http://httpredir.debian.org/debian"
-SUITE="jessie"
+SUITE="sid"
 
 # Packages to install at the end
 DPKG_DEPENDS="iproute2 inetutils-ping locales curl ca-certificates"
@@ -31,6 +31,7 @@ echo "en_US.UTF-8 UTF-8" > "/etc/locale.gen"
 echo "deb ${MIRROR} ${SUITE} main" > "/etc/apt/sources.list"
 
 # Dpkg, please always install configurations from upstream and be fast.
+# Also, exclude all these paths from ever installing as I don't need them.
 {
     echo "force-confmiss"
     echo "force-confdef"
@@ -53,8 +54,8 @@ echo "deb ${MIRROR} ${SUITE} main" > "/etc/apt/sources.list"
     echo 'Apt::Install-Recommends "false";'
     echo 'Apt::Get::AllowUnauthenticated "true";'
     echo 'Apt::AutoRemove::SuggestsImportant "false";'
-    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/jessie-min/clean-apt.sh"; };'
-    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/jessie-min/clean-dpkg.sh"; };'
+    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/sid/clean-apt.sh"; };'
+    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/sid/clean-dpkg.sh"; };'
 } | tee "/etc/apt/apt.conf.d/100-apt" > /dev/null
 
 # Install dependencies and upgrade

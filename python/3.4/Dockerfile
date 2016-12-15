@@ -1,4 +1,4 @@
-FROM luisalejandro/debian:jessie-min
+FROM luisalejandro/debian:jessie
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE

@@ -6,7 +6,7 @@ set -ex
 # Some initial configuration
 BASEDIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) )"
 MIRROR="http://httpredir.debian.org/debian"
-SUITE="sid"
+SUITE="stretch"
 
 # Packages to install at the end
 DPKG_DEPENDS="iproute2 inetutils-ping locales curl ca-certificates"
@@ -54,8 +54,8 @@ echo "deb ${MIRROR} ${SUITE} main" > "/etc/apt/sources.list"
     echo 'Apt::Install-Recommends "false";'
     echo 'Apt::Get::AllowUnauthenticated "true";'
     echo 'Apt::AutoRemove::SuggestsImportant "false";'
-    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/sid-min/clean-apt.sh"; };'
-    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/sid-min/clean-dpkg.sh"; };'
+    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/stretch/clean-apt.sh"; };'
+    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/stretch/clean-dpkg.sh"; };'
 } | tee "/etc/apt/apt.conf.d/100-apt" > /dev/null
 
 # Install dependencies and upgrade

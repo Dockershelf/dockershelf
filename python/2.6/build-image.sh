@@ -171,6 +171,7 @@ ln -sfv /usr/local/bin/pip \
 echo -e "\nRemoving unnecessary files ...\n"
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
+rm -rf ${PY_SOURCE_TEMPDIR}
 rm -rfv /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
         /var/cache/debconf/* /var/cache/apt/* /var/tmp/* /var/log/* \
-        /var/lib/apt/lists/* ${PY_SOURCE_TEMPDIR}
+        /var/lib/apt/lists/*

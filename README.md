@@ -1,20 +1,17 @@
 ![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockerfiles/master/banner.svg)
 
-*Dockerfiles* is a repository that serves as a collector for docker recipes that I've found useful for specific cases. All docker images are rebuilt and uploaded weekly (on sundays) via a Travis cron.
+*Dockerfiles* is a repository that serves as a collector for docker recipes that I've found useful for specific cases. All docker images are rebuilt weekly on Docker Hub via a Travis cron.
 
 Here you can find instructions on how to use them. Enjoy!
 
 # Debian images
 
-## Debian Minimal luisalejandro/debian:sid-min
+These are images similar to the official, but with some slightly different configurations. Check out their build scripts for more details.
 
-[![](https://images.microbadger.com/badges/image/luisalejandro/debian:sid-min.svg)](https://microbadger.com/images/luisalejandro/debian:sid-min) [![](https://images.microbadger.com/badges/version/luisalejandro/debian:sid-min.svg)](https://microbadger.com/images/luisalejandro/debian:sid-min) [![](https://images.microbadger.com/badges/commit/luisalejandro/debian:sid-min.svg)](https://microbadger.com/images/luisalejandro/debian:sid-min)
-
-I made a minimal image based on Debian Sid so that I can use it as a base for other applications. You can check out its build script [debian/sid-min/build-base.sh](debian/sid-min/build-base.sh) for more details.
-
-## Debian Build luisalejandro/debian:sid-build
-
-[![](https://images.microbadger.com/badges/image/luisalejandro/debian:sid-build.svg)](https://microbadger.com/images/luisalejandro/debian:sid-build) [![](https://images.microbadger.com/badges/version/luisalejandro/debian:sid-build.svg)](https://microbadger.com/images/luisalejandro/debian:sid-build) [![](https://images.microbadger.com/badges/commit/luisalejandro/debian:sid-build.svg)](https://microbadger.com/images/luisalejandro/debian:sid-build)
+* **luisalejandro/debian:sid**: Debian Sid [![](https://img.shields.io/badge/Dockerfile-sid-yellow.svg)](debian/sid/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:sid.svg)](https://microbadger.com/images/luisalejandro/debian:sid) ![](https://images.microbadger.com/badges/version/luisalejandro/debian:sid.svg) ![](https://images.microbadger.com/badges/commit/luisalejandro/debian:sid.svg)
+* **luisalejandro/debian:stretch**: Debian Stretch ![](https://images.microbadger.com/badges/image/luisalejandro/debian:stretch.svg) ![](https://images.microbadger.com/badges/version/luisalejandro/debian:stretch.svg) ![](https://images.microbadger.com/badges/commit/luisalejandro/debian:stretch.svg)
+* **luisalejandro/debian:jessie**: Debian Jessie ![](https://images.microbadger.com/badges/image/luisalejandro/debian:jessie.svg) ![](https://images.microbadger.com/badges/version/luisalejandro/debian:jessie.svg) ![](https://images.microbadger.com/badges/commit/luisalejandro/debian:jessie.svg)
+* **luisalejandro/debian:wheezy**: Debian Wheezy ![](https://images.microbadger.com/badges/image/luisalejandro/debian:wheezy.svg) ![](https://images.microbadger.com/badges/version/luisalejandro/debian:wheezy.svg) ![](https://images.microbadger.com/badges/commit/luisalejandro/debian:wheezy.svg)
 
 # Python images
 

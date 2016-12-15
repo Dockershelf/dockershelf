@@ -54,8 +54,8 @@ echo "deb ${MIRROR} ${SUITE} main" > "/etc/apt/sources.list"
     echo 'Apt::Install-Recommends "false";'
     echo 'Apt::Get::AllowUnauthenticated "true";'
     echo 'Apt::AutoRemove::SuggestsImportant "false";'
-    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/wheezy-min/clean-apt.sh"; };'
-    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/wheezy-min/clean-dpkg.sh"; };'
+    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/wheezy/clean-apt.sh"; };'
+    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/wheezy/clean-dpkg.sh"; };'
 } | tee "/etc/apt/apt.conf.d/100-apt" > /dev/null
 
 # Install dependencies and upgrade
