@@ -48,13 +48,11 @@ This is an image based on [`luisalejandro/debian:sid`](https://microbadger.com/i
 ### luisalejandro/latex:sid [![](https://img.shields.io/badge/Dockerfile-latex:sid-yellow.svg)](latex/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/latex:sid.svg)](https://microbadger.com/images/luisalejandro/latex:sid)
 
 &nbsp;
-&nbsp;
 
 # Made with :heart: and :hamburger:
 
 ![Banner](http://huntingbears.com.ve/static/img/site/banner.svg)
 
-&nbsp;
 &nbsp;
 
 My name is Luis ([@LuisAlejandro](https://github.com/LuisAlejandro)) and I'm a Free and Open-Source Software developer living in Maracay, Venezuela.
@@ -63,5 +61,4 @@ If you like what I do, please support me on [Patreon](https://www.patreon.com/lu
 
 > Blog [huntingbears.com.ve](http://huntingbears.com.ve) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
 
-&nbsp;
 &nbsp;

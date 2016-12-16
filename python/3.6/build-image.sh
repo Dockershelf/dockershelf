@@ -79,7 +79,7 @@ deb ${MIRROR} ${PY_DEBIAN_SUITE} main
 EOF
 
 apt-get update
-dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb
+dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb || true
 apt-get install -f
 
 # Python: Compilation

@@ -81,7 +81,7 @@ deb ${SECMIRROR} ${PY_DEBIAN_SUITE}/updates main
 EOF
 
 apt-get update
-dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb
+dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb || true
 apt-get install -f
 
 # Python: Compilation
