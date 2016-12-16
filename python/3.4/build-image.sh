@@ -125,10 +125,12 @@ apt-get autoremove
 # other stuff we won't use.
 
 for PKG in ${PY_PKGS}; do
-    for DIR in ${PY_CLEAN_DIRS}; do
-        rm -rfv "${PY_SOURCE_DIR}/debian/${PKG}/${DIR}"
-    done
-    (cd ${PY_SOURCE_DIR}/debian/${PKG} && tar c .) | (cd / && tar xf -)
+    if [ -d "${PY_SOURCE_DIR}/debian/${PKG}" ]; then
+        for DIR in ${PY_CLEAN_DIRS}; do
+            rm -rfv "${PY_SOURCE_DIR}/debian/${PKG}/${DIR}"
+        done
+        (cd ${PY_SOURCE_DIR}/debian/${PKG} && tar c .) | (cd / && tar xf -)
+    fi
 done
 
 # Linking to make this the default version of python
