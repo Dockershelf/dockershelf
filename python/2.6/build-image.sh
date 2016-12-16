@@ -146,6 +146,7 @@ deb ${MIRROR} ${SUITE} main
 EOF
 
 apt-get update
+apt-get install apt
 apt-get upgrade
 apt-get dist-upgrade
 apt-get install ${DPKG_DEPENDS}

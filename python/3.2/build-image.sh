@@ -146,6 +146,7 @@ deb ${MIRROR} ${SUITE} main
 EOF
 
 apt-get update
+apt-get install apt
 apt-get upgrade
 apt-get dist-upgrade
 apt-get install ${DPKG_DEPENDS}
@@ -155,7 +156,7 @@ apt-get install ${DPKG_DEPENDS}
 # Let's bring in the old reliable pip guy.
 
 echo -e "\nInstalling pip ...\n"
-curl -fsSL https://bootstrap.pypa.io/get-pip.py | python
+curl -fsSL https://bootstrap.pypa.io/3.2/get-pip.py | python
 pip install --no-cache-dir --upgrade --force-reinstall pip
 
 ln -sfv /usr/local/bin/easy_install \
