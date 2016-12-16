@@ -15,4 +15,4 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.version=${VERSION} \
       ve.com.huntingbears.schema-version="1.0"
 
-RUN pip install pypirazzi
+RUN pip install pypicontents
