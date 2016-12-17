@@ -9,9 +9,16 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Some default values.
 SUITE="sid"
 MIRROR="http://httpredir.debian.org/debian"
+SECMIRROR="http://security.debian.org"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
+
+if [ "${PY_VER_NUM}" == "3.2" ]; then
+    PIPURL="https://bootstrap.pypa.io/3.2/get-pip.py"
+else
+    PIPURL="https://bootstrap.pypa.io/get-pip.py"
+fi
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
@@ -23,11 +30,7 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
     usr/share/doc usr/share/applications"
 
 # Some tools are needed.
-DPKG_PRE_DEPENDS="aptitude deborphan gcc devscripts equivs debian-keyring \
-                  dpkg-dev"
-DPKG_DEPENDS="mime-support libbz2-1.0 libc6 libdb5.3 libexpat1 libffi6 \
-              libncursesw5 libreadline7 libsqlite3-0 libssl1.1 libtinfo5 \
-              zlib1g"
+DPKG_PRE_DEPENDS="aptitude deborphan debian-keyring"
 
 # These options are passed to make because we need to speedup the build.
 DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
@@ -54,7 +57,10 @@ apt-get install ${DPKG_PRE_DEPENDS}
 
 echo -e "\nDownloading python source ...\n"
 cat > /etc/apt/sources.list << EOF
+deb ${MIRROR} ${PY_DEBIAN_SUITE} main
 deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main
+deb ${MIRROR} ${PY_DEBIAN_SUITE}-updates main
+deb ${SECMIRROR} ${PY_DEBIAN_SUITE}/updates main
 EOF
 
 apt-get update
@@ -71,16 +77,11 @@ PY_SOURCE_DIR="$( ls -1d ${PY_SOURCE_TEMPDIR}/*/ | sed 's|/$||' )"
 # depending on them that we will gracefully install with apt-get.
 
 echo -e "\nInstalling build dependencies ...\n"
-cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
-
-cat > /etc/apt/sources.list << EOF
-deb ${MIRROR} ${SUITE} main
-deb ${MIRROR} ${PY_DEBIAN_SUITE} main
-EOF
-
-apt-get update
-dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb || true
-apt-get install -f
+DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
+                        | awk '{print $2}' )"
+DPKG_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
+                    | sed "$( printf 's/^%s$//g;' ${PY_PKGS} )" )"
+apt-get install ${DPKG_BUILD_DEPENDS}
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
@@ -101,7 +102,7 @@ cd "${PY_SOURCE_DIR}" && \
 # because some files might be confused with already installed python packages.
 
 echo -e "\nRemoving unnecessary packages ...\n"
-apt-get purge ${PY_VER_STR}-build-deps
+apt-get purge ${DPKG_BUILD_DEPENDS}
 apt-get autoremove
 
 # This is clever uh? Figure it out myself, ha!
@@ -144,6 +145,7 @@ deb ${MIRROR} ${SUITE} main
 EOF
 
 apt-get update
+apt-get install apt
 apt-get upgrade
 apt-get dist-upgrade
 apt-get install ${DPKG_DEPENDS}
@@ -153,7 +155,7 @@ apt-get install ${DPKG_DEPENDS}
 # Let's bring in the old reliable pip guy.
 
 echo -e "\nInstalling pip ...\n"
-curl -fsSL https://bootstrap.pypa.io/get-pip.py | python
+curl -fsSL ${PIPURL} | python
 pip install --no-cache-dir --upgrade --force-reinstall pip
 
 ln -sfv /usr/local/bin/easy_install \
