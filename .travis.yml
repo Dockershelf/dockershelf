@@ -1,25 +1,43 @@
+sudo: required
+services: docker
+dist: trusty
+group: edge
+language: ruby
 env:
     global:
-        # luisalejandro/debian Docker Hub API end ${DH_DEBIAN_API_END}
-        - secure: "rSP5OtETB4JlNSMRnxQhhcvKEHOfRtjZZq37Cj1QeoF0pDnMzKng7c17uDl7J0OvOxk6YR53k1r+f8XqkQ7yhoFOOWDL0wl2VcD2o/Q1FYNflpz5TuGw0H6HmcsU5eHeFz+unk8XzWgJS+i2Ovpz2hE+Prwx+y9ztqkVWblqKtMGDrLxCi6WjQNMQp8X6cxMIY1DcsBdV4IPlXG1vwLI6kCZj+D0ckG4FN3uim3DZnk+coPU6fbt2uKhA0Yp+cYyEL0AGk6Dfp/YnWTsUJeM3iN8IuoQ/mG0m9bDAVtRPv48oTbKypfhZCU9ypVZFlcwiwnKqRkoPpDgh0ygCQaSyaRG5OMK6b5HD54biV6BPfabuyCiY5uoYBs1i+nO33XIx/PVrGJPUdDGesd0ztRyPsQ1ClahwVpkNlFp/znw47Ie1DsBcGllniPlIPP+FLb2tFdT6M2qXvf3VWohtjTra5gJwsxw/R3x0j06IrnU+4w2ri5tUqT0bKDhy1IFUvCX/dX+BsAQVRgvFFs8Q4Q5jqKvNMrmydzL+dp8xZOimISbzyYZ08DTWooSqlsdm7CwHsiX4QiAXb6PBXxc64m1g9gRC8qLZDoGevPo/nYHm4IGbowmhH0w+8X7mmGccWndSsHgCWawcABQIrnTH9iHizorZLfcbFTYQehhCKACAW8="
+        # Docker Hub username ${DH_USERNAME}
+        - DH_USERNAME="luisalejandro"
+        # Docker Hub password ${DH_PASSWORD}
+        - secure: "PDCqRQDKeHJFhHh/owiFtBwoGtuA7TegbYGOW0UB1Ao4lvbh4tsRmclDAuhpU4yfEieMT9TfCH2MfZb7VZtw9zKfurI5NAxEWZU0UO9Ipfp1xbUksUvr61FMIiScSti5jd8fFSnpboTmU4bvu2nDG2on+19fqc8bWmpOKjfz0eYyWtNejBSgHMgHfjMOrK1Klp+c65+pWVUmt+mF9AvIxBdSFKUmoS4q9GQ5spv/iTzPDNnflzWR20xnkS7FMshSpzYArn9Im5FkXNloDIZZOmVX+5q20RGhnHHt5FmMITLUnmzOWP0lN5xpSzXGc+lCDcaJjQIC7d+aXCQMqe9QI0m8dDVOQbHl4sUlX9vLthA9laqoB4qCY2bOx0y2zPDYKWWahrsZFVy9tNfnL5LukIVp3xmTVA4OF2siMJ7BfVv/z/yXz2fNvuh3f9OQfr/WskARw1u/t8DP4h1Xj6EJSUcwlswRjJPU1+6Vrk0PNMFRRtBIGpuwvvDm0WFxm0EqP7Y5Rbv6voiCn2/+QU5CD3yazDx8Db+b6VUoAd6xBARmWyywkhOCpJED9OfPZPb9V3K+BIPKnZ8oATYXjxXf1HADuykGZos4ILV2bwatPe6dvG1baoc4P4jXsGCMuTAMwtrE7gf4DzBhNrKqegfNCNBbB8SSqo81NzOuKMteZJY="
         # luisalejandro/debian MicroBadger API end ${MB_DEBIAN_API_END}
         - secure: "fvEcXAkKptvKSrR0nVKT0meXdUzxnNBFMxbHwdpsnqT92Re6IUYCdVnyexdyXEmtZH30pagnwVMSdPyHZ+Nmk1fcMi9kQE/JzItH5plrIOfZdXw4BsVYOtfgxOayVUc6Hw8RlLz9sPDmNp3lzXjJ6npf78vKIXJfhZWrZdTvfd2wMwTLdofTx7aT5Pj4xSmZWQlJxHDXjNtC7fwv8s9ZMzWVNG++2zwKPnuZAhzRrOmgLpLCkOagT2VE1ms++BNiEuQi0JzpjvHA+J3uLtapmelS2JKA7urDsYltvyQqjfsCC1hd8uJ9474OaJf/vi31VnBqxFR/9f2SRpTlBRUrUMiCyqghPTVOBS/sCpCWqUx5O2x2mfKi6wTsgdlxpyewAewICH0m4zRiMc48uHIkvH1PJoqywWbQTvJikYH3CzCuvCiXCn+bQdlE7Kfh4KubrEJkq4+nUU1MhzH5KZWsQ4LI2Z9oj8WAbyEGpMvk0S/f7VSwykKyDFSq6gkFbzZFXuruzwfRo0E3a2s2/THTaCq3E1rXvqr5QZ0IiJwAy5jmBYDVePZO07g+fk61+hSBYkosFhT5f98wCDHod+dLI2CTVGf1zsn9+EMjFa36yc64G89TzGd++J+/r8KwuxKiZwvvJn7yPwLC0eKpzFMNvhtcEMAdgxUhAraPyjioMIY="
         # luisalejandro/python MicroBadger API end ${MB_PYTHON_API_END}
         - secure: "Ie55dMoe4lmjeDJtezVofKHD/Ir65p1amt5sq7dZ15sB+YdmiMcK6F8zAUPLvZrMb8I015pjcexz9mlL51SlAPm3AS6mO9akpDLJrMKJTZKxYAGv25+kCLZGsPMQ/nLtZfrLLOyKPgM+qAIxrk4EKFefjyb82S1DRY+M+kX2VpIYg1vJOlvIdBSVFUM5po9YIbtBqnw3kLQF1NuycsIt2mjr8mhV0oRYOwQax/V7AQIjPe4EGecTB03SR1JdF/PaBhWR7yAaxrYetNxovLOFxfTBxeJjrGFzYV3rC3chVnSyY92ex+2MQkrQg8bHmKhO1sMfRmW0TuinCDkH8rwixtJK9pbaZY4vm4bC3ULhrsdYbE/bLYJwXtIqKeyndC1Z3pUYYtvTTSUYHuiWeE3rfqGkwgKg4GjL4PBXy6P9W0TVcC+KBGKAiPP9JosOAF2A56rc//zpbTSNtuF3vWfHDfdPHtXipcR2EpH6U1m4OThYh5uB9RjZdED6afAswRFjf5twNCvSGFpAsMZiZhevNLPZBKJUEc/hPHdHpuqKaaQDty6Y8Xt1KCPVGaGVLzJYb+JQYDEfDkGKY0hgxOXd99fBvfLFLG3YkporG2Ux6FLGju7pXq13ovHXzyke6n7pUtUN5ouUH2MYX+TbaUy/FSg5NSa8cf8Oq1T7nCaET2A="
         # luisalejandro/pypicontents MicroBadger API end ${MB_PYPICONTENTS_API_END}
-        #- secure: 
+        - secure: "WnkVaeBym5NfUTHgzCykXdii97zu9UOtRTJSxuA/qBkDiT19pMKJKHClLOJz2HrpQ5TvNfotnQgBUsgI2RjvwpXu/WaXRePUbP0VLy1MPrp2QHGbOk6yOki5ca4X14FpPFos5SMgSOVAPby6mEKwhFnQh/EtVJcv6tSgoxC4qJJXqZXi8CpAS6ZuA4ICsMVQWYvpcUQtG3R4OZ5ExGml9yyv4PAqUR/Auwzsolce5+pWv5XweuTXwUt5145T5KiZQP2XDpoNUCqYrbp6pZmRBDHmf5m6PH9nM2mPTkXkRYK7bodp7n6DvFnMH0+dqt6K+qDqYAnY5/522UilAHwuW5Coa5DpigqVat8wlWL2s7uzffxAoEmI0504aNTKB+OMQVfBLtxdrZB5DyNtW9V6DVGqYneEZwENhTk2Dmndkh3TJZhpVOdJ+ZrGI86bnXFgEbdmyWGFzat/BSglFUBe7LNuYrV4mEGhJCBksOdTi2Oq8yqcL32gLgczm7FlfWJDFngRBPIcn+CG9jtwHq/Qk3lFh1fzMsp50alI00KDfMRxg39yu4SNhl0CCoAmxVq2dWwghHmLPdu1Ry30gf1fpnusCh2Pbs6lsPLjA6wOwC5b43R77CNZlzlaBNbW6nAXaTdxzarYFXpE2NTrh3Wp5JGeOsy5+qO9GEOIdHjEpQ4="
         # luisalejandro/latex MicroBadger API end ${MB_LATEX_API_END}
         - secure: "TGrnfWpZ814Vn9PfLgEfyPaArx+AnOpJR/CrhSDKNsn76LekpJhcpY/lXATpyLusmgNrAoV0vv7orXdJvDIEYf/nmNigUtQ/TcDmTbl7c8Eq36gN84zK2vPPvgljP4dTjpAbjPFdLGnTyifKZ6vOjYrlRDjfTxcrmKNHPtOxupNCvxY7DP//A/KCmVWY6l1Eyraa9SeyZn1EknVh2qEqY8YZvc3MVUCMya4yw2KEfZbp+ZhXD9D/1+xlKXfKX34v3IGWnLgnrrhjI+8MtKe/K60t7bNvuk5qnR8JhTv2EuUaRH30jG7+htZCgU9hxOrLNXIPFX7KXiOOTBd4rdAmhCXWVHrr9MTAL938weQTrGtOZU1ABFzTHCVS2KGzQRgX5sRu52Lkn6tsrgY9O+6L3I8KLeWVp87oGk96cC5o7aII74WHzoZa0FnAl30DgUzj2pwRH3uxpsusu+k+MR0izacVeUxNaEaxcBk/yJDg6s1WabuNWOs5wUYDBN9Jhf/aHxo/SQx3+pW390S+2mmRKjzAybtBFWae29GM3jyrxRMc/LxyZtpf1SMwsFf5L9zZeTChsvkXOO2BJ1HQ6tfYxkfPy81SAK8o/K5q7na9Ki7Rl9w/gIlApxQKTPtgoAnA9yolDoN+LDLtHE8oHfrVSeBtR7aySzIoPlDasIkZhTQ="
-script:
-    - |
-        if [ "${TRAVIS_EVENT_TYPE}" == "cron" ] && [ "$(date +%w)" == "0" ]; then
-            # luisalejandro/debian
-            curl -H "Content-Type: application/json" --data '{"build": true}' -X POST ${DH_DEBIAN_API_END}
-            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_DEBIAN_API_END}
-            # luisalejandro/python
-            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_PYTHON_API_END}
-            # luisalejandro/pypicontents
-            #curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_PYPICONTENTS_API_END}
-            # luisalejandro/latex
-            curl -H "Content-Type: application/json" --data '{"update": true}' -X POST ${MB_LATEX_API_END}
-        fi
+    matrix:
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:wheezy" DOCKER_IMAGE_DIR="debian/wheezy"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:jessie" DOCKER_IMAGE_DIR="debian/jessie"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:stretch" DOCKER_IMAGE_DIR="debian/stretch"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:sid" DOCKER_IMAGE_DIR="debian/sid"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:2.6" DOCKER_IMAGE_DIR="python/2.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:2.7" DOCKER_IMAGE_DIR="python/2.7"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.2" DOCKER_IMAGE_DIR="python/3.2"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.4" DOCKER_IMAGE_DIR="python/3.4"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.5" DOCKER_IMAGE_DIR="python/3.5"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.6" DOCKER_IMAGE_DIR="python/3.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.6" DOCKER_IMAGE_DIR="pypicontents/2.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.7" DOCKER_IMAGE_DIR="pypicontents/2.7"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.2" DOCKER_IMAGE_DIR="pypicontents/3.2"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.4" DOCKER_IMAGE_DIR="pypicontents/3.4"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.5" DOCKER_IMAGE_DIR="pypicontents/3.5"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.6" DOCKER_IMAGE_DIR="pypicontents/3.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/latex:latest" DOCKER_IMAGE_DIR="latex"
+script: bash travis-build-image.sh
+after_success:
+    - docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
+    - docker push ${DOCKER_IMAGE_NAME}
+    - eval "MB_CURRENT_API_END=${MB_$( echo ${DOCKER_IMAGE_NAME%%:*} | awk -F'/' '{print toupper($2)}' )_API_END}"
+    - "curl -H 'Content-Type: application/json' --data '{update: true}' -X POST ${MB_CURRENT_API_END}"
