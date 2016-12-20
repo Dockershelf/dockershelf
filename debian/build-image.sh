@@ -29,9 +29,9 @@ echo "en_US.UTF-8 UTF-8" > "/etc/locale.gen"
 
 # Configure apt sources
 {
-    echo "deb ${MIRROR} ${SUITE} main"
-    echo "deb ${MIRROR} ${SUITE}-updates main"
-    echo "deb ${SECMIRROR} ${SUITE}/updates main"
+    echo "deb ${MIRROR} ${DEBIAN_RELEASE} main"
+    echo "deb ${MIRROR} ${DEBIAN_RELEASE}-updates main"
+    echo "deb ${SECMIRROR} ${DEBIAN_RELEASE}/updates main"
 } | tee "/etc/apt/sources.list" > /dev/null
 
 # Dpkg, please always install configurations from upstream and be fast.
