@@ -28,11 +28,14 @@ rm -rfv "/etc/apt/apt.conf.d/docker-clean" \
 echo "en_US.UTF-8 UTF-8" > "/etc/locale.gen"
 
 # Configure apt sources
-{
-    echo "deb ${MIRROR} ${DEBIAN_RELEASE} main"
-    echo "deb ${MIRROR} ${DEBIAN_RELEASE}-updates main"
-    echo "deb ${SECMIRROR} ${DEBIAN_RELEASE}/updates main"
-} | tee "/etc/apt/sources.list" > /dev/null
+echo "deb ${MIRROR} ${DEBIAN_RELEASE} main" > "/etc/apt/sources.list"
+
+if [ "${DEBIAN_RELEASE}" != "sid" ]; then
+    {
+        echo "deb ${MIRROR} ${DEBIAN_RELEASE}-updates main"
+        echo "deb ${SECMIRROR} ${DEBIAN_RELEASE}/updates main"
+    } | tee -a "/etc/apt/sources.list" > /dev/null
+fi
 
 # Dpkg, please always install configurations from upstream and be fast.
 {
@@ -57,8 +60,8 @@ echo "en_US.UTF-8 UTF-8" > "/etc/locale.gen"
     echo 'Apt::Install-Recommends "false";'
     echo 'Apt::Get::AllowUnauthenticated "true";'
     echo 'Apt::AutoRemove::SuggestsImportant "false";'
-    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/jessie/clean-apt.sh"; };'
-    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/jessie/clean-dpkg.sh"; };'
+    echo 'Apt::Update::Post-Invoke { "/usr/share/docker/debian/clean-apt.sh"; };'
+    echo 'Dpkg::Post-Invoke { "/usr/share/docker/debian/clean-dpkg.sh"; };'
 } | tee "/etc/apt/apt.conf.d/100-apt" > /dev/null
 
 # Install dependencies and upgrade
