@@ -18,27 +18,22 @@ env:
         # luisalejandro/latex MicroBadger API end ${MB_LATEX_API_END}
         - secure: "TGrnfWpZ814Vn9PfLgEfyPaArx+AnOpJR/CrhSDKNsn76LekpJhcpY/lXATpyLusmgNrAoV0vv7orXdJvDIEYf/nmNigUtQ/TcDmTbl7c8Eq36gN84zK2vPPvgljP4dTjpAbjPFdLGnTyifKZ6vOjYrlRDjfTxcrmKNHPtOxupNCvxY7DP//A/KCmVWY6l1Eyraa9SeyZn1EknVh2qEqY8YZvc3MVUCMya4yw2KEfZbp+ZhXD9D/1+xlKXfKX34v3IGWnLgnrrhjI+8MtKe/K60t7bNvuk5qnR8JhTv2EuUaRH30jG7+htZCgU9hxOrLNXIPFX7KXiOOTBd4rdAmhCXWVHrr9MTAL938weQTrGtOZU1ABFzTHCVS2KGzQRgX5sRu52Lkn6tsrgY9O+6L3I8KLeWVp87oGk96cC5o7aII74WHzoZa0FnAl30DgUzj2pwRH3uxpsusu+k+MR0izacVeUxNaEaxcBk/yJDg6s1WabuNWOs5wUYDBN9Jhf/aHxo/SQx3+pW390S+2mmRKjzAybtBFWae29GM3jyrxRMc/LxyZtpf1SMwsFf5L9zZeTChsvkXOO2BJ1HQ6tfYxkfPy81SAK8o/K5q7na9Ki7Rl9w/gIlApxQKTPtgoAnA9yolDoN+LDLtHE8oHfrVSeBtR7aySzIoPlDasIkZhTQ="
     matrix:
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:wheezy" DOCKER_IMAGE_DIR="debian/wheezy"
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:jessie" DOCKER_IMAGE_DIR="debian/jessie"
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:stretch" DOCKER_IMAGE_DIR="debian/stretch"
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:sid" DOCKER_IMAGE_DIR="debian/sid"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:2.6" DOCKER_IMAGE_DIR="python/2.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:2.7" DOCKER_IMAGE_DIR="python/2.7"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.2" DOCKER_IMAGE_DIR="python/3.2"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.4" DOCKER_IMAGE_DIR="python/3.4"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.5" DOCKER_IMAGE_DIR="python/3.5"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.6" DOCKER_IMAGE_DIR="python/3.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.6" DOCKER_IMAGE_DIR="pypicontents/2.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.7" DOCKER_IMAGE_DIR="pypicontents/2.7"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.2" DOCKER_IMAGE_DIR="pypicontents/3.2"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.4" DOCKER_IMAGE_DIR="pypicontents/3.4"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.5" DOCKER_IMAGE_DIR="pypicontents/3.5"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.6" DOCKER_IMAGE_DIR="pypicontents/3.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/latex:sid" DOCKER_IMAGE_DIR="latex/sid"
-script: bash travis-build-image.sh
-after_success:
-    - set -e
-    - docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
-    - docker push ${DOCKER_IMAGE_NAME}
-    - eval "MB_CURRENT_API_END=\${MB_$( echo ${DOCKER_IMAGE_NAME%%:*} | awk -F'/' '{print toupper($2)}' )_API_END}"
-    - "curl -H 'Content-Type: application/json' --data '{update: true}' -X POST ${MB_CURRENT_API_END}"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:wheezy"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:jessie"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:stretch"
+        - DOCKER_IMAGE_NAME="luisalejandro/debian:sid"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:2.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:2.7"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.2"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.4"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.5"
+        - DOCKER_IMAGE_NAME="luisalejandro/python:3.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.7"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.2"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.4"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.5"
+        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.6"
+        - DOCKER_IMAGE_NAME="luisalejandro/latex:sid"
+script: bash build-image.sh ${DOCKER_IMAGE_NAME}
+after_success: bash push-image.sh ${DOCKER_IMAGE_NAME}
