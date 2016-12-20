@@ -3,6 +3,9 @@
 # Exit early if there are errors and be verbose
 set -ex
 
+# Load helper functions
+source library.sh
+
 # Some initial configuration
 SECMIRROR="http://security.debian.org"
 MIRROR="http://httpredir.debian.org/debian"
@@ -64,9 +67,9 @@ fi
 } | tee "/etc/apt/apt.conf.d/100-apt" > /dev/null
 
 # Install dependencies and upgrade
-travis_retry apt-get update
-travis_retry apt-get upgrade
-travis_retry apt-get install ${DPKG_DEPENDS}
+cmdretry apt-get update
+cmdretry apt-get upgrade
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Configure locales
 update-locale LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8"

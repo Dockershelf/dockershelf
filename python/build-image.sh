@@ -3,6 +3,9 @@
 # Exit early if there are errors and be verbose.
 set -ex
 
+# Load helper functions
+source library.sh
+
 # Some default values.
 DEFAULT_SUITE="sid"
 MIRROR="http://httpredir.debian.org/debian"
@@ -39,10 +42,10 @@ DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
 # some commands are needed to download the source code before installing the
 # build dependencies.
 
-echo -e "\nInstalling pre dependencies ...\n"
-travis_retry apt-get update
-travis_retry apt-get upgrade
-travis_retry apt-get install ${DPKG_PRE_DEPENDS}
+msginfo "Installing pre dependencies ..."
+cmdretry apt-get update
+cmdretry apt-get upgrade
+cmdretry apt-get install ${DPKG_PRE_DEPENDS}
 
 # Python: Download
 # ------------------------------------------------------------------------------
@@ -53,7 +56,7 @@ travis_retry apt-get install ${DPKG_PRE_DEPENDS}
 # is recommended as it was coded by a Debian Developer who already knows what
 # he's doing. Not like me.
 
-echo -e "\nConfiguring /etc/apt/sources.list ...\n"
+msginfo "Configuring /etc/apt/sources.list ..."
 if [ "${PY_DEBIAN_SUITE}" == "sid" ]; then
     {
         echo "deb ${MIRROR} ${PY_DEBIAN_SUITE} main"
@@ -74,10 +77,10 @@ else
     } | tee /etc/apt/sources.list > /dev/null
 fi
 
-travis_retry apt-get update
+cmdretry apt-get update
 
-echo -e "\nDownloading python source ...\n"
-cd "${PY_SOURCE_TEMPDIR}" && travis_retry apt-get source ${PY_VER_STR}
+msginfo "Downloading python source ..."
+cd "${PY_SOURCE_TEMPDIR}" && cmdretry apt-get source ${PY_VER_STR}
 
 # This is the only folder that was uncompressed (I hope) by apt-get source.
 # We will use it as our base source directory.
@@ -89,12 +92,12 @@ PY_SOURCE_DIR="$( ls -1d ${PY_SOURCE_TEMPDIR}/*/ | sed 's|/$||' )"
 # file which declares all build dependencies. This will generate a package 
 # depending on them that we will gracefully install with apt-get.
 
-echo -e "\nInstalling python build dependencies ...\n"
+msginfo "Installing python build dependencies ..."
 DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
                         | awk '{print $2}' )"
 DPKG_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
                     | sed "$( printf 's/^%s$//g;' ${PY_PKGS} )" )"
-travis_retry apt-get install ${DPKG_BUILD_DEPENDS}
+cmdretry apt-get install ${DPKG_BUILD_DEPENDS}
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
@@ -103,7 +106,7 @@ travis_retry apt-get install ${DPKG_BUILD_DEPENDS}
 # our python source code. This will generate a python build tree in the 
 # debian folder which we will later process.
 
-echo -e "\nCompiling python ...\n"
+msginfo "Compiling python ..."
 cd "${PY_SOURCE_DIR}" && \
     DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS}" make -f debian/rules clean
 cd "${PY_SOURCE_DIR}" && \
@@ -114,22 +117,22 @@ cd "${PY_SOURCE_DIR}" && \
 # We need to clear the filesystem of unwanted packages before installing python
 # because some files might be confused with already installed python packages.
 
-echo -e "\nRemoving unnecessary packages ...\n"
-travis_retry apt-get purge ${DPKG_BUILD_DEPENDS}
-travis_retry apt-get autoremove
+msginfo "Removing unnecessary packages ..."
+cmdretry apt-get purge ${DPKG_BUILD_DEPENDS}
+cmdretry apt-get autoremove
 
 # This is clever uh? Figure it out myself, ha!
-travis_retry apt-get purge $( apt-mark showauto $( deborphan -a -n \
+cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                                 --no-show-section --guess-all --libdevel \
                                 -p standard ) )
-travis_retry apt-get autoremove
+cmdretry apt-get autoremove
 
 # This too
-travis_retry apt-get purge $( aptitude search -F%p ~c ~g )
-travis_retry apt-get autoremove
+cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get autoremove
 
-travis_retry apt-get purge ${DPKG_PRE_DEPENDS}
-travis_retry apt-get autoremove
+cmdretry apt-get purge ${DPKG_PRE_DEPENDS}
+cmdretry apt-get autoremove
 
 # Python: Installation
 # ------------------------------------------------------------------------------
@@ -137,7 +140,7 @@ travis_retry apt-get autoremove
 # ${PY_PKGS} package list. But before that, we will remove documentation and
 # other stuff we won't use.
 
-echo -e "\nInstalling python ...\n"
+msginfo "Installing python ..."
 for PKG in ${PY_PKGS}; do
     if [ -d "${PY_SOURCE_DIR}/debian/${PKG}" ]; then
         for DIR in ${PY_CLEAN_DIRS}; do
@@ -155,20 +158,20 @@ ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
 # Now we will install the libraries python needs to properly function, and also 
 # update the distro to ${DEFAULT_SUITE}
 
-echo -e "\nInstalling python runtime dependencies ...\n"
+msginfo "Installing python runtime dependencies ..."
 echo "deb ${MIRROR} ${DEFAULT_SUITE} main" > /etc/apt/sources.list
 
-travis_retry apt-get update
-travis_retry apt-get install apt
-travis_retry apt-get upgrade
-travis_retry apt-get dist-upgrade
-travis_retry apt-get install ${DPKG_DEPENDS}
+cmdretry apt-get update
+cmdretry apt-get install apt
+cmdretry apt-get upgrade
+cmdretry apt-get dist-upgrade
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Pip: Installation
 # ------------------------------------------------------------------------------
 # Let's bring in the old reliable pip guy.
 
-echo -e "\nInstalling pip ...\n"
+msginfo "Installing pip ..."
 curl -fsSL ${PIPURL} | ${PY_VER_STR}
 pip${PY_VER_NUM} install --no-cache-dir --upgrade --force-reinstall pip
 
@@ -176,7 +179,7 @@ pip${PY_VER_NUM} install --no-cache-dir --upgrade --force-reinstall pip
 # ------------------------------------------------------------------------------
 # Buncha files we won't use.
 
-echo -e "\nRemoving unnecessary files ...\n"
+msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
 rm -rf ${PY_SOURCE_TEMPDIR}
