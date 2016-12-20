@@ -16,7 +16,8 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.schema-version="1.0"
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
-    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive"
+    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
+    DEBIAN_SUITE="stretch"
 
 COPY *.sh /usr/share/docker/debian/stretch/
 RUN bash /usr/share/docker/debian/stretch/build-image.sh
