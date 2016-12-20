@@ -4,10 +4,9 @@
 set -ex
 
 # Some initial configuration
-BASEDIR="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) )"
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SECMIRROR="http://security.debian.org"
 MIRROR="http://httpredir.debian.org/debian"
-SUITE="jessie"
 
 # Packages to install at the end
 DPKG_DEPENDS="iproute2 inetutils-ping locales curl ca-certificates"
