@@ -8,7 +8,7 @@ env:
         # Docker Hub username ${DH_USERNAME}
         - DH_USERNAME="luisalejandro"
         # Docker Hub password ${DH_PASSWORD}
-        - secure: "S1w8lEGK7hBN6VN3V3qVf+diTu74qg5A3vvBVzI9cqbT7mrCUn8jSjsCEsdq4Iru4eFRY02SIkGUbGKJ8bqvfTVqIqydEygjR6FuBAAYLkCxO59IzKt9WZYpUaVS9mLyifpIdWoq97bFvPTuaF1RZl2VeeSL4DtAJszFVw+A7NiCt+KD6Id2/ITY8F4EvopxuOTojiSihJWAR1NfMorSIuRVrSbUVJWJfu9ylTVTfPekXD219YH9OorGhZqjH8xG+3jsX7rSKfU2EHfTUnMgONPpAx69vDJozsqcGraPUKjQ5G8pFwWd6uAq5KXiLJUPXr/tbcnf11QtWw+/WUofwwItP/JyIlAPS7kOeLf+nbIZcbFbM62nBT5pnZobmkCynr/xlTg4usL4z1rqmXFYlaJWlHPCO6LFUMKbDTazYCrGvjOfgsUwWY9v/4tklbOO7eiQIoF3PWh0NJQpgVuAI7CppzL76M+Hy8LWjNnN278lXoTH91UW4oB8oAnoiY1mUuOQUChzboOuHw6EjaoX03vak1Vt9ZlATJyHZCwYXwHa7SBEDtBbPiGvn0bQjv7Wf71leFi2IsZ1Rwj6KQqYSFFcPltMf8nYP5+itLbxHsgs7sRkrqxyU6vv0Oj34YyDm7vStAzHQswpULJrKYy7P+Fl3LTLDs7N8yxjaBBGA7I="
+        - secure: "oDB6+RmyILUoZ3Ha1A/Oczrh6nHKYZm3wkf91ZmtRZQk1LeDie7ra6d8GsBCjyhQgk5TeZool+MNFIixFuiMg5Scgx381dOLgcIS5Cwg71OOCgnRIjz30zuU/iXh0+yIcGgqMzzZOl0ZGEt77aLmFSdgXK1iwnZdx9HujnLrAG/44d4+KC+6F2i4grW4KrGt2h+SeDnHvewS4iNpqGRbNlHqB3HuUZJVKEyPM/9ITjnj/4xnOqgdHI/amHqre9gbos02Dq54KAF8UYu34d/miLDzc7j8EiyVAi9LhV9K85z5RvuFJhxZB/ntOI08mY/0/KR06DUlAOYicdVnAwPJ7jAWItrRk/bpDwYFTzNcGd0kRHCLKRUFtz1olJhx2a/Gt2xkKusmAjJgrGjtIYCdvB79zY0ChRjQYbV8FwwZw9xyT+l0sg79nUWzsMCOJc2dBpTFXHyN2wnUrIsjtEBtyW0mvd1XcC9iYfInxCGyIkbLYukP+ECpZtNX44TLw47obyfUIVO/w1samgqGurloEjtJ/ry2HCIQJfcMWdS83y5nsp6POi/fa5CTtN9QPRie8QFFPfjZwwNCxW0bLj6xXXEqaRRBR+WDlA4en/j6YRNCjN2eKc7oT5sxE9b4RPbZpcEk0WeYHkCN5NOWQQNrH95hUjWZa/cu0b3RADNJ0/8="
         # luisalejandro/debian MicroBadger API end ${MB_DEBIAN_API_END}
         - secure: "fvEcXAkKptvKSrR0nVKT0meXdUzxnNBFMxbHwdpsnqT92Re6IUYCdVnyexdyXEmtZH30pagnwVMSdPyHZ+Nmk1fcMi9kQE/JzItH5plrIOfZdXw4BsVYOtfgxOayVUc6Hw8RlLz9sPDmNp3lzXjJ6npf78vKIXJfhZWrZdTvfd2wMwTLdofTx7aT5Pj4xSmZWQlJxHDXjNtC7fwv8s9ZMzWVNG++2zwKPnuZAhzRrOmgLpLCkOagT2VE1ms++BNiEuQi0JzpjvHA+J3uLtapmelS2JKA7urDsYltvyQqjfsCC1hd8uJ9474OaJf/vi31VnBqxFR/9f2SRpTlBRUrUMiCyqghPTVOBS/sCpCWqUx5O2x2mfKi6wTsgdlxpyewAewICH0m4zRiMc48uHIkvH1PJoqywWbQTvJikYH3CzCuvCiXCn+bQdlE7Kfh4KubrEJkq4+nUU1MhzH5KZWsQ4LI2Z9oj8WAbyEGpMvk0S/f7VSwykKyDFSq6gkFbzZFXuruzwfRo0E3a2s2/THTaCq3E1rXvqr5QZ0IiJwAy5jmBYDVePZO07g+fk61+hSBYkosFhT5f98wCDHod+dLI2CTVGf1zsn9+EMjFa36yc64G89TzGd++J+/r8KwuxKiZwvvJn7yPwLC0eKpzFMNvhtcEMAdgxUhAraPyjioMIY="
         # luisalejandro/python MicroBadger API end ${MB_PYTHON_API_END}
@@ -37,6 +37,7 @@ env:
         - DOCKER_IMAGE_NAME="luisalejandro/latex:latest" DOCKER_IMAGE_DIR="latex"
 script: bash travis-build-image.sh
 after_success:
+    - set -e
     - docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
     - docker push ${DOCKER_IMAGE_NAME}
     - eval "MB_CURRENT_API_END=\${MB_$( echo ${DOCKER_IMAGE_NAME%%:*} | awk -F'/' '{print toupper($2)}' )_API_END}"
