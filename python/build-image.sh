@@ -14,6 +14,13 @@ PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
 
+# Let's guess which pip installer we need
+if [ "${PY_VER_NUM}" == "3.2" ]; then
+    PIPURL="https://bootstrap.pypa.io/3.2/get-pip.py"
+else
+    PIPURL="https://bootstrap.pypa.io/get-pip.py"
+fi
+
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
 PY_PKGS="${PY_VER_STR} ${PY_VER_STR}-minimal lib${PY_VER_STR} \
@@ -24,11 +31,7 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
     usr/share/doc usr/share/applications"
 
 # Some tools are needed.
-DPKG_PRE_DEPENDS="aptitude deborphan gcc devscripts equivs debian-keyring \
-                  dpkg-dev"
-DPKG_DEPENDS="mime-support libbz2-1.0 libc6 libdb5.3 libexpat1 libffi6 \
-              libncursesw5 libreadline7 libsqlite3-0 libssl1.1 libtinfo5 \
-              zlib1g"
+DPKG_PRE_DEPENDS="aptitude deborphan debian-keyring"
 
 # These options are passed to make because we need to speedup the build.
 DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
@@ -53,12 +56,29 @@ apt-get install ${DPKG_PRE_DEPENDS}
 # is recommended as it was coded by a Debian Developer who already knows what
 # he's doing. Not like me.
 
-echo -e "\nDownloading python source ...\n"
-cat > /etc/apt/sources.list << EOF
-deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main
-EOF
-
+echo -e "\nConfiguring /etc/apt/sources.list ...\n"
+if [ "${PY_DEBIAN_SUITE}" == "sid" ]; then
+    {
+        echo "deb ${MIRROR} ${PY_DEBIAN_SUITE} main"
+        echo "deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main"
+    } | tee /etc/apt/sources.list > /dev/null
+elif [ "${PY_DEBIAN_SUITE}" == "experimental" ]; then
+    {
+        echo "deb ${MIRROR} ${SUITE} main"
+        echo "deb ${MIRROR} ${PY_DEBIAN_SUITE} main"
+        echo "deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main"
+    } | tee /etc/apt/sources.list > /dev/null
+else
+    {
+        echo "deb ${MIRROR} ${PY_DEBIAN_SUITE} main"
+        echo "deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main"
+        echo "deb ${MIRROR} ${PY_DEBIAN_SUITE}-updates main"
+        echo "deb ${SECMIRROR} ${PY_DEBIAN_SUITE}/updates main"
+    } | tee /etc/apt/sources.list > /dev/null
+fi
 apt-get update
+
+echo -e "\nDownloading python source ...\n"
 cd "${PY_SOURCE_TEMPDIR}" && apt-get source ${PY_VER_STR}
 
 # This is the only folder that was uncompressed (I hope) by apt-get source.
@@ -71,18 +91,12 @@ PY_SOURCE_DIR="$( ls -1d ${PY_SOURCE_TEMPDIR}/*/ | sed 's|/$||' )"
 # file which declares all build dependencies. This will generate a package 
 # depending on them that we will gracefully install with apt-get.
 
-echo -e "\nInstalling build dependencies ...\n"
-cd "${PY_SOURCE_TEMPDIR}" && mk-build-deps "${PY_SOURCE_DIR}/debian/control"
-
-cat > /etc/apt/sources.list << EOF
-deb ${MIRROR} ${PY_DEBIAN_SUITE} main
-deb ${MIRROR} ${PY_DEBIAN_SUITE}-updates main
-deb ${SECMIRROR} ${PY_DEBIAN_SUITE}/updates main
-EOF
-
-apt-get update
-dpkg -i ${PY_SOURCE_TEMPDIR}/*.deb || true
-apt-get install -f
+echo -e "\nInstalling python build dependencies ...\n"
+DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
+                        | awk '{print $2}' )"
+DPKG_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
+                    | sed "$( printf 's/^%s$//g;' ${PY_PKGS} )" )"
+apt-get install ${DPKG_BUILD_DEPENDS}
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
@@ -103,7 +117,7 @@ cd "${PY_SOURCE_DIR}" && \
 # because some files might be confused with already installed python packages.
 
 echo -e "\nRemoving unnecessary packages ...\n"
-apt-get purge ${PY_VER_STR}-build-deps
+apt-get purge ${DPKG_BUILD_DEPENDS}
 apt-get autoremove
 
 # This is clever uh? Figure it out myself, ha!
@@ -124,6 +138,7 @@ apt-get autoremove
 # ${PY_PKGS} package list. But before that, we will remove documentation and
 # other stuff we won't use.
 
+echo -e "\nInstalling python ...\n"
 for PKG in ${PY_PKGS}; do
     if [ -d "${PY_SOURCE_DIR}/debian/${PKG}" ]; then
         for DIR in ${PY_CLEAN_DIRS}; do
@@ -141,10 +156,8 @@ ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
 # Now we will install the libraries python needs to properly function, and also 
 # update the distro to ${SUITE}
 
-cat > /etc/apt/sources.list << EOF
-deb ${MIRROR} ${SUITE} main
-EOF
-
+echo -e "\nInstalling python runtime dependencies ...\n"
+echo "deb ${MIRROR} ${SUITE} main" > /etc/apt/sources.list
 apt-get update
 apt-get install apt
 apt-get upgrade
@@ -156,20 +169,8 @@ apt-get install ${DPKG_DEPENDS}
 # Let's bring in the old reliable pip guy.
 
 echo -e "\nInstalling pip ...\n"
-curl -fsSL https://bootstrap.pypa.io/get-pip.py | python
-pip install --no-cache-dir --upgrade --force-reinstall pip
-
-ln -sfv /usr/local/bin/easy_install \
-        /usr/local/bin/easy_install${PY_VER_NUM}
-
-ln -sfv /usr/local/bin/easy_install \
-        /usr/local/bin/easy_install${PY_VER_NUM_MAJOR}
-
-ln -sfv /usr/local/bin/pip \
-        /usr/local/bin/pip${PY_VER_NUM}
-
-ln -sfv /usr/local/bin/pip \
-        /usr/local/bin/pip${PY_VER_NUM_MAJOR}
+curl -fsSL ${PIPURL} | ${PY_VER_STR}
+pip${PY_VER_NUM} install --no-cache-dir --upgrade --force-reinstall pip
 
 # Final cleaning
 # ------------------------------------------------------------------------------
