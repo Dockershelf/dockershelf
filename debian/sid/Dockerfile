@@ -17,7 +17,7 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_SUITE="sid"
+    DEBIAN_RELEASE="sid"
 
 COPY *.sh /usr/share/docker/debian/sid/
 RUN bash /usr/share/docker/debian/sid/build-image.sh
