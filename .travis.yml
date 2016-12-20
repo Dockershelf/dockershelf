@@ -36,11 +36,4 @@ env:
         - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.6"
         - DOCKER_IMAGE_NAME="luisalejandro/latex:sid"
 script: bash build-image.sh ${DOCKER_IMAGE_NAME}
-after_success:
-    - set -e
-    - docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
-    - docker push ${DOCKER_IMAGE_NAME}
-    - |
-        DOCKER_IMAGE_TARGET="$( echo ${DOCKER_IMAGE_NAME%%:*} | awk -F'/' '{print toupper($2)}' )"
-        MB_CURRENT_API_END="$( eval 'echo ${MB_'"${DOCKER_IMAGE_TARGET}"'_API_END}' )"
-        curl -H 'Content-Type: application/json' --data '{update: true}' -X POST ${MB_CURRENT_API_END}
+after_success: bash push-image.sh ${DOCKER_IMAGE_NAME}

@@ -3,15 +3,16 @@
 # Exit early if there are errors and be verbose
 set -ex
 
-# Load helper functions
-source library.sh
-
 # Some initial configuration
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SECMIRROR="http://security.debian.org"
 MIRROR="http://httpredir.debian.org/debian"
 
 # Packages to install at the end
 DPKG_DEPENDS="iproute inetutils-ping locales curl ca-certificates"
+
+# Load helper functions
+source "${BASEDIR}/library.sh"
 
 # Remove tianon's config
 rm -rfv "/etc/apt/apt.conf.d/docker-clean" \

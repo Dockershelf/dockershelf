@@ -17,5 +17,5 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
 
 ENV PY_VER_NUM="3.5" PY_DEBIAN_SUITE="stretch"
 
-COPY build-image.sh /usr/share/docker/python/
+COPY *.sh /usr/share/docker/python/
 RUN bash /usr/share/docker/python/build-image.sh

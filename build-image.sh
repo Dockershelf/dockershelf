@@ -4,6 +4,14 @@ set -ex
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DOCKER_IMAGE_NAME="${1}"
+
+source "${BASEDIR}/library.sh"
+
+if [ -z "${DOCKER_IMAGE_NAME}" ]; then
+    msgerror "No Docker image name was given. Aborting."
+    exit 1
+fi
+
 DOCKER_IMAGE_DIR="${BASEDIR}/$( echo ${DOCKER_IMAGE_NAME##luisalejandro/} | sed 's|:|/|' )"
 BUILD_DATE="$( date -u +"%Y-%m-%dT%H:%M:%SZ" )"
 VCS_REF="$( git rev-parse --short HEAD )"
@@ -26,3 +34,5 @@ cd "${DOCKER_IMAGE_DIR}" && \
                  --build-arg VCS_REF="${VCS_REF}" \
                  --build-arg VERSION="${VERSION}" \
                  -t ${DOCKER_IMAGE_NAME} .
+
+rm "${DOCKER_IMAGE_DIR}"/*.sh
