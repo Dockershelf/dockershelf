@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ev
+set -ex
 
 BUILD_DATE="$( date -u +"%Y-%m-%dT%H:%M:%SZ" )"
 VERSION="${TRAVIS_COMMIT}"

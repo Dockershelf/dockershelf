@@ -3,11 +3,8 @@
 # Exit early if there are errors and be verbose.
 set -ex
 
-# Tell me where we are.
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 # Some default values.
-SUITE="sid"
+DEFAULT_SUITE="sid"
 MIRROR="http://httpredir.debian.org/debian"
 SECMIRROR="http://security.debian.org"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
@@ -31,7 +28,7 @@ PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
     usr/share/doc usr/share/applications"
 
 # Some tools are needed.
-DPKG_PRE_DEPENDS="aptitude deborphan debian-keyring"
+DPKG_PRE_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
 
 # These options are passed to make because we need to speedup the build.
 DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
@@ -43,9 +40,9 @@ DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
 # build dependencies.
 
 echo -e "\nInstalling pre dependencies ...\n"
-apt-get update
-apt-get upgrade
-apt-get install ${DPKG_PRE_DEPENDS}
+travis_retry apt-get update
+travis_retry apt-get upgrade
+travis_retry apt-get install ${DPKG_PRE_DEPENDS}
 
 # Python: Download
 # ------------------------------------------------------------------------------
@@ -64,7 +61,7 @@ if [ "${PY_DEBIAN_SUITE}" == "sid" ]; then
     } | tee /etc/apt/sources.list > /dev/null
 elif [ "${PY_DEBIAN_SUITE}" == "experimental" ]; then
     {
-        echo "deb ${MIRROR} ${SUITE} main"
+        echo "deb ${MIRROR} ${DEFAULT_SUITE} main"
         echo "deb ${MIRROR} ${PY_DEBIAN_SUITE} main"
         echo "deb-src ${MIRROR} ${PY_DEBIAN_SUITE} main"
     } | tee /etc/apt/sources.list > /dev/null
@@ -76,10 +73,11 @@ else
         echo "deb ${SECMIRROR} ${PY_DEBIAN_SUITE}/updates main"
     } | tee /etc/apt/sources.list > /dev/null
 fi
-apt-get update
+
+travis_retry apt-get update
 
 echo -e "\nDownloading python source ...\n"
-cd "${PY_SOURCE_TEMPDIR}" && apt-get source ${PY_VER_STR}
+cd "${PY_SOURCE_TEMPDIR}" && travis_retry apt-get source ${PY_VER_STR}
 
 # This is the only folder that was uncompressed (I hope) by apt-get source.
 # We will use it as our base source directory.
@@ -96,7 +94,7 @@ DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
                         | awk '{print $2}' )"
 DPKG_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
                     | sed "$( printf 's/^%s$//g;' ${PY_PKGS} )" )"
-apt-get install ${DPKG_BUILD_DEPENDS}
+travis_retry apt-get install ${DPKG_BUILD_DEPENDS}
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
@@ -117,20 +115,21 @@ cd "${PY_SOURCE_DIR}" && \
 # because some files might be confused with already installed python packages.
 
 echo -e "\nRemoving unnecessary packages ...\n"
-apt-get purge ${DPKG_BUILD_DEPENDS}
-apt-get autoremove
+travis_retry apt-get purge ${DPKG_BUILD_DEPENDS}
+travis_retry apt-get autoremove
 
 # This is clever uh? Figure it out myself, ha!
-apt-get purge $( apt-mark showauto $( deborphan -a -n --no-show-section \
-                                        --guess-all --libdevel -p standard ) )
-apt-get autoremove
+travis_retry apt-get purge $( apt-mark showauto $( deborphan -a -n \
+                                --no-show-section --guess-all --libdevel \
+                                -p standard ) )
+travis_retry apt-get autoremove
 
 # This too
-apt-get purge $( aptitude search -F%p ~c ~g )
-apt-get autoremove
+travis_retry apt-get purge $( aptitude search -F%p ~c ~g )
+travis_retry apt-get autoremove
 
-apt-get purge ${DPKG_PRE_DEPENDS}
-apt-get autoremove
+travis_retry apt-get purge ${DPKG_PRE_DEPENDS}
+travis_retry apt-get autoremove
 
 # Python: Installation
 # ------------------------------------------------------------------------------
@@ -154,15 +153,16 @@ ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
 # Now we will install the libraries python needs to properly function, and also 
-# update the distro to ${SUITE}
+# update the distro to ${DEFAULT_SUITE}
 
 echo -e "\nInstalling python runtime dependencies ...\n"
-echo "deb ${MIRROR} ${SUITE} main" > /etc/apt/sources.list
-apt-get update
-apt-get install apt
-apt-get upgrade
-apt-get dist-upgrade
-apt-get install ${DPKG_DEPENDS}
+echo "deb ${MIRROR} ${DEFAULT_SUITE} main" > /etc/apt/sources.list
+
+travis_retry apt-get update
+travis_retry apt-get install apt
+travis_retry apt-get upgrade
+travis_retry apt-get dist-upgrade
+travis_retry apt-get install ${DPKG_DEPENDS}
 
 # Pip: Installation
 # ------------------------------------------------------------------------------

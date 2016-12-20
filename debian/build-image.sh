@@ -4,12 +4,11 @@
 set -ex
 
 # Some initial configuration
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SECMIRROR="http://security.debian.org"
 MIRROR="http://httpredir.debian.org/debian"
 
 # Packages to install at the end
-DPKG_DEPENDS="iproute2 inetutils-ping locales curl ca-certificates"
+DPKG_DEPENDS="iproute inetutils-ping locales curl ca-certificates"
 
 # Remove tianon's config
 rm -rfv "/etc/apt/apt.conf.d/docker-clean" \
@@ -65,9 +64,9 @@ fi
 } | tee "/etc/apt/apt.conf.d/100-apt" > /dev/null
 
 # Install dependencies and upgrade
-apt-get update
-apt-get upgrade
-apt-get install ${DPKG_DEPENDS}
+travis_retry apt-get update
+travis_retry apt-get upgrade
+travis_retry apt-get install ${DPKG_DEPENDS}
 
 # Configure locales
 update-locale LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8"
