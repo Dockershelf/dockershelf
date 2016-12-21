@@ -82,9 +82,9 @@ These are python images compiled from source, using the `debian/rules` makefile 
 
 > [![](https://img.shields.io/badge/Dockerfile-python:3.6-yellow.svg)](https://github.com/LuisAlejandro/dockerfiles/blob/master/python/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.6.svg)](https://microbadger.com/images/luisalejandro/python:3.6)
 
-* `luisalejandro/python:2.7+3.5`
+* `luisalejandro/python:2.7and3.5`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:2.7+3.5-yellow.svg)](https://github.com/LuisAlejandro/dockerfiles/blob/master/python/2.7+3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:2.7+3.5.svg)](https://microbadger.com/images/luisalejandro/python:2.7+3.5)
+> [![](https://img.shields.io/badge/Dockerfile-python:2.7and3.5-yellow.svg)](https://github.com/LuisAlejandro/dockerfiles/blob/master/python/2.7and3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:2.7and3.5.svg)](https://microbadger.com/images/luisalejandro/python:2.7and3.5)
 
 &nbsp;
 
@@ -116,9 +116,9 @@ These are images based on `luisalejandro/python` images and are used to build th
 
 > [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.6-yellow.svg)](https://github.com/LuisAlejandro/dockerfiles/blob/master/pypicontents/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.6.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.6)
 
-* `luisalejandro/pypicontents:2.7+3.5`
+* `luisalejandro/pypicontents:2.7and3.5`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7+3.5-yellow.svg)](https://github.com/LuisAlejandro/dockerfiles/blob/master/pypicontents/2.7+3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.7+3.5.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.7+3.5)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7and3.5-yellow.svg)](https://github.com/LuisAlejandro/dockerfiles/blob/master/pypicontents/2.7and3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.7and3.5.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.7and3.5)
 
 &nbsp;
 
