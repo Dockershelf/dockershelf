@@ -173,7 +173,6 @@ cmdretry apt-get dist-upgrade
 
 msginfo "Installing pip ..."
 curl -fsSL ${PIPURL} | ${PY_VER_STR}
-pip${PY_VER_NUM} install --no-cache-dir --upgrade --force-reinstall pip
 
 # Final cleaning
 # ------------------------------------------------------------------------------
