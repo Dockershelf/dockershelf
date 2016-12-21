@@ -1,4 +1,12 @@
-![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/art/banner.svg)
+
+---
+
+[![](https://img.shields.io/travis/LuisAlejandro/dockershelf.svg)](https://travis-ci.org/LuisAlejandro/dockershelf)
+[![](https://cla-assistant.io/readme/badge/LuisAlejandro/dockershelf)](https://cla-assistant.io/LuisAlejandro/dockershelf)
+[![](https://badges.gitter.im/LuisAlejandro/dockershelf.svg)](https://gitter.im/LuisAlejandro/dockershelf)
+
+Current version: 0.1.0
 
 *Dockershelf* is a repository that serves as a collector for docker recipes that I've found useful for specific cases and personal applications. However, I've designed them for universal purposes, so that they can serve for other applications as well.
 

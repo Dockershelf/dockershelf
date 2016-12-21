@@ -19,5 +19,5 @@ ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
     DEBIAN_RELEASE="wheezy"
 
-COPY *.sh /usr/share/docker/debian/
-RUN bash /usr/share/docker/debian/build-image.sh
+COPY *.sh /usr/share/dockershelf/debian/
+RUN bash /usr/share/dockershelf/debian/build-image.sh
