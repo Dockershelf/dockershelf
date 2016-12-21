@@ -166,7 +166,7 @@ cmdretry apt-get dist-upgrade
 
 msginfo "Installing pip ..."
 if [ "${PY_VER_NUM}" == "3.2" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | ${PY_VER_STR} 'setuptools<30'
+    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | ${PY_VER_STR} - 'setuptools<30'
 else
     curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | ${PY_VER_STR}
 fi
