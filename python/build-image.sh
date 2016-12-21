@@ -12,41 +12,34 @@ MIRROR="http://httpredir.debian.org/debian"
 SECMIRROR="http://security.debian.org"
 DEFAULT_SUITE="sid"
 
-# Let's guess which pip installer we need
-if [ "${PY_VER_NUM}" == "3.2" ]; then
-    PIPURL="https://bootstrap.pypa.io/3.2/get-pip.py"
-else
-    PIPURL="https://bootstrap.pypa.io/get-pip.py"
-fi
-
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
 PY_PKGS="${PY_VER_STR} ${PY_VER_STR}-minimal lib${PY_VER_STR} \
     lib${PY_VER_STR}-stdlib lib${PY_VER_STR}-minimal"
 
 # These are the folders of a debian python installation that we won't need.
-PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
-    usr/share/doc usr/share/applications"
+PY_CLEAN_DIRS="/usr/share/lintian /usr/share/man /usr/share/pixmaps \
+    /usr/share/doc /usr/share/applications"
 
 # Some tools are needed.
-DPKG_PRE_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
 
 # These options are passed to make because we need to speedup the build.
-DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck nobench"
+DEB_BUILD_OPTIONS="parallel=$( nproc ) nocheck nobench"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
 
-# Apt: Install pre depends
+# Apt: Install tools
 # ------------------------------------------------------------------------------
-# We need to install the packages defined at ${DPKG_PRE_DEPENDS} because
+# We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
 # some commands are needed to download the source code before installing the
 # build dependencies.
 
-msginfo "Installing pre dependencies ..."
+msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get upgrade
-cmdretry apt-get install ${DPKG_PRE_DEPENDS}
+cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Python: Download
 # ------------------------------------------------------------------------------
@@ -87,18 +80,17 @@ cd "${PY_SOURCE_TEMPDIR}" && cmdretry apt-get source ${PY_VER_STR}
 # We will use it as our base source directory.
 PY_SOURCE_DIR="$( ls -1d ${PY_SOURCE_TEMPDIR}/*/ | sed 's|/$||' )"
 
-# Apt: Install build depends
+# Apt: Install build and runtime depends
 # ------------------------------------------------------------------------------
-# Now we use mk-build-deps of devscripts package to parse the debian/control
-# file which declares all build dependencies. This will generate a package 
-# depending on them that we will gracefully install with apt-get.
+# Now we use some shell/apt plumbing to get build depends and runtime depends.
 
-msginfo "Installing python build dependencies ..."
+msginfo "Installing python build and runtime dependencies ..."
 DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
-                        | awk '{print $2}' )"
-DPKG_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
-                    | sed "$( printf 's/^%s$//g;' ${PY_PKGS} )" )"
-cmdretry apt-get install ${DPKG_BUILD_DEPENDS}
+    | awk '{print $2}' | xargs )"
+DPKG_RUN_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
+    | xargs | sed "$( printf 's/\s%s\s/ /g;' ${PY_PKGS} )" )"
+cmdretry apt-get install $( printf '%s\n' ${DPKG_BUILD_DEPENDS} ${DPKG_RUN_DEPENDS} \
+    | uniq | xargs )
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
@@ -119,7 +111,8 @@ cd "${PY_SOURCE_DIR}" && \
 # because some files might be confused with already installed python packages.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge ${DPKG_BUILD_DEPENDS}
+cmdretry apt-get purge $( echo ${DPKG_BUILD_DEPENDS} \
+    | sed "$( printf 's/\s%s\s/ /g;' ${DPKG_RUN_DEPENDS} )" )
 cmdretry apt-get autoremove
 
 # This is clever uh? Figure it out myself, ha!
@@ -132,7 +125,7 @@ cmdretry apt-get autoremove
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
 cmdretry apt-get autoremove
 
-cmdretry apt-get purge ${DPKG_PRE_DEPENDS}
+cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Python: Installation
@@ -159,22 +152,24 @@ ln -sfv /usr/bin/${PY_VER_STR} /usr/bin/python
 # Now we will install the libraries python needs to properly function, and also 
 # update the distro to ${DEFAULT_SUITE}
 
-msginfo "Installing python runtime dependencies ..."
+msginfo "Upgrading image to ${DEFAULT_SUITE} ..."
 echo "deb ${MIRROR} ${DEFAULT_SUITE} main" > /etc/apt/sources.list
 
 cmdretry apt-get update
 cmdretry apt-get install apt
 cmdretry apt-get upgrade
 cmdretry apt-get dist-upgrade
-cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Pip: Installation
 # ------------------------------------------------------------------------------
 # Let's bring in the old reliable pip guy.
 
 msginfo "Installing pip ..."
-curl -fsSL ${PIPURL} | ${PY_VER_STR}
-pip${PY_VER_NUM} install --no-cache-dir --upgrade --force-reinstall pip
+if [ "${PY_VER_NUM}" == "3.2" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | ${PY_VER_STR} - 'setuptools<30'
+else
+    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | ${PY_VER_STR}
+fi
 
 # Final cleaning
 # ------------------------------------------------------------------------------

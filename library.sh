@@ -19,6 +19,7 @@ msgerror(){
 }
 
 cmdretry() {
+    set +ex
     local RESULT=0
     local COUNT=1
 
@@ -42,5 +43,6 @@ cmdretry() {
         msgerror "The command \"$@\" failed 3 times."
     fi
 
+    set -ex
     return ${RESULT}
 }
