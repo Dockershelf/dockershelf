@@ -12,13 +12,6 @@ MIRROR="http://httpredir.debian.org/debian"
 SECMIRROR="http://security.debian.org"
 DEFAULT_SUITE="sid"
 
-# Let's guess which pip installer we need
-if [ "${PY_VER_NUM}" == "3.2" ]; then
-    PIPURL="https://bootstrap.pypa.io/3.2/get-pip.py"
-else
-    PIPURL="https://bootstrap.pypa.io/get-pip.py"
-fi
-
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
 PY_PKGS="${PY_VER_STR} ${PY_VER_STR}-minimal lib${PY_VER_STR} \
@@ -172,7 +165,11 @@ cmdretry apt-get dist-upgrade
 # Let's bring in the old reliable pip guy.
 
 msginfo "Installing pip ..."
-curl -fsSL ${PIPURL} | ${PY_VER_STR}
+if [ "${PY_VER_NUM}" == "3.2" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | ${PY_VER_STR} 'setuptools<30'
+else
+    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | ${PY_VER_STR}
+fi
 
 # Final cleaning
 # ------------------------------------------------------------------------------
