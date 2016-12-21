@@ -1,6 +1,6 @@
 Contributor License Agreement Version 1.0
 
-Copyright (C) 2016, PyPIContents Developers.
+Copyright (C) 2016, Dockershelf Developers.
 
 Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
 
