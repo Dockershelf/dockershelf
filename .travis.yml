@@ -37,5 +37,9 @@ env:
         - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.6"
         - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.7and3.5"
         - DOCKER_IMAGE_NAME="luisalejandro/latex:sid"
-script: travis_wait 40 bash build-image.sh ${DOCKER_IMAGE_NAME}
+install:
+    - gem install docker-api serverspec
+    - npm install -g dockerfile_lint
+before_script: bash build-image.sh ${DOCKER_IMAGE_NAME}
+script: bash test-image.sh ${DOCKER_IMAGE_NAME}
 after_success: bash push-image.sh ${DOCKER_IMAGE_NAME}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Exit early if there are errors and be verbose
-set -ex
+set -euxo pipefail
 
 # Some initial configuration
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
