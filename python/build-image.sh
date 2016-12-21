@@ -25,8 +25,8 @@ PY_PKGS="${PY_VER_STR} ${PY_VER_STR}-minimal lib${PY_VER_STR} \
     lib${PY_VER_STR}-stdlib lib${PY_VER_STR}-minimal"
 
 # These are the folders of a debian python installation that we won't need.
-PY_CLEAN_DIRS="usr/share/lintian usr/share/man usr/share/pixmaps \
-    usr/share/doc usr/share/applications"
+PY_CLEAN_DIRS="/usr/share/lintian /usr/share/man /usr/share/pixmaps \
+    /usr/share/doc /usr/share/applications"
 
 # Some tools are needed.
 DPKG_PRE_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
@@ -95,9 +95,9 @@ PY_SOURCE_DIR="$( ls -1d ${PY_SOURCE_TEMPDIR}/*/ | sed 's|/$||' )"
 
 msginfo "Installing python build dependencies ..."
 DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
-                        | awk '{print $2}' )"
+                        | awk '{print $2}' | xargs )"
 DPKG_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
-                    | sed "$( printf 's/^%s$//g;' ${PY_PKGS} )" )"
+                    | xargs | sed "$( printf 's/\s%s\s/ /g;' ${PY_PKGS} )" )"
 cmdretry apt-get install ${DPKG_BUILD_DEPENDS}
 
 # Python: Compilation
