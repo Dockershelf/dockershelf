@@ -33,10 +33,10 @@ describe "Docker image" do
         it 'should contain these files' do
             expect(file('/etc/debian_version')).to exist
             expect(file('/etc/os-release')).to exist
-            expect(file('/usr/share/docker/debian/clean-apt.sh')).to exist
-            expect(file('/usr/share/docker/debian/clean-dpkg.sh')).to exist
-            expect(file('/usr/share/docker/debian/library.sh')).to exist
-            expect(file('/usr/share/docker/debian/build-image.sh')).to exist
+            expect(file('/usr/share/dockershelf/debian/clean-apt.sh')).to exist
+            expect(file('/usr/share/dockershelf/debian/clean-dpkg.sh')).to exist
+            expect(file('/usr/share/dockershelf/debian/library.sh')).to exist
+            expect(file('/usr/share/dockershelf/debian/build-image.sh')).to exist
             expect(file('/etc/apt/apt.conf.d/100-apt')).to exist
             expect(file('/etc/dpkg/dpkg.cfg.d/100-dpkg')).to exist
             expect(file('/etc/apt/sources.list')).to exist

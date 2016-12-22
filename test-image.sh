@@ -19,4 +19,4 @@ DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TARGET%%:*}"
 
 # dockerfile_lint -f "${DOCKER_IMAGE_DIR}/Dockerfile"
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" \
-    DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" rspec -c "${BASEDIR}/test-image.rb"
+    DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" rspec -c -f d "${BASEDIR}/test-image.rb"
