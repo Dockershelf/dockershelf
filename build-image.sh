@@ -75,4 +75,4 @@ cd "${DOCKER_IMAGE_DIR}" && \
         -t ${DOCKER_IMAGE_NAME} .
 
 # Remove unnecessary files
-rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}/base"
+sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}/base"
