@@ -151,7 +151,7 @@ Apt::Update::Post-Invoke { "${APT_POST_HOOK}"; };
 Dpkg::Post-Invoke { "${DPKG_POST_HOOK}"; };
 EOF
 
-cat >> "${TARGET}/etc/bash.bashrc" << EOF
+cat >> "${TARGET}/etc/bash.bashrc" << 'EOF'
 # Enable bash auto completion
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
@@ -171,9 +171,9 @@ ANSI_RED="\[\033[38;5;167m\]"
 ANSI_DARK_RED="\[\033[38;5;088m\]"
 ANSI_OFF="\[\033[0m\]"
 PS1="${ANSI_RED}[\u@${ANSI_DARK_RED}\h]${ANSI_OFF}:\w\$ "
-EOF
+'EOF'
 
-cat > "${TARGET}/etc/motd" << EOF
+cat > "${TARGET}/etc/motd" << 'EOF'
            This image is part of            
  ,-.          ,               .       .     
  |  \         |               |       |  ,- 
@@ -183,7 +183,7 @@ cat > "${TARGET}/etc/motd" << EOF
                                        -'   
         For more information, visit         
 https://github.com/LuisAlejandro/dockershelf
-EOF
+'EOF'
 
 # Export some configuration variables before chrooting
 export LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
