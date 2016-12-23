@@ -1,4 +1,4 @@
-FROM luisalejandro/debian:stretch
+FROM dockershelf/debian:stretch
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE
@@ -15,7 +15,7 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.version=${VERSION} \
       ve.com.huntingbears.schema-version="1.0"
 
-ENV PY_VER_NUM="3.5" PY_DEBIAN_SUITE="stretch"
+ENV PY_VER_NUM="3.5" PY_DEBIAN_SUITE="stretch" PYTHONIOENCODING="UTF-8"
 
 COPY *.sh /usr/share/dockershelf/python/
 RUN bash /usr/share/dockershelf/python/build-image.sh

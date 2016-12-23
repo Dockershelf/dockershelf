@@ -3,39 +3,45 @@ services: docker
 dist: trusty
 group: edge
 language: ruby
+addons:
+    apt:
+        sources:
+            - debian-sid
+        packages:
+            - debootstrap
 env:
     global:
         # Docker Hub username ${DH_USERNAME}
         - DH_USERNAME="luisalejandro"
         # Docker Hub password ${DH_PASSWORD}
         - secure: "oDB6+RmyILUoZ3Ha1A/Oczrh6nHKYZm3wkf91ZmtRZQk1LeDie7ra6d8GsBCjyhQgk5TeZool+MNFIixFuiMg5Scgx381dOLgcIS5Cwg71OOCgnRIjz30zuU/iXh0+yIcGgqMzzZOl0ZGEt77aLmFSdgXK1iwnZdx9HujnLrAG/44d4+KC+6F2i4grW4KrGt2h+SeDnHvewS4iNpqGRbNlHqB3HuUZJVKEyPM/9ITjnj/4xnOqgdHI/amHqre9gbos02Dq54KAF8UYu34d/miLDzc7j8EiyVAi9LhV9K85z5RvuFJhxZB/ntOI08mY/0/KR06DUlAOYicdVnAwPJ7jAWItrRk/bpDwYFTzNcGd0kRHCLKRUFtz1olJhx2a/Gt2xkKusmAjJgrGjtIYCdvB79zY0ChRjQYbV8FwwZw9xyT+l0sg79nUWzsMCOJc2dBpTFXHyN2wnUrIsjtEBtyW0mvd1XcC9iYfInxCGyIkbLYukP+ECpZtNX44TLw47obyfUIVO/w1samgqGurloEjtJ/ry2HCIQJfcMWdS83y5nsp6POi/fa5CTtN9QPRie8QFFPfjZwwNCxW0bLj6xXXEqaRRBR+WDlA4en/j6YRNCjN2eKc7oT5sxE9b4RPbZpcEk0WeYHkCN5NOWQQNrH95hUjWZa/cu0b3RADNJ0/8="
-        # luisalejandro/debian MicroBadger API end ${MB_DEBIAN_API_END}
+        # dockershelf/debian MicroBadger API end ${MB_DEBIAN_API_END}
         - secure: "fvEcXAkKptvKSrR0nVKT0meXdUzxnNBFMxbHwdpsnqT92Re6IUYCdVnyexdyXEmtZH30pagnwVMSdPyHZ+Nmk1fcMi9kQE/JzItH5plrIOfZdXw4BsVYOtfgxOayVUc6Hw8RlLz9sPDmNp3lzXjJ6npf78vKIXJfhZWrZdTvfd2wMwTLdofTx7aT5Pj4xSmZWQlJxHDXjNtC7fwv8s9ZMzWVNG++2zwKPnuZAhzRrOmgLpLCkOagT2VE1ms++BNiEuQi0JzpjvHA+J3uLtapmelS2JKA7urDsYltvyQqjfsCC1hd8uJ9474OaJf/vi31VnBqxFR/9f2SRpTlBRUrUMiCyqghPTVOBS/sCpCWqUx5O2x2mfKi6wTsgdlxpyewAewICH0m4zRiMc48uHIkvH1PJoqywWbQTvJikYH3CzCuvCiXCn+bQdlE7Kfh4KubrEJkq4+nUU1MhzH5KZWsQ4LI2Z9oj8WAbyEGpMvk0S/f7VSwykKyDFSq6gkFbzZFXuruzwfRo0E3a2s2/THTaCq3E1rXvqr5QZ0IiJwAy5jmBYDVePZO07g+fk61+hSBYkosFhT5f98wCDHod+dLI2CTVGf1zsn9+EMjFa36yc64G89TzGd++J+/r8KwuxKiZwvvJn7yPwLC0eKpzFMNvhtcEMAdgxUhAraPyjioMIY="
-        # luisalejandro/python MicroBadger API end ${MB_PYTHON_API_END}
+        # dockershelf/python MicroBadger API end ${MB_PYTHON_API_END}
         - secure: "Ie55dMoe4lmjeDJtezVofKHD/Ir65p1amt5sq7dZ15sB+YdmiMcK6F8zAUPLvZrMb8I015pjcexz9mlL51SlAPm3AS6mO9akpDLJrMKJTZKxYAGv25+kCLZGsPMQ/nLtZfrLLOyKPgM+qAIxrk4EKFefjyb82S1DRY+M+kX2VpIYg1vJOlvIdBSVFUM5po9YIbtBqnw3kLQF1NuycsIt2mjr8mhV0oRYOwQax/V7AQIjPe4EGecTB03SR1JdF/PaBhWR7yAaxrYetNxovLOFxfTBxeJjrGFzYV3rC3chVnSyY92ex+2MQkrQg8bHmKhO1sMfRmW0TuinCDkH8rwixtJK9pbaZY4vm4bC3ULhrsdYbE/bLYJwXtIqKeyndC1Z3pUYYtvTTSUYHuiWeE3rfqGkwgKg4GjL4PBXy6P9W0TVcC+KBGKAiPP9JosOAF2A56rc//zpbTSNtuF3vWfHDfdPHtXipcR2EpH6U1m4OThYh5uB9RjZdED6afAswRFjf5twNCvSGFpAsMZiZhevNLPZBKJUEc/hPHdHpuqKaaQDty6Y8Xt1KCPVGaGVLzJYb+JQYDEfDkGKY0hgxOXd99fBvfLFLG3YkporG2Ux6FLGju7pXq13ovHXzyke6n7pUtUN5ouUH2MYX+TbaUy/FSg5NSa8cf8Oq1T7nCaET2A="
-        # luisalejandro/pypicontents MicroBadger API end ${MB_PYPICONTENTS_API_END}
+        # dockershelf/pypicontents MicroBadger API end ${MB_PYPICONTENTS_API_END}
         - secure: "WnkVaeBym5NfUTHgzCykXdii97zu9UOtRTJSxuA/qBkDiT19pMKJKHClLOJz2HrpQ5TvNfotnQgBUsgI2RjvwpXu/WaXRePUbP0VLy1MPrp2QHGbOk6yOki5ca4X14FpPFos5SMgSOVAPby6mEKwhFnQh/EtVJcv6tSgoxC4qJJXqZXi8CpAS6ZuA4ICsMVQWYvpcUQtG3R4OZ5ExGml9yyv4PAqUR/Auwzsolce5+pWv5XweuTXwUt5145T5KiZQP2XDpoNUCqYrbp6pZmRBDHmf5m6PH9nM2mPTkXkRYK7bodp7n6DvFnMH0+dqt6K+qDqYAnY5/522UilAHwuW5Coa5DpigqVat8wlWL2s7uzffxAoEmI0504aNTKB+OMQVfBLtxdrZB5DyNtW9V6DVGqYneEZwENhTk2Dmndkh3TJZhpVOdJ+ZrGI86bnXFgEbdmyWGFzat/BSglFUBe7LNuYrV4mEGhJCBksOdTi2Oq8yqcL32gLgczm7FlfWJDFngRBPIcn+CG9jtwHq/Qk3lFh1fzMsp50alI00KDfMRxg39yu4SNhl0CCoAmxVq2dWwghHmLPdu1Ry30gf1fpnusCh2Pbs6lsPLjA6wOwC5b43R77CNZlzlaBNbW6nAXaTdxzarYFXpE2NTrh3Wp5JGeOsy5+qO9GEOIdHjEpQ4="
-        # luisalejandro/latex MicroBadger API end ${MB_LATEX_API_END}
+        # dockershelf/latex MicroBadger API end ${MB_LATEX_API_END}
         - secure: "TGrnfWpZ814Vn9PfLgEfyPaArx+AnOpJR/CrhSDKNsn76LekpJhcpY/lXATpyLusmgNrAoV0vv7orXdJvDIEYf/nmNigUtQ/TcDmTbl7c8Eq36gN84zK2vPPvgljP4dTjpAbjPFdLGnTyifKZ6vOjYrlRDjfTxcrmKNHPtOxupNCvxY7DP//A/KCmVWY6l1Eyraa9SeyZn1EknVh2qEqY8YZvc3MVUCMya4yw2KEfZbp+ZhXD9D/1+xlKXfKX34v3IGWnLgnrrhjI+8MtKe/K60t7bNvuk5qnR8JhTv2EuUaRH30jG7+htZCgU9hxOrLNXIPFX7KXiOOTBd4rdAmhCXWVHrr9MTAL938weQTrGtOZU1ABFzTHCVS2KGzQRgX5sRu52Lkn6tsrgY9O+6L3I8KLeWVp87oGk96cC5o7aII74WHzoZa0FnAl30DgUzj2pwRH3uxpsusu+k+MR0izacVeUxNaEaxcBk/yJDg6s1WabuNWOs5wUYDBN9Jhf/aHxo/SQx3+pW390S+2mmRKjzAybtBFWae29GM3jyrxRMc/LxyZtpf1SMwsFf5L9zZeTChsvkXOO2BJ1HQ6tfYxkfPy81SAK8o/K5q7na9Ki7Rl9w/gIlApxQKTPtgoAnA9yolDoN+LDLtHE8oHfrVSeBtR7aySzIoPlDasIkZhTQ="
     matrix:
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:wheezy"
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:jessie"
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:stretch"
-        - DOCKER_IMAGE_NAME="luisalejandro/debian:sid"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:2.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:2.7"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.2"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.4"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.5"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:3.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/python:2.7and3.5"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.7"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.2"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.4"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.5"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:3.6"
-        - DOCKER_IMAGE_NAME="luisalejandro/pypicontents:2.7and3.5"
-        - DOCKER_IMAGE_NAME="luisalejandro/latex:sid"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:wheezy"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:jessie"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:stretch"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:sid"
+        - DOCKER_IMAGE_NAME="dockershelf/python:2.6"
+        - DOCKER_IMAGE_NAME="dockershelf/python:2.7"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.2"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.4"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.5"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.6"
+        - DOCKER_IMAGE_NAME="dockershelf/python:2.7and3.5"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:2.6"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:2.7"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:3.2"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:3.4"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:3.5"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:3.6"
+        - DOCKER_IMAGE_NAME="dockershelf/pypicontents:2.7and3.5"
+        - DOCKER_IMAGE_NAME="dockershelf/latex:sid"
 script: travis_wait 40 bash build-image.sh ${DOCKER_IMAGE_NAME}
 after_success: bash push-image.sh ${DOCKER_IMAGE_NAME}

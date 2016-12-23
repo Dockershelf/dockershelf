@@ -3,7 +3,7 @@
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016, Dockershelf Developers.
 #
-#   Please refer to AUTHORS.rst for a complete list of Copyright holders.
+#   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
 #   Dockershelf is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by

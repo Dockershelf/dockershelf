@@ -44,21 +44,21 @@ bash build-image.sh [docker image name]
 
 These are images similar to the official, but with some slightly different configurations. Check out their Dockerfiles for more details.
 
-* `luisalejandro/debian:sid`
+* `dockershelf/debian:sid`
 
-> [![](https://img.shields.io/badge/Dockerfile-debian:sid-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:sid.svg)](https://microbadger.com/images/luisalejandro/debian:sid)
+> [![](https://img.shields.io/badge/Dockerfile-debian:sid-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/debian:sid.svg)](https://microbadger.com/images/dockershelf/debian:sid)
 
-* `luisalejandro/debian:stretch`
+* `dockershelf/debian:stretch`
 
-> [![](https://img.shields.io/badge/Dockerfile-debian:stretch-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/stretch/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:stretch.svg)](https://microbadger.com/images/luisalejandro/debian:stretch)
+> [![](https://img.shields.io/badge/Dockerfile-debian:stretch-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/stretch/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/debian:stretch.svg)](https://microbadger.com/images/dockershelf/debian:stretch)
 
-* `luisalejandro/debian:jessie`
+* `dockershelf/debian:jessie`
 
-> [![](https://img.shields.io/badge/Dockerfile-debian:jessie-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/jessie/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:jessie.svg)](https://microbadger.com/images/luisalejandro/debian:jessie)
+> [![](https://img.shields.io/badge/Dockerfile-debian:jessie-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/jessie/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/debian:jessie.svg)](https://microbadger.com/images/dockershelf/debian:jessie)
 
-* `luisalejandro/debian:wheezy`
+* `dockershelf/debian:wheezy`
 
-> [![](https://img.shields.io/badge/Dockerfile-debian:wheezy-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/wheezy/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/debian:wheezy.svg)](https://microbadger.com/images/luisalejandro/debian:wheezy)
+> [![](https://img.shields.io/badge/Dockerfile-debian:wheezy-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/wheezy/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/debian:wheezy.svg)](https://microbadger.com/images/dockershelf/debian:wheezy)
 
 &nbsp;
 
@@ -66,78 +66,78 @@ These are images similar to the official, but with some slightly different confi
 
 These are python images compiled from source, using the `debian/rules` makefile from debian's python source. These images are then updated to Debian Sid. Check out their Dockerfiles for more details.
 
-* `luisalejandro/python:2.6`
+* `dockershelf/python:2.6`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:2.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:2.6.svg)](https://microbadger.com/images/luisalejandro/python:2.6)
+> [![](https://img.shields.io/badge/Dockerfile-python:2.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.6/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:2.6.svg)](https://microbadger.com/images/dockershelf/python:2.6)
 
-* `luisalejandro/python:2.7`
+* `dockershelf/python:2.7`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:2.7-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:2.7.svg)](https://microbadger.com/images/luisalejandro/python:2.7)
+> [![](https://img.shields.io/badge/Dockerfile-python:2.7-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:2.7.svg)](https://microbadger.com/images/dockershelf/python:2.7)
 
-* `luisalejandro/python:3.2`
+* `dockershelf/python:3.2`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:3.2-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.2/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.2.svg)](https://microbadger.com/images/luisalejandro/python:3.2)
+> [![](https://img.shields.io/badge/Dockerfile-python:3.2-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.2/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:3.2.svg)](https://microbadger.com/images/dockershelf/python:3.2)
 
-* `luisalejandro/python:3.4`
+* `dockershelf/python:3.4`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:3.4-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.4/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.4.svg)](https://microbadger.com/images/luisalejandro/python:3.4)
+> [![](https://img.shields.io/badge/Dockerfile-python:3.4-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.4/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:3.4.svg)](https://microbadger.com/images/dockershelf/python:3.4)
 
-* `luisalejandro/python:3.5`
+* `dockershelf/python:3.5`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.5.svg)](https://microbadger.com/images/luisalejandro/python:3.5)
+> [![](https://img.shields.io/badge/Dockerfile-python:3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:3.5.svg)](https://microbadger.com/images/dockershelf/python:3.5)
 
-* `luisalejandro/python:3.6`
+* `dockershelf/python:3.6`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:3.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:3.6.svg)](https://microbadger.com/images/luisalejandro/python:3.6)
+> [![](https://img.shields.io/badge/Dockerfile-python:3.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:3.6.svg)](https://microbadger.com/images/dockershelf/python:3.6)
 
-* `luisalejandro/python:2.7and3.5`
+* `dockershelf/python:2.7and3.5`
 
-> [![](https://img.shields.io/badge/Dockerfile-python:2.7and3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7and3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/python:2.7and3.5.svg)](https://microbadger.com/images/luisalejandro/python:2.7and3.5)
+> [![](https://img.shields.io/badge/Dockerfile-python:2.7and3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7and3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/python:2.7and3.5.svg)](https://microbadger.com/images/dockershelf/python:2.7and3.5)
 
 &nbsp;
 
 ## PyPIContents
 
-These are images based on `luisalejandro/python` images and are used to build the [PyPIContents Index](https://github.com/LuisAlejandro/pypicontents). Check out their Dockerfiles for more details.
+These are images based on `dockershelf/python` images and are used to build the [PyPIContents Index](https://github.com/LuisAlejandro/pypicontents). Check out their Dockerfiles for more details.
 
-* `luisalejandro/pypicontents:2.6`
+* `dockershelf/pypicontents:2.6`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.6.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.6)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.6/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:2.6.svg)](https://microbadger.com/images/dockershelf/pypicontents:2.6)
 
-* `luisalejandro/pypicontents:2.7`
+* `dockershelf/pypicontents:2.7`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.7/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.7.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.7)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.7/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:2.7.svg)](https://microbadger.com/images/dockershelf/pypicontents:2.7)
 
-* `luisalejandro/pypicontents:3.2`
+* `dockershelf/pypicontents:3.2`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.2-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.2/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.2.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.2)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.2-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.2/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:3.2.svg)](https://microbadger.com/images/dockershelf/pypicontents:3.2)
 
-* `luisalejandro/pypicontents:3.4`
+* `dockershelf/pypicontents:3.4`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.4-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.4/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.4.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.4)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.4-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.4/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:3.4.svg)](https://microbadger.com/images/dockershelf/pypicontents:3.4)
 
-* `luisalejandro/pypicontents:3.5`
+* `dockershelf/pypicontents:3.5`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.5.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.5)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:3.5.svg)](https://microbadger.com/images/dockershelf/pypicontents:3.5)
 
-* `luisalejandro/pypicontents:3.6`
+* `dockershelf/pypicontents:3.6`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:3.6.svg)](https://microbadger.com/images/luisalejandro/pypicontents:3.6)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:3.6-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/3.6/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:3.6.svg)](https://microbadger.com/images/dockershelf/pypicontents:3.6)
 
-* `luisalejandro/pypicontents:2.7and3.5`
+* `dockershelf/pypicontents:2.7and3.5`
 
-> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7and3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.7and3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/pypicontents:2.7and3.5.svg)](https://microbadger.com/images/luisalejandro/pypicontents:2.7and3.5)
+> [![](https://img.shields.io/badge/Dockerfile-pypicontents:2.7and3.5-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.7and3.5/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/pypicontents:2.7and3.5.svg)](https://microbadger.com/images/dockershelf/pypicontents:2.7and3.5)
 
 &nbsp;
 
 ## Latex
 
-This is an image based on [`luisalejandro/debian:sid`](https://microbadger.com/images/luisalejandro/debian:sid) with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor` packages installed. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion.
+This is an image based on [`dockershelf/debian:sid`](https://microbadger.com/images/dockershelf/debian:sid) with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor` packages installed. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion.
 
 
-* `luisalejandro/latex:sid`
+* `dockershelf/latex:sid`
 
-> [![](https://img.shields.io/badge/Dockerfile-latex:sid-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile) [![](https://images.microbadger.com/badges/image/luisalejandro/latex:sid.svg)](https://microbadger.com/images/luisalejandro/latex:sid)
+> [![](https://img.shields.io/badge/Dockerfile-latex:sid-yellow.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile) [![](https://images.microbadger.com/badges/image/dockershelf/latex:sid.svg)](https://microbadger.com/images/dockershelf/latex:sid)
 
 &nbsp;
 

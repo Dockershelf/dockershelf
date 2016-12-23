@@ -1,4 +1,4 @@
-FROM debian:wheezy-slim
+FROM scratch
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE
@@ -16,8 +16,6 @@ LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
       ve.com.huntingbears.schema-version="1.0"
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
-    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_RELEASE="wheezy"
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="wheezy"
 
-COPY *.sh /usr/share/dockershelf/debian/
-RUN bash /usr/share/dockershelf/debian/build-image.sh
+ADD base /
