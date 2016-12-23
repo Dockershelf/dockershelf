@@ -47,13 +47,13 @@ Changelog
 - [FIX] Wheezy doesn't build because iproute2 doesn't exist. Replacing
   with iproute which is a dummy package. [REF] Adding travis_retry
   because sometimes network times out. [FIX] Adding dpkg-dev to
-  DPKG_PRE_DEPENDS in luisalejandro/python because apt-get source can't
+  DPKG_PRE_DEPENDS in dockershelf/python because apt-get source can't
   work without it. [Luis Alejandro Martínez Faneyth]
 
 - [REF] Improving discovery and installation of Build-Depends and
   Depends (closes #1). [Luis Alejandro Martínez Faneyth]
 
-- [FIX] Fixing luisalejandro/latex build. [REF] Changing location of
+- [FIX] Fixing dockershelf/latex build. [REF] Changing location of
   scripts inside image. [Luis Alejandro Martínez Faneyth]
 
 - [FIX] Updating Docker Hub password. [Luis Alejandro Martínez Faneyth]
@@ -72,7 +72,7 @@ Changelog
 - Merge branch 'feature/build-push-in-travis-luisalejandro' into
   develop. [Luis Alejandro Martínez Faneyth]
 
-- [FIX] Fixing luisalejandro/latex build. [REF] Changing location of
+- [FIX] Fixing dockershelf/latex build. [REF] Changing location of
   scripts inside image. [Luis Alejandro Martínez Faneyth]
 
 - [FIX] Updating Docker Hub password. [Luis Alejandro Martínez Faneyth]

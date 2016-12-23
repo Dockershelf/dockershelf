@@ -1,4 +1,4 @@
-FROM luisalejandro/python:2.7
+FROM dockershelf/python:2.7
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE

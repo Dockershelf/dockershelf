@@ -7,15 +7,15 @@ ANSI_RESET="\033[0m"
 ANSI_CLEAR="\033[0K"
 
 msginfo(){
-    echo -e "\n${ANSI_YELLOW}${1}${ANSI_RESET}\n\n"
+    echo -e "\n${ANSI_YELLOW}${1}${ANSI_RESET}\n"
 }
 
 msgsuccess(){
-    echo -e "\n${ANSI_GREEN}${1}${ANSI_RESET}\n\n"
+    echo -e "\n${ANSI_GREEN}${1}${ANSI_RESET}\n"
 }
 
 msgerror(){
-    echo -e "\n${ANSI_RED}${1}${ANSI_RESET}\n\n" >&2
+    echo -e "\n${ANSI_RED}${1}${ANSI_RESET}\n" >&2
 }
 
 cmdretry() {
