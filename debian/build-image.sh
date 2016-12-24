@@ -167,10 +167,10 @@ if [ -n "${TERM}" ] && [ -r /etc/motd ]; then
 fi
 
 # Changing prompt
-ANSI_RED="\[\033[38;5;167m\]"
-ANSI_DARK_RED="\[\033[38;5;088m\]"
-ANSI_OFF="\[\033[0m\]"
-PS1="${ANSI_RED}[\u@${ANSI_DARK_RED}\h]${ANSI_OFF}:\w\$ "
+PROMPT_RED="\[\033[38;5;167m\]"
+PROMPT_DARK_RED="\[\033[38;5;088m\]"
+PROMPT_OFF="\[\033[0m\]"
+PS1="${PROMPT_RED}[\u@${PROMPT_DARK_RED}\h]${PROMPT_OFF}:\w\$ "
 'EOF'
 
 cat > "${TARGET}/etc/motd" << 'EOF'
