@@ -42,10 +42,10 @@ cmdretry() {
 
     while [ ${COUNT} -le 3 ]; do
         if [ ${RESULT} -ne 0 ]; then
-            msgerror "The command \"$@\" failed. Retrying, ${COUNT} of 3."
+            msgerror "The command \"${@}\" failed. Retrying, ${COUNT} of 3."
         fi
 
-        "$@"
+        "${@}"
         RESULT=${?}
 
         if [ ${RESULT} -eq 0 ]; then

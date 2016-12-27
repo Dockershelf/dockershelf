@@ -21,20 +21,18 @@
 # Exit early if there are errors and be verbose
 set -ex
 
-# Some initial configuration
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOCKER_IMAGE_NAME="${1}"
-
 # Load helper functions
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${BASEDIR}/library.sh"
 
 # Exit if we didn't get an image to build
-if [ -z "${DOCKER_IMAGE_NAME}" ]; then
+if [ -z "${1}" ]; then
     msgerror "No Docker image name was given. Aborting."
     exit 1
 fi
 
 # Some initial configuration
+DOCKER_IMAGE_NAME="${1}"
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_NAME##*:}"
 DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
 DOCKER_IMAGE_DIR="${BASEDIR}/${DOCKER_IMAGE_TARGET/://}"

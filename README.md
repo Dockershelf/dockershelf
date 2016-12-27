@@ -1,4 +1,4 @@
-![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/art/banner.svg)
+![Banner](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
 
 ---
 
