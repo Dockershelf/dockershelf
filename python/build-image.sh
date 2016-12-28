@@ -19,15 +19,15 @@
 #   along with this program. If not, see http://www.gnu.org/licenses.
 
 # Exit early if there are errors and be verbose.
-set -euxo pipefail
+set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
-MIRROR="http://httpredir.debian.org/debian"
-SECMIRROR="http://security.debian.org"
+MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 DEFAULT_SUITE="sid"
 
 # This is the list of python packages from debian that make up a minimal

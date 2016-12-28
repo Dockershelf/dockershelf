@@ -19,22 +19,20 @@
 #   along with this program. If not, see http://www.gnu.org/licenses.
 
 # Exit early if there are errors and be verbose
-set -euxo pipefail
-
-# Some initial configuration
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOCKER_IMAGE_NAME="${1}"
+set -exuo pipefail
 
 # Load helper functions
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${BASEDIR}/library.sh"
 
 # Exit if we didn't get an image to build
-if [ -z "${DOCKER_IMAGE_NAME}" ]; then
+if [ -z "${1}" ]; then
     msgerror "No Docker image name was given. Aborting."
     exit 1
 fi
 
 # Some initial configuration
+DOCKER_IMAGE_NAME="${1}"
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_NAME##*:}"
 DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
 DOCKER_IMAGE_DIR="${BASEDIR}/${DOCKER_IMAGE_TARGET/://}"
@@ -51,6 +49,12 @@ if git describe --tags ${VCS_REF} >/dev/null 2>&1; then
     VERSION="$( git describe --tags ${VCS_REF} )"
 else
     VERSION="${VCS_REF}"
+fi
+
+# Test if the selected image has a configuration directory here
+if [ ! -d "${DOCKER_IMAGE_DIR}" ]; then
+    msgerror "\"${DOCKER_IMAGE_NAME}\" image is not available. Aborting."
+    exit 1
 fi
 
 # Copy library.sh because we need some helper functions

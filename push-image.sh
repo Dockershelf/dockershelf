@@ -18,21 +18,30 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program. If not, see http://www.gnu.org/licenses.
 
+# Exit early if there are errors and be verbose
 set -euo pipefail
 
+# Load helper functions
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOCKER_IMAGE_NAME="${1}"
-
 source "${BASEDIR}/library.sh"
 
-if [ -z "${DOCKER_IMAGE_NAME}" ]; then
+# Exit if we didn't get an image to build
+if [ -z "${1}" ]; then
     msgerror "No Docker image name was given. Aborting."
     exit 1
 fi
 
-DOCKER_IMAGE_TARGET="$( echo ${DOCKER_IMAGE_NAME%%:*} | awk -F'/' '{print toupper($2)}' )"
-MB_CURRENT_API_END="$( eval 'echo ${MB_'"${DOCKER_IMAGE_TARGET}"'_API_END}' )"
+# Exit if we didn't get an image to build
+if [ -z "${2}" ] || [ -z "${3}" ]; then
+    msgerror "Username or Password for Docker Hub were not given. Aborting."
+    exit 1
+fi
 
-cmdretry curl -H 'Content-Type: application/json' --data '{update: true}' -X POST ${MB_CURRENT_API_END}
-cmdretry docker login --username ${DH_USERNAME} --password ${DH_PASSWORD} >/dev/null 2>&1
+# Some initial configuration
+DOCKER_IMAGE_NAME="${1}"
+DH_USERNAME="${2}"
+DH_PASSWORD="${3}"
+
+# Login & push
+cmdretry docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
 cmdretry docker push ${DOCKER_IMAGE_NAME}
