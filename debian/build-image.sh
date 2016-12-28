@@ -19,29 +19,20 @@
 #   along with this program. If not, see http://www.gnu.org/licenses.
 
 # Exit early if there are errors and be verbose
-set -ex
+set -exuo pipefail
 
 # Some initial configuration
 ARCH="amd64"
 VARIANT="minbase"
 DEBIAN_RELEASE="${1}"
-SECMIRROR="http://security.debian.org"
-MIRROR="http://httpredir.debian.org/debian"
+MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
 
 # Packages to install at the end
 DPKG_DEPENDS="iproute inetutils-ping locales curl ca-certificates \
     bash-completion"
-
-# Declare post hooks for later use
-APT_POST_HOOK="rm -rf /var/cache/apt/* || true"
-DPKG_POST_HOOK="$( printf '%s || true; ' \
-    'find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf' \
-    'find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rf' \
-    'rm -rf /usr/share/doc/*' 'rm -rf /usr/share/locale/*' \
-    'rm -rf /usr/share/man/*' 'rm -rf /var/cache/debconf/*' \
-    'rm -rf /var/cache/apt/*' )"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -147,8 +138,28 @@ Apt::AutoRemove::SuggestsImportant "false";
 Apt::AutoRemove::RecommendsImportant "false";
 
 # Cleaning post-hooks for dpkg and apt.
-Apt::Update::Post-Invoke { "${APT_POST_HOOK}"; };
-Dpkg::Post-Invoke { "${DPKG_POST_HOOK}"; };
+Apt::Update::Post-Invoke { "/usr/share/dockershelf/clean-apt.sh"; };
+Dpkg::Post-Invoke { "/usr/share/dockershelf/clean-dpkg.sh"; };
+EOF
+
+mkdir -p "${TARGET}/usr/share/dockershelf"
+touch "${TARGET}/usr/share/dockershelf/clean-apt.sh"
+chmod +x "${TARGET}/usr/share/dockershelf/clean-apt.sh"
+cat > "${TARGET}/usr/share/dockershelf/clean-apt.sh" << 'EOF'
+#!/usr/bin/env bash
+# Dockershelf post hook for apt
+rm -rf /var/cache/apt/*
+EOF
+
+touch "${TARGET}/usr/share/dockershelf/clean-dpkg.sh"
+chmod +x "${TARGET}/usr/share/dockershelf/clean-dpkg.sh"
+cat > "${TARGET}/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
+#!/usr/bin/env bash
+# Dockershelf post hook for dpkg
+find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf
+find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rf
+rm -rf /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
+       /var/cache/debconf/* /var/cache/apt/* 
 EOF
 
 cat >> "${TARGET}/etc/bash.bashrc" << 'EOF'
@@ -171,19 +182,19 @@ PROMPT_RED="\[\033[38;5;167m\]"
 PROMPT_DARK_RED="\[\033[38;5;088m\]"
 PROMPT_OFF="\[\033[0m\]"
 PS1="${PROMPT_RED}[\u@${PROMPT_DARK_RED}\h]${PROMPT_OFF}:\w\$ "
-'EOF'
+EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'
            This image is part of            
- ,-.          ,               .       .     
+ ,-.          .               .       .     
  |  \         |               |       |  ,- 
  |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
- |  / | | |   |<  |-' |   `-. | | |-' |  |- 
- `-'  `-' `-' ' ` `-' '   `-' ' ' `-' '  |  
-                                       -'   
+ |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
+ `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
+                                        -´   
         For more information, visit         
 https://github.com/LuisAlejandro/dockershelf
-'EOF'
+EOF
 
 # Export some configuration variables before chrooting
 export LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \

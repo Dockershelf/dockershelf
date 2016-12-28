@@ -28,7 +28,7 @@ Changelog
   version on 3.2 image which breaks pip. [FIX] Fixing typo. [Luis
   Alejandro Martínez Faneyth]
 
-- [FIX] Changing tag 2.7+3.5 -> 2.7and3.5 because its invalid. [REF]
+- [FIX] Changing tag 2.7+3.5 -> 2.7-3.5 because its invalid. [REF]
   Rewriting process of installing runtime dependencies because sometimes
   fails. [Luis Alejandro Martínez Faneyth]
 
