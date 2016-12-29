@@ -38,4 +38,8 @@ env:
 install: gem install docker-api serverspec
 before_script: bash build-image.sh ${DOCKER_IMAGE_NAME}
 script: bash test-image.sh ${DOCKER_IMAGE_NAME}
-after_success: bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
+after_success: 
+    - |
+        if [ "${TRAVIS_EVENT_TYPE}" == "cron" ] && [ "${TRAVIS_BRANCH}" == "master" ]; then
+            bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
+        fi
