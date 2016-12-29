@@ -1,8 +1,50 @@
 Changelog
 =========
 
+0.1.1 (2016-12-29)
+------------------
+
+- [REF] Adding version to README. [Luis Alejandro Martínez Faneyth]
+
+- [REF] Only pushing images if they come from a cron and the master
+  branch (closes #7). [Luis Alejandro Martínez Faneyth]
+
+- [REF] Changing dockershelf/python:2.7and3.5 to
+  dockershelf/python:2.7-3.5 because it was too long. [REF] Changing SVG
+  files location to root folder. [REF] Improving README file, adding
+  README's to every type of image because its useful and to reuse in
+  Docker Hub long description. [REF] Improving build scripts. [REF]
+  Changing label-schema namespace. [REF] Adding default CMD to
+  Dockerfiles. [Luis Alejandro Martínez Faneyth]
+
+- [REF] Updating docker hub password. [Luis Alejandro Martínez Faneyth]
+
+- [REF] Adding logo. [REF] Removing curl to MicroBadger API because it
+  can be configured as a webhook in docker hub. [REF] Improving scripts.
+  [Luis Alejandro Martínez Faneyth]
+
+- [FIX] Fixing cleartext password on Travis. [Luis Alejandro Martínez
+  Faneyth]
+
+- [FIX] Fixing build. [Luis Alejandro Martínez Faneyth]
+
+- [REF] Changing namespace of images from luisalejandro to dockershelf.
+  [REF] Using debootstrap to generate base image instead of reusing
+  tianon's image (closes #8). [REF] Adding fancy Motd, installing bash-
+  completion and modifying prompt (closes #6). [REF] General
+  improvements for debian images build script. [Luis Alejandro Martínez
+  Faneyth]
+
+- [REF] Removing unnecessary code. [Luis Alejandro Martínez Faneyth]
+
+- [REF] Removing unnecessary code. [Luis Alejandro Martínez Faneyth]
+
 0.1.0 (2016-12-21)
 ------------------
+
+- Merge branch 'release/0.1.0' [Luis Alejandro Martínez Faneyth]
+
+- Updating Changelog and version. [Luis Alejandro Martínez Faneyth]
 
 - [FIX] Fixing typo. [Luis Alejandro Martínez Faneyth]
 
@@ -11,9 +53,6 @@ Changelog
 
 - [REF] Changing name and graphical image to Dockershelf! [Luis
   Alejandro Martínez Faneyth]
-
-- Merge branch 'feature/add-2.7+3.5-image-luisalejandro' into develop.
-  [Luis Alejandro Martínez Faneyth]
 
 - [FIX] Fixing installation of pip in python 3.2. [Luis Alejandro
   Martínez Faneyth]
@@ -28,9 +67,9 @@ Changelog
   version on 3.2 image which breaks pip. [FIX] Fixing typo. [Luis
   Alejandro Martínez Faneyth]
 
-- [FIX] Changing tag 2.7+3.5 -> 2.7-3.5 because its invalid. [REF]
-  Rewriting process of installing runtime dependencies because sometimes
-  fails. [Luis Alejandro Martínez Faneyth]
+- [FIX] Changing tag 2.7+3.5 -> 2.7and3.5 because its invalid (closes
+  #4). [REF] Rewriting process of installing runtime dependencies
+  because sometimes fails. [Luis Alejandro Martínez Faneyth]
 
 - [REF] Adding initial codebase for 2.7+3.5 Python image. [Luis
   Alejandro Martínez Faneyth]
@@ -47,13 +86,13 @@ Changelog
 - [FIX] Wheezy doesn't build because iproute2 doesn't exist. Replacing
   with iproute which is a dummy package. [REF] Adding travis_retry
   because sometimes network times out. [FIX] Adding dpkg-dev to
-  DPKG_PRE_DEPENDS in dockershelf/python because apt-get source can't
+  DPKG_PRE_DEPENDS in luisalejandro/python because apt-get source can't
   work without it. [Luis Alejandro Martínez Faneyth]
 
 - [REF] Improving discovery and installation of Build-Depends and
   Depends (closes #1). [Luis Alejandro Martínez Faneyth]
 
-- [FIX] Fixing dockershelf/latex build. [REF] Changing location of
+- [FIX] Fixing luisalejandro/latex build. [REF] Changing location of
   scripts inside image. [Luis Alejandro Martínez Faneyth]
 
 - [FIX] Updating Docker Hub password. [Luis Alejandro Martínez Faneyth]
@@ -72,7 +111,7 @@ Changelog
 - Merge branch 'feature/build-push-in-travis-luisalejandro' into
   develop. [Luis Alejandro Martínez Faneyth]
 
-- [FIX] Fixing dockershelf/latex build. [REF] Changing location of
+- [FIX] Fixing luisalejandro/latex build. [REF] Changing location of
   scripts inside image. [Luis Alejandro Martínez Faneyth]
 
 - [FIX] Updating Docker Hub password. [Luis Alejandro Martínez Faneyth]
@@ -86,6 +125,14 @@ Changelog
 - [REF] Removing duplicate scripts because they are no longer necessary.
   [ADD] Creating travis-build-image.sh for building the image in Travis.
   [Luis Alejandro Martínez Faneyth]
+
+- Merge pull request #3 from LuisAlejandro/01-improve-build-depends-
+  luisalejandro. [Luis Alejandro Martínez Faneyth]
+
+  [REF] Improving method for getting Build-Depends and Depends.
+
+- [REF] Improving method for getting Build-Depends and Depends. [REF]
+  Unifying PIPURL. [Luis Alejandro Martínez Faneyth]
 
 - [FIX] PyPIrazzi no longer exists, renaming to pypicontents. [Luis
   Alejandro Martínez Faneyth]
