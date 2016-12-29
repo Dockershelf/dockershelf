@@ -1,21 +1,21 @@
-FROM luisalejandro/debian:stretch
+FROM dockershelf/debian:stretch
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
-      ve.com.huntingbears.name="python3.5" \
-      ve.com.huntingbears.description="A Python 3.5 image based on Debian Sid." \
-      ve.com.huntingbears.url="https://github.com/LuisAlejandro/dockershelf" \
-      ve.com.huntingbears.vcs-ref=${VCS_REF} \
-      ve.com.huntingbears.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
-      ve.com.huntingbears.vendor="Luis Alejandro Martínez Faneyth" \
-      ve.com.huntingbears.version=${VERSION} \
-      ve.com.huntingbears.schema-version="1.0"
+LABEL org.label-schema.build-date=${BUILD_DATE} \
+      org.label-schema.name="python3.5" \
+      org.label-schema.description="A Python 3.5 image based on Debian Sid." \
+      org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
+      org.label-schema.vcs-ref=${VCS_REF} \
+      org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
+      org.label-schema.vendor="Luis Alejandro Martínez Faneyth" \
+      org.label-schema.version=${VERSION} \
+      org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV PY_VER_NUM="3.5" PY_DEBIAN_SUITE="stretch"
+ENV PY_VER_NUM="3.5" PY_DEBIAN_SUITE="stretch" PYTHONIOENCODING="UTF-8"
 
 COPY *.sh /usr/share/dockershelf/python/
 RUN bash /usr/share/dockershelf/python/build-image.sh

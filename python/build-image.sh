@@ -3,7 +3,7 @@
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016, Dockershelf Developers.
 #
-#   Please refer to AUTHORS.rst for a complete list of Copyright holders.
+#   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
 #   Dockershelf is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -19,22 +19,16 @@
 #   along with this program. If not, see http://www.gnu.org/licenses.
 
 # Exit early if there are errors and be verbose.
-set -ex
+set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PY_SOURCE_TEMPDIR="$( mktemp -d )"
 PY_VER_STR="python${PY_VER_NUM}"
 PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
-MIRROR="http://httpredir.debian.org/debian"
-SECMIRROR="http://security.debian.org"
+MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 DEFAULT_SUITE="sid"
-
-if [ "${PY_VER_NUM}" == "3.2" ]; then
-    PIPURL="https://bootstrap.pypa.io/3.2/get-pip.py"
-else
-    PIPURL="https://bootstrap.pypa.io/get-pip.py"
-fi
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.

@@ -1,23 +1,23 @@
-FROM debian:sid-slim
+FROM scratch
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-LABEL ve.com.huntingbears.build-date=${BUILD_DATE} \
-      ve.com.huntingbears.name="debian-sid" \
-      ve.com.huntingbears.description="A Debian Sid minimal image built from scratch." \
-      ve.com.huntingbears.url="https://github.com/LuisAlejandro/dockershelf" \
-      ve.com.huntingbears.vcs-ref=${VCS_REF} \
-      ve.com.huntingbears.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
-      ve.com.huntingbears.vendor="Luis Alejandro Martínez Faneyth" \
-      ve.com.huntingbears.version=${VERSION} \
-      ve.com.huntingbears.schema-version="1.0"
+LABEL org.label-schema.build-date=${BUILD_DATE} \
+      org.label-schema.name="debian-sid" \
+      org.label-schema.description="A Debian Sid minimal image built from scratch." \
+      org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
+      org.label-schema.vcs-ref=${VCS_REF} \
+      org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
+      org.label-schema.vendor="Luis Alejandro Martínez Faneyth" \
+      org.label-schema.version=${VERSION} \
+      org.label-schema.schema-version="1.0.0-rc.1"
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
-    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_RELEASE="sid"
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="sid"
 
-COPY *.sh /usr/share/dockershelf/debian/
-RUN bash /usr/share/dockershelf/debian/build-image.sh
+ADD base /
+
+CMD ["/bin/bash"]
