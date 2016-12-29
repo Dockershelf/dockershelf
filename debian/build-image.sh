@@ -185,6 +185,7 @@ PS1="${PROMPT_RED}[\u@${PROMPT_DARK_RED}\h]${PROMPT_OFF}:\w\$ "
 EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'
+
            This image is part of            
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
@@ -194,6 +195,7 @@ cat > "${TARGET}/etc/motd" << 'EOF'
                                         -´   
         For more information, visit         
 https://github.com/LuisAlejandro/dockershelf
+
 EOF
 
 # Export some configuration variables before chrooting

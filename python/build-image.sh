@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016, Dockershelf Developers.
