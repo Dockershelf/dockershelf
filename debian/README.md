@@ -89,6 +89,10 @@ However, we explain the overall process here:
             # and there's no default option, replace the conffile with the new one.
             force-confnew
 
+            # If a package tries to overwrite a file that exists in another package,
+            # let it do it.
+            force-overwrite
+
             # Don't call sync() for every IO operation.
             force-unsafe-io
 

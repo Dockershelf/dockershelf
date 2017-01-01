@@ -4,7 +4,6 @@ require "serverspec"
 describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]] do
     before(:all) do
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        # @image = Docker::Image.create('fromImage' => ENV["DOCKER_IMAGE_NAME"])
         @container = Docker::Container.create('Image' => @image.id, 'Tty' => true)
         @container.start
 
@@ -71,12 +70,22 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should contain apt list files after an apt-get update" do
-        expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_InRelease" % ENV["DOCKER_IMAGE_TAG"])).to exist
+        case ENV['DOCKER_IMAGE_TAG']
+        when "sid"
+            expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_InRelease" % ENV["DOCKER_IMAGE_TAG"])).to exist
+        else
+            expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_Release" % ENV["DOCKER_IMAGE_TAG"])).to exist
+        end
     end
 
     it "should be able to install a package" do
         expect(command("apt-get install make").exit_status).to eq(0)
         expect(file('/usr/bin/make')).to be_executable
+    end
+
+    it "should be able to uninstall a package" do
+        expect(command("apt-get purge make").exit_status).to eq(0)
+        expect(file('/usr/bin/make')).not_to exist
     end
 
     it "should have these directories empty" do

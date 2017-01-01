@@ -11,18 +11,8 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         set :docker_container, @container.id
     end
 
-    def python_version
-        command("python -c \"import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))\"").stdout
-    end
-
     it "should exist" do
         expect(@container).not_to be_nil
-    end
-
-    it "should have a python interpreter" do
-        expect(file("/usr/bin/python%s" % python_version)).to be_executable
-        expect(file("/usr/bin/python")).to be_symlink
-        expect(file("/usr/bin/python")).to be_linked_to("/usr/bin/python%s" % python_version)
     end
 
     after(:all) do
