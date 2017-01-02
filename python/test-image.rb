@@ -4,7 +4,7 @@ require "serverspec"
 describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]] do
     before(:all) do
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true)
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
         @container.start
 
         set :backend, :docker
@@ -12,7 +12,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     def python_version
-        command("python -c \"import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))\"").stdout
+        command("python -c \"import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))\"").stdout.strip
     end
 
     it "should exist" do
@@ -23,6 +23,16 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(file("/usr/bin/python%s" % python_version)).to be_executable
         expect(file("/usr/bin/python")).to be_symlink
         expect(file("/usr/bin/python")).to be_linked_to("/usr/bin/python%s" % python_version)
+    end
+
+    it "should be able to install a python package" do
+        expect(command("pip install pypicontents").exit_status).to eq(0)
+        expect(file('/usr/local/bin/pypicontents')).to be_executable
+    end
+
+    it "should be able to uninstall a python package" do
+        expect(command("pip uninstall -y pypicontents").exit_status).to eq(0)
+        expect(file('/usr/local/bin/pypicontents')).not_to exist
     end
 
     after(:all) do

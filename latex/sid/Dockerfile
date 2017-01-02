@@ -23,4 +23,6 @@ RUN apt-get update && \
         texlive-latex-extra \
         latex-xcolor
 
+ADD sample.tex /root/
+
 CMD ["/bin/bash"]

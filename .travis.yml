@@ -45,8 +45,7 @@ before_script:
     - |
         if [ "${TRAVIS_BRANCH}" == "develop" ]; then
             DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
-            DOCKER_IMAGE_DIR="${BASEDIR}/${DOCKER_IMAGE_TARGET/://}"
-            sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_DIR}/Dockerfile"
+            sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
         fi
     - bash build-image.sh ${DOCKER_IMAGE_NAME}
 script:
