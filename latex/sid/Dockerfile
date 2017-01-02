@@ -22,3 +22,5 @@ RUN apt-get update && \
         texlive-latex-base \
         texlive-latex-extra \
         latex-xcolor
+
+CMD ["/bin/bash"]

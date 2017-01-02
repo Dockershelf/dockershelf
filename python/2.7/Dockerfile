@@ -19,3 +19,5 @@ ENV PY_VER_NUM="2.7" PY_DEBIAN_SUITE="stretch" PYTHONIOENCODING="UTF-8"
 
 COPY *.sh /usr/share/dockershelf/python/
 RUN bash /usr/share/dockershelf/python/build-image.sh
+
+CMD ["/bin/bash"]

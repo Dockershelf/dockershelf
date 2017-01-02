@@ -9,6 +9,10 @@ addons:
             - debian-sid
         packages:
             - debootstrap
+branches:
+    only:
+        - master
+        - develop
 env:
     global:
         # Docker Hub username ${DH_USERNAME}
@@ -35,9 +39,22 @@ env:
         - DOCKER_IMAGE_NAME="dockershelf/pypicontents:3.6"
         - DOCKER_IMAGE_NAME="dockershelf/pypicontents:2.7-3.5"
         - DOCKER_IMAGE_NAME="dockershelf/latex:sid"
-script: bash build-image.sh ${DOCKER_IMAGE_NAME}
-after_success: 
+install:
+    - gem install docker-api serverspec
+before_script:
     - |
-        if [ "${TRAVIS_EVENT_TYPE}" == "cron" ] && [ "${TRAVIS_BRANCH}" == "master" ]; then
-            bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
+        if [ "${TRAVIS_BRANCH}" == "develop" ]; then
+            DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
+            DOCKER_IMAGE_DIR="${BASEDIR}/${DOCKER_IMAGE_TARGET/://}"
+            sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_DIR}/Dockerfile"
         fi
+    - bash build-image.sh ${DOCKER_IMAGE_NAME}
+script:
+    - bash test-image.sh ${DOCKER_IMAGE_NAME}
+after_success:
+    - |
+        if [ "${TRAVIS_BRANCH}" == "develop" ]; then
+            docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}-dev
+            DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-dev"
+        fi
+    - bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}

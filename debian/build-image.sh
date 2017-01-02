@@ -100,6 +100,10 @@ force-confdef
 # and there's no default option, replace the conffile with the new one.
 force-confnew
 
+# If a package tries to overwrite a file that exists in another package,
+# let it do it.
+force-overwrite
+
 # Don't call sync() for every IO operation.
 force-unsafe-io
 EOF
@@ -185,6 +189,7 @@ PS1="${PROMPT_RED}[\u@${PROMPT_DARK_RED}\h]${PROMPT_OFF}:\w\$ "
 EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'
+
            This image is part of            
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
@@ -194,6 +199,7 @@ cat > "${TARGET}/etc/motd" << 'EOF'
                                         -´   
         For more information, visit         
 https://github.com/LuisAlejandro/dockershelf
+
 EOF
 
 # Export some configuration variables before chrooting
