@@ -35,6 +35,14 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(file('/usr/local/bin/pypicontents')).not_to exist
     end
 
+    it "should have setuptools installed by pip" do
+        expect(package('setuptools')).to be_installed.by('pip')
+    end
+
+    it "shouldn't have invalid packages installed by pip" do
+        expect(package('invalid-pip')).not_to be_installed.by('pip').with_version('invalid-version')
+    end
+
     after(:all) do
         @container.kill
         @container.delete(:force => true)

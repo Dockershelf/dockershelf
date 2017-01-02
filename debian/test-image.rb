@@ -27,6 +27,32 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(os[:arch]).to eq("x86_64")
     end
 
+    it "should have a proper root user" do
+        expect(user('root')).to exist
+        expect(user('root')).to belong_to_group 'root'
+        expect(user('root')).not_to belong_to_group 'invalid-group'
+        expect(user('root')).to have_uid 0
+        expect(user('root')).not_to have_uid 'invalid-uid'
+        expect(user('root')).to have_login_shell '/bin/bash'
+        expect(user('root')).not_to have_login_shell 'invalid-login-shell'
+        expect(user('root')).to have_home_directory '/root'
+        expect(user('root')).not_to have_authorized_key 'invalid-key'
+        expect(user('root')).not_to have_home_directory 'invalid-home-directory'
+    end
+
+    it "shouldn't have invalid users" do
+        expect(user('invalid-user')).not_to exist
+    end
+
+    it "should have a proper /etc/passwd file" do
+        expect(file('/etc/passwd')).to be_mode 644
+        expect(file('/etc/passwd')).not_to be_mode 'invalid'
+        expect(file('/etc/passwd')).to be_owned_by 'root'
+        expect(file('/etc/passwd')).to be_grouped_into 'root'
+        expect(file('/etc/passwd')).not_to be_owned_by 'invalid-owner'
+        expect(file('/etc/passwd')).not_to be_grouped_into 'invalid-group'
+    end
+
     it "should contain these files" do
         expect(file("/etc/debian_version")).to exist
         expect(file("/etc/os-release")).to exist
@@ -51,6 +77,10 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(package("bash-completion")).to be_installed
     end
 
+    it "shouldn't have invalid packages installed" do
+        expect(package('invalid-package')).not_to be_installed
+    end
+
     it "should have environmental variable" do
         debian_release = "DEBIAN_RELEASE=%s" % ENV["DOCKER_IMAGE_TAG"]
         expect(@image.json["Config"]["Env"]).to include(debian_release)
@@ -63,7 +93,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     it "shouldn't contain apt cache files after an apt-get update" do
         expect(command("ls -1 /var/cache/apt").stdout).to be_empty
-        expect(command("apt-get update").exit_status).to eq(0)
+        expect(command("apt-get update", 120).exit_status).to eq(0)
         expect(command("ls -1 /var/cache/apt").stdout).to be_empty
         expect(file("/var/cache/apt/pkgcache.bin")).not_to exist
         expect(file("/var/cache/apt/srcpkgcache.bin")).not_to exist
