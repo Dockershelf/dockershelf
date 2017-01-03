@@ -27,33 +27,36 @@ leave uncommitted changes.
 
         git flow release start <release number>
 
-8. Update your changelog:
+8. Bump your version (check everything before next step)::
+
+        bumpversion --no-commit --new-version <release number> patch
+
+9. Update your changelog:
 
         gitchangelog > HISTORY.rst
 
-9. Commit your changes to version files and changelog:
+10. Commit your changes to version files and changelog:
 
         git commit -aS -m "Updating Changelog and version"
 
-10. Delete the tag made by bumpversion:
+11. Delete the tag made by bumpversion:
 
         git tag -d <release number>
 
-11. Finish your release:
+12. Finish your release:
 
         git flow release finish <release number>
 
-12. Push your tags:
+13. Push your tags:
 
         git push --tags
 
-13. Draft a new release in GitHub (based on the new version tag) and include
+14. Draft a new release in GitHub (based on the new version tag) and include
 a description. Also pick a codename because it makes you cool.
-14. Close the milestone in GitHub.
-15. Write about your new version in your blog. Tweet it, post it on facebook.
+15. Close the milestone in GitHub.
+16. Write about your new version in your blog. Tweet it, post it on facebook.
 
-Making a new hotfix
--------------------
+### Making a new hotfix
 
 1. Create a new milestone in GitHub. Assign existing bugs to your new milestone.
 2. Start a new hotfix:
