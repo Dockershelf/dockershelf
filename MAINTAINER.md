@@ -33,11 +33,11 @@ leave uncommitted changes.
 
 9. Update your changelog:
 
-        gitchangelog > HISTORY.rst
+        gitchangelog > HISTORY.md
 
 10. Commit your changes to version files and changelog:
 
-        git commit -aS -m "Updating Changelog and version"
+        git commit -aS -m "Updating Changelog and version."
 
 11. Delete the tag made by bumpversion:
 
