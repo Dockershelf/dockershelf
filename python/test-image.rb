@@ -26,13 +26,13 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to install a python package" do
-        expect(command("pip install pypicontents").exit_status).to eq(0)
-        expect(file('/usr/local/bin/pypicontents')).to be_executable
+        expect(command("pip install virtualenv").exit_status).to eq(0)
+        expect(file('/usr/local/bin/virtualenv')).to be_executable
     end
 
     it "should be able to uninstall a python package" do
-        expect(command("pip uninstall -y pypicontents").exit_status).to eq(0)
-        expect(file('/usr/local/bin/pypicontents')).not_to exist
+        expect(command("pip uninstall -y virtualenv").exit_status).to eq(0)
+        expect(file('/usr/local/bin/virtualenv')).not_to exist
     end
 
     it "should have setuptools installed by pip" do
