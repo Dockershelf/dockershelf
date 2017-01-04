@@ -91,11 +91,11 @@ These are python images compiled from source, using the `debian/rules` makefile 
 [l3.6]: https://images.microbadger.com/badges/image/dockershelf/python:3.6.svg
 [l3.6l]: https://microbadger.com/images/dockershelf/python:3.6
 
-[i2.7-3.6l]: https://hub.docker.com/r/dockershelf/python
-[d2.7-3.6]: https://img.shields.io/badge/-python%2F2.7--3.6%2FDockerfile-blue.svg
-[d2.7-3.6l]: https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7-3.6/Dockerfile
-[l2.7-3.6]: https://images.microbadger.com/badges/image/dockershelf/python:2.7-3.6.svg
-[l2.7-3.6l]: https://microbadger.com/images/dockershelf/python:2.7-3.6
+[i2.7-3.5l]: https://hub.docker.com/r/dockershelf/python
+[d2.7-3.5]: https://img.shields.io/badge/-python%2F2.7--3.6%2FDockerfile-blue.svg
+[d2.7-3.5l]: https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7-3.5/Dockerfile
+[l2.7-3.5]: https://images.microbadger.com/badges/image/dockershelf/python:2.7-3.5.svg
+[l2.7-3.5l]: https://microbadger.com/images/dockershelf/python:2.7-3.5
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
@@ -107,7 +107,7 @@ These are python images compiled from source, using the `debian/rules` makefile 
 |[`dockershelf/python:3.4`][i3.4l]        |`3.4`    |[![][d3.4]][d3.4l]        |[![][l3.4]][l3.4l]        |
 |[`dockershelf/python:3.5`][i3.5l]        |`3.5`    |[![][d3.5]][d3.5l]        |[![][l3.5]][l3.5l]        |
 |[`dockershelf/python:3.6`][i3.6l]        |`3.6`    |[![][d3.6]][d3.6l]        |[![][l3.6]][l3.6l]        |
-|[`dockershelf/python:2.7-3.6`][i2.7-3.6l]|`2.7-3.6`|[![][d2.7-3.6]][d2.7-3.6l]|[![][l2.7-3.6]][l2.7-3.6l]|
+|[`dockershelf/python:2.7-3.5`][i2.7-3.5l]|`2.7-3.5`|[![][d2.7-3.5]][d2.7-3.5l]|[![][l2.7-3.5]][l2.7-3.5l]|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
@@ -151,11 +151,11 @@ These are images based on `dockershelf/python` images and are used to build the 
 [lpypi3.6]: https://images.microbadger.com/badges/image/dockershelf/pypicontents:3.6.svg
 [lpypi3.6l]: https://microbadger.com/images/dockershelf/pypicontents:3.6
 
-[ipypi2.7-3.6l]: https://hub.docker.com/r/dockershelf/pypicontents
-[dpypi2.7-3.6]: https://img.shields.io/badge/-pypicontents%2F2.7--3.6%2FDockerfile-blue.svg
-[dpypi2.7-3.6l]: https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.7-3.6/Dockerfile
-[lpypi2.7-3.6]: https://images.microbadger.com/badges/image/dockershelf/pypicontents:2.7-3.6.svg
-[lpypi2.7-3.6l]: https://microbadger.com/images/dockershelf/pypicontents:2.7-3.6
+[ipypi2.7-3.5l]: https://hub.docker.com/r/dockershelf/pypicontents
+[dpypi2.7-3.5]: https://img.shields.io/badge/-pypicontents%2F2.7--3.6%2FDockerfile-blue.svg
+[dpypi2.7-3.5l]: https://github.com/LuisAlejandro/dockershelf/blob/master/pypicontents/2.7-3.5/Dockerfile
+[lpypi2.7-3.5]: https://images.microbadger.com/badges/image/dockershelf/pypicontents:2.7-3.5.svg
+[lpypi2.7-3.5l]: https://microbadger.com/images/dockershelf/pypicontents:2.7-3.5
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
@@ -167,7 +167,7 @@ These are images based on `dockershelf/python` images and are used to build the 
 |[`dockershelf/pypicontents:3.4`][ipypi3.4l]        |`3.4`    |[![][dpypi3.4]][dpypi3.4l]        |[![][lpypi3.4]][lpypi3.4l]        |
 |[`dockershelf/pypicontents:3.5`][ipypi3.5l]        |`3.5`    |[![][dpypi3.5]][dpypi3.5l]        |[![][lpypi3.5]][lpypi3.5l]        |
 |[`dockershelf/pypicontents:3.6`][ipypi3.6l]        |`3.6`    |[![][dpypi3.6]][dpypi3.6l]        |[![][lpypi3.6]][lpypi3.6l]        |
-|[`dockershelf/pypicontents:2.7-3.6`][ipypi2.7-3.6l]|`2.7-3.6`|[![][dpypi2.7-3.6]][dpypi2.7-3.6l]|[![][lpypi2.7-3.6]][lpypi2.7-3.6l]|
+|[`dockershelf/pypicontents:2.7-3.5`][ipypi2.7-3.5l]|`2.7-3.5`|[![][dpypi2.7-3.5]][dpypi2.7-3.5l]|[![][lpypi2.7-3.5]][lpypi2.7-3.5l]|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
