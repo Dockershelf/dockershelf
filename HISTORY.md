@@ -1,8 +1,17 @@
 # Changelog
 
+## 0.1.3 (2017-01-04)
+
+### Other
+
+* [FIX] Correcting typo for python:2.7-3.5 image (closes #10). [Luis Alejandro Martínez Faneyth]
+
+
 ## 0.1.2 (2017-01-03)
 
 ### Other
+
+* Updating Changelog and version. [Luis Alejandro Martínez Faneyth]
 
 * [ADD] Adding Maintainer notes. [Luis Alejandro Martínez Faneyth]
 
