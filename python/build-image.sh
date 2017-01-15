@@ -109,8 +109,10 @@ DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
     | awk '{print $2}' | xargs )"
 DPKG_RUN_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
     | xargs | sed "$( printf 's/\s%s\s/ /g;' ${PY_PKGS} )" )"
-cmdretry apt-get install $( printf '%s\n' ${DPKG_BUILD_DEPENDS} ${DPKG_RUN_DEPENDS} \
-    | uniq | xargs )
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_BUILD_DEPENDS} ${DPKG_RUN_DEPENDS} \
+    | uniq | xargs )"
+cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
