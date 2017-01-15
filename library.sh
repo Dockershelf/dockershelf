@@ -45,8 +45,10 @@ cmdretry() {
             msgerror "The command \"${@}\" failed. Retrying, ${COUNT} of 3."
         fi
 
+        set +e
         "${@}"
         RESULT=${?}
+        set -e
 
         if [ ${RESULT} -eq 0 ]; then
             break
