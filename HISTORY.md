@@ -1,8 +1,21 @@
 # Changelog
 
+## 0.1.4 (2017-05-04)
+
+### Other
+
+* [REF] Fixing location of python 3.6 source package. Fixes #15. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Adding build script for latex image to avoid apt timeouts. [REF] Various improvements. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Adding routine to avoid errors on downloading packages. [REF] Installing PyPIContents for python 3.5 in dockershelf/pypicontents:2.7-3.5 (closes: #13). [Luis Alejandro Martínez Faneyth]
+
+
 ## 0.1.3 (2017-01-04)
 
 ### Other
+
+* Updating Changelog and version. [Luis Alejandro Martínez Faneyth]
 
 * [FIX] Correcting typo for python:2.7-3.5 image (closes #10). [Luis Alejandro Martínez Faneyth]
 
