@@ -56,7 +56,9 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
+cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
+cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Python: Download
@@ -107,8 +109,10 @@ DPKG_BUILD_DEPENDS="$( apt-get -s build-dep ${PY_VER_STR} | grep "Inst " \
     | awk '{print $2}' | xargs )"
 DPKG_RUN_DEPENDS="$( aptitude search -F%p $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) \
     | xargs | sed "$( printf 's/\s%s\s/ /g;' ${PY_PKGS} )" )"
-cmdretry apt-get install $( printf '%s\n' ${DPKG_BUILD_DEPENDS} ${DPKG_RUN_DEPENDS} \
-    | uniq | xargs )
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_BUILD_DEPENDS} ${DPKG_RUN_DEPENDS} \
+    | uniq | xargs )"
+cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Python: Compilation
 # ------------------------------------------------------------------------------
@@ -174,8 +178,11 @@ msginfo "Upgrading image to ${DEFAULT_SUITE} ..."
 echo "deb ${MIRROR} ${DEFAULT_SUITE} main" > /etc/apt/sources.list
 
 cmdretry apt-get update
+cmdretry apt-get -d install apt
 cmdretry apt-get install apt
+cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
+cmdretry apt-get -d dist-upgrade
 cmdretry apt-get dist-upgrade
 
 # Pip: Installation

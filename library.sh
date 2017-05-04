@@ -45,19 +45,20 @@ cmdretry() {
             msgerror "The command \"${@}\" failed. Retrying, ${COUNT} of 3."
         fi
 
+        set +e
         "${@}"
         RESULT=${?}
+        set -e
 
         if [ ${RESULT} -eq 0 ]; then
             break
         fi
 
         COUNT=$((${COUNT} + 1))
-        sleep 1
     done
 
     if [ ${COUNT} -gt 3 ]; then
-        msgerror "The command \"$@\" failed 3 times."
+        msgerror "The command \"${@}\" failed 3 times."
     fi
 
     return ${RESULT}

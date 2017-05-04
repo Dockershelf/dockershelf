@@ -15,6 +15,6 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-RUN pip2.7 install pypicontents
+RUN pip2.7 install pypicontents && pip3.5 install pypicontents
 
 CMD ["/bin/bash"]

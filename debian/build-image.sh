@@ -49,9 +49,15 @@ if [ "$( id -u )" != "0" ]; then
     exit 1
 fi
 
+msginfo "Downloading packages for base filesystem ..."
+cmdretry debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+    --download-only --no-check-gpg --no-check-certificate --merged-usr \
+        "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
+
 msginfo "Building base filesystem ..."
-debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --no-check-gpg --merged-usr "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
+cmdretry debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+    --no-check-gpg --no-check-certificate --merged-usr \
+        "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
 
 msginfo "Configuring base filesystem ..."
 cat > "${TARGET}/etc/resolv.conf" << EOF
@@ -207,12 +213,14 @@ export LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     DEBIAN_FRONTEND="noninteractive"
 
 msginfo "Installing dependencies and upgrading packages ..."
-chroot "${TARGET}" apt-get update
-chroot "${TARGET}" apt-get upgrade
-chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
+cmdretry chroot "${TARGET}" apt-get update
+cmdretry chroot "${TARGET}" apt-get -d upgrade
+cmdretry chroot "${TARGET}" apt-get upgrade
+cmdretry chroot "${TARGET}" apt-get -d install ${DPKG_DEPENDS}
+cmdretry chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
 
 msginfo "Configuring locales ..."
-chroot "${TARGET}" update-locale LANG="en_US.UTF-8" \
+cmdretry chroot "${TARGET}" update-locale LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8"
 
 msginfo "Shrinking base filesystem ..."

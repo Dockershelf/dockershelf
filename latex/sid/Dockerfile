@@ -15,14 +15,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-RUN apt-get update && \
-    apt-get upgrade && \
-    apt-get install \
-        texlive-fonts-recommended \
-        texlive-latex-base \
-        texlive-latex-extra \
-        latex-xcolor
-
-ADD sample.tex /root/
+COPY sample.tex /root/
+COPY *.sh /usr/share/dockershelf/latex/
+RUN bash /usr/share/dockershelf/latex/build-image.sh
 
 CMD ["/bin/bash"]
