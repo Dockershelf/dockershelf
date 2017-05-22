@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/LuisAlejandro/dockershelf.png?label=ready&title=Ready)](https://waffle.io/LuisAlejandro/dockershelf?utm_source=badge)
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
 
 ---
