@@ -1,8 +1,18 @@
 # Changelog
 
+
+## 0.1.5 (2017-07-08)
+
+### Other
+
+* [FIX] Fixing debian stretch test case. [FIX] The package latex-xcolor doesn't exist anymore, xcolor is now provided by texlive-latex-recommended. [Luis Alejandro martínez Faneyth]
+
+
 ## 0.1.4 (2017-05-04)
 
 ### Other
+
+* Updating Changelog and version. [Luis Alejandro Martínez Faneyth]
 
 * [REF] Fixing location of python 3.6 source package. Fixes #15. [Luis Alejandro Martínez Faneyth]
 
@@ -38,7 +48,7 @@
 
 * [REF] Limiting travis build to develop and master branches. [REF] Adding case for -dev images. [Luis Alejandro Martínez Faneyth]
 
-* [REF] Adding functionality for pushing to an alternate development version tag for when not pushing from master branch. [REF] Restoring force-overwrite config because som images fail to build. [REF] Adding test scripts for latex and pypicontents. [REF] Improving Debian &amp; Python test scripts. [REF] Adding default CMD to dockerfiles. [Luis Alejandro Martínez Faneyth]
+* [REF] Adding functionality for pushing to an alternate development version tag for when not pushing from master branch. [REF] Restoring force-overwrite config because som images fail to build. [REF] Adding test scripts for latex and pypicontents. [REF] Improving Debian & Python test scripts. [REF] Adding default CMD to dockerfiles. [Luis Alejandro Martínez Faneyth]
 
 * [ADD] Adding maintainer notes. [DEL] Removing bumpversion configuration. [REF] Improving READMEs. [REF] Improving test scripts. [Luis Alejandro Martínez Faneyth]
 
@@ -58,13 +68,13 @@
 
 * [FIX] Fixing installation of pip in python 3.2. [Luis Alejandro Martínez Faneyth]
 
-* [REF] Extending no-output restriction to 40min on Travis. [REF] Installing setuptools&lt;30 for python 3.2. [Luis Alejandro Martínez Faneyth]
+* [REF] Extending no-output restriction to 40min on Travis. [REF] Installing setuptools<30 for python 3.2. [Luis Alejandro Martínez Faneyth]
 
 * [FIX] Fixing cmdretry. [Luis Alejandro Martínez Faneyth]
 
 * [FIX] Removing reinstall of pip because causes to install a new version on 3.2 image which breaks pip. [FIX] Fixing typo. [Luis Alejandro Martínez Faneyth]
 
-* [FIX] Changing tag 2.7+3.5 -&gt; 2.7and3.5 because its invalid. [REF] Rewriting process of installing runtime dependencies because sometimes fails. [Luis Alejandro Martínez Faneyth]
+* [FIX] Changing tag 2.7+3.5 -> 2.7and3.5 because its invalid. [REF] Rewriting process of installing runtime dependencies because sometimes fails. [Luis Alejandro Martínez Faneyth]
 
 
 ## 0.1.1 (2016-12-29)
@@ -108,13 +118,13 @@
 
 * [FIX] Fixing installation of pip in python 3.2. [Luis Alejandro Martínez Faneyth]
 
-* [REF] Extending no-output restriction to 40min on Travis. [REF] Installing setuptools&lt;30 for python 3.2. [Luis Alejandro Martínez Faneyth]
+* [REF] Extending no-output restriction to 40min on Travis. [REF] Installing setuptools<30 for python 3.2. [Luis Alejandro Martínez Faneyth]
 
 * [FIX] Fixing cmdretry. [Luis Alejandro Martínez Faneyth]
 
 * [FIX] Removing reinstall of pip because causes to install a new version on 3.2 image which breaks pip. [FIX] Fixing typo. [Luis Alejandro Martínez Faneyth]
 
-* [FIX] Changing tag 2.7+3.5 -&gt; 2.7and3.5 because its invalid (closes #4). [REF] Rewriting process of installing runtime dependencies because sometimes fails. [Luis Alejandro Martínez Faneyth]
+* [FIX] Changing tag 2.7+3.5 -> 2.7and3.5 because its invalid (closes #4). [REF] Rewriting process of installing runtime dependencies because sometimes fails. [Luis Alejandro Martínez Faneyth]
 
 * [REF] Adding initial codebase for 2.7+3.5 Python image. [Luis Alejandro Martínez Faneyth]
 
