@@ -26,7 +26,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Latex packages
 DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
-    latex-xcolor"
+    texlive-latex-recommended"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
