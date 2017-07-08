@@ -101,7 +101,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     it "should contain apt list files after an apt-get update" do
         case ENV['DOCKER_IMAGE_TAG']
-        when "sid", "stretch"
+        when "sid"
             expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_InRelease" % ENV["DOCKER_IMAGE_TAG"])).to exist
         else
             expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_Release" % ENV["DOCKER_IMAGE_TAG"])).to exist
