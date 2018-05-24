@@ -188,21 +188,21 @@ if [ -n "${TERM}" ] && [ -r /etc/motd ]; then
 fi
 
 # Changing prompt
-PROMPT_RED="\[\033[38;5;167m\]"
-PROMPT_DARK_RED="\[\033[38;5;088m\]"
-PROMPT_OFF="\[\033[0m\]"
-PS1="${PROMPT_RED}[\u@${PROMPT_DARK_RED}\h]${PROMPT_OFF}:\w\$ "
+COLOR_RED="\[\033[38;5;167m\]"
+COLOR_DARK_RED="\[\033[38;5;88m\]"
+COLOR_OFF="\[\033[0m\]"
+PS1="\u@\h:${COLOR_RED}Dockershelf/${COLOR_DARK_RED}Debian${COLOR_OFF}:\w\$ "
 EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'
 
-           This image is part of            
+         This image was built using         
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
  |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
  |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
  `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
-                                        -´   
+                                        -´  
         For more information, visit         
 https://github.com/LuisAlejandro/dockershelf
 

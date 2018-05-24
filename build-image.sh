@@ -69,7 +69,12 @@ fi
 
 # Create a base filesystem if we are building a debian image
 if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-	cd "${DOCKER_IMAGE_DIR}" && sudo bash build-image.sh "${DOCKER_IMAGE_TAG}"
+    cd "${DOCKER_IMAGE_DIR}" && sudo bash build-image.sh "${DOCKER_IMAGE_TAG}"
+fi
+
+# Copy latex sample
+if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"
 fi
 
 # Build the docker image

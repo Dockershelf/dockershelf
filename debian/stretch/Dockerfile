@@ -7,7 +7,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="debian-stretch" \
-      org.label-schema.description="A Debian Stretch minimal image built from scratch." \
+      org.label-schema.description="A Debian stretch minimal image built from scratch." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \

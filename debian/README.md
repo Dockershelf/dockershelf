@@ -6,38 +6,15 @@
 
 ## Debian shelf
 
-[iwheezyl]: https://hub.docker.com/r/dockershelf/debian
-[dwheezy]: https://img.shields.io/badge/-debian%2Fwheezy%2FDockerfile-blue.svg
-[dwheezyl]: https://github.com/LuisAlejandro/dockershelf/blob/master/debian/wheezy/Dockerfile
-[lwheezy]: https://images.microbadger.com/badges/image/dockershelf/debian:wheezy.svg
-[lwheezyl]: https://microbadger.com/images/dockershelf/debian:wheezy
-
-[ijessiel]: https://hub.docker.com/r/dockershelf/debian
-[djessie]: https://img.shields.io/badge/-debian%2Fjessie%2FDockerfile-blue.svg
-[djessiel]: https://github.com/LuisAlejandro/dockershelf/blob/master/debian/jessie/Dockerfile
-[ljessie]: https://images.microbadger.com/badges/image/dockershelf/debian:jessie.svg
-[ljessiel]: https://microbadger.com/images/dockershelf/debian:jessie
-
-[istretchl]: https://hub.docker.com/r/dockershelf/debian
-[dstretch]: https://img.shields.io/badge/-debian%2Fstretch%2FDockerfile-blue.svg
-[dstretchl]: https://github.com/LuisAlejandro/dockershelf/blob/master/debian/stretch/Dockerfile
-[lstretch]: https://images.microbadger.com/badges/image/dockershelf/debian:stretch.svg
-[lstretchl]: https://microbadger.com/images/dockershelf/debian:stretch
-
-[isidl]: https://hub.docker.com/r/dockershelf/debian
-[dsid]: https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg
-[dsidl]: https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile
-[lsid]: https://images.microbadger.com/badges/image/dockershelf/debian:sid.svg
-[lsidl]: https://microbadger.com/images/dockershelf/debian:sid
-
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
 |Image                                    |Release  |Dockerfile                |Layers                    |
 |-----------------------------------------|---------|--------------------------|--------------------------|
-|[`dockershelf/debian:wheezy`][iwheezyl]  |`wheezy` |[![][dwheezy]][dwheezyl]  |[![][lwheezy]][lwheezyl]  |
-|[`dockershelf/debian:jessie`][ijessiel]  |`jessie` |[![][djessie]][djessiel]  |[![][ljessie]][ljessiel]  |
-|[`dockershelf/debian:stretch`][istretchl]|`stretch`|[![][dstretch]][dstretchl]|[![][lstretch]][lstretchl]|
-|[`dockershelf/debian:sid`][isidl]        |`sid`    |[![][dsid]][dsidl]        |[![][lsid]][lsidl]        |
+|[`dockershelf/debian:wheezy`](https://hub.docker.com/r/dockershelf/debian)|`wheezy`|[![](https://img.shields.io/badge/-debian%2Fwheezy%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/wheezy/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:wheezy.svg)](https://microbadger.com/images/dockershelf/debian:wheezy)|
+|[`dockershelf/debian:jessie`](https://hub.docker.com/r/dockershelf/debian)|`jessie`|[![](https://img.shields.io/badge/-debian%2Fjessie%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/jessie/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:jessie.svg)](https://microbadger.com/images/dockershelf/debian:jessie)|
+|[`dockershelf/debian:stretch`](https://hub.docker.com/r/dockershelf/debian)|`stretch`|[![](https://img.shields.io/badge/-debian%2Fstretch%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/stretch/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:stretch.svg)](https://microbadger.com/images/dockershelf/debian:stretch)|
+|[`dockershelf/debian:buster`](https://hub.docker.com/r/dockershelf/debian)|`buster`|[![](https://img.shields.io/badge/-debian%2Fbuster%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/buster/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:buster.svg)](https://microbadger.com/images/dockershelf/debian:buster)|
+|[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|`sid`|[![](https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:sid.svg)](https://microbadger.com/images/dockershelf/debian:sid)|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
@@ -146,6 +123,6 @@ However, we explain the overall process here:
 
 My name is Luis ([@LuisAlejandro](https://github.com/LuisAlejandro)) and I'm a Free and Open-Source Software developer living in Maracay, Venezuela.
 
-If you like what I do, please support me on [Patreon](https://www.patreon.com/luisalejandro),  [Flattr](https://flattr.com/profile/luisalejandro), or donate via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B8LPXHQY8QE8Y), so that I can continue doing what I love.
+If you like what I do, please support me on [Patreon](https://www.patreon.com/luisalejandro), [Flattr](https://flattr.com/profile/luisalejandro), or donate via [PayPal](https://www.paypal.me/martinezfaneyth), so that I can continue doing what I love.
 
 > Blog [huntingbears.com.ve](http://huntingbears.com.ve) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
