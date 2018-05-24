@@ -69,12 +69,17 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should have these packages installed" do
-        expect(package("iproute")).to be_installed
         expect(package("inetutils-ping")).to be_installed
         expect(package("locales")).to be_installed
         expect(package("curl")).to be_installed
         expect(package("ca-certificates")).to be_installed
         expect(package("bash-completion")).to be_installed
+        case ENV['DOCKER_IMAGE_TAG']
+        when "wheezy"
+            expect(package("iproute")).to be_installed
+        else
+            expect(package("iproute2")).to be_installed
+        end
     end
 
     it "shouldn't have invalid packages installed" do

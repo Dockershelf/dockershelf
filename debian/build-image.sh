@@ -31,7 +31,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
 
 # Packages to install at the end
-DPKG_DEPENDS="iproute inetutils-ping locales curl ca-certificates \
+DPKG_DEPENDS="inetutils-ping locales curl ca-certificates \
     bash-completion"
 
 # Load helper functions
@@ -49,14 +49,31 @@ if [ "$( id -u )" != "0" ]; then
     exit 1
 fi
 
+if [ "${DEBIAN_RELEASE}" == "wheezy" ]; then
+    DPKG_DEPENDS="${DPKG_DEPENDS} iproute"
+else
+    DPKG_DEPENDS="${DPKG_DEPENDS} iproute2"
+fi
+
+if [ "${DEBIAN_RELEASE}" == "sid" ]; then
+    MERGED_USR="--merged-usr"
+else
+    MERGED_USR=""
+fi
+
+# Clean previous builds
+if [ -d "${TARGET}" ]; then
+    rm -rf "${TARGET}"
+fi
+
 msginfo "Downloading packages for base filesystem ..."
-cmdretry debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --download-only --no-check-gpg --no-check-certificate --merged-usr \
+debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+    --download-only --no-check-gpg --no-check-certificate ${MERGED_USR} \
         "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
 
 msginfo "Building base filesystem ..."
-cmdretry debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --no-check-gpg --no-check-certificate --merged-usr \
+debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+    --no-check-gpg --no-check-certificate ${MERGED_USR} \
         "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
 
 msginfo "Configuring base filesystem ..."

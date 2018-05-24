@@ -69,7 +69,19 @@ fi
 
 # Create a base filesystem if we are building a debian image
 if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-    cd "${DOCKER_IMAGE_DIR}" && sudo bash build-image.sh "${DOCKER_IMAGE_TAG}"
+    if [ "${DOCKER_IMAGE_TAG}" == "wheezy" ]; then
+        cd "${DOCKER_IMAGE_DIR}" && \
+            sudo bash build-image.sh "${DOCKER_IMAGE_TAG}"
+    else
+        cd "${DOCKER_IMAGE_DIR}" && \
+            sudo docker run -it \
+                -v "${DOCKER_IMAGE_DIR}:/tmp/dockershelf" \
+                -w "/tmp/dockershelf" \
+                debian:sid \
+                bash -c "apt-get update && \
+                    apt-get install -y debootstrap && \
+                    bash build-image.sh ${DOCKER_IMAGE_TAG}"
+    fi
 fi
 
 # Copy latex sample

@@ -64,3 +64,6 @@ virtualenv/
 # App dirs
 data/
 logs/
+
+debian/*/base
+debian/*/*.sh
