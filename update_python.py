@@ -22,27 +22,12 @@ import os
 import re
 import sys
 import shutil
-from contextlib import closing
-
-try:
-    from urllib2 import urlopen
-except ImportError:
-    from urllib.request import urlopen
-
-from pkg_resources import parse_version
 
 from utils import find_dirs
 
 if not sys.version_info < (3,):
     unicode = str
     basestring = str
-
-versions = {'cpython': {}}
-python_versions_list_file = ('https://raw.githubusercontent.com/saghul/'
-                             'pythonz/master/pythonz/installer/'
-                             'versions.py')
-with closing(urlopen(python_versions_list_file)) as p:
-    exec(p.read())
 
 
 def update_python(basedir):
@@ -55,9 +40,8 @@ def update_python(basedir):
     python_readme_template = os.path.join(pythondir, 'README.md.template')
     python_readme = os.path.join(pythondir, 'README.md')
 
-    base_image_holder = 'dockershelf/debian:{0}'
-    python_os_version_holder = '{0}-{1}'
-    docker_tag_holder = 'dockershelf/python:{0}'
+    base_image = 'dockershelf/debian:sid'
+    docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-python%2F{0}%2FDockerfile-blue.svg')
     dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
@@ -66,102 +50,76 @@ def update_python(basedir):
                                 'image/dockershelf/python:{0}.svg')
     microbadger_url_holder = ('https://microbadger.com/images/'
                               'dockershelf/python:{0}')
-    travis_matrixlist_unstable_py2 = (
+    travis_matrixlist_py2_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:{1}'
-        ' dockershelf/python:2"')
-    travis_matrixlist_unstable_py3 = (
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"')
+    travis_matrixlist_py3_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:{1}'
-        ' dockershelf/python:3"')
-    travis_matrixlist_unstable = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:{1}"')
-    travis_matrixlist_stable = (
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3"')
+    travis_matrixlist_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"')
     python_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
                                       '|[![]({5})]({6})|')
 
-    python_versions_pre = versions['cpython'].keys()
-    python_versions_sel = set(map(lambda x: '.'.join(x.split('.')[:2]),
-                                  python_versions_pre))
-    python_versions_sel = python_versions_sel - set(['2.4', '2.5', '3.0',
-                                                     '3.1', '3.3'])
-
-    for vsel in python_versions_sel:
-        psel = set(filter(lambda x: '.'.join(x.split('.')[:2]) == vsel,
-                          python_versions_pre))
-        psel = [parse_version(x) for x in psel]
-        psel.sort()
-        python_versions.append(str(psel[-1]))
+    python_versions_src_origin = {
+        '2.6': 'wheezy-security',
+        '2.7': 'sid',
+        '3.2': 'wheezy-security',
+        '3.4': 'jessie',
+        '3.5': 'sid',
+        '3.6': 'sid',
+        '3.7': 'sid',
+    }
+    python_versions = python_versions_src_origin.keys()
 
     for deldir in find_dirs(pythondir):
         shutil.rmtree(deldir)
 
     for python_version in python_versions:
-        python_version_short = '.'.join(python_version.split('.')[:2])
+        python_os_version_dir = os.path.join(pythondir, python_version)
+        python_dockerfile = os.path.join(python_os_version_dir, 'Dockerfile')
+        dockerfile_badge = dockerfile_badge_holder.format(python_version)
+        dockerfile_url = dockerfile_url_holder.format(python_version)
+        microbadger_badge = microbadger_badge_holder.format(python_version)
+        microbadger_url = microbadger_url_holder.format(python_version)
 
-        for python_os in ['stable', 'unstable']:
-            base_image = base_image_holder.format(python_os)
-            python_os_version = python_os_version_holder.format(
-                python_version_short, python_os)
-            python_os_version_dir = os.path.join(pythondir, python_os_version)
-            python_dockerfile = os.path.join(python_os_version_dir,
-                                             'Dockerfile')
+        if python_version == '2.7':
+            travis_matrixlist.append(
+                travis_matrixlist_py2_str.format(python_version))
+        elif python_version == '3.5':
+            travis_matrixlist.append(
+                travis_matrixlist_py3_str.format(python_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(python_version))
 
-            docker_tag = docker_tag_holder.format(python_os_version)
-            docker_url = 'https://hub.docker.com/r/dockershelf/python'
-            dockerfile_badge = dockerfile_badge_holder.format(
-                python_os_version)
-            dockerfile_url = dockerfile_url_holder.format(python_os_version)
-            microbadger_badge = microbadger_badge_holder.format(
-                python_os_version)
-            microbadger_url = microbadger_url_holder.format(python_os_version)
+        python_readme_tablelist.append(
+            python_readme_tablelist_holder.format(
+                python_version, docker_url, python_version,
+                dockerfile_badge, dockerfile_url, microbadger_badge,
+                microbadger_url))
 
-            if python_os == 'unstable':
-                if python_version_short == '2.7':
-                    travis_matrixlist.append(
-                        travis_matrixlist_unstable_py2.format(
-                            python_os_version, python_version_short))
-                elif python_version_short == '3.5':
-                    travis_matrixlist.append(
-                        travis_matrixlist_unstable_py3.format(
-                            python_os_version, python_version_short))
-                else:
-                    travis_matrixlist.append(
-                        travis_matrixlist_unstable.format(
-                            python_os_version, python_version_short))
-            else:
-                travis_matrixlist.append(
-                    travis_matrixlist_stable.format(python_os_version))
+        os.makedirs(python_os_version_dir)
 
-            python_readme_tablelist.append(
-                python_readme_tablelist_holder.format(
-                    docker_tag, docker_url, python_os_version,
-                    dockerfile_badge, dockerfile_url, microbadger_badge,
-                    microbadger_url))
+        with open(python_dockerfile_template, 'r') as pdt:
+            python_dockerfile_template_content = pdt.read()
 
-            os.makedirs(python_os_version_dir)
+        python_dockerfile_content = python_dockerfile_template_content
+        python_dockerfile_content = re.sub(
+            '%%BASE_IMAGE%%', base_image, python_dockerfile_content)
+        python_dockerfile_content = re.sub(
+            '%%DEBIAN_RELEASE%%', 'sid', python_dockerfile_content)
+        python_dockerfile_content = re.sub(
+            '%%PYTHON_VERSION%%', python_version, python_dockerfile_content)
+        python_dockerfile_content = re.sub(
+            '%%PYTHON_DEBIAN_SUITE%%',
+            python_versions_src_origin[python_version],
+            python_dockerfile_content)
 
-            with open(python_dockerfile_template, 'r') as pdt:
-                python_dockerfile_template_content = pdt.read()
-
-            python_dockerfile_content = python_dockerfile_template_content
-            python_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
-                                               python_dockerfile_content)
-            python_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%', python_os,
-                                               python_dockerfile_content)
-            python_dockerfile_content = re.sub('%%PYTHON_VERSION%%',
-                                               python_version,
-                                               python_dockerfile_content)
-            python_dockerfile_content = re.sub('%%PYTHON_VERSION_SHORT%%',
-                                               python_version_short,
-                                               python_dockerfile_content)
-
-            with open(python_dockerfile, 'w') as pd:
-                pd.write(python_dockerfile_content)
+        with open(python_dockerfile, 'w') as pd:
+            pd.write(python_dockerfile_content)
 
     with open(python_readme_template, 'r') as prt:
         python_readme_template_content = prt.read()

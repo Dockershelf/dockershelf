@@ -5,6 +5,8 @@ group: edge
 language: ruby
 addons:
     apt:
+        sources:
+            - debian-sid
         packages:
             - debootstrap
 branches:
@@ -23,18 +25,13 @@ env:
         - DOCKER_IMAGE_NAME="dockershelf/debian:stretch" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:stable"
         - DOCKER_IMAGE_NAME="dockershelf/debian:buster" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:testing"
         - DOCKER_IMAGE_NAME="dockershelf/debian:sid" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:unstable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.6-stable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.6-unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3.6"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.4-stable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.4-unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3.4"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.5-stable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.5-unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3.5 dockershelf/python:3"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.2-stable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:3.2-unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3.2"
-        - DOCKER_IMAGE_NAME="dockershelf/python:2.7-stable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:2.7-unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2.7 dockershelf/python:2"
-        - DOCKER_IMAGE_NAME="dockershelf/python:2.6-stable"
-        - DOCKER_IMAGE_NAME="dockershelf/python:2.6-unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2.6"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.6"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.7"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.4"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.5" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3"
+        - DOCKER_IMAGE_NAME="dockershelf/python:3.2"
+        - DOCKER_IMAGE_NAME="dockershelf/python:2.7" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"
+        - DOCKER_IMAGE_NAME="dockershelf/python:2.6"
         # - DOCKER_IMAGE_NAME="dockershelf/latex:stable"
         # - DOCKER_IMAGE_NAME="dockershelf/latex:unstable" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/latex:sid"
         # - DOCKER_IMAGE_NAME="dockershelf/mongo:3.6-stable"
@@ -70,8 +67,8 @@ before_script:
             sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
             sed -i -r 's|FROM scratch-dev|FROM scratch|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
         fi
-script:
     - bash build-image.sh ${DOCKER_IMAGE_NAME}
+script:
     - bash test-image.sh ${DOCKER_IMAGE_NAME}
 after_success:
     - |

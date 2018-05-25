@@ -185,7 +185,7 @@ cat > "${TARGET}/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
 # Dockershelf post hook for dpkg
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rf
-rm -rf /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
+rm -rf /usr/share/doc/* /usr/share/locale/* \
        /var/cache/debconf/* /var/cache/apt/* 
 EOF
 
