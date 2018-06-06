@@ -1,10 +1,6 @@
 require "docker-api"
 require "serverspec"
 
-sample_latex = %q(
-
-)
-
 describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]] do
     before(:all) do
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])

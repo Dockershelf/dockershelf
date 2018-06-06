@@ -10,8 +10,7 @@
 
 |Image                             |Release|Dockerfile            |Layers                |
 |----------------------------------|-------|----------------------|----------------------|
-|[`dockershelf/latex:stable`](https://hub.docker.com/r/dockershelf/latex)|`stable`|[![](https://img.shields.io/badge/-latex%2Fstable%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/stable/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/latex:stable.svg)](https://microbadger.com/images/dockershelf/latex:stable)|
-|[`dockershelf/latex:unstable`](https://hub.docker.com/r/dockershelf/latex)|`unstable`|[![](https://img.shields.io/badge/-latex%2Funstable%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/unstable/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/latex:unstable.svg)](https://microbadger.com/images/dockershelf/latex:unstable)|
+|[`dockershelf/latex:sid`](https://hub.docker.com/r/dockershelf/latex)|`sid`|[![](https://img.shields.io/badge/-latex%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/latex:sid.svg)](https://microbadger.com/images/dockershelf/latex:sid)|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 

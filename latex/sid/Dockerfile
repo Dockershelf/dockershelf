@@ -1,13 +1,13 @@
-FROM dockershelf/debian:stable
-MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
+FROM dockershelf/debian:sid
+MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="latex-debian-stable" \
-      org.label-schema.description="A Latex image based on Debian stable." \
+      org.label-schema.name="latex-debian-sid" \
+      org.label-schema.description="A Latex image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
