@@ -1,13 +1,13 @@
-FROM dockershelf/debian:unstable
-MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
+FROM dockershelf/debian:sid
+MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="node%%NODE_VERSION%%" \
-      org.label-schema.description="A Node %%NODE_VERSION%% image based on Debian unstable." \
+      org.label-schema.name="mongo3.2" \
+      org.label-schema.description="A Mongo 3.2 image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,9 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV NODE_VER_NUM="%%NODE_VERSION%%" PYTHONIOENCODING="UTF-8"
+ENV MONGO_VER_NUM="3.2" MONGO_DEBIAN_SUITE="jessie"
 
-COPY *.sh /usr/share/dockershelf/node/
-RUN bash /usr/share/dockershelf/node/build-image.sh
+COPY *.sh /usr/share/dockershelf/mongo/
+RUN bash /usr/share/dockershelf/mongo/build-image.sh
 
 CMD ["/bin/bash"]

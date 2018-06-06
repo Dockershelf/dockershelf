@@ -23,10 +23,14 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+MIRROR="http://repo.mongodb.org/apt/debian"
+DEBMIRROR="http://deb.debian.org/debian"
+
+MONGO_PKGS="mongodb-org mongodb-org-server mongodb-org-shell \
+	mongodb-org-mongos mongodb-org-tools"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
-DPKG_BUILD_DEPENDS=""
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -34,35 +38,69 @@ source "${BASEDIR}/library.sh"
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
-# some commands are needed to download the source code before installing the
-# build dependencies.
+# some commands are needed to download and process dependencies
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS} ${DPKG_BUILD_DEPENDS} gnupg
-cmdretry apt-get install ${DPKG_TOOLS_DEPENDS} ${DPKG_BUILD_DEPENDS} gnupg
+cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
-# Node: Installation
+# Mongo: Configure sources
 # ------------------------------------------------------------------------------
-# We will use the nodesource script to install node.
+# We will use Mongo's official repository to install the different versions of
+# Mongo.
 
-msginfo "Installing Node ..."
-curl -fsSL "https://deb.nodesource.com/setup_${NODE_VER_NUM}.x" | bash
-cmdretry apt-get -d install nodejs
-cmdretry apt-get install nodejs
+msginfo "Configuring /etc/apt/sources.list ..."
+{
+    echo "deb ${DEBMIRROR} ${MONGO_DEBIAN_SUITE} main"
+    echo "deb ${MIRROR} ${MONGO_DEBIAN_SUITE}/mongodb-org/${MONGO_VER_NUM} main"
+} | tee /etc/apt/sources.list.d/mongo.list > /dev/null
 
-# Apt: Remove build depends
+if [ "${MONGO_VER_NUM}" == "3.6" ]; then
+    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv 58712A2291FA4AD5
+elif [ "${MONGO_VER_NUM}" == "3.4" ]; then
+    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv BC711F9BA15703C6
+elif [ "${MONGO_VER_NUM}" == "3.2" ]; then
+    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv D68FA50FEA312927
+elif [ "${MONGO_VER_NUM}" == "3.0" ]; then
+    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv 9ECBEC467F0CEB10
+fi
+
+cmdretry apt-get update
+
+# Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
-# We need to clear the filesystem of unwanted packages before installing python
-# because some files might be confused with already installed python packages.
+# Now we use some shell/apt plumbing to get runtime dependencies.
+
+msginfo "Installing python runtime dependencies ..."
+DPKG_RUN_DEPENDS="$( aptitude search -F%p \
+    $( printf '~RDepends:~n^%s$ ' ${MONGO_PKGS} ) | xargs | \
+    sed "$( printf 's/\s%s\s/ /g;' ${MONGO_PKGS} )" )"
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
+    uniq | xargs )"
+
+cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
+
+# Mongo: Installation
+# ------------------------------------------------------------------------------
+# We will install the packages listed in ${MONGO_PKGS}
+
+msginfo "Installing Mongo ..."
+cmdretry apt-get -d install ${MONGO_PKGS}
+cmdretry apt-get install ${MONGO_PKGS}
+
+# Apt: Remove unnecessary packages
+# ------------------------------------------------------------------------------
+# We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge $( echo ${DPKG_BUILD_DEPENDS} \
-    | sed "$( printf 's/\s%s\s/ /g;' ${DPKG_RUN_DEPENDS} )" )
-cmdretry apt-get autoremove
-
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                                 --no-show-section --guess-all --libdevel \
@@ -76,6 +114,17 @@ cmdretry apt-get autoremove
 cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
+# Bash: Changing prompt
+# ------------------------------------------------------------------------------
+# To distinguish images.
+
+cat >> "/etc/bash.bashrc" << 'EOF'
+
+COLOR_LIGHT_GREEN="\[\033[38;5;70m\]"
+COLOR_DARK_GREEN="\[\033[38;5;22m\]"
+PS1="\u@\h:${COLOR_LIGHT_GREEN}Dockershelf/${COLOR_DARK_GREEN}Mongo${COLOR_OFF}:\w\$ "
+EOF
+
 # Final cleaning
 # ------------------------------------------------------------------------------
 # Buncha files we won't use.
@@ -83,6 +132,6 @@ cmdretry apt-get autoremove
 msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
-rm -rfv /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
-        /var/cache/debconf/* /var/cache/apt/* /var/tmp/* /var/log/* \
-        /var/lib/apt/lists/*
+rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
+        "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
+        "/var/lib/apt/lists/"*
