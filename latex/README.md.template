@@ -8,8 +8,8 @@
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                             |Release|Dockerfile            |Layers                |
-|----------------------------------|-------|----------------------|----------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 %%LATEX_TABLE%%
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)

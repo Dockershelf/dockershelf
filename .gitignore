@@ -67,3 +67,8 @@ logs/
 
 debian/*/base
 debian/*/*.sh
+latex/*/*.sh
+python/*/*.sh
+ruby/*/*.sh
+mongo/*/*.sh
+node/*/*.sh

@@ -6,9 +6,9 @@
 
 Current version: 0.1.5
 
-*Dockershelf* is a repository that serves as a collector for docker recipes that I've found useful for specific cases and personal applications. However, I've designed them for universal purposes, so that they can serve for other applications as well.
+*Dockershelf* is a repository that serves as a collector for docker recipes that are universal, efficient and slim. We keep adding "shelves", which are holders for the different versions of a popular language or application.
 
-All docker images are updated, tested and published *daily* via a Travis cron job.
+All shelves are currently based off Debian Sid, the development version of Debian. Images are updated, tested and published *daily* via a Travis cron job.
 
 ## Shelves
 
@@ -18,45 +18,69 @@ These images are similar to the official ones, but with some improved configurat
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 %%DEBIAN_TABLE%%
-
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
-
-### Python
-
-These are python images compiled from source, using the `debian/rules` makefile from debian's python source. These images are then updated to Debian Sid. Check out [python/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/python/README.md) for more details.
-
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
-
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
-%%PYTHON_TABLE%%
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
 ### Latex
 
-This is an image based on [`dockershelf/debian:sid`](https://microbadger.com/images/dockershelf/debian:sid) with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor` packages installed. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/README.md) for more details.
+This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/README.md) for more details.
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                             |Release|Dockerfile            |Layers                |
-|----------------------------------|-------|----------------------|----------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 %%LATEX_TABLE%%
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+### Python
+
+These are python images with native debian packages that are extracted from different debian releases. Check out [python/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/python/README.md) for more details.
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
+%%PYTHON_TABLE%%
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+### Ruby
+
+These are ruby images with native debian packages that are extracted from different debian releases. Check out [ruby/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/README.md) for more details.
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
+%%RUBY_TABLE%%
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
 ### Node
 
-These are node images built using the [nodesource installation scripts](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [python/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/python/README.md) for more details.
+These are Node images built using the [nodesource installation scripts](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/node/README.md) for more details.
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 %%NODE_TABLE%%
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+### Mongo
+
+These are Mongo images built using the [official installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/). Check out [mongo/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/README.md) for more details.
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
+%%MONGO_TABLE%%
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
@@ -65,8 +89,8 @@ These are node images built using the [nodesource installation scripts](https://
 Pull one of the available images and start hacking!
 
 ```bash
-git pull [docker image name]
-git run -it [docker image name] bash
+docker pull [docker image name]
+docker run -it [docker image name] bash
 ```
 <sup>[docker image name] is the desired image to download.</sup>
 

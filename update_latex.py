@@ -38,23 +38,19 @@ def update_latex(basedir):
     latex_dockerfile_template = os.path.join(latexdir, 'Dockerfile.template')
     latex_readme_template = os.path.join(latexdir, 'README.md.template')
     latex_readme = os.path.join(latexdir, 'README.md')
-    latex_os_versions = ['stable', 'unstable']
 
-    base_image_holder = 'dockershelf/debian:{0}'
-    docker_tag_holder = 'dockershelf/latex:{0}'
-    dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-latex%2F{0}%2FDockerfile-blue.svg')
-    dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
-                             'blob/master/latex/{0}/Dockerfile')
-    microbadger_badge_holder = ('https://images.microbadger.com/badges/'
-                                'image/dockershelf/latex:{0}.svg')
-    microbadger_url_holder = ('https://microbadger.com/images/'
-                              'dockershelf/latex:{0}')
-    travis_matrixlist_unstable = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/latex:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/latex:sid"')
-    travis_matrixlist_stable = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/latex:{0}"')
+    base_image = 'dockershelf/debian:sid'
+    docker_tag = 'dockershelf/latex:sid'
+    docker_url = 'https://hub.docker.com/r/dockershelf/latex'
+    dockerfile_badge = ('https://img.shields.io/badge/'
+                        '-latex%2Fsid%2FDockerfile-blue.svg')
+    dockerfile_url = ('https://github.com/LuisAlejandro/dockershelf/'
+                      'blob/master/latex/sid/Dockerfile')
+    microbadger_badge = ('https://images.microbadger.com/badges/'
+                         'image/dockershelf/latex:sid.svg')
+    microbadger_url = 'https://microbadger.com/images/dockershelf/latex:sid'
+    travis_matrixlist_str = ('        '
+                             '- DOCKER_IMAGE_NAME="dockershelf/latex:sid"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
@@ -63,44 +59,30 @@ def update_latex(basedir):
     for deldir in find_dirs(latexdir):
         shutil.rmtree(deldir)
 
-    for latex_os_version in latex_os_versions:
-        base_image = base_image_holder.format(latex_os_version)
-        latex_os_version_dir = os.path.join(latexdir, latex_os_version)
-        latex_dockerfile = os.path.join(latex_os_version_dir, 'Dockerfile')
+    latex_os_version_dir = os.path.join(latexdir, 'sid')
+    latex_dockerfile = os.path.join(latex_os_version_dir, 'Dockerfile')
 
-        docker_tag = docker_tag_holder.format(latex_os_version)
-        docker_url = 'https://hub.docker.com/r/dockershelf/latex'
-        dockerfile_badge = dockerfile_badge_holder.format(latex_os_version)
-        dockerfile_url = dockerfile_url_holder.format(latex_os_version)
-        microbadger_badge = microbadger_badge_holder.format(latex_os_version)
-        microbadger_url = microbadger_url_holder.format(latex_os_version)
+    travis_matrixlist.append(travis_matrixlist_str)
 
-        if latex_os_version == 'unstable':
-            travis_matrixlist.append(
-                travis_matrixlist_unstable.format(latex_os_version))
-        else:
-            travis_matrixlist.append(
-                travis_matrixlist_stable.format(latex_os_version))
+    latex_readme_tablelist.append(
+        latex_readme_tablelist_holder.format(
+            docker_tag, docker_url, 'sid', dockerfile_badge,
+            dockerfile_url, microbadger_badge, microbadger_url))
 
-        latex_readme_tablelist.append(
-            latex_readme_tablelist_holder.format(
-                docker_tag, docker_url, latex_os_version, dockerfile_badge,
-                dockerfile_url, microbadger_badge, microbadger_url))
+    os.makedirs(latex_os_version_dir)
 
-        os.makedirs(latex_os_version_dir)
+    with open(latex_dockerfile_template, 'r') as ldt:
+        latex_dockerfile_template_content = ldt.read()
 
-        with open(latex_dockerfile_template, 'r') as ldt:
-            latex_dockerfile_template_content = ldt.read()
+    latex_dockerfile_content = latex_dockerfile_template_content
+    latex_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
+                                      latex_dockerfile_content)
+    latex_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                      'sid',
+                                      latex_dockerfile_content)
 
-        latex_dockerfile_content = latex_dockerfile_template_content
-        latex_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
-                                          latex_dockerfile_content)
-        latex_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                          latex_os_version,
-                                          latex_dockerfile_content)
-
-        with open(latex_dockerfile, 'w') as ld:
-            ld.write(latex_dockerfile_content)
+    with open(latex_dockerfile, 'w') as ld:
+        ld.write(latex_dockerfile_content)
 
     with open(latex_readme_template, 'r') as lrt:
         latex_readme_template_content = lrt.read()

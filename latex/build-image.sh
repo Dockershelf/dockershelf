@@ -50,6 +50,6 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
-rm -rfv /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
-        /var/cache/debconf/* /var/cache/apt/* /var/tmp/* /var/log/* \
-        /var/lib/apt/lists/*
+rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
+        "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
+        "/var/lib/apt/lists/"*

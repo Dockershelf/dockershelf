@@ -47,9 +47,9 @@ def update_node(basedir):
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
 
-    base_image_holder = 'dockershelf/debian:{0}'
-    node_os_version_holder = '{0}-{1}'
+    base_image = 'dockershelf/debian:sid'
     docker_tag_holder = 'dockershelf/node:{0}'
+    docker_url = 'https://hub.docker.com/r/dockershelf/node'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-node%2F{0}%2FDockerfile-blue.svg')
     dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
@@ -58,11 +58,8 @@ def update_node(basedir):
                                 'image/dockershelf/node:{0}.svg')
     microbadger_url_holder = ('https://microbadger.com/images/'
                               'dockershelf/node:{0}')
-    travis_matrixlist_unstable = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/node:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/node:{1}"')
-    travis_matrixlist_stable = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/node:{0}"')
+    travis_matrixlist_str = ('        '
+                             '- DOCKER_IMAGE_NAME="dockershelf/node:{0}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
@@ -76,47 +73,36 @@ def update_node(basedir):
         shutil.rmtree(deldir)
 
     for node_version in node_versions:
-        for node_os in ['stable', 'unstable']:
-            base_image = base_image_holder.format(node_os)
-            node_os_version = node_os_version_holder.format(
-                node_version, node_os)
-            node_os_version_dir = os.path.join(nodedir, node_os_version)
-            node_dockerfile = os.path.join(node_os_version_dir, 'Dockerfile')
+        node_os_version_dir = os.path.join(nodedir, node_version)
+        node_dockerfile = os.path.join(node_os_version_dir, 'Dockerfile')
 
-            docker_tag = docker_tag_holder.format(node_os_version)
-            docker_url = 'https://hub.docker.com/r/dockershelf/node'
-            dockerfile_badge = dockerfile_badge_holder.format(node_os_version)
-            dockerfile_url = dockerfile_url_holder.format(node_os_version)
-            microbadger_badge = microbadger_badge_holder.format(
-                node_os_version)
-            microbadger_url = microbadger_url_holder.format(node_os_version)
+        docker_tag = docker_tag_holder.format(node_version)
+        dockerfile_badge = dockerfile_badge_holder.format(node_version)
+        dockerfile_url = dockerfile_url_holder.format(node_version)
+        microbadger_badge = microbadger_badge_holder.format(node_version)
+        microbadger_url = microbadger_url_holder.format(node_version)
 
-            if node_os == 'unstable':
-                travis_matrixlist.append(travis_matrixlist_unstable.format(
-                    node_os_version, node_version))
-            else:
-                travis_matrixlist.append(travis_matrixlist_stable.format(
-                    node_os_version))
+        travis_matrixlist.append(travis_matrixlist_str.format(node_version))
 
-            node_readme_tablelist.append(latex_readme_tablelist_holder.format(
-                docker_tag, docker_url, node_os_version, dockerfile_badge,
-                dockerfile_url, microbadger_badge, microbadger_url))
+        node_readme_tablelist.append(latex_readme_tablelist_holder.format(
+            docker_tag, docker_url, node_version, dockerfile_badge,
+            dockerfile_url, microbadger_badge, microbadger_url))
 
-            os.makedirs(node_os_version_dir)
+        os.makedirs(node_os_version_dir)
 
-            with open(node_dockerfile_template, 'r') as pdt:
-                node_dockerfile_template_content = pdt.read()
+        with open(node_dockerfile_template, 'r') as pdt:
+            node_dockerfile_template_content = pdt.read()
 
-            node_dockerfile_content = node_dockerfile_template_content
-            node_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
-                                             node_dockerfile_content)
-            node_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%', node_os,
-                                             node_dockerfile_content)
-            node_dockerfile_content = re.sub('%%NODE_VERSION%%', node_version,
-                                             node_dockerfile_content)
+        node_dockerfile_content = node_dockerfile_template_content
+        node_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
+                                         node_dockerfile_content)
+        node_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%', 'sid',
+                                         node_dockerfile_content)
+        node_dockerfile_content = re.sub('%%NODE_VERSION%%', node_version,
+                                         node_dockerfile_content)
 
-            with open(node_dockerfile, 'w') as pd:
-                pd.write(node_dockerfile_content)
+        with open(node_dockerfile, 'w') as pd:
+            pd.write(node_dockerfile_content)
 
     with open(node_readme_template, 'r') as prt:
         node_readme_template_content = prt.read()
