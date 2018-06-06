@@ -29,7 +29,7 @@ However, we explain the overall process here:
 2. Labelled according to [label-schema.org](http://label-schema.org).
 3. The base filesystem is built with `debootstrap` using the following command.
 
-        debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg --merged-usr <release> <dir> <mirror>
+        debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg <release> <dir> <mirror>
 
 4. Then the following files are configured:
 
