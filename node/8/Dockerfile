@@ -1,13 +1,13 @@
-FROM dockershelf/debian:unstable
-MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
+FROM dockershelf/debian:sid
+MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="node9" \
-      org.label-schema.description="A Node 9 image based on Debian unstable." \
+      org.label-schema.name="node8" \
+      org.label-schema.description="A Node 8 image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV NODE_VER_NUM="9" PYTHONIOENCODING="UTF-8"
+ENV NODE_VER_NUM="8" PYTHONIOENCODING="UTF-8"
 
 COPY *.sh /usr/share/dockershelf/node/
 RUN bash /usr/share/dockershelf/node/build-image.sh

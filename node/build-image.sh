@@ -25,8 +25,7 @@ set -exuo pipefail
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
-DPKG_BUILD_DEPENDS=""
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -41,8 +40,8 @@ msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS} ${DPKG_BUILD_DEPENDS} gnupg
-cmdretry apt-get install ${DPKG_TOOLS_DEPENDS} ${DPKG_BUILD_DEPENDS} gnupg
+cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Node: Installation
 # ------------------------------------------------------------------------------
@@ -59,10 +58,6 @@ cmdretry apt-get install nodejs
 # because some files might be confused with already installed python packages.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge $( echo ${DPKG_BUILD_DEPENDS} \
-    | sed "$( printf 's/\s%s\s/ /g;' ${DPKG_RUN_DEPENDS} )" )
-cmdretry apt-get autoremove
-
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                                 --no-show-section --guess-all --libdevel \
@@ -83,6 +78,6 @@ cmdretry apt-get autoremove
 msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
-rm -rfv /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
-        /var/cache/debconf/* /var/cache/apt/* /var/tmp/* /var/log/* \
-        /var/lib/apt/lists/*
+rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
+        "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
+        "/var/lib/apt/lists/"*
