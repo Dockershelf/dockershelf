@@ -1,5 +1,5 @@
 FROM dockershelf/debian:sid
-MAINTAINER Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
+MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
 ARG VCS_REF
