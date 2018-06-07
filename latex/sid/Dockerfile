@@ -16,7 +16,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
 COPY sample.tex /root/
-COPY build-image.sh /usr/share/dockershelf/latex/
+COPY build-image.sh library.sh /usr/share/dockershelf/latex/
 RUN bash /usr/share/dockershelf/latex/build-image.sh
 
 CMD ["/bin/bash"]

@@ -8,8 +8,8 @@
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 |[`dockershelf/node:10`](https://hub.docker.com/r/dockershelf/node)|`10`|[![](https://img.shields.io/badge/-node%2F10%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/10/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:10.svg)](https://microbadger.com/images/dockershelf/node:10)|
 |[`dockershelf/node:5`](https://hub.docker.com/r/dockershelf/node)|`5`|[![](https://img.shields.io/badge/-node%2F5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:5.svg)](https://microbadger.com/images/dockershelf/node:5)|
 |[`dockershelf/node:4`](https://hub.docker.com/r/dockershelf/node)|`4`|[![](https://img.shields.io/badge/-node%2F4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:4.svg)](https://microbadger.com/images/dockershelf/node:4)|

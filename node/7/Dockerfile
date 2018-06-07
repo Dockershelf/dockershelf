@@ -17,7 +17,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV NODE_VER_NUM="7"
 
-COPY build-image.sh /usr/share/dockershelf/node/
+COPY build-image.sh library.sh /usr/share/dockershelf/node/
 RUN bash /usr/share/dockershelf/node/build-image.sh
 
 CMD ["/bin/bash"]

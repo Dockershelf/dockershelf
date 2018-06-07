@@ -8,8 +8,8 @@
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 %%NODE_TABLE%%
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)

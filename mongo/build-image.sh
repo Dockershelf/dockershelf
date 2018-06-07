@@ -88,6 +88,15 @@ DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
 cmdretry apt-get -d install ${DPKG_DEPENDS} jq numactl
 cmdretry apt-get install ${DPKG_DEPENDS} jq numactl
 
+# Mongo: Configure
+# ------------------------------------------------------------------------------
+# We need to configure proper volumes and users.
+
+mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d
+groupadd -r mongodb
+useradd -r -g mongodb mongodb
+chown -R mongodb:mongodb /data/db /data/configdb
+
 # Mongo: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${MONGO_PKGS}
@@ -124,15 +133,6 @@ COLOR_LIGHT_GREEN="\[\033[38;5;70m\]"
 COLOR_DARK_GREEN="\[\033[38;5;22m\]"
 PS1="\u@\h:${COLOR_LIGHT_GREEN}Dockershelf/${COLOR_DARK_GREEN}Mongo${COLOR_OFF}:\w\$ "
 EOF
-
-# Mongo: Configure
-# ------------------------------------------------------------------------------
-# We need to configure proper volumes and users.
-
-mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d
-groupadd -r mongodb
-useradd -r -g mongodb mongodb
-chown -R mongodb:mongodb /data/db /data/configdb
 
 # Final cleaning
 # ------------------------------------------------------------------------------

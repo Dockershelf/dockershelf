@@ -17,7 +17,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV RUBY_VER_NUM="%%RUBY_VERSION%%" RUBY_DEBIAN_SUITE="%%RUBY_DEBIAN_SUITE%%"
 
-COPY build-image.sh /usr/share/dockershelf/ruby/
+COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
 RUN bash /usr/share/dockershelf/ruby/build-image.sh
 
 CMD ["ruby"]

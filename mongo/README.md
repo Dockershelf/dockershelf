@@ -4,12 +4,12 @@
 
 [![](https://img.shields.io/github/release/LuisAlejandro/dockershelf.svg)](https://github.com/LuisAlejandro/dockershelf/releases) [![](https://img.shields.io/travis/LuisAlejandro/dockershelf.svg)](https://travis-ci.org/LuisAlejandro/dockershelf) [![](https://img.shields.io/docker/pulls/dockershelf/mongo.svg)](https://hub.docker.com/r/dockershelf/mongo) [![](https://img.shields.io/github/issues-raw/LuisAlejandro/dockershelf/in%20progress.svg?label=in%20progress)](https://github.com/LuisAlejandro/dockershelf/issues?q=is%3Aissue+is%3Aopen+label%3A%22in+progress%22) [![](https://badges.gitter.im/LuisAlejandro/dockershelf.svg)](https://gitter.im/LuisAlejandro/dockershelf) [![](https://cla-assistant.io/readme/badge/LuisAlejandro/dockershelf)](https://cla-assistant.io/LuisAlejandro/dockershelf)
 
-## Node shelf
+## Mongo shelf
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 |[`dockershelf/mongo:3.0`](https://hub.docker.com/r/dockershelf/mongo)|`3.0`|[![](https://img.shields.io/badge/-mongo%2F3.0%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.0/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.0.svg)](https://microbadger.com/images/dockershelf/mongo:3.0)|
 |[`dockershelf/mongo:3.2`](https://hub.docker.com/r/dockershelf/mongo)|`3.2`|[![](https://img.shields.io/badge/-mongo%2F3.2%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.2/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.2.svg)](https://microbadger.com/images/dockershelf/mongo:3.2)|
 |[`dockershelf/mongo:3.4`](https://hub.docker.com/r/dockershelf/mongo)|`3.4`|[![](https://img.shields.io/badge/-mongo%2F3.4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.4.svg)](https://microbadger.com/images/dockershelf/mongo:3.4)|
@@ -25,10 +25,11 @@ Each mongo release is installed using the [official installation guide](https://
 
 We'll explain the overall process here:
 
-1. Built `FROM dockershelf/debian:<release>`.
+1. Built `FROM dockershelf/debian:sid`.
 2. Labelled according to [label-schema.org](http://label-schema.org).
-3. Install developer tools and build depends to handle the nodesource script install.
-4. Install Node.
+3. Install developer tools to handle the packages installation.
+5. Configure mongodb user and data/config directories.
+4. Install Mongo.
 5. Shrink image by deleting unnecessary files.
 
 ## Made with :heart: and :hamburger:

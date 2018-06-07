@@ -8,8 +8,8 @@
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
-|Image                                    |Release  |Dockerfile                |Layers                    |
-|-----------------------------------------|---------|--------------------------|--------------------------|
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
 |[`2.6`](https://hub.docker.com/r/dockershelf/python)|`2.6`|[![](https://img.shields.io/badge/-python%2F2.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:2.6.svg)](https://microbadger.com/images/dockershelf/python:2.6)|
 |[`2.7`](https://hub.docker.com/r/dockershelf/python)|`2.7`|[![](https://img.shields.io/badge/-python%2F2.7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:2.7.svg)](https://microbadger.com/images/dockershelf/python:2.7)|
 |[`3.2`](https://hub.docker.com/r/dockershelf/python)|`3.2`|[![](https://img.shields.io/badge/-python%2F3.2%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.2/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.2.svg)](https://microbadger.com/images/dockershelf/python:3.2)|
