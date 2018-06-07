@@ -24,6 +24,7 @@ import sys
 
 from update_debian import update_debian
 from update_python import update_python
+from update_ruby import update_ruby
 from update_latex import update_latex
 from update_mongo import update_mongo
 from update_node import update_node
@@ -44,12 +45,14 @@ if __name__ == '__main__':
 
     debian_matrix_list, debian_readme_table = update_debian(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
+    ruby_matrix_list, ruby_readme_table = update_ruby(basedir)
     latex_matrix_list, latex_readme_table = update_latex(basedir)
     mongo_matrix_list, mongo_readme_table = update_mongo(basedir)
     node_matrix_list, node_readme_table = update_node(basedir)
 
     travis_matrixlist.extend(debian_matrix_list)
     travis_matrixlist.extend(python_matrix_list)
+    travis_matrixlist.extend(ruby_matrix_list)
     travis_matrixlist.extend(latex_matrix_list)
     travis_matrixlist.extend(mongo_matrix_list)
     travis_matrixlist.extend(node_matrix_list)
@@ -72,6 +75,8 @@ if __name__ == '__main__':
     readme_content = re.sub('%%DEBIAN_TABLE%%', debian_readme_table,
                             readme_content)
     readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,
+                            readme_content)
+    readme_content = re.sub('%%RUBY_TABLE%%', ruby_readme_table,
                             readme_content)
     readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
                             readme_content)

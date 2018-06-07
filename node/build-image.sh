@@ -26,6 +26,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+NODE_PKGS="nodejs"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -43,14 +44,33 @@ cmdretry apt-get upgrade
 cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
+# Node: Configure sources
+# ------------------------------------------------------------------------------
+# We will use Nodesource's configuration script to configure sources.
+
+curl -fsSL "https://deb.nodesource.com/setup_${NODE_VER_NUM}.x" | bash
+
+# Apt: Install runtime dependencies
+# ------------------------------------------------------------------------------
+# Now we use some shell/apt plumbing to get runtime dependencies.
+
+msginfo "Installing node runtime dependencies ..."
+DPKG_RUN_DEPENDS="$( aptitude search -F%p \
+    $( printf '~RDepends:~n^%s$ ' ${NODE_PKGS} ) | xargs | \
+    sed "$( printf 's/\s%s\s/ /g;' ${NODE_PKGS} )" )"
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
+    uniq | xargs )"
+
+cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
+
 # Node: Installation
 # ------------------------------------------------------------------------------
 # We will use the nodesource script to install node.
 
 msginfo "Installing Node ..."
-curl -fsSL "https://deb.nodesource.com/setup_${NODE_VER_NUM}.x" | bash
-cmdretry apt-get -d install nodejs
-cmdretry apt-get install nodejs
+cmdretry apt-get -d install ${NODE_PKGS}
+cmdretry apt-get install ${NODE_PKGS}
 
 # Apt: Remove build depends
 # ------------------------------------------------------------------------------

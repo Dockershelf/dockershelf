@@ -84,6 +84,11 @@ if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
     fi
 fi
 
+# Copy entrypoint if we are building Mongo
+if [ "${DOCKER_IMAGE_TYPE}" == "mongo" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+fi
+
 # Copy latex sample
 if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"

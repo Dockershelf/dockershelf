@@ -33,7 +33,6 @@ if not sys.version_info < (3,):
 def update_mongo(basedir):
 
     travis_matrixlist = []
-    # mongo_versions = []
     mongo_readme_tablelist = []
     mongodir = os.path.join(basedir, 'mongo')
     mongo_dockerfile_template = os.path.join(mongodir, 'Dockerfile.template')

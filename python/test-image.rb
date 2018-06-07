@@ -32,15 +32,15 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(file("/usr/bin/python")).to be_linked_to("/usr/bin/python#{python_version()}")
     end
 
-    it "should be able to install a python package" do
-        expect(command("pip install virtualenv").exit_status).to eq(0)
-        expect(file('/usr/local/bin/virtualenv')).to be_executable
-    end
+    # it "should be able to install a python package" do
+    #     expect(command("pip install virtualenv").exit_status).to eq(0)
+    #     expect(file('/usr/local/bin/virtualenv')).to be_executable
+    # end
 
-    it "should be able to uninstall a python package" do
-        expect(command("pip uninstall -y virtualenv").exit_status).to eq(0)
-        expect(file('/usr/local/bin/virtualenv')).not_to exist
-    end
+    # it "should be able to uninstall a python package" do
+    #     expect(command("pip uninstall -y virtualenv").exit_status).to eq(0)
+    #     expect(file('/usr/local/bin/virtualenv')).not_to exist
+    # end
 
     # it "should have setuptools installed by pip" do
     #     expect(package('setuptools')).to be_installed.by('pip')

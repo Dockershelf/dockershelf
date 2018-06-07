@@ -17,7 +17,13 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV MONGO_VER_NUM="3.6" MONGO_DEBIAN_SUITE="stretch"
 
-COPY *.sh /usr/share/dockershelf/mongo/
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY build-image.sh /usr/share/dockershelf/mongo/
 RUN bash /usr/share/dockershelf/mongo/build-image.sh
 
-CMD ["/bin/bash"]
+VOLUME /data/db /data/configdb
+
+EXPOSE 27017
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mongod"]

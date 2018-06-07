@@ -15,9 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV NODE_VER_NUM="4" PYTHONIOENCODING="UTF-8"
+ENV NODE_VER_NUM="4"
 
-COPY *.sh /usr/share/dockershelf/node/
+COPY build-image.sh /usr/share/dockershelf/node/
 RUN bash /usr/share/dockershelf/node/build-image.sh
 
 CMD ["/bin/bash"]

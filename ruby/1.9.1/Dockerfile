@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="python3.5" \
-      org.label-schema.description="A Python 3.5 image based on Debian sid." \
+      org.label-schema.name="ruby1.9.1" \
+      org.label-schema.description="A Ruby 1.9.1 image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,9 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV PY_VER_NUM="3.5" PY_DEBIAN_SUITE="sid" PYTHONIOENCODING="UTF-8"
+ENV RUBY_VER_NUM="1.9.1" RUBY_DEBIAN_SUITE="wheezy"
 
-COPY *.sh /usr/share/dockershelf/python/
-RUN bash /usr/share/dockershelf/python/build-image.sh
+COPY build-image.sh /usr/share/dockershelf/ruby/
+RUN bash /usr/share/dockershelf/ruby/build-image.sh
 
-CMD ["python"]
+CMD ["ruby"]

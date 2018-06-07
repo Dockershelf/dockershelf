@@ -16,7 +16,7 @@
 
 ## Building process
 
-You can check out the Dockerfile for earch debian release at `debian/<release>/Dockerfile`.
+You can check out the Dockerfile for each debian release at `debian/<release>/Dockerfile`.
 The base filesystem is created with [`debian/build-image.sh`](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/build-image.sh)
 
 However, we explain the overall process here:

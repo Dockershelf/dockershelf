@@ -58,7 +58,7 @@ def update_debian(basedir):
                                 'image/dockershelf/debian:{0}.svg')
     microbadger_url_holder = ('https://microbadger.com/images/dockershelf/'
                               'debian:{0}')
-    travis_matrixlist_holder = (
+    travis_matrixlist_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
         ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
@@ -90,7 +90,7 @@ def update_debian(basedir):
         microbadger_badge = microbadger_badge_holder.format(debian_codename)
         microbadger_url = microbadger_url_holder.format(debian_codename)
 
-        travis_matrixlist.append(travis_matrixlist_holder.format(
+        travis_matrixlist.append(travis_matrixlist_str.format(
             debian_codename, debian_suite))
         debian_readme_tablelist.append(debian_readme_tablelist_holder.format(
             docker_tag, docker_url, debian_codename, dockerfile_badge,

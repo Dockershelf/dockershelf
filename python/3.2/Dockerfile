@@ -15,9 +15,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV PY_VER_NUM="3.2" PY_DEBIAN_SUITE="wheezy-security" PYTHONIOENCODING="UTF-8"
+ENV PYTHON_VER_NUM="3.2" PYTHON_DEBIAN_SUITE="wheezy-security" \
+	PYTHONIOENCODING="UTF-8"
 
-COPY *.sh /usr/share/dockershelf/python/
+COPY build-image.sh /usr/share/dockershelf/python/
 RUN bash /usr/share/dockershelf/python/build-image.sh
 
 CMD ["python"]

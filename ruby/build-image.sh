@@ -23,29 +23,18 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PY_SOURCE_TEMPDIR="$( mktemp -d )"
-PY_VER_NUM_MINOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1"."$2}')"
-PY_VER_NUM_MAJOR="$( echo ${PY_VER_NUM} | awk -F'.' '{print $1}')"
-PY_VER_NUM_MINOR_STR="python${PY_VER_NUM_MINOR}"
-PY_VER_NUM_MAJOR_STR="python${PY_VER_NUM_MAJOR}"
+
+RUBY_VER_NUM_MINOR="$( echo ${RUBY_VER_NUM} | awk -F'.' '{print $1"."$2}')"
+RUBY_VER_NUM_MAJOR="$( echo ${RUBY_VER_NUM} | awk -F'.' '{print $1}')"
+RUBY_VER_NUM_STR="ruby${RUBY_VER_NUM}"
+RUBY_VER_NUM_MINOR_STR="ruby${RUBY_VER_NUM_MINOR}"
+RUBY_VER_NUM_MAJOR_STR="ruby${RUBY_VER_NUM_MAJOR}"
+
 MIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
 
-# This is the list of python packages from debian that make up a minimal
-# python installation. We will use them later.
-if [ "${PY_DEBIAN_SUITE}" == "wheezy-security" ]; then
-    PY_PKGS="${PY_VER_NUM_MINOR_STR}-minimal lib${PY_VER_NUM_MINOR_STR} \
-        ${PY_VER_NUM_MINOR_STR} ${PY_VER_NUM_MINOR_STR}-dev"
-else
-    PY_PKGS="lib${PY_VER_NUM_MINOR_STR}-minimal \
-        ${PY_VER_NUM_MINOR_STR}-minimal lib${PY_VER_NUM_MINOR_STR}-stdlib \
-        lib${PY_VER_NUM_MINOR_STR} ${PY_VER_NUM_MINOR_STR} \
-        lib${PY_VER_NUM_MINOR_STR}-dev ${PY_VER_NUM_MINOR_STR}-dev"
-fi
-
-# These are the folders of a debian python installation that we won't need.
-PY_CLEAN_DIRS="/usr/share/lintian /usr/share/man /usr/share/pixmaps \
-    /usr/share/doc /usr/share/applications"
+# This is the list of ruby packages from debian that make up a minimal
+# ruby installation. We will use them later.
+RUBY_PKGS="${RUBY_VER_NUM_STR} ${RUBY_VER_NUM_STR}-dev"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
@@ -65,20 +54,15 @@ cmdretry apt-get upgrade
 cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
-# Python: Configure sources
+# Ruby: Configure sources
 # ------------------------------------------------------------------------------
-# We will use Debian's repository to install the different versions of Python.
+# We will use Debian's repository to install the different versions of Ruby.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${PY_DEBIAN_SUITE}" == "wheezy-security" ]; then
+if [ "${RUBY_DEBIAN_SUITE}" != "sid" ]; then
     {
-        echo "deb ${MIRROR} wheezy main"
-        echo "deb ${SECMIRROR} wheezy/updates main"
-    } | tee /etc/apt/sources.list.d/python.list > /dev/null
-elif [ "${PY_DEBIAN_SUITE}" != "sid" ]; then
-    {
-        echo "deb ${MIRROR} ${PY_DEBIAN_SUITE} main"
-    } | tee /etc/apt/sources.list.d/python.list > /dev/null
+        echo "deb ${MIRROR} ${RUBY_DEBIAN_SUITE} main"
+    } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
 fi
 
 cmdretry apt-get update
@@ -87,33 +71,23 @@ cmdretry apt-get update
 # ------------------------------------------------------------------------------
 # Now we use some shell/apt plumbing to get runtime dependencies.
 
-msginfo "Installing python runtime dependencies ..."
+msginfo "Installing ruby runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) | xargs | \
-    sed "$( printf 's/\s%s\s/ /g;' ${PY_PKGS} )" )"
+    $( printf '~RDepends:~n^%s$ ' ${RUBY_PKGS} ) | xargs | \
+    sed "$( printf 's/\s%s\s/ /g;' ${RUBY_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
 cmdretry apt-get -d install ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
 
-if [ "${PY_DEBIAN_SUITE}" == "jessie" ]; then
-    cmdretry apt-get --allow-remove-essential purge findutils
-    cmdretry apt-get -d -t jessie install findutils
-    cmdretry apt-get -t jessie install findutils
-fi
-
-# Python: Installation
+# Ruby: Installation
 # ------------------------------------------------------------------------------
-# We will install the packages listed in ${PY_PKGS}
+# We will install the packages listed in ${RUBY_PKGS}
 
-msginfo "Installing Python ..."
-cmdretry apt-get -d install ${PY_PKGS}
-cmdretry apt-get install ${PY_PKGS}
-
-if [ ! -f "/usr/bin/python" ]; then
-    ln -s /usr/bin/${PY_VER_NUM_MINOR_STR} /usr/bin/python
-fi
+msginfo "Installing Ruby ..."
+cmdretry apt-get -d install ${RUBY_PKGS}
+cmdretry apt-get install ${RUBY_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
@@ -133,35 +107,13 @@ cmdretry apt-get autoremove
 cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
-# Pip: Installation
-# ------------------------------------------------------------------------------
-# Let's bring in the old reliable pip guy.
-
-msginfo "Installing pip ..."
-if [ "${PY_VER_NUM}" == "3.2" ]; then
-    ${PY_VER_NUM_MINOR_STR} -m easy_install setuptools==29.0.1
-    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | \
-        ${PY_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
-elif [ "${PY_VER_NUM}" == "2.6" ]; then
-    ${PY_VER_NUM_MINOR_STR} -m easy_install setuptools==29.0.1
-    curl -fsSL "https://bootstrap.pypa.io/2.6/get-pip.py" | \
-        ${PY_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
-else
-    ${PY_VER_NUM_MINOR_STR} -m easy_install setuptools
-    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
-        ${PY_VER_NUM_MINOR_STR}
-fi
-
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------
 # To distinguish images.
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
-COLOR_YELLOW="\[\033[38;5;220m\]"
-COLOR_BLUE="\[\033[38;5;33m\]"
-COLOR_OFF="\[\033[0m\]"
-PS1="\u@\h:${COLOR_YELLOW}Dockershelf/${COLOR_BLUE}Python${COLOR_OFF}:\w\$ "
+PS1="\u@\h:${COLOR_RED}Dockershelf/${COLOR_DARK_RED}Ruby${COLOR_OFF}:\w\$ "
 EOF
 
 # Final cleaning

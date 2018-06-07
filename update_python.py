@@ -72,7 +72,7 @@ def update_python(basedir):
         '3.6': 'sid',
         '3.7': 'sid',
     }
-    python_versions = python_versions_src_origin.keys()
+    python_versions = sorted(python_versions_src_origin.keys())
 
     for deldir in find_dirs(pythondir):
         shutil.rmtree(deldir)
