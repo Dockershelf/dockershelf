@@ -17,7 +17,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV MONGO_VER_NUM="%%MONGO_VERSION%%" MONGO_DEBIAN_SUITE="%%MONGO_DEBIAN_SUITE%%"
 
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint.sh /usr/bin/
 COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
 RUN bash /usr/share/dockershelf/mongo/build-image.sh
 

@@ -32,14 +32,17 @@ PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 MIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
 
+SETUPTOOLS_TEMP_DIR="$( mktemp -d )"
+SETUPTOOLS_GIT_REPO="https://github.com/pypa/setuptools"
+
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
 if [ "${PYTHON_DEBIAN_SUITE}" == "wheezy-security" ]; then
-    PY_PKGS="${PYTHON_VER_NUM_MINOR_STR}-minimal \
+    PYTHON_PKGS="${PYTHON_VER_NUM_MINOR_STR}-minimal \
         lib${PYTHON_VER_NUM_MINOR_STR} ${PYTHON_VER_NUM_MINOR_STR} \
         ${PYTHON_VER_NUM_MINOR_STR}-dev"
 else
-    PY_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
+    PYTHON_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
         ${PYTHON_VER_NUM_MINOR_STR}-minimal \
         lib${PYTHON_VER_NUM_MINOR_STR}-stdlib \
         lib${PYTHON_VER_NUM_MINOR_STR} ${PYTHON_VER_NUM_MINOR_STR} \
@@ -47,7 +50,7 @@ else
 fi
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev git"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -88,8 +91,8 @@ cmdretry apt-get update
 
 msginfo "Installing python runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${PY_PKGS} ) | xargs | \
-    sed "$( printf 's/\s%s\s/ /g;' ${PY_PKGS} )" )"
+    $( printf '~RDepends:~n^%s$ ' ${PYTHON_PKGS} ) | xargs | \
+    sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
@@ -104,11 +107,11 @@ fi
 
 # Python: Installation
 # ------------------------------------------------------------------------------
-# We will install the packages listed in ${PY_PKGS}
+# We will install the packages listed in ${PYTHON_PKGS}
 
 msginfo "Installing Python ..."
-cmdretry apt-get -d install ${PY_PKGS}
-cmdretry apt-get install ${PY_PKGS}
+cmdretry apt-get -d install ${PYTHON_PKGS}
+cmdretry apt-get install ${PYTHON_PKGS}
 
 if [ ! -f "/usr/bin/python" ]; then
     ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
@@ -136,20 +139,25 @@ cmdretry apt-get autoremove
 # ------------------------------------------------------------------------------
 # Let's bring in the old reliable pip guy.
 
-# msginfo "Installing pip ..."
-# if [ "${PYTHON_VER_NUM}" == "3.2" ]; then
-#     ${PYTHON_VER_NUM_MINOR_STR} -m easy_install setuptools==29.0.1
-#     curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | \
-#         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
-# elif [ "${PYTHON_VER_NUM}" == "2.6" ]; then
-#     ${PYTHON_VER_NUM_MINOR_STR} -m easy_install setuptools==29.0.1
-#     curl -fsSL "https://bootstrap.pypa.io/2.6/get-pip.py" | \
-#         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
-# else
-#     ${PYTHON_VER_NUM_MINOR_STR} -m easy_install setuptools
-#     curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
-#         ${PYTHON_VER_NUM_MINOR_STR}
-# fi
+git clone --depth 1 --single-branch --branch v29.0.1 \
+    "${SETUPTOOLS_TEMP_DIR}" "${SETUPTOOLS_GIT_REPO}"
+${PYTHON_VER_NUM_MINOR_STR} "${SETUPTOOLS_GIT_REPO}/setup.py" install
+rm -rf "${SETUPTOOLS_GIT_REPO}"
+
+msginfo "Installing pip ..."
+if [ "${PYTHON_VER_NUM}" == "3.2" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR}
+    pip install --upgrade setuptools==29.0.1
+elif [ "${PYTHON_VER_NUM}" == "2.6" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/2.6/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR}
+    pip install --upgrade setuptools==29.0.1
+else
+    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR}
+    pip install --upgrade setuptools
+fi
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------
@@ -160,7 +168,7 @@ cat >> "/etc/bash.bashrc" << 'EOF'
 COLOR_YELLOW="\[\033[38;5;220m\]"
 COLOR_BLUE="\[\033[38;5;33m\]"
 COLOR_OFF="\[\033[0m\]"
-PS1="\u@\h:${COLOR_YELLOW}Dockershelf/${COLOR_BLUE}Python${COLOR_OFF}:\w\$ "
+PS1="${COLOR_YELLOW}[\u@${COLOR_BLUE}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 # Final cleaning

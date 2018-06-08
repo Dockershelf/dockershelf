@@ -91,6 +91,16 @@ cmdretry apt-get autoremove
 cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
+# Bash: Changing prompt
+# ------------------------------------------------------------------------------
+# To distinguish images.
+
+cat >> "/etc/bash.bashrc" << 'EOF'
+
+COLOR_DARK_GREEN="\[\033[38;5;22m\]"
+PS1="[\u@${COLOR_DARK_GREEN}\h]${COLOR_OFF}:\w\$ "
+EOF
+
 # Final cleaning
 # ------------------------------------------------------------------------------
 # Buncha files we won't use.

@@ -130,8 +130,7 @@ cmdretry apt-get autoremove
 cat >> "/etc/bash.bashrc" << 'EOF'
 
 COLOR_LIGHT_GREEN="\[\033[38;5;70m\]"
-COLOR_DARK_GREEN="\[\033[38;5;22m\]"
-PS1="\u@\h:${COLOR_LIGHT_GREEN}Dockershelf/${COLOR_DARK_GREEN}Mongo${COLOR_OFF}:\w\$ "
+PS1="[\u@${COLOR_LIGHT_GREEN}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 # Final cleaning

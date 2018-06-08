@@ -16,7 +16,6 @@
 |[`3.4`](https://hub.docker.com/r/dockershelf/python)|`3.4`|[![](https://img.shields.io/badge/-python%2F3.4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.4.svg)](https://microbadger.com/images/dockershelf/python:3.4)|
 |[`3.5`](https://hub.docker.com/r/dockershelf/python)|`3.5`|[![](https://img.shields.io/badge/-python%2F3.5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.5.svg)](https://microbadger.com/images/dockershelf/python:3.5)|
 |[`3.6`](https://hub.docker.com/r/dockershelf/python)|`3.6`|[![](https://img.shields.io/badge/-python%2F3.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.6.svg)](https://microbadger.com/images/dockershelf/python:3.6)|
-|[`3.7`](https://hub.docker.com/r/dockershelf/python)|`3.7`|[![](https://img.shields.io/badge/-python%2F3.7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.7.svg)](https://microbadger.com/images/dockershelf/python:3.7)|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
@@ -30,16 +29,11 @@ We'll explain the overall process here:
 
 1. Built `FROM dockershelf/debian:sid`.
 2. Labelled according to [label-schema.org](http://label-schema.org).
-3. Install developer tools to handle the python source download.
-4. Download Python source with `apt-get source python<release>`.
-5. Parse `Build-Depends` and `Depends` fields.
-6. Install `Build-Depends` and `Depends` packages.
-7. Compile Python using `make -f debian/rules install`.
-8. Uninstall `Build-Depends`, developer tools and orphan packages.
-9. Install Python by copying the compiled files to their corresponding places.
-10. Upgrade image to Debian Sid.
-11. Install `pip`.
-12. Shrink image by deleting unnecessary files.
+3. Install developer tools to handle the package installation.
+4. Install Python.
+5. Uninstall developer tools and orphan packages.
+6. Install `pip`.
+7. Shrink image by deleting unnecessary files.
 
 ## Made with :heart: and :hamburger:
 

@@ -208,7 +208,7 @@ fi
 COLOR_RED="\[\033[38;5;167m\]"
 COLOR_DARK_RED="\[\033[38;5;88m\]"
 COLOR_OFF="\[\033[0m\]"
-PS1="\u@\h:${COLOR_RED}Dockershelf/${COLOR_DARK_RED}Debian${COLOR_OFF}:\w\$ "
+PS1="${COLOR_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'

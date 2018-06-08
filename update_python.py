@@ -70,7 +70,7 @@ def update_python(basedir):
         '3.4': 'jessie',
         '3.5': 'sid',
         '3.6': 'sid',
-        '3.7': 'sid',
+        # '3.7': 'sid',
     }
     python_versions = sorted(python_versions_src_origin.keys())
 

@@ -43,6 +43,15 @@ cmdretry apt-get upgrade
 cmdretry apt-get -d install ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
 
+# Bash: Changing prompt
+# ------------------------------------------------------------------------------
+# To distinguish images.
+
+cat >> "/etc/bash.bashrc" << 'EOF'
+
+PS1="[\u@\h]:\w\$ "
+EOF
+
 # Final cleaning
 # ------------------------------------------------------------------------------
 # Buncha files we won't use.

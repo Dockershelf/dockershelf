@@ -113,7 +113,7 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
-PS1="\u@\h:${COLOR_RED}Dockershelf/${COLOR_DARK_RED}Ruby${COLOR_OFF}:\w\$ "
+PS1="[\u@${COLOR_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 # Final cleaning
