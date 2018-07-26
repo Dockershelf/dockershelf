@@ -55,7 +55,7 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 {
-    echo "deb ${MIRROR} sid-pgdg main"
+    echo "deb ${MIRROR} sid-pgdg main ${POSTGRES_VER_NUM}"
 } | tee /etc/apt/sources.list.d/postgres.list > /dev/null
 
 cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
