@@ -156,9 +156,11 @@ Apt::Install-Recommends "false";
 
 # Don't ask questions, assume 'yes'.
 Apt::Get::Assume-Yes "true";
+Aptitude::CmdLine::Assume-Yes "true";
 
 # Allow installation of unauthenticated packages.
 Apt::Get::AllowUnauthenticated "true";
+Aptitude::CmdLine::Ignore-Trust-Violations "true";
 
 # Remove suggested and recommended packages on autoremove.
 Apt::AutoRemove::SuggestsImportant "false";
