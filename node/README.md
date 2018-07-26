@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,19 +6,19 @@
 
 ## Node shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
+|[`dockershelf/node:6`](https://hub.docker.com/r/dockershelf/node)|`6`|[![](https://img.shields.io/badge/-node%2F6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:6.svg)](https://microbadger.com/images/dockershelf/node:6)|
+|[`dockershelf/node:7`](https://hub.docker.com/r/dockershelf/node)|`7`|[![](https://img.shields.io/badge/-node%2F7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:7.svg)](https://microbadger.com/images/dockershelf/node:7)|
 |[`dockershelf/node:10`](https://hub.docker.com/r/dockershelf/node)|`10`|[![](https://img.shields.io/badge/-node%2F10%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/10/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:10.svg)](https://microbadger.com/images/dockershelf/node:10)|
 |[`dockershelf/node:5`](https://hub.docker.com/r/dockershelf/node)|`5`|[![](https://img.shields.io/badge/-node%2F5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:5.svg)](https://microbadger.com/images/dockershelf/node:5)|
 |[`dockershelf/node:4`](https://hub.docker.com/r/dockershelf/node)|`4`|[![](https://img.shields.io/badge/-node%2F4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:4.svg)](https://microbadger.com/images/dockershelf/node:4)|
-|[`dockershelf/node:9`](https://hub.docker.com/r/dockershelf/node)|`9`|[![](https://img.shields.io/badge/-node%2F9%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/9/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:9.svg)](https://microbadger.com/images/dockershelf/node:9)|
-|[`dockershelf/node:7`](https://hub.docker.com/r/dockershelf/node)|`7`|[![](https://img.shields.io/badge/-node%2F7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:7.svg)](https://microbadger.com/images/dockershelf/node:7)|
-|[`dockershelf/node:6`](https://hub.docker.com/r/dockershelf/node)|`6`|[![](https://img.shields.io/badge/-node%2F6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:6.svg)](https://microbadger.com/images/dockershelf/node:6)|
 |[`dockershelf/node:8`](https://hub.docker.com/r/dockershelf/node)|`8`|[![](https://img.shields.io/badge/-node%2F8%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/8/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:8.svg)](https://microbadger.com/images/dockershelf/node:8)|
+|[`dockershelf/node:9`](https://hub.docker.com/r/dockershelf/node)|`9`|[![](https://img.shields.io/badge/-node%2F9%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/9/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:9.svg)](https://microbadger.com/images/dockershelf/node:9)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 

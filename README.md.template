@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -16,85 +16,85 @@ All shelves are currently based off Debian Sid, the development version of Debia
 
 These images are similar to the official ones, but with some improved configurations. Check out [debian/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%DEBIAN_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Latex
 
 This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%LATEX_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Python
 
 These are python images with native debian packages that are extracted from different debian releases. Check out [python/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/python/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%PYTHON_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Ruby
 
 These are ruby images with native debian packages that are extracted from different debian releases. Check out [ruby/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%RUBY_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Node
 
 These are Node images built using the [nodesource installation scripts](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/node/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%NODE_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Mongo
 
 These are Mongo images built using the [official installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/). Check out [mongo/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%MONGO_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Postgres
 
 These are PostgreSQL images built using the [official installation guide](https://www.postgresql.org/download/linux/debian/). Check out [postgres/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%POSTGRES_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## How to download
 

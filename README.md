@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -16,7 +16,7 @@ All shelves are currently based off Debian Sid, the development version of Debia
 
 These images are similar to the official ones, but with some improved configurations. Check out [debian/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -26,25 +26,25 @@ These images are similar to the official ones, but with some improved configurat
 |[`dockershelf/debian:buster`](https://hub.docker.com/r/dockershelf/debian)|`buster`|[![](https://img.shields.io/badge/-debian%2Fbuster%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/buster/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:buster.svg)](https://microbadger.com/images/dockershelf/debian:buster)|
 |[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|`sid`|[![](https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:sid.svg)](https://microbadger.com/images/dockershelf/debian:sid)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Latex
 
 This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 |[`dockershelf/latex:sid`](https://hub.docker.com/r/dockershelf/latex)|`sid`|[![](https://img.shields.io/badge/-latex%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/latex:sid.svg)](https://microbadger.com/images/dockershelf/latex:sid)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Python
 
 These are python images with native debian packages that are extracted from different debian releases. Check out [python/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/python/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -56,13 +56,13 @@ These are python images with native debian packages that are extracted from diff
 |[`3.6`](https://hub.docker.com/r/dockershelf/python)|`3.6`|[![](https://img.shields.io/badge/-python%2F3.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.6.svg)](https://microbadger.com/images/dockershelf/python:3.6)|
 |[`3.7`](https://hub.docker.com/r/dockershelf/python)|`3.7`|[![](https://img.shields.io/badge/-python%2F3.7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.7.svg)](https://microbadger.com/images/dockershelf/python:3.7)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Ruby
 
 These are ruby images with native debian packages that are extracted from different debian releases. Check out [ruby/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -72,31 +72,31 @@ These are ruby images with native debian packages that are extracted from differ
 |[`2.3`](https://hub.docker.com/r/dockershelf/ruby)|`2.3`|[![](https://img.shields.io/badge/-ruby%2F2.3%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.3/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.3.svg)](https://microbadger.com/images/dockershelf/ruby:2.3)|
 |[`2.5`](https://hub.docker.com/r/dockershelf/ruby)|`2.5`|[![](https://img.shields.io/badge/-ruby%2F2.5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.5.svg)](https://microbadger.com/images/dockershelf/ruby:2.5)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Node
 
 These are Node images built using the [nodesource installation scripts](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/node/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
+|[`dockershelf/node:6`](https://hub.docker.com/r/dockershelf/node)|`6`|[![](https://img.shields.io/badge/-node%2F6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:6.svg)](https://microbadger.com/images/dockershelf/node:6)|
+|[`dockershelf/node:7`](https://hub.docker.com/r/dockershelf/node)|`7`|[![](https://img.shields.io/badge/-node%2F7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:7.svg)](https://microbadger.com/images/dockershelf/node:7)|
 |[`dockershelf/node:10`](https://hub.docker.com/r/dockershelf/node)|`10`|[![](https://img.shields.io/badge/-node%2F10%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/10/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:10.svg)](https://microbadger.com/images/dockershelf/node:10)|
 |[`dockershelf/node:5`](https://hub.docker.com/r/dockershelf/node)|`5`|[![](https://img.shields.io/badge/-node%2F5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:5.svg)](https://microbadger.com/images/dockershelf/node:5)|
 |[`dockershelf/node:4`](https://hub.docker.com/r/dockershelf/node)|`4`|[![](https://img.shields.io/badge/-node%2F4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:4.svg)](https://microbadger.com/images/dockershelf/node:4)|
-|[`dockershelf/node:9`](https://hub.docker.com/r/dockershelf/node)|`9`|[![](https://img.shields.io/badge/-node%2F9%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/9/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:9.svg)](https://microbadger.com/images/dockershelf/node:9)|
-|[`dockershelf/node:7`](https://hub.docker.com/r/dockershelf/node)|`7`|[![](https://img.shields.io/badge/-node%2F7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:7.svg)](https://microbadger.com/images/dockershelf/node:7)|
-|[`dockershelf/node:6`](https://hub.docker.com/r/dockershelf/node)|`6`|[![](https://img.shields.io/badge/-node%2F6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:6.svg)](https://microbadger.com/images/dockershelf/node:6)|
 |[`dockershelf/node:8`](https://hub.docker.com/r/dockershelf/node)|`8`|[![](https://img.shields.io/badge/-node%2F8%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/8/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:8.svg)](https://microbadger.com/images/dockershelf/node:8)|
+|[`dockershelf/node:9`](https://hub.docker.com/r/dockershelf/node)|`9`|[![](https://img.shields.io/badge/-node%2F9%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/node/9/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/node:9.svg)](https://microbadger.com/images/dockershelf/node:9)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Mongo
 
 These are Mongo images built using the [official installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/). Check out [mongo/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -106,13 +106,13 @@ These are Mongo images built using the [official installation guide](https://doc
 |[`dockershelf/mongo:3.6`](https://hub.docker.com/r/dockershelf/mongo)|`3.6`|[![](https://img.shields.io/badge/-mongo%2F3.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.6.svg)](https://microbadger.com/images/dockershelf/mongo:3.6)|
 |[`dockershelf/mongo:4.0`](https://hub.docker.com/r/dockershelf/mongo)|`4.0`|[![](https://img.shields.io/badge/-mongo%2F4.0%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/4.0/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:4.0.svg)](https://microbadger.com/images/dockershelf/mongo:4.0)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ### Postgres
 
 These are PostgreSQL images built using the [official installation guide](https://www.postgresql.org/download/linux/debian/). Check out [postgres/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/README.md) for more details.
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -124,7 +124,7 @@ These are PostgreSQL images built using the [official installation guide](https:
 |[`dockershelf/postgres:11`](https://hub.docker.com/r/dockershelf/postgres)|`11`|[![](https://img.shields.io/badge/-postgres%2F11%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/11/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:11.svg)](https://microbadger.com/images/dockershelf/postgres:11)|
 |[`dockershelf/postgres:12`](https://hub.docker.com/r/dockershelf/postgres)|`12`|[![](https://img.shields.io/badge/-postgres%2F12%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/12/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:12.svg)](https://microbadger.com/images/dockershelf/postgres:12)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## How to download
 

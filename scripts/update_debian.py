@@ -29,7 +29,7 @@ try:
 except ImportError:
     from urllib.request import urlopen, Request
 
-from utils import find_dirs, u
+from .utils import find_dirs, u
 
 if not sys.version_info < (3,):
     unicode = str

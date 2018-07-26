@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,13 +6,13 @@
 
 ## Python shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
 %%PYTHON_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 

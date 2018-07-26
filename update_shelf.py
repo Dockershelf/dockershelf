@@ -22,13 +22,13 @@ import os
 import re
 import sys
 
-from update_debian import update_debian
-from update_latex import update_latex
-from update_python import update_python
-from update_ruby import update_ruby
-from update_node import update_node
-from update_mongo import update_mongo
-from update_postgres import update_postgres
+from scripts.update_debian import update_debian
+from scripts.update_latex import update_latex
+from scripts.update_python import update_python
+from scripts.update_ruby import update_ruby
+from scripts.update_node import update_node
+from scripts.update_mongo import update_mongo
+from scripts.update_postgres import update_postgres
 
 if not sys.version_info < (3,):
     unicode = str

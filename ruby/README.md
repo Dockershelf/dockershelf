@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,7 +6,7 @@
 
 ## Ruby shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -16,7 +16,7 @@
 |[`2.3`](https://hub.docker.com/r/dockershelf/ruby)|`2.3`|[![](https://img.shields.io/badge/-ruby%2F2.3%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.3/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.3.svg)](https://microbadger.com/images/dockershelf/ruby:2.3)|
 |[`2.5`](https://hub.docker.com/r/dockershelf/ruby)|`2.5`|[![](https://img.shields.io/badge/-ruby%2F2.5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.5.svg)](https://microbadger.com/images/dockershelf/ruby:2.5)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 

@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,7 +6,7 @@
 
 ## Debian shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 |Image  |Release  |Dockerfile  |Layers  |
 |-------|---------|------------|--------|
@@ -16,7 +16,7 @@
 |[`dockershelf/debian:buster`](https://hub.docker.com/r/dockershelf/debian)|`buster`|[![](https://img.shields.io/badge/-debian%2Fbuster%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/buster/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:buster.svg)](https://microbadger.com/images/dockershelf/debian:buster)|
 |[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|`sid`|[![](https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:sid.svg)](https://microbadger.com/images/dockershelf/debian:sid)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 

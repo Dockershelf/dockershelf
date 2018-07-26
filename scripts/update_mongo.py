@@ -23,7 +23,7 @@ import re
 import sys
 import shutil
 
-from utils import find_dirs
+from .utils import find_dirs
 
 if not sys.version_info < (3,):
     unicode = str
