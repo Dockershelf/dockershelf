@@ -11,10 +11,6 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         set :docker_container, @container.id
     end
 
-    def mongo_version
-        command("mongo --quiet admin --eval 'db.version();'").stdout.strip
-    end
-
     it "should exist" do
         expect(@container).not_to be_nil
     end
@@ -22,10 +18,6 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     it "should be able to start" do
         mongod = command("mongod --fork --syslog --smallfiles")
         expect(mongod.exit_status).to eq(0)
-    end
-
-    it "should be correct version" do
-        expect(mongo_version()).to eq(ENV['DOCKER_IMAGE_TAG'])
     end
 
     it "should contain these files" do
@@ -46,6 +38,12 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     it "should have a mongodb user" do
         expect(user('mongodb')).to exist
         expect(user('mongodb')).to belong_to_group 'mongodb'
+    end
+
+    it "should be correct version" do
+        mongov = command("mongo --quiet admin --eval 'db.version();'").stdout.strip
+        mongov_short = mongov[0..2]
+        expect(mongov_short).to eq(ENV['DOCKER_IMAGE_TAG'])
     end
 
     it "should be able to execute an operation on mongo shell" do
