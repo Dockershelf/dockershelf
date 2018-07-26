@@ -57,7 +57,6 @@ def update_mongo(basedir):
                                      '|[![]({5})]({6})|')
 
     mongo_versions_src_origin = {
-        '3.0': 'wheezy',
         '3.2': 'jessie',
         '3.4': 'jessie',
         '3.6': 'stretch',

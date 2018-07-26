@@ -45,7 +45,7 @@ if [ "$1" = 'postgres' ] && [ "$(id -u)" = '0' ]; then
         chmod 700 "$POSTGRES_INITDB_WALDIR"
     fi
 
-    exec gosu postgres "$BASH_SOURCE" "$@"
+    sudo -H -u postgres bash -c "\"$BASH_SOURCE\" \"$@\""
 fi
 
 if [ "$1" = 'postgres' ]; then
@@ -80,8 +80,8 @@ if [ "$1" = 'postgres' ]; then
         # check password first so we can output the warning before postgres
         # messes it up
         file_env 'POSTGRES_PASSWORD'
-        if [ "$POSTGRES_PASSWORD" ]; then
-            pass="PASSWORD '$POSTGRES_PASSWORD'"
+        if [ "${POSTGRES_PASSWORD}" ]; then
+            pass="PASSWORD '${POSTGRES_PASSWORD}'"
             authMethod=md5
         else
             echo "****************************************************"
@@ -113,28 +113,25 @@ if [ "$1" = 'postgres' ]; then
             -w start
 
         file_env 'POSTGRES_USER' 'postgres'
-        file_env 'POSTGRES_DB' "$POSTGRES_USER"
+        file_env 'POSTGRES_DB' "${POSTGRES_USER}"
 
         psql=( psql -v ON_ERROR_STOP=1 )
 
-        if [ "$POSTGRES_DB" != 'postgres' ]; then
-            "${psql[@]}" --username postgres <<-EOSQL
-                CREATE DATABASE "$POSTGRES_DB" ;
-            EOSQL
+        if [ "${POSTGRES_DB}" != 'postgres' ]; then
+            "${psql[@]}" --username postgres -c "CREATE DATABASE '${POSTGRES_DB}';"
             echo
         fi
 
-        if [ "$POSTGRES_USER" = 'postgres' ]; then
+        if [ "${POSTGRES_USER}" = 'postgres' ]; then
             op='ALTER'
         else
             op='CREATE'
         fi
-        "${psql[@]}" --username postgres <<-EOSQL
-            $op USER "$POSTGRES_USER" WITH SUPERUSER $pass ;
-        EOSQL
+
+        "${psql[@]}" --username postgres -c "${op} USER '${POSTGRES_USER}' WITH SUPERUSER '${pass}';"
         echo
 
-        psql+=( --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" )
+        psql+=( --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" )
 
         echo
         for f in /docker-entrypoint-initdb.d/*; do

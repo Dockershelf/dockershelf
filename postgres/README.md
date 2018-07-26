@@ -16,7 +16,6 @@
 |[`dockershelf/postgres:9.6`](https://hub.docker.com/r/dockershelf/postgres)|`9.6`|[![](https://img.shields.io/badge/-postgres%2F9.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:9.6.svg)](https://microbadger.com/images/dockershelf/postgres:9.6)|
 |[`dockershelf/postgres:10`](https://hub.docker.com/r/dockershelf/postgres)|`10`|[![](https://img.shields.io/badge/-postgres%2F10%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/10/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:10.svg)](https://microbadger.com/images/dockershelf/postgres:10)|
 |[`dockershelf/postgres:11`](https://hub.docker.com/r/dockershelf/postgres)|`11`|[![](https://img.shields.io/badge/-postgres%2F11%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/11/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:11.svg)](https://microbadger.com/images/dockershelf/postgres:11)|
-|[`dockershelf/postgres:12`](https://hub.docker.com/r/dockershelf/postgres)|`12`|[![](https://img.shields.io/badge/-postgres%2F12%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/12/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:12.svg)](https://microbadger.com/images/dockershelf/postgres:12)|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 

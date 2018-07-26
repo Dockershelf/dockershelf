@@ -65,7 +65,8 @@ def update_postgres(basedir):
                                      '|[![]({3})]({4})'
                                      '|[![]({5})]({6})|')
 
-    postgres_version_cut = 9.3
+    postgres_version_lower_limit = 9.3
+    postgres_version_upper_limit = 11
 
     r = Request(postgres_release_url)
 
@@ -77,7 +78,8 @@ def update_postgres(basedir):
     postgres_versions = list(filter(lambda x: not is_string_a_string(x),
                                     postgres_versions.split()))
     postgres_versions = [v for v in postgres_versions
-                         if float(v) >= postgres_version_cut]
+                         if (float(v) >= postgres_version_lower_limit and
+                             float(v) <= postgres_version_upper_limit)]
 
     for deldir in find_dirs(postgresdir):
         shutil.rmtree(deldir)
