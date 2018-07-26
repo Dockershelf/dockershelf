@@ -16,7 +16,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
 ENV POSTGRES_VER_NUM="%%POSTGRES_VERSION%%" \
-	PATH="${PATH}:/usr/lib/postgresql/%%POSTGRES_VERSION%%/bin"
+	PATH="${PATH}:/usr/lib/postgresql/%%POSTGRES_VERSION%%/bin" \
 	PGDATA="/var/lib/postgresql/data"
 
 COPY docker-entrypoint.sh /usr/local/bin/

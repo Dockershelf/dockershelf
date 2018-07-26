@@ -91,6 +91,11 @@ if [ "${DOCKER_IMAGE_TYPE}" == "mongo" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/articles.js"  "${DOCKER_IMAGE_DIR}"
 fi
 
+# Copy entrypoint if we are building Postgres
+if [ "${DOCKER_IMAGE_TYPE}" == "postgres" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+fi
+
 # Copy latex sample
 if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"
