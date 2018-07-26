@@ -74,14 +74,28 @@ chown -R postgres:postgres /var/lib/postgresql/data /var/run/postgresql
 chmod 2777 /var/run/postgresql
 chmod 777 /var/lib/postgresql/data
 
+# Apt: Install runtime dependencies for postgresql-common
+# ------------------------------------------------------------------------------
+# Now we use some shell/apt plumbing to get runtime dependencies.
+
+msginfo "Installing postgresql-common runtime dependencies ..."
+DPKG_RUN_DEPENDS="$( aptitude search -F%p \
+    $( printf '~RDepends:~n^%s$ ' postgresql-common ) | xargs printf ' %s ' | \
+    sed "$( printf 's/\s%s\s/ /g;' postgresql-common )" )"
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
+    uniq | xargs )"
+
+cmdretry aptitude install -d ${DPKG_DEPENDS}
+cmdretry aptitude install ${DPKG_DEPENDS}
+
 # Apt: Install postgresql-common
 # ------------------------------------------------------------------------------
 # We need to install postgresql-common to be able to configure it before
 # actually installing postgres
 
 msginfo "Installing postgresql-common ..."
-cmdretry apt-get install -d postgresql-common
-cmdretry apt-get install postgresql-common
+cmdretry aptitude install -d postgresql-common
+cmdretry aptitude install postgresql-common
 
 # Postgres: Configure
 # ------------------------------------------------------------------------------
@@ -101,8 +115,8 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get install -d ${DPKG_DEPENDS} libnss-wrapper
-cmdretry apt-get install ${DPKG_DEPENDS} libnss-wrapper
+cmdretry aptitude install -d ${DPKG_DEPENDS} libnss-wrapper
+cmdretry aptitude install ${DPKG_DEPENDS} libnss-wrapper
 
 # Postgres: Installation
 # ------------------------------------------------------------------------------
