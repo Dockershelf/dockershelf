@@ -29,7 +29,7 @@ try:
 except ImportError:
     from urllib.request import urlopen, Request
 
-from utils import find_dirs
+from utils import find_dirs, u
 
 if not sys.version_info < (3,):
     unicode = str
@@ -77,10 +77,10 @@ def update_debian(basedir):
         r.add_header('Range', 'bytes={0}-{1}'.format(0, 256))
 
         with closing(urlopen(r)) as d:
-            debian_releases_content = d.read()
+            debian_release_content = d.read()
 
         debian_codename = re.findall('Codename: (.*)',
-                                     debian_releases_content)[0]
+                                     u(debian_release_content))[0]
         debian_codename_dir = os.path.join(debiandir, debian_codename)
         debian_dockerfile = os.path.join(debian_codename_dir, 'Dockerfile')
         docker_tag = docker_tag_holder.format(debian_codename)

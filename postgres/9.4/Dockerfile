@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="mongo3.2" \
-      org.label-schema.description="A Mongo 3.2 image based on Debian sid." \
+      org.label-schema.name="postgres9.4" \
+      org.label-schema.description="A Postgres 9.4 image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,16 +15,17 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV MONGO_VER_NUM="3.2" MONGO_DEBIAN_SUITE="jessie"
+ENV POSTGRES_VER_NUM="9.4" \
+	PATH="${PATH}:/usr/lib/postgresql/9.4/bin"
+	PGDATA="/var/lib/postgresql/data"
 
-COPY aggregate.js articles.js /root/
 COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
-RUN bash /usr/share/dockershelf/mongo/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/postgres/
+RUN bash /usr/share/dockershelf/postgres/build-image.sh
 
-VOLUME /data/db /data/configdb
+VOLUME /var/lib/postgresql/data
 
-EXPOSE 27017
+EXPOSE 5432
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["mongod"]
+CMD ["postgres"]

@@ -60,7 +60,8 @@ def update_mongo(basedir):
         '3.0': 'wheezy',
         '3.2': 'jessie',
         '3.4': 'jessie',
-        '3.6': 'stretch'
+        '3.6': 'stretch',
+        '4.0': 'stretch',
     }
     mongo_versions = sorted(mongo_versions_src_origin.keys())
 

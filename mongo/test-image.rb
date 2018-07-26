@@ -16,7 +16,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to start" do
-        mongod = command("mongod --fork --syslog --smallfiles")
+        mongod = command("mongod --fork --syslog --smallfiles && sleep 5")
         expect(mongod.exit_status).to eq(0)
     end
 

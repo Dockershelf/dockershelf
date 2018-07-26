@@ -105,7 +105,7 @@ if [ "${PYTHON_DEBIAN_SUITE}" == "jessie" ]; then
     cmdretry apt-get -t jessie install findutils
 fi
 
-if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+if [ "${PYTHON_VER_NUM}" == "3.6" ] || [ "${PYTHON_VER_NUM}" == "3.7" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
 fi

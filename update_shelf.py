@@ -23,11 +23,12 @@ import re
 import sys
 
 from update_debian import update_debian
+from update_latex import update_latex
 from update_python import update_python
 from update_ruby import update_ruby
-from update_latex import update_latex
-from update_mongo import update_mongo
 from update_node import update_node
+from update_mongo import update_mongo
+from update_postgres import update_postgres
 
 if not sys.version_info < (3,):
     unicode = str
@@ -44,18 +45,20 @@ if __name__ == '__main__':
     readme = os.path.join(basedir, 'README.md')
 
     debian_matrix_list, debian_readme_table = update_debian(basedir)
+    latex_matrix_list, latex_readme_table = update_latex(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
     ruby_matrix_list, ruby_readme_table = update_ruby(basedir)
-    latex_matrix_list, latex_readme_table = update_latex(basedir)
-    mongo_matrix_list, mongo_readme_table = update_mongo(basedir)
     node_matrix_list, node_readme_table = update_node(basedir)
+    mongo_matrix_list, mongo_readme_table = update_mongo(basedir)
+    postgres_matrix_list, postgres_readme_table = update_postgres(basedir)
 
     travis_matrixlist.extend(debian_matrix_list)
+    travis_matrixlist.extend(latex_matrix_list)
     travis_matrixlist.extend(python_matrix_list)
     travis_matrixlist.extend(ruby_matrix_list)
-    travis_matrixlist.extend(latex_matrix_list)
-    travis_matrixlist.extend(mongo_matrix_list)
     travis_matrixlist.extend(node_matrix_list)
+    travis_matrixlist.extend(mongo_matrix_list)
+    travis_matrixlist.extend(postgres_matrix_list)
 
     with open(travis_template, 'r') as tt:
         travis_template_content = tt.read()
@@ -74,15 +77,17 @@ if __name__ == '__main__':
     readme_content = readme_template_content
     readme_content = re.sub('%%DEBIAN_TABLE%%', debian_readme_table,
                             readme_content)
+    readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
+                            readme_content)
     readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,
                             readme_content)
     readme_content = re.sub('%%RUBY_TABLE%%', ruby_readme_table,
                             readme_content)
-    readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
+    readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
                             readme_content)
     readme_content = re.sub('%%MONGO_TABLE%%', mongo_readme_table,
                             readme_content)
-    readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
+    readme_content = re.sub('%%POSTGRES_TABLE%%', postgres_readme_table,
                             readme_content)
 
     with open(readme, 'w') as t:

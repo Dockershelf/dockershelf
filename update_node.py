@@ -29,7 +29,7 @@ try:
 except ImportError:
     from urllib.request import urlopen
 
-from utils import find_dirs
+from utils import find_dirs, u
 
 if not sys.version_info < (3,):
     unicode = str
@@ -66,8 +66,11 @@ def update_node(basedir):
                                      '|[![]({5})]({6})|')
 
     with closing(urlopen(node_versions_list_file)) as n:
-        node_versions = set(re.findall(
-            r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x', n.read()))
+        node_versions_list_content = n.read()
+
+    node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
+                               u(node_versions_list_content))
+    node_versions = set(node_versions)
 
     for deldir in find_dirs(nodedir):
         shutil.rmtree(deldir)

@@ -18,7 +18,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 ENV MONGO_VER_NUM="3.0" MONGO_DEBIAN_SUITE="wheezy"
 
 COPY aggregate.js articles.js /root/
-COPY docker-entrypoint.sh /usr/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
 RUN bash /usr/share/dockershelf/mongo/build-image.sh
 

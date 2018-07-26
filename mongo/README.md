@@ -14,6 +14,7 @@
 |[`dockershelf/mongo:3.2`](https://hub.docker.com/r/dockershelf/mongo)|`3.2`|[![](https://img.shields.io/badge/-mongo%2F3.2%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.2/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.2.svg)](https://microbadger.com/images/dockershelf/mongo:3.2)|
 |[`dockershelf/mongo:3.4`](https://hub.docker.com/r/dockershelf/mongo)|`3.4`|[![](https://img.shields.io/badge/-mongo%2F3.4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.4.svg)](https://microbadger.com/images/dockershelf/mongo:3.4)|
 |[`dockershelf/mongo:3.6`](https://hub.docker.com/r/dockershelf/mongo)|`3.6`|[![](https://img.shields.io/badge/-mongo%2F3.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.6.svg)](https://microbadger.com/images/dockershelf/mongo:3.6)|
+|[`dockershelf/mongo:4.0`](https://hub.docker.com/r/dockershelf/mongo)|`4.0`|[![](https://img.shields.io/badge/-mongo%2F4.0%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/4.0/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:4.0.svg)](https://microbadger.com/images/dockershelf/mongo:4.0)|
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 

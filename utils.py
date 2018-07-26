@@ -22,14 +22,15 @@ import os
 import sys
 import fnmatch
 
-try:
-    from HTMLParser import HTMLParser
-except ImportError:
-    from html.parser import HTMLParser
-
 if not sys.version_info < (3,):
     unicode = str
     basestring = str
+
+
+def u(u_string):
+    if isinstance(u_string, unicode):
+        return u_string
+    return u_string.decode('utf-8')
 
 
 def find_dirs(path=None, pattern='*'):
@@ -44,34 +45,21 @@ def find_dirs(path=None, pattern='*'):
     return dirlist
 
 
-class MongoVersionParser(HTMLParser):
-    def handle_starttag(self, tag, attrs):
-        if attrs:
-            dlstr = attrs[0][1]
-            # dlstr = dlstr.replace('http://downloads.mongodb.org/src/mongodb-src-v', '')
-            # dlstr = dlstr.replace('http://downloads.mongodb.org/src/mongodb-src-r', '')
-            # dlstr = dlstr.replace('http://downloads.mongodb.org/src/mongodb-src-', '')
-            # dlstr = dlstr.replace('.tar.gz.sig', '')
-            # dlstr = dlstr.replace('.tar.gz.md5', '')
-            # dlstr = dlstr.replace('.tar.gz.sha1', '')
-            # dlstr = dlstr.replace('.tar.gz.sha256', '')
-            # dlstr = dlstr.replace('.tar.gz', '')
-            # dlstr = dlstr.replace('.tgz.sig', '')
-            # dlstr = dlstr.replace('.tgz.md5', '')
-            # dlstr = dlstr.replace('.tgz.sha1', '')
-            # dlstr = dlstr.replace('.tgz.sha256', '')
-            # dlstr = dlstr.replace('.tgz', '')
-            # dlstr = dlstr.replace('.zip.sig', '')
-            # dlstr = dlstr.replace('.zip.md5', '')
-            # dlstr = dlstr.replace('.zip.sha1', '')
-            # dlstr = dlstr.replace('.zip.sha256', '')
-            # dlstr = dlstr.replace('.zip', '')
-            # dlstr = dlstr.replace('-cut', '')
-            # dlstr = dlstr.replace('-latest', '')
-            # dlstr = dlstr.replace('latest', '')
-            # dlstr = re.sub('-rc.*', '', dlstr)
-            # dlstr = re.sub('_rc.*', '', dlstr)
-            dlstr = dlstr.replace('..', '')
-            dlstr = dlstr.replace('development', '')
-            dlstr = dlstr.replace('testing', '')
-            self.dlstr = dlstr
+def is_string_an_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
+def is_string_a_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+def is_string_a_string(s):
+    return not (is_string_a_float(s) or is_string_an_int(s))

@@ -84,6 +84,18 @@ These are Mongo images built using the [official installation guide](https://doc
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
 
+### Postgres
+
+These are PostgreSQL images built using the [official installation guide](https://www.postgresql.org/download/linux/debian/). Check out [postgres/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/README.md) for more details.
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
+%%POSTGRES_TABLE%%
+
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+
 ## How to download
 
 Pull one of the available images and start hacking!
