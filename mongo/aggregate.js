@@ -1,6 +1,7 @@
 /* sample aggregate command queries */
+
 // make sure we're using the right db; this is the same as "use mydb;" in shell
-db = db.getSisterDB("aggdb");
+db = db.getSisterDB("testdb");
 
 // just passing through fields
 var p1 = db.runCommand(

@@ -27,6 +27,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
 NODE_PKGS="nodejs"
+NODE_PKGS_VER=""
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -41,7 +42,7 @@ msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Node: Configure sources
@@ -56,12 +57,12 @@ curl -fsSL "https://deb.nodesource.com/setup_${NODE_VER_NUM}.x" | bash
 
 msginfo "Installing node runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${NODE_PKGS} ) | xargs | \
+    $( printf '~RDepends:~n^%s$ ' ${NODE_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${NODE_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Node: Installation
@@ -69,8 +70,14 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 # We will use the nodesource script to install node.
 
 msginfo "Installing Node ..."
-cmdretry apt-get -d install ${NODE_PKGS}
-cmdretry apt-get install ${NODE_PKGS}
+for PKG in ${NODE_PKGS}; do
+    PKG_VER="$( apt-cache madison ${PKG} | grep Packages | \
+        grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs )"
+    NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
+done
+
+cmdretry aptitude install -d ${NODE_PKGS_VER}
+cmdretry aptitude install ${NODE_PKGS_VER}
 
 # Apt: Remove build depends
 # ------------------------------------------------------------------------------

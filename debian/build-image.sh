@@ -233,7 +233,7 @@ msginfo "Installing dependencies and upgrading packages ..."
 cmdretry chroot "${TARGET}" apt-get update
 cmdretry chroot "${TARGET}" apt-get -d upgrade
 cmdretry chroot "${TARGET}" apt-get upgrade
-cmdretry chroot "${TARGET}" apt-get -d install ${DPKG_DEPENDS}
+cmdretry chroot "${TARGET}" apt-get install -d ${DPKG_DEPENDS}
 cmdretry chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
 
 msginfo "Configuring locales ..."

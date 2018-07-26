@@ -26,11 +26,11 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 MIRROR="http://repo.mongodb.org/apt/debian"
 DEBMIRROR="http://deb.debian.org/debian"
 
-MONGO_PKGS="mongodb-org mongodb-org-server mongodb-org-shell \
-	mongodb-org-mongos mongodb-org-tools"
-
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+MONGO_PKGS="mongodb-org mongodb-org-server mongodb-org-shell \
+    mongodb-org-mongos mongodb-org-tools"
+MONGO_PKGS_VER=""
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -42,9 +42,9 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-cmdretry apt-get -d upgrade
+cmdretry apt-get upgrade -d
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Mongo: Configure sources
@@ -80,30 +80,36 @@ cmdretry apt-get update
 
 msginfo "Installing mongo runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${MONGO_PKGS} ) | xargs | \
+    $( printf '~RDepends:~n^%s$ ' ${MONGO_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${MONGO_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get -d install ${DPKG_DEPENDS} jq numactl
-cmdretry apt-get install ${DPKG_DEPENDS} jq numactl
+cmdretry apt-get install -d ${DPKG_DEPENDS} sudo jq numactl lsb-base
+cmdretry apt-get install ${DPKG_DEPENDS} sudo jq numactl lsb-base
 
 # Mongo: Configure
 # ------------------------------------------------------------------------------
 # We need to configure proper volumes and users.
 
-mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d
+mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d /var/log/mongodb
 groupadd -r mongodb
 useradd -r -g mongodb mongodb
-chown -R mongodb:mongodb /data/db /data/configdb
+chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb
 
 # Mongo: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${MONGO_PKGS}
 
 msginfo "Installing Mongo ..."
-cmdretry apt-get -d install ${MONGO_PKGS}
-cmdretry apt-get install ${MONGO_PKGS}
+for PKG in ${MONGO_PKGS}; do
+    PKG_VER="$( apt-cache madison ${PKG} | grep Packages | \
+        grep repo.mongodb.org | head -n1 | awk -F'|' '{print $2}' | xargs )"
+    MONGO_PKGS_VER="${MONGO_PKGS_VER} ${PKG}=${PKG_VER}"
+done
+
+cmdretry aptitude install -d ${MONGO_PKGS_VER}
+cmdretry aptitude install ${MONGO_PKGS_VER}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

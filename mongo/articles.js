@@ -1,7 +1,7 @@
 /* sample articles for aggregation demonstrations */
 
 // make sure we're using the right db; this is the same as "use mydb;" in shell
-db = db.getSiblingDB("aggdb");
+db = db.getSiblingDB("testdb");
 db.article.drop();
 
 db.article.save( {

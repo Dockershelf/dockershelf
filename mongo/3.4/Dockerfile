@@ -17,6 +17,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV MONGO_VER_NUM="3.4" MONGO_DEBIAN_SUITE="jessie"
 
+COPY aggregate.js articles.js /root/
 COPY docker-entrypoint.sh /usr/bin/
 COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
 RUN bash /usr/share/dockershelf/mongo/build-image.sh

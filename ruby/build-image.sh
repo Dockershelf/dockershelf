@@ -51,7 +51,7 @@ msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Ruby: Configure sources
@@ -73,12 +73,12 @@ cmdretry apt-get update
 
 msginfo "Installing ruby runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${RUBY_PKGS} ) | xargs | \
+    $( printf '~RDepends:~n^%s$ ' ${RUBY_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${RUBY_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Ruby: Installation
@@ -86,7 +86,7 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 # We will install the packages listed in ${RUBY_PKGS}
 
 msginfo "Installing Ruby ..."
-cmdretry apt-get -d install ${RUBY_PKGS}
+cmdretry apt-get install -d ${RUBY_PKGS}
 cmdretry apt-get install ${RUBY_PKGS}
 
 # Apt: Remove unnecessary packages

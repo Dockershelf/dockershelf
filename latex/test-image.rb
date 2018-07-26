@@ -15,6 +15,13 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(@container).not_to be_nil
     end
 
+    it "should have these packages installed" do
+        expect(package("texlive-fonts-recommended")).to be_installed
+        expect(package("texlive-latex-base")).to be_installed
+        expect(package("texlive-latex-extra")).to be_installed
+        expect(package("texlive-latex-recommended")).to be_installed
+    end
+
     it "should contain these files" do
         expect(file("/usr/bin/pdflatex")).to be_executable
     end

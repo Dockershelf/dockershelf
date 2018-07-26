@@ -84,9 +84,11 @@ if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
     fi
 fi
 
-# Copy entrypoint if we are building Mongo
+# Copy entrypoint and operation samples if we are building Mongo
 if [ "${DOCKER_IMAGE_TYPE}" == "mongo" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/aggregate.js"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/articles.js"  "${DOCKER_IMAGE_DIR}"
 fi
 
 # Copy latex sample
@@ -101,4 +103,5 @@ cd "${DOCKER_IMAGE_DIR}" && \
         -t ${DOCKER_IMAGE_NAME} .
 
 # Remove unnecessary files
-sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}/base" || true
+sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+    "${DOCKER_IMAGE_DIR}/base" || true

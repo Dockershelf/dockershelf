@@ -50,7 +50,7 @@ else
 fi
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev git"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -64,7 +64,7 @@ msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Python: Configure sources
@@ -91,12 +91,12 @@ cmdretry apt-get update
 
 msginfo "Installing python runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${PYTHON_PKGS} ) | xargs | \
+    $( printf '~RDepends:~n^%s$ ' ${PYTHON_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
 
 if [ "${PYTHON_DEBIAN_SUITE}" == "jessie" ]; then
@@ -105,16 +105,37 @@ if [ "${PYTHON_DEBIAN_SUITE}" == "jessie" ]; then
     cmdretry apt-get -t jessie install findutils
 fi
 
+if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
+fi
+
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PYTHON_PKGS}
 
 msginfo "Installing Python ..."
-cmdretry apt-get -d install ${PYTHON_PKGS}
+cmdretry apt-get install -d ${PYTHON_PKGS}
 cmdretry apt-get install ${PYTHON_PKGS}
 
 if [ ! -f "/usr/bin/python" ]; then
     ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
+fi
+
+# Pip: Installation
+# ------------------------------------------------------------------------------
+# Let's bring in the old reliable pip guy.
+
+msginfo "Installing pip ..."
+if [ "${PYTHON_VER_NUM}" == "3.2" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
+elif [ "${PYTHON_VER_NUM}" == "2.6" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/2.6/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
+else
+    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 fi
 
 # Apt: Remove unnecessary packages
@@ -134,30 +155,6 @@ cmdretry apt-get autoremove
 
 cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
-
-# Pip: Installation
-# ------------------------------------------------------------------------------
-# Let's bring in the old reliable pip guy.
-
-git clone --depth 1 --single-branch --branch v29.0.1 \
-    "${SETUPTOOLS_TEMP_DIR}" "${SETUPTOOLS_GIT_REPO}"
-${PYTHON_VER_NUM_MINOR_STR} "${SETUPTOOLS_GIT_REPO}/setup.py" install
-rm -rf "${SETUPTOOLS_GIT_REPO}"
-
-msginfo "Installing pip ..."
-if [ "${PYTHON_VER_NUM}" == "3.2" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR}
-    pip install --upgrade setuptools==29.0.1
-elif [ "${PYTHON_VER_NUM}" == "2.6" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/2.6/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR}
-    pip install --upgrade setuptools==29.0.1
-else
-    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR}
-    pip install --upgrade setuptools
-fi
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------
