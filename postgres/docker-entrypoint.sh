@@ -84,20 +84,17 @@ if [ "$1" = 'postgres' ]; then
             pass="PASSWORD '$POSTGRES_PASSWORD'"
             authMethod=md5
         else
-            # The - option suppresses leading tabs but *not* spaces. :)
-            cat >&2 <<-'EOWARN'
-                ****************************************************
-                WARNING: No password has been set for the database.
-                         This will allow anyone with access to the
-                         Postgres port to access your database. In
-                         Docker's default configuration, this is
-                         effectively any other container on the same
-                         system.
-
-                         Use "-e POSTGRES_PASSWORD=password" to set
-                         it in "docker run".
-                ****************************************************
-            EOWARN
+            echo "****************************************************"
+            echo "WARNING: No password has been set for the database. "
+            echo "         This will allow anyone with access to the  "
+            echo "         Postgres port to access your database. In  "
+            echo "         Docker's default configuration, this is    "
+            echo "         effectively any other container on the same"
+            echo "         system.                                    "
+            echo "                                                    "
+            echo "         Use '-e POSTGRES_PASSWORD=password' to set "
+            echo "         it in 'docker run'.                        "
+            echo "****************************************************"
 
             pass=
             authMethod=trust
