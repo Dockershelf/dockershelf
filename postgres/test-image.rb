@@ -15,36 +15,35 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(@container).not_to be_nil
     end
 
-    # it "should be able to start" do
-    #     mongod = command("mongod --fork --syslog --smallfiles && sleep 5")
-    #     expect(mongod.exit_status).to eq(0)
-    # end
+    it "should be able to start" do
+        expect(command("service postgres start").exit_status).to eq(0)
+    end
 
-    # it "should contain these files" do
-    #     expect(file("/etc/apt/sources.list.d/mongo.list")).to exist
-    #     expect(file("/data/db")).to be_directory
-    #     expect(file("/data/configdb")).to be_directory
-    #     expect(file("/docker-entrypoint-initdb.d")).to be_directory
-    # end
+    it "should contain these files" do
+        expect(file("/etc/apt/sources.list.d/postgres.list")).to exist
+        expect(file("/var/lib/postgresql/data")).to be_directory
+        expect(file("/var/run/postgresql")).to be_directory
+        expect(file("/docker-entrypoint-initdb.d")).to be_directory
+    end
 
-    # it "should have these packages installed" do
-    #     expect(package("mongodb-org")).to be_installed
-    #     expect(package("mongodb-org-server")).to be_installed
-    #     expect(package("mongodb-org-shell")).to be_installed
-    #     expect(package("mongodb-org-mongos")).to be_installed
-    #     expect(package("mongodb-org-tools")).to be_installed
-    # end
+    it "should have these packages installed" do
+        expect(package("postgresql-#{ENV['DOCKER_IMAGE_TAG']}")).to be_installed
+        expect(package("postgresql-common")).to be_installed
+        expect(package("postgresql-client-#{ENV['DOCKER_IMAGE_TAG']}")).to be_installed
+        expect(package("postgresql-client-common")).to be_installed
+    end
 
-    # it "should have a mongodb user" do
-    #     expect(user('mongodb')).to exist
-    #     expect(user('mongodb')).to belong_to_group 'mongodb'
-    # end
+    it "should have a postgres user" do
+        expect(user("postgres")).to exist
+        expect(user("postgres")).to belong_to_group "postgres"
+    end
 
-    # it "should be correct version" do
-    #     mongov = command("mongo --quiet admin --eval 'db.version();'").stdout.strip
-    #     mongov_short = mongov[0..2]
-    #     expect(mongov_short).to eq(ENV['DOCKER_IMAGE_TAG'])
-    # end
+    it "should be correct version" do
+        psqlv = command("sudo -H -u postgres bash -c \"psql -t -c 'SHOW server_version;'\"").stdout.strip
+        vlength = ENV['DOCKER_IMAGE_TAG'] - 1
+        psqlv_short = mongov[0..vlength]
+        expect(psqlv_short).to eq(ENV['DOCKER_IMAGE_TAG'])
+    end
 
     # it "should be able to execute an operation on mongo shell" do
     #     expect(command("mongo admin --eval 'db.stats();'").exit_status).to eq(0)
