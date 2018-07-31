@@ -1,9 +1,68 @@
 # Changelog
 
 
+## 2.0.0 (2018-07-31)
+
+### Other
+
+* [REF] Improving README. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Improving documentation. [FIX] Fixing Postgres build. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Removing the behavior of nor creating the main cluster [postgres]. [REF] Adding Postgres tests. [Luis Alejandro Martínez Faneyth]
+
+* [DEL] Removing Mongo 3.0 because is too much difficult to make it work and Postgres 12 because is not ready yet. [Luis Alejandro Martínez Faneyth]
+
+* [FIX] Fixing Postgres 11 & 12 build. [Luis Alejandro Martínez Faneyth]
+
+* [FIX] Fixing Postgres build. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Configuring aptitude to not ask questions and trust everything. [Luis Alejandro Martínez Faneyth]
+
+* [FIX] Fixing Postgres build. [Luis Alejandro Martínez Faneyth]
+
+* [FIX] Fixing Postgres build. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Moving images to a folder. [REF] Moving python script to folder. [REF] Changing paths. [FIX] Fixing Mongo 4.0 build. [Luis Alejandro Martínez Faneyth]
+
+* [ADD] Adding Python 3.7. [ADD] Adding Mongo 4.0. [ADD] Adding Postgres images. [Luis Alejandro Martínez Faneyth]
+
+* [FIX] Fixing Mongo test. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Copy Mongo test files if we are building it. [REF] Add more test cases for Latex image. [REF] Improve package version pinning when installing from foreign repositories. [REF] Add more test cases for Mongo image. [REF] Add more test cases for Node image. [REF] Installing python3-distutils in python 3.6. [Luis Alejandro Martínez Faneyth]
+
+* [DEL] Removing python 3.7 because is not stable yet. [ADD] Including js scripts to test mongo. [REF] Improving bash prompt design and colors. [REF] Improving documentation. [FIX] Fixing pip installation. [Luis Alejandro Martínez Faneyth]
+
+* [FIX] Fixing typo in Dockerfiles. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Sorting versions in descending order on .travis.yml. [REF] Improving Readme. [REF] Adding entrypoint to Mongo. [REF] Completing ruby configuration. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Improving documentation and scripts. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Adding ruby images based in python images. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Removing debian stable images. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Changing the way that python images are built. [REF] Changing image maintainer email. [REF] Improving test cases. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Changing image maintainer email. [REF] Removing debian stable images. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Removing unstable versions of Mongo. [REF] Completing development of Mongo shelf build script. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Changing maintainer email. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Removing debian stable python versions. [REF] Rolling back to compiling of python. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Configuring iproute package for Wheezy and iproute2 for the rest. [REF] Building minimal base (debootstrap) with docker except for Wheezy. [Luis Alejandro Martínez Faneyth]
+
+* [REF] Adding scripts to automate the generarion of Dockerfiles and Readmes. [REF] Adding Mongo and Node images. [Luis Alejandro Martínez Faneyth]
+
+
 ## 0.1.5 (2017-07-08)
 
 ### Other
+
+* Updating Changelog and version. [Luis Alejandro martínez Faneyth]
 
 * [FIX] Fixing debian stretch test case. [FIX] The package latex-xcolor doesn't exist anymore, xcolor is now provided by texlive-latex-recommended. [Luis Alejandro martínez Faneyth]
 
