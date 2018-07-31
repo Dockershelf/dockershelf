@@ -62,7 +62,7 @@ These are ruby images with native debian packages that are extracted from differ
 
 ### Node
 
-These are Node images built using the [nodesource installation scripts](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/node/README.md) for more details.
+These are Node images built using the [nodesource installation script](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/node/README.md) for more details.
 
 ![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
@@ -104,7 +104,7 @@ Pull one of the available images and start hacking!
 docker pull [docker image name]
 docker run -it [docker image name] bash
 ```
-<sup>[docker image name] is the desired image to download.</sup>
+<sup>[docker image name] is the desired image to download, for example <code>dockershelf/python:2.7</code>.</sup>
 
 ## How to build locally
 
@@ -120,7 +120,7 @@ Run the build script in the root folder of your local copy. Remember to have doc
 bash build-image.sh [docker image name]
 ```
 
-<sup>[docker image name] is the desired image to build.</sup>
+<sup>[docker image name] is the desired image to build, for example <code>dockershelf/debian:sid</code>.</sup>
 
 ## Made with :heart: and :hamburger:
 
