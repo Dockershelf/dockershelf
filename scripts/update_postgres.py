@@ -50,6 +50,7 @@ def update_postgres(basedir):
                             'dists/sid-pgdg/Release')
     base_image = 'dockershelf/debian:sid'
     docker_tag_holder = 'dockershelf/postgres:{0}'
+    docker_url = 'https://hub.docker.com/r/dockershelf/postgres'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-postgres%2F{0}%2FDockerfile-blue.svg')
     dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
@@ -88,9 +89,7 @@ def update_postgres(basedir):
         postgres_os_version_dir = os.path.join(postgresdir, postgres_version)
         postgres_dockerfile = os.path.join(postgres_os_version_dir,
                                            'Dockerfile')
-
         docker_tag = docker_tag_holder.format(postgres_version)
-        docker_url = 'https://hub.docker.com/r/dockershelf/postgres'
         dockerfile_badge = dockerfile_badge_holder.format(postgres_version)
         dockerfile_url = dockerfile_url_holder.format(postgres_version)
         microbadger_badge = microbadger_badge_holder.format(postgres_version)

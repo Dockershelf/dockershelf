@@ -41,6 +41,7 @@ def update_python(basedir):
     python_readme = os.path.join(pythondir, 'README.md')
 
     base_image = 'dockershelf/debian:sid'
+    docker_tag_holder = 'dockershelf/python:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-python%2F{0}%2FDockerfile-blue.svg')
@@ -80,6 +81,7 @@ def update_python(basedir):
     for python_version in python_versions:
         python_os_version_dir = os.path.join(pythondir, python_version)
         python_dockerfile = os.path.join(python_os_version_dir, 'Dockerfile')
+        docker_tag = docker_tag_holder.format(python_version)
         dockerfile_badge = dockerfile_badge_holder.format(python_version)
         dockerfile_url = dockerfile_url_holder.format(python_version)
         microbadger_badge = microbadger_badge_holder.format(python_version)
@@ -97,9 +99,8 @@ def update_python(basedir):
 
         python_readme_tablelist.append(
             python_readme_tablelist_holder.format(
-                python_version, docker_url, python_version,
-                dockerfile_badge, dockerfile_url, microbadger_badge,
-                microbadger_url))
+                docker_tag, docker_url, python_version, dockerfile_badge,
+                dockerfile_url, microbadger_badge, microbadger_url))
 
         os.makedirs(python_os_version_dir)
 

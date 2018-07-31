@@ -1,28 +1,18 @@
 ##
 ## Format
 ##
-##   ACTION: [AUDIENCE:] COMMIT_MSG [!TAG ...]
+##   ACTION COMMIT_MSG [!TAG ...]
 ##
 ## Description
 ##
-##   ACTION is one of 'chg', 'fix', 'new'
+##   ACTION is one of '[REF]', '[FIX]', '[ADD]'
 ##
 ##       Is WHAT the change is about.
 ##
-##       'chg' is for refactor, small improvement, cosmetic changes...
-##       'fix' is for bug fixes
-##       'new' is for new features, big improvement
-##
-##   AUDIENCE is optional and one of 'dev', 'usr', 'pkg', 'test', 'doc'
-##
-##       Is WHO is concerned by the change.
-##
-##       'dev'  is for developpers (API changes, refactors...)
-##       'usr'  is for final users (UI changes)
-##       'pkg'  is for packagers   (packaging changes)
-##       'test' is for testers     (test only related changes)
-##       'doc'  is for doc guys    (doc only changes)
-##
+##       '[REF]' is for refactor, small improvement, cosmetic changes...
+##       '[FIX]' is for bug fixes
+##       '[ADD]' is for new features, big improvement
+
 ##   COMMIT_MSG is ... well ... the commit message itself.
 ##
 ##   TAGs are additionnal adjective as 'refactor' 'minor' 'cosmetic'
@@ -37,17 +27,9 @@
 ##
 ## Example:
 ##
-##   new: usr: support of bazaar implemented
-##   chg: re-indentend some lines !cosmetic
-##   new: dev: updated code to be compatible with last version of killer lib.
-##   fix: pkg: updated year of licence coverage.
-##   new: test: added a bunch of test around user usability of feature X.
-##   fix: typo in spelling my name in comment. !minor
-##
-##   Please note that multi-line commit message are supported, and only the
-##   first line will be considered as the "summary" of the commit message. So
-##   tags, and other rules only applies to the summary.  The body of the commit
-##   message will be displayed in the changelog without reformatting.
+##   [ADD] support of bazaar implemented
+##   [REF] re-indentend some lines !cosmetic
+##   [FIX] typo in spelling my name in comment. !minor
 
 
 ##
@@ -57,14 +39,9 @@
 ## will be ignored and won't be reported in the changelog.
 ##
 ignore_regexps = [
-        r'@minor', r'!minor',
-        r'@cosmetic', r'!cosmetic',
-        r'@refactor', r'!refactor',
-        r'@wip', r'!wip',
-        r'^([cC]hg|[fF]ix|[nN]ew)\s*:\s*[p|P]kg:',
-        r'^([cC]hg|[fF]ix|[nN]ew)\s*:\s*[d|D]ev:',
-        r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
-  ]
+    r'^(.{3,3}\s*:)?\s*[Uu]pdating [Cc]hangelog and version.?\s*$',
+    r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
+]
 
 
 ## ``section_regexps`` is a list of 2-tuples associating a string label and a
@@ -80,19 +57,10 @@ ignore_regexps = [
 ## whenever you are tweaking this variable.
 ##
 section_regexps = [
-    ('New', [
-	r'^[nN]ew\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
-     ]),
-    ('Changes', [
-        r'^[cC]hg\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
-     ]),
-    ('Fix', [
-        r'^[fF]ix\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
-     ]),
-
-    ('Other', None ## Match all lines
-     ),
-
+    ('New', [r'^\[ADD\]\s*([^\n]*)$']),
+    ('Changes', [r'^\[REF\]\s*([^\n]*)$']),
+    ('Fix', [r'^\[FIX\]\s*([^\n]*)$']),
+    ('Other', None),
 ]
 
 
@@ -127,7 +95,7 @@ section_regexps = [
 #body_process = Wrap(regexp=r'\n(?=\w+\s*:)') | Indent(chars="  ")
 #body_process = Wrap(regexp=r'\n(?=\w+\s*:)')
 #body_process = noop
-body_process = ReSub(r'((^|\n)[A-Z]\w+(-\w+)*: .*(\n\s+.*)*)+$', r'') | strip
+body_process = ReSub(r'((^|\n)\[[A-Z]\w+(-\w+)*\] .*(\n\s+.*)*)+$', r'') | strip
 
 
 ## ``subject_process`` is a callable
@@ -137,7 +105,7 @@ body_process = ReSub(r'((^|\n)[A-Z]\w+(-\w+)*: .*(\n\s+.*)*)+$', r'') | strip
 ##
 ## Available constructs are those listed in ``body_process`` doc.
 subject_process = (strip |
-    ReSub(r'^([cC]hg|[fF]ix|[nN]ew)\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n@]*)(@[a-z]+\s+)*$', r'\4') |
+    ReSub(r'^(\[ADD\]|\[REF\]|\[FIX\])\s*([^\n@]*)(@[a-z]+\s+)*$', r'\2') |
     ucfirst | final_dot)
 
 
