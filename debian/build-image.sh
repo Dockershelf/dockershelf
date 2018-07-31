@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2017, Dockershelf Developers.
+#   Copyright (C) 2016-2018, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -31,7 +31,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
 
 # Packages to install at the end
-DPKG_DEPENDS="iproute inetutils-ping locales curl ca-certificates \
+DPKG_DEPENDS="inetutils-ping locales curl ca-certificates \
     bash-completion"
 
 # Load helper functions
@@ -49,14 +49,31 @@ if [ "$( id -u )" != "0" ]; then
     exit 1
 fi
 
+if [ "${DEBIAN_RELEASE}" == "wheezy" ]; then
+    DPKG_DEPENDS="${DPKG_DEPENDS} iproute"
+else
+    DPKG_DEPENDS="${DPKG_DEPENDS} iproute2"
+fi
+
+if [ "${DEBIAN_RELEASE}" == "sid" ]; then
+    MERGED_USR="--merged-usr"
+else
+    MERGED_USR=""
+fi
+
+# Clean previous builds
+if [ -d "${TARGET}" ]; then
+    rm -rf "${TARGET}"
+fi
+
 msginfo "Downloading packages for base filesystem ..."
-cmdretry debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --download-only --no-check-gpg --no-check-certificate --merged-usr \
+debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+    --download-only --no-check-gpg --no-check-certificate ${MERGED_USR} \
         "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
 
 msginfo "Building base filesystem ..."
-cmdretry debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --no-check-gpg --no-check-certificate --merged-usr \
+debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+    --no-check-gpg --no-check-certificate ${MERGED_USR} \
         "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
 
 msginfo "Configuring base filesystem ..."
@@ -139,9 +156,11 @@ Apt::Install-Recommends "false";
 
 # Don't ask questions, assume 'yes'.
 Apt::Get::Assume-Yes "true";
+Aptitude::CmdLine::Assume-Yes "true";
 
 # Allow installation of unauthenticated packages.
 Apt::Get::AllowUnauthenticated "true";
+Aptitude::CmdLine::Ignore-Trust-Violations "true";
 
 # Remove suggested and recommended packages on autoremove.
 Apt::AutoRemove::SuggestsImportant "false";
@@ -168,7 +187,7 @@ cat > "${TARGET}/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
 # Dockershelf post hook for dpkg
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rf
-rm -rf /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
+rm -rf /usr/share/doc/* /usr/share/locale/* \
        /var/cache/debconf/* /var/cache/apt/* 
 EOF
 
@@ -188,21 +207,21 @@ if [ -n "${TERM}" ] && [ -r /etc/motd ]; then
 fi
 
 # Changing prompt
-PROMPT_RED="\[\033[38;5;167m\]"
-PROMPT_DARK_RED="\[\033[38;5;088m\]"
-PROMPT_OFF="\[\033[0m\]"
-PS1="${PROMPT_RED}[\u@${PROMPT_DARK_RED}\h]${PROMPT_OFF}:\w\$ "
+COLOR_LIGHT_RED="\[\033[38;5;167m\]"
+COLOR_DARK_RED="\[\033[38;5;88m\]"
+COLOR_OFF="\[\033[0m\]"
+PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'
 
-           This image is part of            
+         This image was built using         
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
  |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
  |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
  `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
-                                        -´   
+                                        -´  
         For more information, visit         
 https://github.com/LuisAlejandro/dockershelf
 
@@ -216,7 +235,7 @@ msginfo "Installing dependencies and upgrading packages ..."
 cmdretry chroot "${TARGET}" apt-get update
 cmdretry chroot "${TARGET}" apt-get -d upgrade
 cmdretry chroot "${TARGET}" apt-get upgrade
-cmdretry chroot "${TARGET}" apt-get -d install ${DPKG_DEPENDS}
+cmdretry chroot "${TARGET}" apt-get install -d ${DPKG_DEPENDS}
 cmdretry chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
 
 msginfo "Configuring locales ..."

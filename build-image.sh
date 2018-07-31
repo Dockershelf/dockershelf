@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2017, Dockershelf Developers.
+#   Copyright (C) 2016-2018, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -69,7 +69,36 @@ fi
 
 # Create a base filesystem if we are building a debian image
 if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-	cd "${DOCKER_IMAGE_DIR}" && sudo bash build-image.sh "${DOCKER_IMAGE_TAG}"
+    if [ "${DOCKER_IMAGE_TAG}" == "wheezy" ]; then
+        cd "${DOCKER_IMAGE_DIR}" && \
+            sudo bash build-image.sh "${DOCKER_IMAGE_TAG}"
+    else
+        cd "${DOCKER_IMAGE_DIR}" && \
+            sudo docker run -it \
+                -v "${DOCKER_IMAGE_DIR}:/tmp/dockershelf" \
+                -w "/tmp/dockershelf" \
+                debian:sid \
+                bash -c "apt-get update && \
+                    apt-get install -y debootstrap && \
+                    bash build-image.sh ${DOCKER_IMAGE_TAG}"
+    fi
+fi
+
+# Copy entrypoint and operation samples if we are building Mongo
+if [ "${DOCKER_IMAGE_TYPE}" == "mongo" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/aggregate.js"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/articles.js"  "${DOCKER_IMAGE_DIR}"
+fi
+
+# Copy entrypoint if we are building Postgres
+if [ "${DOCKER_IMAGE_TYPE}" == "postgres" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+fi
+
+# Copy latex sample
+if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"
 fi
 
 # Build the docker image
@@ -79,4 +108,5 @@ cd "${DOCKER_IMAGE_DIR}" && \
         -t ${DOCKER_IMAGE_NAME} .
 
 # Remove unnecessary files
-sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}/base"
+sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+    "${DOCKER_IMAGE_DIR}/base" || true

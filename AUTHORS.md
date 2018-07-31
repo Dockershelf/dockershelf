@@ -2,7 +2,7 @@
 
 ## Development Lead
 
-* Luis Alejandro Martínez Faneyth <luis@huntingbears.com.ve>
+* Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ## Contributors
 

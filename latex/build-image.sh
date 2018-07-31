@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2017, Dockershelf Developers.
+#   Copyright (C) 2016-2018, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -40,8 +40,17 @@ msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get -d install ${DPKG_DEPENDS}
+cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
+
+# Bash: Changing prompt
+# ------------------------------------------------------------------------------
+# To distinguish images.
+
+cat >> "/etc/bash.bashrc" << 'EOF'
+
+PS1="[\u@\h]:\w\$ "
+EOF
 
 # Final cleaning
 # ------------------------------------------------------------------------------
@@ -50,6 +59,6 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
-rm -rfv /tmp/* /usr/share/doc/* /usr/share/locale/* /usr/share/man/* \
-        /var/cache/debconf/* /var/cache/apt/* /var/tmp/* /var/log/* \
-        /var/lib/apt/lists/*
+rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
+        "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
+        "/var/lib/apt/lists/"*

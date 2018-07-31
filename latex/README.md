@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/banner.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,19 +6,13 @@
 
 ## Latex shelf
 
-[ilatexl]: https://hub.docker.com/r/dockershelf/latex
-[dlatex]: https://img.shields.io/badge/-latex%2Fsid%2FDockerfile-blue.svg
-[dlatexl]: https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile
-[llatex]: https://images.microbadger.com/badges/image/dockershelf/latex:sid.svg
-[llatexl]: https://microbadger.com/images/dockershelf/latex:sid
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+|Image  |Release  |Dockerfile  |Layers  |
+|-------|---------|------------|--------|
+|[`dockershelf/latex:sid`](https://hub.docker.com/r/dockershelf/latex)|`sid`|[![](https://img.shields.io/badge/-latex%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/latex:sid.svg)](https://microbadger.com/images/dockershelf/latex:sid)|
 
-|Image                             |Release|Dockerfile            |Layers                |
-|----------------------------------|-------|----------------------|----------------------|
-|[`dockershelf/latex:sid`][ilatexl]|`sid`  |[![][dlatex]][dlatexl]|[![][llatex]][llatexl]|
-
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/table.svg)
+![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 
@@ -30,6 +24,6 @@ The Latex images are very simple, they're just debian images with `texlive-fonts
 
 My name is Luis ([@LuisAlejandro](https://github.com/LuisAlejandro)) and I'm a Free and Open-Source Software developer living in Maracay, Venezuela.
 
-If you like what I do, please support me on [Patreon](https://www.patreon.com/luisalejandro),  [Flattr](https://flattr.com/profile/luisalejandro), or donate via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B8LPXHQY8QE8Y), so that I can continue doing what I love.
+If you like what I do, please support me on [Patreon](https://www.patreon.com/luisalejandro), [Flattr](https://flattr.com/profile/luisalejandro), or donate via [PayPal](https://www.paypal.me/martinezfaneyth), so that I can continue doing what I love.
 
-> Blog [huntingbears.com.ve](http://huntingbears.com.ve) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
+> Blog [luisalejandro.org](http://luisalejandro.org) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)

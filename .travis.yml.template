@@ -1,0 +1,52 @@
+sudo: required
+services: docker
+dist: trusty
+group: edge
+language: ruby
+addons:
+    apt:
+        sources:
+            - debian-sid
+        packages:
+            - debootstrap
+branches:
+    only:
+        - master
+        - develop
+env:
+    global:
+        # Docker Hub username ${DH_USERNAME}
+        - DH_USERNAME="luisalejandro"
+        # Docker Hub password ${DH_PASSWORD}
+        - secure: "gOxNCewy0xuQS3SbOkk++sqT5NCFMCEAP5HNBIsJFcle0Qbkv7XF+hKwn+oGbWc+Ti1SgXi251O0hTkXwWhcQOMUH6ZzVwQ2wFhKyUP9bIqORDm03+8G6ZPfw8NP70N/MfihmuWTgKl79kZ2S5mYPdig0RlcENwKq95Rw4wtT45BLGS2Tj7X9Hch2F1sqhEOKgoLomQ5Qs1KezLC/rRwNxocW41WiGYUdgvaSmLeaITcliYIOqwsXc381IDiVIrrGc9MI/LCrxuDiliaFvK+t4sv7Fz7ogCn2d7WNGZQsPi6xNImUco6pCiSmQ3CFTe1il9mcZXHVDJ4dMmVqHgH1s2WWr7Ygd901Dnq3awusI2TELIQk2whKxRExYfz0wTae6dE1KOZHsHMAY1CotUEtyja9D8dnGfqFa+qDiagAP+c7FmxImDiaTrqZ0ez6XlKnmw6RefElvlFgbrtNtW0ZsX7c1futtiW8PArmud6ikuvR7lhiKMMeVnhktbniEqkxX50DplTODyq9DZPXBMHIkPSqe9uNfKu+bOhKjfkfyFtQ/uIFLq2tdtgtXbIn6UOq+ncNFEhJkR0gvLXrZ5Wj0SHofbdU9vFV1LB37ecA+H0j5hE477lB7qNRb41lTilS7D87wW+TWCAN/BRXvnMRUrvAiX0F0CIeowHTcnllKs="
+    matrix:
+%%MATRIX%%
+install:
+    - gem install docker-api serverspec
+before_script:
+    - |
+        if [ "${TRAVIS_BRANCH}" == "develop" ]; then
+            DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
+            sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
+            sed -i -r 's|FROM scratch-dev|FROM scratch|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
+        fi
+    - bash build-image.sh ${DOCKER_IMAGE_NAME}
+script:
+    - bash test-image.sh ${DOCKER_IMAGE_NAME}
+after_success:
+    - |
+        if [ "${TRAVIS_BRANCH}" == "develop" ]; then
+            docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}-dev
+            DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-dev"
+        fi
+    - bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
+    - |
+        if [ -n "${DOCKER_IMAGE_EXTRA_TAGS}" ]; then
+            for EXTRA_TAG in ${DOCKER_IMAGE_EXTRA_TAGS}; do
+                if [ "${TRAVIS_BRANCH}" == "develop" ]; then
+                    EXTRA_TAG="${EXTRA_TAG}-dev"
+                fi
+                docker tag ${DOCKER_IMAGE_NAME} ${EXTRA_TAG}
+                bash push-image.sh ${EXTRA_TAG} ${DH_USERNAME} ${DH_PASSWORD}
+            done
+        fi
