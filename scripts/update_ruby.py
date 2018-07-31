@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2017, Dockershelf Developers.
+#   Copyright (C) 2016-2018, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #

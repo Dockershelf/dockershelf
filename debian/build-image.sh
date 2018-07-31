@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2017, Dockershelf Developers.
+#   Copyright (C) 2016-2018, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -207,10 +207,10 @@ if [ -n "${TERM}" ] && [ -r /etc/motd ]; then
 fi
 
 # Changing prompt
-COLOR_RED="\[\033[38;5;167m\]"
+COLOR_LIGHT_RED="\[\033[38;5;167m\]"
 COLOR_DARK_RED="\[\033[38;5;88m\]"
 COLOR_OFF="\[\033[0m\]"
-PS1="${COLOR_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
+PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 cat > "${TARGET}/etc/motd" << 'EOF'

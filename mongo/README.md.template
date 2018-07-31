@@ -25,9 +25,11 @@ We'll explain the overall process here:
 1. Built `FROM dockershelf/debian:sid`.
 2. Labelled according to [label-schema.org](http://label-schema.org).
 3. Install developer tools to handle the packages installation.
-5. Configure mongodb user and data/config directories.
-4. Install Mongo.
-5. Shrink image by deleting unnecessary files.
+4. Configure `/etc/apt/sources.list` to add the official mongo repository according to the version.
+5. Install runtime dependencies.
+6. Configure mongodb user and data/config directories.
+7. Install Mongo.
+8. Shrink image by deleting unnecessary files and/or packages.
 
 ## Made with :heart: and :hamburger:
 
@@ -37,4 +39,4 @@ My name is Luis ([@LuisAlejandro](https://github.com/LuisAlejandro)) and I'm a F
 
 If you like what I do, please support me on [Patreon](https://www.patreon.com/luisalejandro), [Flattr](https://flattr.com/profile/luisalejandro), or donate via [PayPal](https://www.paypal.me/martinezfaneyth), so that I can continue doing what I love.
 
-> Blog [huntingbears.com.ve](http://huntingbears.com.ve) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
+> Blog [luisalejandro.org](http://luisalejandro.org) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)

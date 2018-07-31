@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2017, Dockershelf Developers.
+#   Copyright (C) 2016-2018, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -136,8 +136,9 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
-COLOR_DARK_BLUE="\[\033[38;5;18m\]"
-PS1="[\u@${COLOR_DARK_BLUE}\h]${COLOR_OFF}:\w\$ "
+COLOR_DARK_BLUE="\[\033[38;5;26m\]"
+COLOR_LIGHT_BLUE="\[\033[38;5;75m\]"
+PS1="${COLOR_LIGHT_BLUE}[\u@${COLOR_DARK_BLUE}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 # Final cleaning
