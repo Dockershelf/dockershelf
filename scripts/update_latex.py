@@ -38,38 +38,53 @@ def update_latex(basedir):
     latex_dockerfile_template = os.path.join(latexdir, 'Dockerfile.template')
     latex_readme_template = os.path.join(latexdir, 'README.md.template')
     latex_readme = os.path.join(latexdir, 'README.md')
+    latex_hooks_dir = os.path.join(latexdir, 'hooks')
+    latex_build_hook = os.path.join(latex_hooks_dir, 'build')
+    latex_push_hook = os.path.join(latex_hooks_dir, 'push')
 
     base_image = 'dockershelf/debian:sid'
     docker_tag = 'dockershelf/latex:sid'
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
     dockerfile_badge = ('https://img.shields.io/badge/'
-                        '-latex%2Fsid%2FDockerfile-blue.svg')
+                        '-latex%2Fsid%2FDockerfile-blue.svg'
+                        '?colorA=22313F&colorB=4a637b&logo=docker'
+                        '')
     dockerfile_url = ('https://github.com/LuisAlejandro/dockershelf/'
                       'blob/master/latex/sid/Dockerfile')
-    microbadger_badge = ('https://images.microbadger.com/badges/'
-                         'image/dockershelf/latex:sid.svg')
-    microbadger_url = 'https://microbadger.com/images/dockershelf/latex:sid'
+    mb_layers_badge = ('https://img.shields.io/microbadger/layers/'
+                       '_/latex/sid.svg?colorA=22313F&colorB=4A637B'
+                       '')
+    mb_layers_url = ('https://microbadger.com/images/dockershelf/'
+                     'latex:sid')
+    mb_size_badge = ('https://img.shields.io/microbadger/image-size/'
+                     '_/latex/sid.svg?colorA=22313F&colorB=4A637B'
+                     '')
+    mb_size_url = ('https://microbadger.com/images/dockershelf/'
+                   'latex:sid')
     travis_matrixlist_str = ('        '
                              '- DOCKER_IMAGE_NAME="dockershelf/latex:sid"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
-                                     '|[![]({5})]({6})|')
+                                     '|[![]({5})]({6})'
+                                     '|[![]({7})]({8})'
+                                     '|')
 
     for deldir in find_dirs(latexdir):
         shutil.rmtree(deldir)
 
-    latex_os_version_dir = os.path.join(latexdir, 'sid')
-    latex_dockerfile = os.path.join(latex_os_version_dir, 'Dockerfile')
+    latex_version_dir = os.path.join(latexdir, 'sid')
+    latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
 
     travis_matrixlist.append(travis_matrixlist_str)
 
     latex_readme_tablelist.append(
         latex_readme_tablelist_holder.format(
             docker_tag, docker_url, 'sid', dockerfile_badge,
-            dockerfile_url, microbadger_badge, microbadger_url))
+            dockerfile_url, mb_layers_badge, mb_layers_url,
+            mb_size_badge, mb_size_url))
 
-    os.makedirs(latex_os_version_dir)
+    os.makedirs(latex_version_dir)
 
     with open(latex_dockerfile_template, 'r') as ldt:
         latex_dockerfile_template_content = ldt.read()
@@ -84,6 +99,19 @@ def update_latex(basedir):
     with open(latex_dockerfile, 'w') as ld:
         ld.write(latex_dockerfile_content)
 
+    os.makedirs(latex_hooks_dir)
+
+    with open(latex_build_hook, 'w') as lbh:
+        lbh.write('#!/usr/bin/env bash\n')
+        lbh.write('echo "This is a dummy build script that just allows to '
+                  'automatically fill the long description with the Readme '
+                  'from GitHub."\n')
+        lbh.write('echo "No real building is done here."')
+
+    with open(latex_push_hook, 'w') as lph:
+        lph.write('#!/usr/bin/env bash\n')
+        lph.write('echo "We arent really pushing."')
+
     with open(latex_readme_template, 'r') as lrt:
         latex_readme_template_content = lrt.read()
 
@@ -97,3 +125,8 @@ def update_latex(basedir):
         lr.write(latex_readme_content)
 
     return travis_matrixlist, latex_readme_table
+
+
+if __name__ == '__main__':
+    basedir = os.path.dirname(os.path.realpath(__file__))
+    update_latex(basedir)

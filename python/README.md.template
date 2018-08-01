@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,13 +6,13 @@
 
 ## Python shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-|Image  |Release  |Dockerfile  |Layers  |
-|-------|---------|------------|--------|
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
 %%PYTHON_TABLE%%
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 

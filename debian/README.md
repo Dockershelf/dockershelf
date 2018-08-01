@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,17 +6,17 @@
 
 ## Debian shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-|Image  |Release  |Dockerfile  |Layers  |
-|-------|---------|------------|--------|
-|[`dockershelf/debian:wheezy`](https://hub.docker.com/r/dockershelf/debian)|`wheezy`|[![](https://img.shields.io/badge/-debian%2Fwheezy%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/wheezy/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:wheezy.svg)](https://microbadger.com/images/dockershelf/debian:wheezy)|
-|[`dockershelf/debian:jessie`](https://hub.docker.com/r/dockershelf/debian)|`jessie`|[![](https://img.shields.io/badge/-debian%2Fjessie%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/jessie/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:jessie.svg)](https://microbadger.com/images/dockershelf/debian:jessie)|
-|[`dockershelf/debian:stretch`](https://hub.docker.com/r/dockershelf/debian)|`stretch`|[![](https://img.shields.io/badge/-debian%2Fstretch%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/stretch/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:stretch.svg)](https://microbadger.com/images/dockershelf/debian:stretch)|
-|[`dockershelf/debian:buster`](https://hub.docker.com/r/dockershelf/debian)|`buster`|[![](https://img.shields.io/badge/-debian%2Fbuster%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/buster/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:buster.svg)](https://microbadger.com/images/dockershelf/debian:buster)|
-|[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|`sid`|[![](https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/debian:sid.svg)](https://microbadger.com/images/dockershelf/debian:sid)|
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+|[`dockershelf/debian:wheezy`](https://hub.docker.com/r/dockershelf/debian)|`wheezy`|[![](https://img.shields.io/badge/-debian%2Fwheezy%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/wheezy/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/debian/wheezy.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:wheezy)|[![](https://img.shields.io/microbadger/image-size/_/debian/wheezy.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:wheezy)|
+|[`dockershelf/debian:jessie`](https://hub.docker.com/r/dockershelf/debian)|`jessie`|[![](https://img.shields.io/badge/-debian%2Fjessie%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/jessie/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/debian/jessie.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:jessie)|[![](https://img.shields.io/microbadger/image-size/_/debian/jessie.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:jessie)|
+|[`dockershelf/debian:stretch`](https://hub.docker.com/r/dockershelf/debian)|`stretch`|[![](https://img.shields.io/badge/-debian%2Fstretch%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/stretch/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/debian/stretch.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:stretch)|[![](https://img.shields.io/microbadger/image-size/_/debian/stretch.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:stretch)|
+|[`dockershelf/debian:buster`](https://hub.docker.com/r/dockershelf/debian)|`buster`|[![](https://img.shields.io/badge/-debian%2Fbuster%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/buster/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/debian/buster.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:buster)|[![](https://img.shields.io/microbadger/image-size/_/debian/buster.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:buster)|
+|[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|`sid`|[![](https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/debian/sid.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:sid)|[![](https://img.shields.io/microbadger/image-size/_/debian/sid.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/debian:sid)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 
@@ -29,7 +29,7 @@ However, we explain the overall process here:
 2. Labelled according to [label-schema.org](http://label-schema.org).
 3. The base filesystem is built with `debootstrap` using the following command.
 
-        debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg <release> <dir> <mirror>
+        debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg --no-check-certificate <release> <dir> <mirror>
 
 4. Then the following files are configured:
 
@@ -99,9 +99,11 @@ However, we explain the overall process here:
 
             # Don't ask questions, assume 'yes'.
             Apt::Get::Assume-Yes "true";
+            Aptitude::CmdLine::Assume-Yes "true";
 
             # Allow installation of unauthenticated packages.
             Apt::Get::AllowUnauthenticated "true";
+            Aptitude::CmdLine::Ignore-Trust-Violations "true";
 
             # Remove suggested and recommended packages on autoremove.
             Apt::AutoRemove::SuggestsImportant "false";
