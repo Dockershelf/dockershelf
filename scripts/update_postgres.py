@@ -102,7 +102,6 @@ def update_postgres(basedir):
         postgres_version_dir = os.path.join(postgresdir, postgres_version)
         postgres_dockerfile = os.path.join(postgres_version_dir,
                                            'Dockerfile')
-
         docker_tag = docker_tag_holder.format(postgres_version)
         dockerfile_badge = dockerfile_badge_holder.format(postgres_version)
         dockerfile_url = dockerfile_url_holder.format(postgres_version)
