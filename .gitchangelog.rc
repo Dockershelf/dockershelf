@@ -39,7 +39,7 @@
 ## will be ignored and won't be reported in the changelog.
 ##
 ignore_regexps = [
-    r'^(.{3,3}\s*:)?\s*[Uu]pdating [Cc]hangelog and version.?\s*$',
+    r'^(.{3,3}\s*:)?\s*[Uu]pdating [Cc]hangelog and [Vv]ersion.?\s*$',
     r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
 ]
 
