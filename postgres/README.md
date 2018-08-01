@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,18 +6,18 @@
 
 ## Postgres shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-|Image  |Release  |Dockerfile  |Layers  |
-|-------|---------|------------|--------|
-|[`dockershelf/postgres:9.3`](https://hub.docker.com/r/dockershelf/postgres)|`9.3`|[![](https://img.shields.io/badge/-postgres%2F9.3%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.3/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:9.3.svg)](https://microbadger.com/images/dockershelf/postgres:9.3)|
-|[`dockershelf/postgres:9.4`](https://hub.docker.com/r/dockershelf/postgres)|`9.4`|[![](https://img.shields.io/badge/-postgres%2F9.4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:9.4.svg)](https://microbadger.com/images/dockershelf/postgres:9.4)|
-|[`dockershelf/postgres:9.5`](https://hub.docker.com/r/dockershelf/postgres)|`9.5`|[![](https://img.shields.io/badge/-postgres%2F9.5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:9.5.svg)](https://microbadger.com/images/dockershelf/postgres:9.5)|
-|[`dockershelf/postgres:9.6`](https://hub.docker.com/r/dockershelf/postgres)|`9.6`|[![](https://img.shields.io/badge/-postgres%2F9.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:9.6.svg)](https://microbadger.com/images/dockershelf/postgres:9.6)|
-|[`dockershelf/postgres:10`](https://hub.docker.com/r/dockershelf/postgres)|`10`|[![](https://img.shields.io/badge/-postgres%2F10%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/10/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:10.svg)](https://microbadger.com/images/dockershelf/postgres:10)|
-|[`dockershelf/postgres:11`](https://hub.docker.com/r/dockershelf/postgres)|`11`|[![](https://img.shields.io/badge/-postgres%2F11%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/11/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/postgres:11.svg)](https://microbadger.com/images/dockershelf/postgres:11)|
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+|[`dockershelf/postgres:10`](https://hub.docker.com/r/dockershelf/postgres)|`10`|[![](https://img.shields.io/badge/-postgres%2F10%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/10/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/postgres/10.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:10)|[![](https://img.shields.io/microbadger/image-size/_/postgres/10.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:10)|
+|[`dockershelf/postgres:11`](https://hub.docker.com/r/dockershelf/postgres)|`11`|[![](https://img.shields.io/badge/-postgres%2F11%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/11/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/postgres/11.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:11)|[![](https://img.shields.io/microbadger/image-size/_/postgres/11.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:11)|
+|[`dockershelf/postgres:9.3`](https://hub.docker.com/r/dockershelf/postgres)|`9.3`|[![](https://img.shields.io/badge/-postgres%2F9.3%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.3/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/postgres/9.3.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.3)|[![](https://img.shields.io/microbadger/image-size/_/postgres/9.3.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.3)|
+|[`dockershelf/postgres:9.4`](https://hub.docker.com/r/dockershelf/postgres)|`9.4`|[![](https://img.shields.io/badge/-postgres%2F9.4%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.4/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/postgres/9.4.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.4)|[![](https://img.shields.io/microbadger/image-size/_/postgres/9.4.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.4)|
+|[`dockershelf/postgres:9.5`](https://hub.docker.com/r/dockershelf/postgres)|`9.5`|[![](https://img.shields.io/badge/-postgres%2F9.5%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.5/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/postgres/9.5.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.5)|[![](https://img.shields.io/microbadger/image-size/_/postgres/9.5.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.5)|
+|[`dockershelf/postgres:9.6`](https://hub.docker.com/r/dockershelf/postgres)|`9.6`|[![](https://img.shields.io/badge/-postgres%2F9.6%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/postgres/9.6/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/postgres/9.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.6)|[![](https://img.shields.io/microbadger/image-size/_/postgres/9.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/postgres:9.6)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 
@@ -30,9 +30,9 @@ We'll explain the overall process here:
 1. Built `FROM dockershelf/debian:sid`.
 2. Labelled according to [label-schema.org](http://label-schema.org).
 3. Install developer tools to handle the packages installation.
-5. Configure postgresdb user and data/config directories.
-4. Install Postgres.
-5. Shrink image by deleting unnecessary files.
+4. Configure postgres user and data/config directories.
+5. Install Postgres.
+6. Shrink image by deleting unnecessary files.
 
 ## Made with :heart: and :hamburger:
 
