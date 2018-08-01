@@ -39,17 +39,27 @@ def update_python(basedir):
     python_dockerfile_template = os.path.join(pythondir, 'Dockerfile.template')
     python_readme_template = os.path.join(pythondir, 'README.md.template')
     python_readme = os.path.join(pythondir, 'README.md')
+    python_hooks_dir = os.path.join(pythondir, 'hooks')
+    python_build_hook = os.path.join(python_hooks_dir, 'build')
+    python_push_hook = os.path.join(python_hooks_dir, 'push')
 
     base_image = 'dockershelf/debian:sid'
+    docker_tag_holder = 'dockershelf/python:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-python%2F{0}%2FDockerfile-blue.svg')
+                               '-python%2F{0}%2FDockerfile-blue.svg'
+                               '?colorA=22313F&colorB=4a637b&logo=docker'
+                               '&maxAge=86400')
     dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
                              'blob/master/python/{0}/Dockerfile')
-    microbadger_badge_holder = ('https://images.microbadger.com/badges/'
-                                'image/dockershelf/python:{0}.svg')
-    microbadger_url_holder = ('https://microbadger.com/images/'
-                              'dockershelf/python:{0}')
+    mb_layers_badge_holder = ('https://img.shields.io/microbadger/layers/'
+                              '_/python/{0}.svg?maxAge=86400')
+    mb_layers_url_holder = ('https://microbadger.com/images/dockershelf/'
+                            'python:{0}')
+    mb_size_badge_holder = ('https://img.shields.io/microbadger/image-size/'
+                            '_/python/{0}.svg?maxAge=86400')
+    mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
+                          'python:{0}')
     travis_matrixlist_py2_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
         ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"')
@@ -61,7 +71,9 @@ def update_python(basedir):
     python_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
-                                      '|[![]({5})]({6})|')
+                                      '|[![]({5})]({6})'
+                                      '|[![]({7})]({8})'
+                                      '|')
 
     python_versions_src_origin = {
         '2.6': 'wheezy-security',
@@ -72,18 +84,23 @@ def update_python(basedir):
         '3.6': 'sid',
         '3.7': 'sid',
     }
+
     python_versions = sorted(python_versions_src_origin.keys())
 
     for deldir in find_dirs(pythondir):
         shutil.rmtree(deldir)
 
     for python_version in python_versions:
-        python_os_version_dir = os.path.join(pythondir, python_version)
-        python_dockerfile = os.path.join(python_os_version_dir, 'Dockerfile')
+        python_version_dir = os.path.join(pythondir, python_version)
+        python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
+
+        docker_tag = docker_tag_holder.format(python_version)
         dockerfile_badge = dockerfile_badge_holder.format(python_version)
         dockerfile_url = dockerfile_url_holder.format(python_version)
-        microbadger_badge = microbadger_badge_holder.format(python_version)
-        microbadger_url = microbadger_url_holder.format(python_version)
+        mb_layers_badge = mb_layers_badge_holder.format(python_version)
+        mb_layers_url = mb_layers_url_holder.format(python_version)
+        mb_size_badge = mb_size_badge_holder.format(python_version)
+        mb_size_url = mb_size_url_holder.format(python_version)
 
         if python_version == '2.7':
             travis_matrixlist.append(
@@ -97,11 +114,11 @@ def update_python(basedir):
 
         python_readme_tablelist.append(
             python_readme_tablelist_holder.format(
-                python_version, docker_url, python_version,
-                dockerfile_badge, dockerfile_url, microbadger_badge,
-                microbadger_url))
+                docker_tag, docker_url, python_version, dockerfile_badge,
+                dockerfile_url, mb_layers_badge, mb_layers_url,
+                mb_size_badge, mb_size_url))
 
-        os.makedirs(python_os_version_dir)
+        os.makedirs(python_version_dir)
 
         with open(python_dockerfile_template, 'r') as pdt:
             python_dockerfile_template_content = pdt.read()
@@ -121,6 +138,19 @@ def update_python(basedir):
         with open(python_dockerfile, 'w') as pd:
             pd.write(python_dockerfile_content)
 
+    os.makedirs(python_hooks_dir)
+
+    with open(python_build_hook, 'w') as pbh:
+        pbh.write('#!/usr/bin/env bash\n')
+        pbh.write('echo "This is a dummy build script that just allows to '
+                  'automatically fill the long description with the Readme '
+                  'from GitHub."\n')
+        pbh.write('echo "No real building is done here."')
+
+    with open(python_push_hook, 'w') as pph:
+        pph.write('#!/usr/bin/env bash\n')
+        pph.write('echo "We arent really pushing."')
+
     with open(python_readme_template, 'r') as prt:
         python_readme_template_content = prt.read()
 
@@ -134,3 +164,8 @@ def update_python(basedir):
         pr.write(python_readme_content)
 
     return travis_matrixlist, python_readme_table
+
+
+if __name__ == '__main__':
+    basedir = os.path.dirname(os.path.realpath(__file__))
+    update_python(basedir)

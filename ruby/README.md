@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,17 +6,17 @@
 
 ## Ruby shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-|Image  |Release  |Dockerfile  |Layers  |
-|-------|---------|------------|--------|
-|[`1.8`](https://hub.docker.com/r/dockershelf/ruby)|`1.8`|[![](https://img.shields.io/badge/-ruby%2F1.8%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/1.8/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:1.8.svg)](https://microbadger.com/images/dockershelf/ruby:1.8)|
-|[`1.9.1`](https://hub.docker.com/r/dockershelf/ruby)|`1.9.1`|[![](https://img.shields.io/badge/-ruby%2F1.9.1%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/1.9.1/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:1.9.1.svg)](https://microbadger.com/images/dockershelf/ruby:1.9.1)|
-|[`2.1`](https://hub.docker.com/r/dockershelf/ruby)|`2.1`|[![](https://img.shields.io/badge/-ruby%2F2.1%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.1/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.1.svg)](https://microbadger.com/images/dockershelf/ruby:2.1)|
-|[`2.3`](https://hub.docker.com/r/dockershelf/ruby)|`2.3`|[![](https://img.shields.io/badge/-ruby%2F2.3%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.3/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.3.svg)](https://microbadger.com/images/dockershelf/ruby:2.3)|
-|[`2.5`](https://hub.docker.com/r/dockershelf/ruby)|`2.5`|[![](https://img.shields.io/badge/-ruby%2F2.5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/ruby:2.5.svg)](https://microbadger.com/images/dockershelf/ruby:2.5)|
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+|[`dockershelf/ruby:1.8`](https://hub.docker.com/r/dockershelf/ruby)|`1.8`|[![](https://img.shields.io/badge/-ruby%2F1.8%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/1.8/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/ruby/1.8.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:1.8)|[![](https://img.shields.io/microbadger/image-size/_/ruby/1.8.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:1.8)|
+|[`dockershelf/ruby:1.9.1`](https://hub.docker.com/r/dockershelf/ruby)|`1.9.1`|[![](https://img.shields.io/badge/-ruby%2F1.9.1%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/1.9.1/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/ruby/1.9.1.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:1.9.1)|[![](https://img.shields.io/microbadger/image-size/_/ruby/1.9.1.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:1.9.1)|
+|[`dockershelf/ruby:2.1`](https://hub.docker.com/r/dockershelf/ruby)|`2.1`|[![](https://img.shields.io/badge/-ruby%2F2.1%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.1/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/ruby/2.1.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:2.1)|[![](https://img.shields.io/microbadger/image-size/_/ruby/2.1.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:2.1)|
+|[`dockershelf/ruby:2.3`](https://hub.docker.com/r/dockershelf/ruby)|`2.3`|[![](https://img.shields.io/badge/-ruby%2F2.3%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.3/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/ruby/2.3.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:2.3)|[![](https://img.shields.io/microbadger/image-size/_/ruby/2.3.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:2.3)|
+|[`dockershelf/ruby:2.5`](https://hub.docker.com/r/dockershelf/ruby)|`2.5`|[![](https://img.shields.io/badge/-ruby%2F2.5%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/ruby/2.5/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/ruby/2.5.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:2.5)|[![](https://img.shields.io/microbadger/image-size/_/ruby/2.5.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/ruby:2.5)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 

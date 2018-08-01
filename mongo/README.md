@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,16 +6,16 @@
 
 ## Mongo shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-|Image  |Release  |Dockerfile  |Layers  |
-|-------|---------|------------|--------|
-|[`dockershelf/mongo:3.2`](https://hub.docker.com/r/dockershelf/mongo)|`3.2`|[![](https://img.shields.io/badge/-mongo%2F3.2%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.2/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.2.svg)](https://microbadger.com/images/dockershelf/mongo:3.2)|
-|[`dockershelf/mongo:3.4`](https://hub.docker.com/r/dockershelf/mongo)|`3.4`|[![](https://img.shields.io/badge/-mongo%2F3.4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.4.svg)](https://microbadger.com/images/dockershelf/mongo:3.4)|
-|[`dockershelf/mongo:3.6`](https://hub.docker.com/r/dockershelf/mongo)|`3.6`|[![](https://img.shields.io/badge/-mongo%2F3.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:3.6.svg)](https://microbadger.com/images/dockershelf/mongo:3.6)|
-|[`dockershelf/mongo:4.0`](https://hub.docker.com/r/dockershelf/mongo)|`4.0`|[![](https://img.shields.io/badge/-mongo%2F4.0%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/4.0/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/mongo:4.0.svg)](https://microbadger.com/images/dockershelf/mongo:4.0)|
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+|[`dockershelf/mongo:3.2`](https://hub.docker.com/r/dockershelf/mongo)|`3.2`|[![](https://img.shields.io/badge/-mongo%2F3.2%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.2/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/mongo/3.2.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:3.2)|[![](https://img.shields.io/microbadger/image-size/_/mongo/3.2.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:3.2)|
+|[`dockershelf/mongo:3.4`](https://hub.docker.com/r/dockershelf/mongo)|`3.4`|[![](https://img.shields.io/badge/-mongo%2F3.4%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.4/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/mongo/3.4.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:3.4)|[![](https://img.shields.io/microbadger/image-size/_/mongo/3.4.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:3.4)|
+|[`dockershelf/mongo:3.6`](https://hub.docker.com/r/dockershelf/mongo)|`3.6`|[![](https://img.shields.io/badge/-mongo%2F3.6%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/3.6/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/mongo/3.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:3.6)|[![](https://img.shields.io/microbadger/image-size/_/mongo/3.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:3.6)|
+|[`dockershelf/mongo:4.0`](https://hub.docker.com/r/dockershelf/mongo)|`4.0`|[![](https://img.shields.io/badge/-mongo%2F4.0%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/mongo/4.0/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/mongo/4.0.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:4.0)|[![](https://img.shields.io/microbadger/image-size/_/mongo/4.0.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/mongo:4.0)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 
@@ -28,9 +28,11 @@ We'll explain the overall process here:
 1. Built `FROM dockershelf/debian:sid`.
 2. Labelled according to [label-schema.org](http://label-schema.org).
 3. Install developer tools to handle the packages installation.
-5. Configure mongodb user and data/config directories.
-4. Install Mongo.
-5. Shrink image by deleting unnecessary files.
+4. Configure `/etc/apt/sources.list` to add the official mongo repository according to the version.
+5. Install runtime dependencies.
+6. Configure mongodb user and data/config directories.
+7. Install Mongo.
+8. Shrink image by deleting unnecessary files and/or packages.
 
 ## Made with :heart: and :hamburger:
 

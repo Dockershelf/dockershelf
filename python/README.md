@@ -1,4 +1,4 @@
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/banner.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/banner.svg)
 
 ---
 
@@ -6,19 +6,19 @@
 
 ## Python shelf
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-|Image  |Release  |Dockerfile  |Layers  |
-|-------|---------|------------|--------|
-|[`2.6`](https://hub.docker.com/r/dockershelf/python)|`2.6`|[![](https://img.shields.io/badge/-python%2F2.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:2.6.svg)](https://microbadger.com/images/dockershelf/python:2.6)|
-|[`2.7`](https://hub.docker.com/r/dockershelf/python)|`2.7`|[![](https://img.shields.io/badge/-python%2F2.7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:2.7.svg)](https://microbadger.com/images/dockershelf/python:2.7)|
-|[`3.2`](https://hub.docker.com/r/dockershelf/python)|`3.2`|[![](https://img.shields.io/badge/-python%2F3.2%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.2/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.2.svg)](https://microbadger.com/images/dockershelf/python:3.2)|
-|[`3.4`](https://hub.docker.com/r/dockershelf/python)|`3.4`|[![](https://img.shields.io/badge/-python%2F3.4%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.4/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.4.svg)](https://microbadger.com/images/dockershelf/python:3.4)|
-|[`3.5`](https://hub.docker.com/r/dockershelf/python)|`3.5`|[![](https://img.shields.io/badge/-python%2F3.5%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.5/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.5.svg)](https://microbadger.com/images/dockershelf/python:3.5)|
-|[`3.6`](https://hub.docker.com/r/dockershelf/python)|`3.6`|[![](https://img.shields.io/badge/-python%2F3.6%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.6/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.6.svg)](https://microbadger.com/images/dockershelf/python:3.6)|
-|[`3.7`](https://hub.docker.com/r/dockershelf/python)|`3.7`|[![](https://img.shields.io/badge/-python%2F3.7%2FDockerfile-blue.svg)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.7/Dockerfile)|[![](https://images.microbadger.com/badges/image/dockershelf/python:3.7.svg)](https://microbadger.com/images/dockershelf/python:3.7)|
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+|[`dockershelf/python:2.6`](https://hub.docker.com/r/dockershelf/python)|`2.6`|[![](https://img.shields.io/badge/-python%2F2.6%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.6/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/2.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:2.6)|[![](https://img.shields.io/microbadger/image-size/_/python/2.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:2.6)|
+|[`dockershelf/python:2.7`](https://hub.docker.com/r/dockershelf/python)|`2.7`|[![](https://img.shields.io/badge/-python%2F2.7%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/2.7/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/2.7.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:2.7)|[![](https://img.shields.io/microbadger/image-size/_/python/2.7.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:2.7)|
+|[`dockershelf/python:3.2`](https://hub.docker.com/r/dockershelf/python)|`3.2`|[![](https://img.shields.io/badge/-python%2F3.2%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.2/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/3.2.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.2)|[![](https://img.shields.io/microbadger/image-size/_/python/3.2.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.2)|
+|[`dockershelf/python:3.4`](https://hub.docker.com/r/dockershelf/python)|`3.4`|[![](https://img.shields.io/badge/-python%2F3.4%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.4/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/3.4.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.4)|[![](https://img.shields.io/microbadger/image-size/_/python/3.4.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.4)|
+|[`dockershelf/python:3.5`](https://hub.docker.com/r/dockershelf/python)|`3.5`|[![](https://img.shields.io/badge/-python%2F3.5%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.5/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/3.5.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.5)|[![](https://img.shields.io/microbadger/image-size/_/python/3.5.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.5)|
+|[`dockershelf/python:3.6`](https://hub.docker.com/r/dockershelf/python)|`3.6`|[![](https://img.shields.io/badge/-python%2F3.6%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.6/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/3.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.6)|[![](https://img.shields.io/microbadger/image-size/_/python/3.6.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.6)|
+|[`dockershelf/python:3.7`](https://hub.docker.com/r/dockershelf/python)|`3.7`|[![](https://img.shields.io/badge/-python%2F3.7%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker&maxAge=86400)](https://github.com/LuisAlejandro/dockershelf/blob/master/python/3.7/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/python/3.7.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.7)|[![](https://img.shields.io/microbadger/image-size/_/python/3.7.svg?maxAge=86400)](https://microbadger.com/images/dockershelf/python:3.7)|
 
-![](https://gitcdn.xyz/repo/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
 ## Building process
 
