@@ -6,8 +6,6 @@
 
 ## Node shelf
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
-
 |Image  |Release  |Dockerfile  |Layers  |Size  |
 |-------|---------|------------|--------|------|
 %%NODE_TABLE%%

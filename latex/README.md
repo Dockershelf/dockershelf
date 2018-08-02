@@ -6,11 +6,9 @@
 
 ## Latex shelf
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
-
 |Image  |Release  |Dockerfile  |Layers  |Size  |
 |-------|---------|------------|--------|------|
-|[`dockershelf/latex:sid`](https://hub.docker.com/r/dockershelf/latex)|`sid`|[![](https://img.shields.io/badge/-latex%2Fsid%2FDockerfile-blue.svg?colorA=22313F&colorB=4a637b&logo=docker)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile)|[![](https://img.shields.io/microbadger/layers/_/latex/sid.svg?colorA=22313F&colorB=4A637B)](https://microbadger.com/images/dockershelf/latex:sid)|[![](https://img.shields.io/microbadger/image-size/_/latex/sid.svg?colorA=22313F&colorB=4A637B)](https://microbadger.com/images/dockershelf/latex:sid)|
+|[`dockershelf/latex:sid`](https://hub.docker.com/r/dockershelf/latex)|`sid`|[![](https://img.shields.io/badge/-latex%2Fsid%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&maxAge=86400&logo=docker)](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/sid/Dockerfile)|[![](https://img.shields.io/microbadger/layers/dockershelf/latex/sid.svg?colorA=22313f&colorB=4a637b&maxAge=86400)](https://microbadger.com/images/dockershelf/latex:sid)|[![](https://img.shields.io/microbadger/image-size/dockershelf/latex/sid.svg?colorA=22313f&colorB=4a637b&maxAge=86400)](https://microbadger.com/images/dockershelf/latex:sid)|
 
 ![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
