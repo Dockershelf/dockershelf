@@ -47,18 +47,18 @@ def update_latex(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
     dockerfile_badge = ('https://img.shields.io/badge/'
                         '-latex%2Fsid%2FDockerfile-blue.svg'
-                        '?colorA=22313F&colorB=4a637b&logo=docker'
-                        '')
+                        '?colorA=22313f&colorB=4a637b&maxAge=86400'
+                        '&logo=docker')
     dockerfile_url = ('https://github.com/LuisAlejandro/dockershelf/'
                       'blob/master/latex/sid/Dockerfile')
     mb_layers_badge = ('https://img.shields.io/microbadger/layers/'
-                       '_/latex/sid.svg?colorA=22313F&colorB=4A637B'
-                       '')
+                       'dockershelf/latex/sid.svg'
+                       '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_layers_url = ('https://microbadger.com/images/dockershelf/'
                      'latex:sid')
     mb_size_badge = ('https://img.shields.io/microbadger/image-size/'
-                     '_/latex/sid.svg?colorA=22313F&colorB=4A637B'
-                     '')
+                     'dockershelf/latex/sid.svg'
+                     '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url = ('https://microbadger.com/images/dockershelf/'
                    'latex:sid')
     travis_matrixlist_str = ('        '
