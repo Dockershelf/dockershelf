@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2.0.2 (2018-08-02)
+
+### Fix
+
+* Fixing badges. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.0.1 (2018-08-01)
 
 ### Changes

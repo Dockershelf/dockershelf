@@ -6,8 +6,6 @@
 
 ## Latex shelf
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
-
 |Image  |Release  |Dockerfile  |Layers  |Size  |
 |-------|---------|------------|--------|------|
 %%LATEX_TABLE%%
