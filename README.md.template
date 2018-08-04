@@ -82,6 +82,16 @@ These are PostgreSQL images built using the [official installation guide](https:
 
 ![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
+### Odoo
+
+These images are similar to the official ones, but with some improved configurations. Check out [odoo/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/odoo/README.md) for more details.
+
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+%%ODOO_TABLE%%
+
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+
 ## How to download
 
 Pull one of the available images and start hacking!
