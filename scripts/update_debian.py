@@ -22,14 +22,10 @@ import os
 import re
 import sys
 import shutil
-from contextlib import closing
 
-try:
-    from urllib2 import urlopen, Request
-except ImportError:
-    from urllib.request import urlopen, Request
-
-from .utils import find_dirs, u
+from .config import debian_versions
+from .utils import find_dirs
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -68,8 +64,7 @@ def update_debian(basedir):
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'debian:{0}')
     travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}"')
+        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
@@ -77,27 +72,12 @@ def update_debian(basedir):
                                       '|[![]({7})]({8})'
                                       '|')
 
-    debian_release_url_holder = ('https://deb.debian.org/debian/dists/{0}/'
-                                 'Release')
-
-    debian_suites = ['oldoldstable', 'oldstable', 'stable', 'testing',
-                     'unstable']
-
+    logger.info('Erasing current Debian folders')
     for deldir in find_dirs(debiandir):
         shutil.rmtree(deldir)
 
-    for debian_suite in debian_suites:
-        debian_release_url = debian_release_url_holder.format(debian_suite)
-
-        r = Request(debian_release_url)
-        r.add_header('Range', 'bytes={0}-{1}'.format(0, 256))
-
-        with closing(urlopen(r)) as d:
-            debian_release_content = d.read()
-
-        debian_version = re.findall('Codename: (.*)',
-                                    u(debian_release_content))[0]
-
+    for debian_version, debian_suite in debian_versions:
+        logger.info('Processing Debian {0}'.format(debian_version))
         debian_version_dir = os.path.join(debiandir, debian_version)
         debian_dockerfile = os.path.join(debian_version_dir, 'Dockerfile')
 
@@ -133,6 +113,7 @@ def update_debian(basedir):
         with open(debian_dockerfile, 'w') as dd:
             dd.write(debian_dockerfile_content)
 
+    logger.info('Writing dummy hooks')
     os.makedirs(debian_hooks_dir)
 
     with open(debian_build_hook, 'w') as pbh:
@@ -146,6 +127,7 @@ def update_debian(basedir):
         pph.write('#!/usr/bin/env bash\n')
         pph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Debian Readme')
     with open(debian_readme_template, 'r') as drt:
         debian_readme_template_content = drt.read()
 
@@ -163,5 +145,5 @@ def update_debian(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_debian(basedir)

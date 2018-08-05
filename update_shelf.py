@@ -22,6 +22,7 @@ import os
 import re
 import sys
 
+from scripts.logger import logger
 from scripts.update_debian import update_debian
 from scripts.update_latex import update_latex
 from scripts.update_python import update_python
@@ -45,6 +46,9 @@ if __name__ == '__main__':
     readme_template = os.path.join(basedir, 'README.md.template')
     readme = os.path.join(basedir, 'README.md')
 
+    logger.start()
+    logger.info('Updating shelves')
+
     debian_matrix_list, debian_readme_table = update_debian(basedir)
     latex_matrix_list, latex_readme_table = update_latex(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
@@ -54,6 +58,7 @@ if __name__ == '__main__':
     postgres_matrix_list, postgres_readme_table = update_postgres(basedir)
     odoo_matrix_list, odoo_readme_table = update_odoo(basedir)
 
+    logger.info('Writing Travis CI matrix')
     travis_matrixlist.extend(debian_matrix_list)
     travis_matrixlist.extend(latex_matrix_list)
     travis_matrixlist.extend(python_matrix_list)
@@ -74,6 +79,7 @@ if __name__ == '__main__':
     with open(travis, 'w') as t:
         t.write(travis_content)
 
+    logger.info('Writing top level Readme')
     with open(readme_template, 'r') as rt:
         readme_template_content = rt.read()
 

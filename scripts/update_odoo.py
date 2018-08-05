@@ -23,7 +23,10 @@ import re
 import sys
 import shutil
 
-from .utils import find_dirs
+import lxml.html
+
+from .utils import find_dirs, is_string_a_string
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -70,23 +73,28 @@ def update_odoo(basedir):
                                     '|[![]({5})]({6})'
                                     '|[![]({7})]({8})'
                                     '|')
+    odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
+    odoo_version_lower_limit = 10.0
+    odoo_version_upper_limit = 11.0
 
-    odoo_versions_src_origin = {
-        '2.6': 'wheezy-security',
-        '2.7': 'sid',
-        '3.2': 'wheezy-security',
-        '3.4': 'jessie',
-        '3.5': 'sid',
-        '3.6': 'sid',
-        '3.7': 'sid',
-    }
+    logger.info('Getting Odoo versions')
+    odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()
+    odoo_versions = odoo_ver_html.cssselect('a.list-group-item')
+    odoo_versions = [e.get('href') for e in odoo_versions]
+    odoo_versions = [e.replace('/nightly', '') for e in odoo_versions]
+    odoo_versions = list(filter(lambda x: not is_string_a_string(x),
+                                odoo_versions))
+    odoo_versions = [v for v in odoo_versions
+                     if (float(v) >= odoo_version_lower_limit and
+                         float(v) <= odoo_version_upper_limit)]
+    odoo_versions = sorted(set(odoo_versions))
 
-    odoo_versions = sorted(odoo_versions_src_origin.keys())
-
+    logger.info('Erasing current Odoo folders')
     for deldir in find_dirs(odoodir):
         shutil.rmtree(deldir)
 
     for odoo_version in odoo_versions:
+        logger.info('Processing Odoo {0}'.format(odoo_version))
         odoo_version_dir = os.path.join(odoodir, odoo_version)
         odoo_dockerfile = os.path.join(odoo_version_dir, 'Dockerfile')
 
@@ -118,16 +126,13 @@ def update_odoo(basedir):
             '%%DEBIAN_RELEASE%%', 'sid', odoo_dockerfile_content)
         odoo_dockerfile_content = re.sub(
             '%%ODOO_VERSION%%', odoo_version, odoo_dockerfile_content)
-        odoo_dockerfile_content = re.sub(
-            '%%ODOO_DEBIAN_SUITE%%',
-            odoo_versions_src_origin[odoo_version],
-            odoo_dockerfile_content)
 
         with open(odoo_dockerfile, 'w') as pd:
             pd.write(odoo_dockerfile_content)
 
     os.makedirs(odoo_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(odoo_build_hook, 'w') as pbh:
         pbh.write('#!/usr/bin/env bash\n')
         pbh.write('echo "This is a dummy build script that just allows to '
@@ -139,6 +144,7 @@ def update_odoo(basedir):
         pph.write('#!/usr/bin/env bash\n')
         pph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Odoo Readme')
     with open(odoo_readme_template, 'r') as prt:
         odoo_readme_template_content = prt.read()
 
@@ -155,5 +161,5 @@ def update_odoo(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_odoo(basedir)

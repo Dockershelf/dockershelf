@@ -24,6 +24,7 @@ import sys
 import shutil
 
 from .utils import find_dirs
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -79,12 +80,15 @@ def update_ruby(basedir):
         '2.5': 'sid',
     }
 
+    logger.info('Getting Ruby versions')
     ruby_versions = sorted(ruby_versions_src_origin.keys())
 
+    logger.info('Erasing current Ruby folders')
     for deldir in find_dirs(rubydir):
         shutil.rmtree(deldir)
 
     for ruby_version in ruby_versions:
+        logger.info('Processing Ruby {0}'.format(ruby_version))
         ruby_version_dir = os.path.join(rubydir, ruby_version)
         ruby_dockerfile = os.path.join(ruby_version_dir, 'Dockerfile')
 
@@ -126,6 +130,7 @@ def update_ruby(basedir):
 
     os.makedirs(ruby_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(ruby_build_hook, 'w') as rbh:
         rbh.write('#!/usr/bin/env bash\n')
         rbh.write('echo "This is a dummy build script that just allows to '
@@ -137,6 +142,7 @@ def update_ruby(basedir):
         rph.write('#!/usr/bin/env bash\n')
         rph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Ruby Readme')
     with open(ruby_readme_template, 'r') as prt:
         ruby_readme_template_content = prt.read()
 
@@ -153,5 +159,5 @@ def update_ruby(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_ruby(basedir)

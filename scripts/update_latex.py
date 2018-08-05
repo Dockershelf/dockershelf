@@ -24,6 +24,7 @@ import sys
 import shutil
 
 from .utils import find_dirs
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -70,9 +71,11 @@ def update_latex(basedir):
                                      '|[![]({7})]({8})'
                                      '|')
 
+    logger.info('Erasing current Latex folders')
     for deldir in find_dirs(latexdir):
         shutil.rmtree(deldir)
 
+    logger.info('Processing Latex')
     latex_version_dir = os.path.join(latexdir, 'sid')
     latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
 
@@ -101,6 +104,7 @@ def update_latex(basedir):
 
     os.makedirs(latex_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(latex_build_hook, 'w') as lbh:
         lbh.write('#!/usr/bin/env bash\n')
         lbh.write('echo "This is a dummy build script that just allows to '
@@ -112,6 +116,7 @@ def update_latex(basedir):
         lph.write('#!/usr/bin/env bash\n')
         lph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Latex Readme')
     with open(latex_readme_template, 'r') as lrt:
         latex_readme_template_content = lrt.read()
 
@@ -128,5 +133,5 @@ def update_latex(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_latex(basedir)

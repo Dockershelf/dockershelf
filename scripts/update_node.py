@@ -30,6 +30,7 @@ except ImportError:
     from urllib.request import urlopen
 
 from .utils import find_dirs, u
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -78,18 +79,26 @@ def update_node(basedir):
 
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
+    node_version_lower_limit = 5
+    node_version_upper_limit = 10
 
+    logger.info('Getting Node versions')
     with closing(urlopen(node_versions_list_file)) as n:
         node_versions_list_content = n.read()
 
     node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
                                u(node_versions_list_content))
+    node_versions = [v for v in node_versions
+                     if (float(v) >= node_version_lower_limit and
+                         float(v) <= node_version_upper_limit)]
     node_versions = sorted(set(node_versions))
 
+    logger.info('Erasing current Node folders')
     for deldir in find_dirs(nodedir):
         shutil.rmtree(deldir)
 
     for node_version in node_versions:
+        logger.info('Processing Node {0}'.format(node_version))
         node_version_dir = os.path.join(nodedir, node_version)
         node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
 
@@ -127,6 +136,7 @@ def update_node(basedir):
 
     os.makedirs(node_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(node_build_hook, 'w') as nbh:
         nbh.write('#!/usr/bin/env bash\n')
         nbh.write('echo "This is a dummy build script that just allows to '
@@ -138,6 +148,7 @@ def update_node(basedir):
         nph.write('#!/usr/bin/env bash\n')
         nph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Node Readme')
     with open(node_readme_template, 'r') as prt:
         node_readme_template_content = prt.read()
 
@@ -154,5 +165,5 @@ def update_node(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_node(basedir)

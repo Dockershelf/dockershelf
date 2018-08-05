@@ -24,6 +24,7 @@ import sys
 import shutil
 
 from .utils import find_dirs
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -87,12 +88,15 @@ def update_python(basedir):
         '3.7': 'sid',
     }
 
+    logger.info('Getting Python versions')
     python_versions = sorted(python_versions_src_origin.keys())
 
+    logger.info('Erasing current Python folders')
     for deldir in find_dirs(pythondir):
         shutil.rmtree(deldir)
 
     for python_version in python_versions:
+        logger.info('Processing Python {0}'.format(python_version))
         python_version_dir = os.path.join(pythondir, python_version)
         python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
 
@@ -142,6 +146,7 @@ def update_python(basedir):
 
     os.makedirs(python_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(python_build_hook, 'w') as pbh:
         pbh.write('#!/usr/bin/env bash\n')
         pbh.write('echo "This is a dummy build script that just allows to '
@@ -149,6 +154,7 @@ def update_python(basedir):
                   'from GitHub."\n')
         pbh.write('echo "No real building is done here."')
 
+    logger.info('Writing Python Readme')
     with open(python_push_hook, 'w') as pph:
         pph.write('#!/usr/bin/env bash\n')
         pph.write('echo "We arent really pushing."')
@@ -169,5 +175,5 @@ def update_python(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_python(basedir)
