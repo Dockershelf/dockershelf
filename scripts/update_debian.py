@@ -64,7 +64,8 @@ def update_debian(basedir):
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'debian:{0}')
     travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"')
+        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'

@@ -20,11 +20,11 @@ env:
         # Docker Hub password ${DH_PASSWORD}
         - secure: "gOxNCewy0xuQS3SbOkk++sqT5NCFMCEAP5HNBIsJFcle0Qbkv7XF+hKwn+oGbWc+Ti1SgXi251O0hTkXwWhcQOMUH6ZzVwQ2wFhKyUP9bIqORDm03+8G6ZPfw8NP70N/MfihmuWTgKl79kZ2S5mYPdig0RlcENwKq95Rw4wtT45BLGS2Tj7X9Hch2F1sqhEOKgoLomQ5Qs1KezLC/rRwNxocW41WiGYUdgvaSmLeaITcliYIOqwsXc381IDiVIrrGc9MI/LCrxuDiliaFvK+t4sv7Fz7ogCn2d7WNGZQsPi6xNImUco6pCiSmQ3CFTe1il9mcZXHVDJ4dMmVqHgH1s2WWr7Ygd901Dnq3awusI2TELIQk2whKxRExYfz0wTae6dE1KOZHsHMAY1CotUEtyja9D8dnGfqFa+qDiagAP+c7FmxImDiaTrqZ0ez6XlKnmw6RefElvlFgbrtNtW0ZsX7c1futtiW8PArmud6ikuvR7lhiKMMeVnhktbniEqkxX50DplTODyq9DZPXBMHIkPSqe9uNfKu+bOhKjfkfyFtQ/uIFLq2tdtgtXbIn6UOq+ncNFEhJkR0gvLXrZ5Wj0SHofbdU9vFV1LB37ecA+H0j5hE477lB7qNRb41lTilS7D87wW+TWCAN/BRXvnMRUrvAiX0F0CIeowHTcnllKs="
     matrix:
-        - DOCKER_IMAGE_NAME="dockershelf/debian:wheezy"
-        - DOCKER_IMAGE_NAME="dockershelf/debian:jessie"
-        - DOCKER_IMAGE_NAME="dockershelf/debian:stretch"
-        - DOCKER_IMAGE_NAME="dockershelf/debian:buster"
-        - DOCKER_IMAGE_NAME="dockershelf/debian:sid"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:wheezy" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:oldoldstable"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:jessie" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:oldstable"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:stretch" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:stable"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:buster" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:testing"
+        - DOCKER_IMAGE_NAME="dockershelf/debian:sid" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:unstable"
         - DOCKER_IMAGE_NAME="dockershelf/latex:sid"
         - DOCKER_IMAGE_NAME="dockershelf/python:2.6"
         - DOCKER_IMAGE_NAME="dockershelf/python:2.7" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"

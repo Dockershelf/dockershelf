@@ -17,10 +17,17 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV ODOO_VER_NUM="10.0"
 
+COPY odoo.conf /etc/odoo/
+COPY docker-entrypoint.sh /usr/local/bin/
 COPY build-image-node.sh /usr/share/dockershelf/node/build-image.sh
 COPY build-image.sh library.sh /usr/share/dockershelf-extras/odoo/
 
 RUN bash /usr/share/dockershelf/node/build-image.sh
 RUN bash /usr/share/dockershelf-extras/odoo/build-image.sh
 
+VOLUME /var/lib/odoo /mnt/extra-addons
+
+EXPOSE 8069 8071
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["odoo"]
