@@ -46,6 +46,7 @@ def update_odoo(basedir):
     odoo_build_hook = os.path.join(odoo_hooks_dir, 'build')
     odoo_push_hook = os.path.join(odoo_hooks_dir, 'push')
 
+    node_version = '10'
     base_image_holder = 'dockershelf/python:{0}'
     docker_tag_holder = 'dockershelf/odoo:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/odoo'
@@ -133,6 +134,8 @@ def update_odoo(basedir):
             '%%DEBIAN_RELEASE%%', 'sid', odoo_dockerfile_content)
         odoo_dockerfile_content = re.sub(
             '%%PYTHON_VERSION%%', python_version, odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub(
+            '%%NODE_VERSION%%', node_version, odoo_dockerfile_content)
         odoo_dockerfile_content = re.sub(
             '%%ODOO_VERSION%%', odoo_version, odoo_dockerfile_content)
 

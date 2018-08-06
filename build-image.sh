@@ -103,8 +103,9 @@ fi
 
 # Copy Node build script and Odoo config if we are building Odoo
 if [ "${DOCKER_IMAGE_TYPE}" == "odoo" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf"  "${DOCKER_IMAGE_DIR}"
     cp "${BASEDIR}/node/build-image.sh"  "${DOCKER_IMAGE_DIR}/build-image-node.sh"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
 fi
 
 # Build the docker image
