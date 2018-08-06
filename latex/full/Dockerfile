@@ -1,4 +1,4 @@
-FROM %%BASE_IMAGE%%
+FROM dockershelf/debian:sid
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
@@ -7,7 +7,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="latex-%%LATEX_VERSION%%" \
-      org.label-schema.description="A Latex (%%LATEX_VERSION%%) image based on Debian %%DEBIAN_RELEASE%%." \
+      org.label-schema.description="A Latex (%%LATEX_VERSION%%) image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \

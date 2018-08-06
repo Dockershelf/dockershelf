@@ -25,8 +25,12 @@ set -exuo pipefail
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Latex packages
-DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
-    texlive-latex-recommended"
+if [ "${LATEX_VER_NUM}" == "basic" ]; then
+	DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
+	    texlive-latex-recommended"
+else
+	DPKG_DEPENDS="texlive-full"
+fi
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
