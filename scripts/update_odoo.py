@@ -46,7 +46,7 @@ def update_odoo(basedir):
     odoo_build_hook = os.path.join(odoo_hooks_dir, 'build')
     odoo_push_hook = os.path.join(odoo_hooks_dir, 'push')
 
-    base_image = 'dockershelf/debian:sid'
+    base_image_holder = 'dockershelf/python:{0}'
     docker_tag_holder = 'dockershelf/odoo:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/odoo'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
@@ -74,7 +74,7 @@ def update_odoo(basedir):
                                     '|[![]({7})]({8})'
                                     '|')
     odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-    odoo_version_lower_limit = 10.0
+    odoo_version_lower_limit = 9.0
     odoo_version_upper_limit = 11.0
 
     logger.info('Getting Odoo versions')
@@ -95,9 +95,16 @@ def update_odoo(basedir):
 
     for odoo_version in odoo_versions:
         logger.info('Processing Odoo {0}'.format(odoo_version))
+
+        if float(odoo_version) >= 11.0:
+            python_version = '3.5'
+        else:
+            python_version = '2.7'
+
         odoo_version_dir = os.path.join(odoodir, odoo_version)
         odoo_dockerfile = os.path.join(odoo_version_dir, 'Dockerfile')
 
+        base_image = base_image_holder.format(python_version)
         docker_tag = docker_tag_holder.format(odoo_version)
         dockerfile_badge = dockerfile_badge_holder.format(odoo_version)
         dockerfile_url = dockerfile_url_holder.format(odoo_version)
@@ -124,6 +131,8 @@ def update_odoo(basedir):
             '%%BASE_IMAGE%%', base_image, odoo_dockerfile_content)
         odoo_dockerfile_content = re.sub(
             '%%DEBIAN_RELEASE%%', 'sid', odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub(
+            '%%PYTHON_VERSION%%', python_version, odoo_dockerfile_content)
         odoo_dockerfile_content = re.sub(
             '%%ODOO_VERSION%%', odoo_version, odoo_dockerfile_content)
 

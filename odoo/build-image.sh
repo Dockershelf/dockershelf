@@ -23,34 +23,14 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-PYTHON_VER_NUM_MINOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1"."$2}')"
-PYTHON_VER_NUM_MAJOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
-PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
-PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
-
-MIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
-
-SETUPTOOLS_TEMP_DIR="$( mktemp -d )"
-SETUPTOOLS_GIT_REPO="https://github.com/pypa/setuptools"
-
-# This is the list of python packages from debian that make up a minimal
-# python installation. We will use them later.
-if [ "${PYTHON_DEBIAN_SUITE}" == "wheezy-security" ]; then
-    PYTHON_PKGS="${PYTHON_VER_NUM_MINOR_STR}-minimal \
-        lib${PYTHON_VER_NUM_MINOR_STR} ${PYTHON_VER_NUM_MINOR_STR} \
-        ${PYTHON_VER_NUM_MINOR_STR}-dev"
-else
-    PYTHON_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
-        ${PYTHON_VER_NUM_MINOR_STR}-minimal \
-        lib${PYTHON_VER_NUM_MINOR_STR}-stdlib \
-        lib${PYTHON_VER_NUM_MINOR_STR} ${PYTHON_VER_NUM_MINOR_STR} \
-        lib${PYTHON_VER_NUM_MINOR_STR}-dev ${PYTHON_VER_NUM_MINOR_STR}-dev"
-fi
+MIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
+WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/"\
+"releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+ODOO_PKGS="odoo"
+ODOO_PKGS_VER=""
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -58,92 +38,86 @@ source "${BASEDIR}/library.sh"
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
-# some commands are needed to download and process dependencies.
+# some commands are needed to download and process dependencies
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-cmdretry apt-get -d upgrade
+cmdretry apt-get upgrade -d
 cmdretry apt-get upgrade
 cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
-# Python: Configure sources
+# Odoo: Configure sources
 # ------------------------------------------------------------------------------
-# We will use Debian's repository to install the different versions of Python.
+# We will use Odoo's official repository to install the different versions of
+# Odoo.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${PYTHON_DEBIAN_SUITE}" == "wheezy-security" ]; then
-    {
-        echo "deb ${MIRROR} wheezy main"
-        echo "deb ${SECMIRROR} wheezy/updates main"
-    } | tee /etc/apt/sources.list.d/python.list > /dev/null
-elif [ "${PYTHON_DEBIAN_SUITE}" != "sid" ]; then
-    {
-        echo "deb ${MIRROR} ${PYTHON_DEBIAN_SUITE} main"
-    } | tee /etc/apt/sources.list.d/python.list > /dev/null
-fi
+{
+    echo "deb ${MIRROR} ./"
+} | tee /etc/apt/sources.list.d/odoo.list > /dev/null
 
+cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv DEF2A2198183CBB5
 cmdretry apt-get update
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
 # Now we use some shell/apt plumbing to get runtime dependencies.
 
-msginfo "Installing python runtime dependencies ..."
+msginfo "Installing odoo runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${PYTHON_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
+    $( printf '~RDepends:~n^%s$ ' ${ODOO_PKGS} ) | xargs printf ' %s ' | \
+    sed "$( printf 's/\s%s\s/ /g;' ${ODOO_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
+cmdretry apt-get install -d ${DPKG_DEPENDS} sudo
+cmdretry apt-get install ${DPKG_DEPENDS} sudo
 
-if [ "${PYTHON_DEBIAN_SUITE}" == "jessie" ]; then
-    cmdretry apt-get --allow-remove-essential purge findutils
-    cmdretry apt-get -d -t jessie install findutils
-    cmdretry apt-get -t jessie install findutils
-fi
+# Installing wkhtmltopdf
+curl -o wkhtmltopdf.deb -sLO "${WKHTMLTOPDF_URL}" && \
+    dpkg -i wkhtmltopdf.deb && rm wkhtmltopdf.deb
 
-if [ "${PYTHON_VER_NUM}" == "3.6" ] || [ "${PYTHON_VER_NUM}" == "3.7" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-fi
-
-# Python: Installation
+# Odoo: Configure
 # ------------------------------------------------------------------------------
-# We will install the packages listed in ${PYTHON_PKGS}
+# We need to configure proper volumes and users.
 
-msginfo "Installing Python ..."
-cmdretry apt-get install -d ${PYTHON_PKGS}
-cmdretry apt-get install ${PYTHON_PKGS}
+mkdir -p /mnt/extra-addons /var/log/odoo /var/lib/odoo
+groupadd -r odoo
+useradd -r -g odoo odoo
+chown -R odoo:odoo /mnt/extra-addons /var/log/odoo /var/lib/odoo
 
-if [ ! -f "/usr/bin/python" ]; then
-    ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
-fi
-
-# Pip: Installation
+# Odoo: Installation
 # ------------------------------------------------------------------------------
-# Let's bring in the old reliable pip guy.
+# We will install the packages listed in ${ODOO_PKGS}
 
-msginfo "Installing pip ..."
-if [ "${PYTHON_VER_NUM}" == "3.2" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/3.2/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
-elif [ "${PYTHON_VER_NUM}" == "2.6" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/2.6/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools==29.0.1'
-else
-    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+msginfo "Installing Odoo ..."
+for PKG in ${ODOO_PKGS}; do
+    PKG_VER="$( apt-cache madison ${PKG} | grep Packages | \
+        grep nightly.odoo.com | head -n1 | awk -F'|' '{print $2}' | xargs )"
+    ODOO_PKGS_VER="${ODOO_PKGS_VER} ${PKG}=${PKG_VER}"
+done
+
+cmdretry aptitude install -d ${ODOO_PKGS_VER}
+cmdretry aptitude install ${ODOO_PKGS_VER}
+
+# Odoo: Configure
+# ------------------------------------------------------------------------------
+# Standarize paths.
+
+if [ ! -f "/usr/bin/odoo" ] && [ -f "/usr/bin/openerp-server" ]; then
+    ln -s /usr/bin/openerp-server /usr/bin/odoo
 fi
+
+ln -s /usr/lib/python${PYTHON_VER_NUM}/dist-packages/odoo/addons /mnt/addons
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? I figured it out myself, ha!
+# This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                                 --no-show-section --guess-all --libdevel \
                                 -p standard ) )
@@ -162,10 +136,9 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
-COLOR_YELLOW="\[\033[38;5;220m\]"
-COLOR_BLUE="\[\033[38;5;33m\]"
-COLOR_OFF="\[\033[0m\]"
-PS1="${COLOR_YELLOW}[\u@${COLOR_BLUE}\h]${COLOR_OFF}:\w\$ "
+COLOR_LIGHT_PURPLE="\[\033[38;5;131m\]"
+COLOR_LIGHT_GRAY="\[\033[38;5;250m\]"
+PS1="${COLOR_LIGHT_GRAY}[\u@${COLOR_LIGHT_PURPLE}\h]${COLOR_OFF}:\w\$ "
 EOF
 
 # Final cleaning

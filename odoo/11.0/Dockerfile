@@ -1,4 +1,4 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/python:3.5
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
@@ -7,7 +7,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="odoo11.0" \
-      org.label-schema.description="A Odoo 11.0 image based on Debian sid." \
+      org.label-schema.description="An Odoo 11.0 image based on Debian sid and Python 3.5." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf-extras" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf-extras" \
@@ -18,11 +18,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 ENV ODOO_VER_NUM="11.0"
 
 COPY build-image-node.sh /usr/share/dockershelf/node/build-image.sh
-COPY build-image-postgres.sh /usr/share/dockershelf/postgres/build-image.sh
 COPY build-image.sh library.sh /usr/share/dockershelf-extras/odoo/
 
 RUN bash /usr/share/dockershelf/node/build-image.sh
-RUN bash /usr/share/dockershelf/postgres/build-image.sh
 RUN bash /usr/share/dockershelf-extras/odoo/build-image.sh
 
 CMD ["odoo"]
