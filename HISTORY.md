@@ -1,6 +1,35 @@
 # Changelog
 
 
+## 2.1.0 (2018-08-07)
+
+### New
+
+* Adding docker entrypoint and configuration for Odoo. [REF] Improving Odoo documentation. [Luis Alejandro Martínez Faneyth]
+
+### Changes
+
+* Improving documentation. [Luis Alejandro Martínez Faneyth]
+
+* Finishing Odoo images (closes #30). [Luis Alejandro Martínez Faneyth]
+
+* Adding 'latest' tags (closes #32). [Luis Alejandro Martínez Faneyth]
+
+* Adding full version image for Latex (closes #31). [Luis Alejandro Martínez Faneyth]
+
+* Improving Dockerfiles. [Luis Alejandro Martínez Faneyth]
+
+* Update Odoo Dockerfiles. [Luis Alejandro Martínez Faneyth]
+
+* Updating odoo images versions. [REF] Improving generation scripts. [Luis Alejandro Martínez Faneyth]
+
+* Adding Odoo image. [REF] Adding requirements.txt. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing latex build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.0.2 (2018-08-02)
 
 ### Fix
