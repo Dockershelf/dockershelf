@@ -63,6 +63,10 @@ def update_debian(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'debian:{0}')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1} '
+        'dockershelf/debian:latest"')
     travis_matrixlist_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
         ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}"')
@@ -72,6 +76,7 @@ def update_debian(basedir):
                                       '|[![]({5})]({6})'
                                       '|[![]({7})]({8})'
                                       '|')
+    debian_latest_version = debian_versions[-1][0]
 
     logger.info('Erasing current Debian folders')
     for deldir in find_dirs(debiandir):
@@ -90,8 +95,12 @@ def update_debian(basedir):
         mb_size_badge = mb_size_badge_holder.format(debian_version)
         mb_size_url = mb_size_url_holder.format(debian_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(
-            debian_version, debian_suite))
+        if debian_version == debian_latest_version:
+            travis_matrixlist.append(travis_matrixlist_latest_str.format(
+                debian_version, debian_suite))
+        else:
+            travis_matrixlist.append(travis_matrixlist_str.format(
+                debian_version, debian_suite))
 
         debian_readme_tablelist.append(
             debian_readme_tablelist_holder.format(

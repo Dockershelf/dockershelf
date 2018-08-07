@@ -44,63 +44,82 @@ def update_latex(basedir):
     latex_push_hook = os.path.join(latex_hooks_dir, 'push')
 
     base_image = 'dockershelf/debian:sid'
-    docker_tag = 'dockershelf/latex:sid'
+    docker_tag_holder = 'dockershelf/latex:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
-    dockerfile_badge = ('https://img.shields.io/badge/'
-                        '-latex%2Fsid%2FDockerfile-blue.svg'
-                        '?colorA=22313f&colorB=4a637b&maxAge=86400'
-                        '&logo=docker')
-    dockerfile_url = ('https://github.com/LuisAlejandro/dockershelf/'
-                      'blob/master/latex/sid/Dockerfile')
-    mb_layers_badge = ('https://img.shields.io/microbadger/layers/'
-                       'dockershelf/latex/sid.svg'
-                       '?colorA=22313f&colorB=4a637b&maxAge=86400')
-    mb_layers_url = ('https://microbadger.com/images/dockershelf/'
-                     'latex:sid')
-    mb_size_badge = ('https://img.shields.io/microbadger/image-size/'
-                     'dockershelf/latex/sid.svg'
-                     '?colorA=22313f&colorB=4a637b&maxAge=86400')
-    mb_size_url = ('https://microbadger.com/images/dockershelf/'
-                   'latex:sid')
+    dockerfile_badge_holder = ('https://img.shields.io/badge/'
+                               '-latex%2F{0}%2FDockerfile-blue.svg'
+                               '?colorA=22313f&colorB=4a637b&maxAge=86400'
+                               '&logo=docker')
+    dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
+                             'blob/master/latex/{0}/Dockerfile')
+    mb_layers_badge_holder = ('https://img.shields.io/microbadger/layers/'
+                              'dockershelf/latex/{0}.svg'
+                              '?colorA=22313f&colorB=4a637b&maxAge=86400')
+    mb_layers_url_holder = ('https://microbadger.com/images/dockershelf/'
+                            'latex:{0}')
+    mb_size_badge_holder = ('https://img.shields.io/microbadger/image-size/'
+                            'dockershelf/latex/{0}.svg'
+                            '?colorA=22313f&colorB=4a637b&maxAge=86400')
+    mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
+                          'latex:{0}')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/latex:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/latex:latest"')
     travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/latex:sid"')
+                             '- DOCKER_IMAGE_NAME="dockershelf/latex:{0}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
                                      '|[![]({5})]({6})'
                                      '|[![]({7})]({8})'
                                      '|')
+    latex_versions = ['basic', 'full']
 
     logger.info('Erasing current Latex folders')
     for deldir in find_dirs(latexdir):
         shutil.rmtree(deldir)
 
-    logger.info('Processing Latex')
-    latex_version_dir = os.path.join(latexdir, 'sid')
-    latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
+    for latex_version in latex_versions:
+        logger.info('Processing Mongo {0}'.format(latex_version))
+        latex_version_dir = os.path.join(latexdir, latex_version)
+        latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
 
-    travis_matrixlist.append(travis_matrixlist_str)
+        docker_tag = docker_tag_holder.format(latex_version)
+        dockerfile_badge = dockerfile_badge_holder.format(latex_version)
+        dockerfile_url = dockerfile_url_holder.format(latex_version)
+        mb_layers_badge = mb_layers_badge_holder.format(latex_version)
+        mb_layers_url = mb_layers_url_holder.format(latex_version)
+        mb_size_badge = mb_size_badge_holder.format(latex_version)
+        mb_size_url = mb_size_url_holder.format(latex_version)
 
-    latex_readme_tablelist.append(
-        latex_readme_tablelist_holder.format(
-            docker_tag, docker_url, 'sid', dockerfile_badge,
-            dockerfile_url, mb_layers_badge, mb_layers_url,
-            mb_size_badge, mb_size_url))
+        if latex_version == 'basic':
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(latex_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(latex_version))
 
-    os.makedirs(latex_version_dir)
+        latex_readme_tablelist.append(
+            latex_readme_tablelist_holder.format(
+                docker_tag, docker_url, latex_version, dockerfile_badge,
+                dockerfile_url, mb_layers_badge, mb_layers_url,
+                mb_size_badge, mb_size_url))
 
-    with open(latex_dockerfile_template, 'r') as ldt:
-        latex_dockerfile_template_content = ldt.read()
+        os.makedirs(latex_version_dir)
 
-    latex_dockerfile_content = latex_dockerfile_template_content
-    latex_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
-                                      latex_dockerfile_content)
-    latex_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                      'sid',
-                                      latex_dockerfile_content)
+        with open(latex_dockerfile_template, 'r') as ldt:
+            latex_dockerfile_template_content = ldt.read()
 
-    with open(latex_dockerfile, 'w') as ld:
-        ld.write(latex_dockerfile_content)
+        latex_dockerfile_content = latex_dockerfile_template_content
+        latex_dockerfile_content = re.sub(
+            '%%BASE_IMAGE%%', base_image, latex_dockerfile_content)
+        latex_dockerfile_content = re.sub(
+            '%%DEBIAN_RELEASE%%', 'sid', latex_dockerfile_content)
+        latex_dockerfile_content = re.sub(
+            '%%MONGO_VERSION%%', latex_version, latex_dockerfile_content)
+
+        with open(latex_dockerfile, 'w') as ld:
+            ld.write(latex_dockerfile_content)
 
     os.makedirs(latex_hooks_dir)
 

@@ -23,6 +23,8 @@ import re
 import sys
 import shutil
 
+from packaging.version import Version
+
 from .utils import find_dirs
 from .logger import logger
 
@@ -63,6 +65,9 @@ def update_python(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'python:{0}')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:latest"')
     travis_matrixlist_py2_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
         ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"')
@@ -89,7 +94,9 @@ def update_python(basedir):
     }
 
     logger.info('Getting Python versions')
-    python_versions = sorted(python_versions_src_origin.keys())
+    python_versions = python_versions_src_origin.keys()
+    python_versions = sorted(python_versions, key=lambda x: Version(x))
+    python_latest_version = python_versions[-1]
 
     logger.info('Erasing current Python folders')
     for deldir in find_dirs(pythondir):
@@ -114,6 +121,9 @@ def update_python(basedir):
         elif python_version == '3.5':
             travis_matrixlist.append(
                 travis_matrixlist_py3_str.format(python_version))
+        elif python_version == python_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(python_version))
         else:
             travis_matrixlist.append(
                 travis_matrixlist_str.format(python_version))

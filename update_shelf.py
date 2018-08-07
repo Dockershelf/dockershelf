@@ -47,6 +47,7 @@ if __name__ == '__main__':
     readme = os.path.join(basedir, 'README.md')
 
     logger.start()
+    logger.loglevel('INFO')
     logger.info('Updating shelves')
 
     debian_matrix_list, debian_readme_table = update_debian(basedir)

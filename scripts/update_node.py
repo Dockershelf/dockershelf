@@ -29,6 +29,8 @@ try:
 except ImportError:
     from urllib.request import urlopen
 
+from packaging.version import Version
+
 from .utils import find_dirs, u
 from .logger import logger
 
@@ -68,8 +70,11 @@ def update_node(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'node:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/node:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/node:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/node:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/node:{0}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -91,7 +96,8 @@ def update_node(basedir):
     node_versions = [v for v in node_versions
                      if (float(v) >= node_version_lower_limit and
                          float(v) <= node_version_upper_limit)]
-    node_versions = sorted(set(node_versions))
+    node_versions = sorted(set(node_versions), key=lambda x: Version(x))
+    node_latest_version = node_versions[-1]
 
     logger.info('Erasing current Node folders')
     for deldir in find_dirs(nodedir):
@@ -110,7 +116,12 @@ def update_node(basedir):
         mb_size_badge = mb_size_badge_holder.format(node_version)
         mb_size_url = mb_size_url_holder.format(node_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(node_version))
+        if node_version == node_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(node_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(node_version))
 
         node_readme_tablelist.append(
             node_readme_tablelist_holder.format(

@@ -23,6 +23,8 @@ import re
 import sys
 import shutil
 
+from packaging.version import Version
+
 from .utils import find_dirs
 from .logger import logger
 
@@ -63,8 +65,11 @@ def update_ruby(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'ruby:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/ruby:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"')
     ruby_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -81,7 +86,9 @@ def update_ruby(basedir):
     }
 
     logger.info('Getting Ruby versions')
-    ruby_versions = sorted(ruby_versions_src_origin.keys())
+    ruby_versions = ruby_versions_src_origin.keys()
+    ruby_versions = sorted(ruby_versions, key=lambda x: Version(x))
+    ruby_latest_version = ruby_versions[-1]
 
     logger.info('Erasing current Ruby folders')
     for deldir in find_dirs(rubydir):
@@ -100,7 +107,12 @@ def update_ruby(basedir):
         mb_size_badge = mb_size_badge_holder.format(ruby_version)
         mb_size_url = mb_size_url_holder.format(ruby_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(ruby_version))
+        if ruby_version == ruby_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(ruby_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(ruby_version))
 
         ruby_readme_tablelist.append(
             ruby_readme_tablelist_holder.format(

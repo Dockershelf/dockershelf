@@ -29,6 +29,8 @@ try:
 except ImportError:
     from urllib.request import urlopen, Request
 
+from packaging.version import Version
+
 from .utils import find_dirs, is_string_a_string, u
 from .logger import logger
 
@@ -69,8 +71,11 @@ def update_postgres(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'postgres:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/postgres:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"')
     postgres_readme_tablelist_holder = ('|[`{0}`]({1})'
                                         '|`{2}`'
                                         '|[![]({3})]({4})'
@@ -96,7 +101,8 @@ def update_postgres(basedir):
     postgres_versions = [v for v in postgres_versions
                          if (float(v) >= postgres_version_lower_limit and
                              float(v) <= postgres_version_upper_limit)]
-    postgres_versions = sorted(postgres_versions)
+    postgres_versions = sorted(postgres_versions, key=lambda x: Version(x))
+    postgres_latest_version = postgres_versions[-1]
 
     logger.info('Erasing current Postgres folders')
     for deldir in find_dirs(postgresdir):
@@ -115,8 +121,12 @@ def update_postgres(basedir):
         mb_size_badge = mb_size_badge_holder.format(postgres_version)
         mb_size_url = mb_size_url_holder.format(postgres_version)
 
-        travis_matrixlist.append(
-            travis_matrixlist_str.format(postgres_version))
+        if postgres_version == postgres_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(postgres_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(postgres_version))
 
         postgres_readme_tablelist.append(
             postgres_readme_tablelist_holder.format(

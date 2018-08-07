@@ -24,6 +24,7 @@ import sys
 import shutil
 
 import lxml.html
+from packaging.version import Version
 
 from .config import debian_versions
 from .utils import find_dirs, is_string_a_string
@@ -65,8 +66,11 @@ def update_mongo(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'mongo:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/mongo:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"')
     mongo_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
@@ -106,11 +110,13 @@ def update_mongo(basedir):
 
     mongo_versions_src_origin = dict((key, d[key]) for d in mongo_versions
                                      for key in d)
-    mongo_versions = sorted(mongo_versions_src_origin.keys())
+    mongo_versions = mongo_versions_src_origin.keys()
     mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
     mongo_versions = [v for v in mongo_versions
                       if (float(v) >= mongo_version_lower_limit and
                           float(v) <= mongo_version_upper_limit)]
+    mongo_versions = sorted(set(mongo_versions), key=lambda x: Version(x))
+    mongo_latest_version = mongo_versions[-1]
 
     logger.info('Erasing current Mongo folders')
     for deldir in find_dirs(mongodir):
@@ -129,7 +135,12 @@ def update_mongo(basedir):
         mb_size_badge = mb_size_badge_holder.format(mongo_version)
         mb_size_url = mb_size_url_holder.format(mongo_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(mongo_version))
+        if mongo_version == mongo_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(mongo_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(mongo_version))
 
         mongo_readme_tablelist.append(
             mongo_readme_tablelist_holder.format(

@@ -24,6 +24,7 @@ import sys
 import shutil
 
 import lxml.html
+from packaging.version import Version
 
 from .utils import find_dirs, is_string_a_string
 from .logger import logger
@@ -66,6 +67,9 @@ def update_odoo(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'odoo:{0}')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/odoo:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/odoo:latest"')
     travis_matrixlist_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/odoo:{0}"')
     odoo_readme_tablelist_holder = ('|[`{0}`]({1})'
@@ -88,7 +92,8 @@ def update_odoo(basedir):
     odoo_versions = [v for v in odoo_versions
                      if (float(v) >= odoo_version_lower_limit and
                          float(v) <= odoo_version_upper_limit)]
-    odoo_versions = sorted(set(odoo_versions))
+    odoo_versions = sorted(set(odoo_versions), key=lambda x: Version(x))
+    odoo_latest_version = odoo_versions[-1]
 
     logger.info('Erasing current Odoo folders')
     for deldir in find_dirs(odoodir):
@@ -114,7 +119,12 @@ def update_odoo(basedir):
         mb_size_badge = mb_size_badge_holder.format(odoo_version)
         mb_size_url = mb_size_url_holder.format(odoo_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(odoo_version))
+        if odoo_version == odoo_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(odoo_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(odoo_version))
 
         odoo_readme_tablelist.append(
             odoo_readme_tablelist_holder.format(
