@@ -22,16 +22,6 @@ These images are similar to the official ones, but with some improved configurat
 
 ![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
-### Latex
-
-This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/README.md) for more details.
-
-|Image  |Release  |Dockerfile  |Layers  |Size  |
-|-------|---------|------------|--------|------|
-%%LATEX_TABLE%%
-
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
-
 ### Python
 
 These are python images with native debian packages that are extracted from different debian releases. Check out [python/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/python/README.md) for more details.
@@ -79,6 +69,16 @@ These are PostgreSQL images built using the [official installation guide](https:
 |Image  |Release  |Dockerfile  |Layers  |Size  |
 |-------|---------|------------|--------|------|
 %%POSTGRES_TABLE%%
+
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+
+### Latex
+
+This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/LuisAlejandro/dockershelf/blob/master/latex/README.md) for more details.
+
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+%%LATEX_TABLE%%
 
 ![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
