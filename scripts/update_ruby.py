@@ -23,7 +23,10 @@ import re
 import sys
 import shutil
 
+from packaging.version import Version
+
 from .utils import find_dirs
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -62,8 +65,11 @@ def update_ruby(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'ruby:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/ruby:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"')
     ruby_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -79,12 +85,17 @@ def update_ruby(basedir):
         '2.5': 'sid',
     }
 
-    ruby_versions = sorted(ruby_versions_src_origin.keys())
+    logger.info('Getting Ruby versions')
+    ruby_versions = ruby_versions_src_origin.keys()
+    ruby_versions = sorted(ruby_versions, key=lambda x: Version(x))
+    ruby_latest_version = ruby_versions[-1]
 
+    logger.info('Erasing current Ruby folders')
     for deldir in find_dirs(rubydir):
         shutil.rmtree(deldir)
 
     for ruby_version in ruby_versions:
+        logger.info('Processing Ruby {0}'.format(ruby_version))
         ruby_version_dir = os.path.join(rubydir, ruby_version)
         ruby_dockerfile = os.path.join(ruby_version_dir, 'Dockerfile')
 
@@ -96,7 +107,12 @@ def update_ruby(basedir):
         mb_size_badge = mb_size_badge_holder.format(ruby_version)
         mb_size_url = mb_size_url_holder.format(ruby_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(ruby_version))
+        if ruby_version == ruby_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(ruby_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(ruby_version))
 
         ruby_readme_tablelist.append(
             ruby_readme_tablelist_holder.format(
@@ -126,6 +142,7 @@ def update_ruby(basedir):
 
     os.makedirs(ruby_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(ruby_build_hook, 'w') as rbh:
         rbh.write('#!/usr/bin/env bash\n')
         rbh.write('echo "This is a dummy build script that just allows to '
@@ -137,6 +154,7 @@ def update_ruby(basedir):
         rph.write('#!/usr/bin/env bash\n')
         rph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Ruby Readme')
     with open(ruby_readme_template, 'r') as prt:
         ruby_readme_template_content = prt.read()
 
@@ -153,5 +171,5 @@ def update_ruby(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_ruby(basedir)

@@ -1,0 +1,3 @@
+packaging
+lxml
+cssselect

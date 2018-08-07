@@ -1,4 +1,4 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/python:3.5
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="node4" \
-      org.label-schema.description="A Node 4 image based on Debian sid." \
+      org.label-schema.name="odoo11.0" \
+      org.label-schema.description="An Odoo 11.0 image based on Debian sid, Python 3.5 and Node 10." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,9 +15,17 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV NODE_VER_NUM="4"
+ENV ODOO_VER_NUM="11.0" NODE_VER_NUM="10"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/node/
-RUN bash /usr/share/dockershelf/node/build-image.sh
+COPY odoo.conf /etc/odoo/
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
 
-CMD ["/bin/bash"]
+RUN bash /usr/share/dockershelf/odoo/build-image.sh
+
+VOLUME /var/lib/odoo /mnt/extra-addons
+
+EXPOSE 8069 8071
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["odoo"]

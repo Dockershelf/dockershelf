@@ -1,4 +1,4 @@
-FROM %%BASE_IMAGE%%
+FROM dockershelf/python:2.7
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="latex-%%LATEX_VERSION%%" \
-      org.label-schema.description="A Latex (%%LATEX_VERSION%%) image based on Debian %%DEBIAN_RELEASE%%." \
+      org.label-schema.name="odoo10.0" \
+      org.label-schema.description="An Odoo 10.0 image based on Debian sid, Python 2.7 and Node 10." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,10 +15,17 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV LATEX_VER_NUM="%%LATEX_VERSION%%"
+ENV ODOO_VER_NUM="10.0" NODE_VER_NUM="10"
 
-COPY sample.tex /root/
-COPY build-image.sh library.sh /usr/share/dockershelf/latex/
-RUN bash /usr/share/dockershelf/latex/build-image.sh
+COPY odoo.conf /etc/odoo/
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
 
-CMD ["/bin/bash"]
+RUN bash /usr/share/dockershelf/odoo/build-image.sh
+
+VOLUME /var/lib/odoo /mnt/extra-addons
+
+EXPOSE 8069 8071
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["odoo"]

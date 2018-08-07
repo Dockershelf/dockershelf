@@ -96,9 +96,15 @@ if [ "${DOCKER_IMAGE_TYPE}" == "postgres" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
 fi
 
-# Copy latex sample
+# Copy latex sample if we are building Latex
 if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"
+fi
+
+# Copy Node build script and Odoo config if we are building Odoo
+if [ "${DOCKER_IMAGE_TYPE}" == "odoo" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
 fi
 
 # Build the docker image

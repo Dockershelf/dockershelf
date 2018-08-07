@@ -23,7 +23,12 @@ import re
 import sys
 import shutil
 
-from .utils import find_dirs
+import lxml.html
+from packaging.version import Version
+
+from .config import debian_versions
+from .utils import find_dirs, is_string_a_string
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -61,8 +66,11 @@ def update_mongo(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'mongo:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/mongo:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"')
     mongo_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
@@ -70,19 +78,52 @@ def update_mongo(basedir):
                                      '|[![]({7})]({8})'
                                      '|')
 
-    mongo_versions_src_origin = {
-        '3.2': 'jessie',
-        '3.4': 'jessie',
-        '3.6': 'stretch',
-        '4.0': 'stretch',
-    }
+    mongo_debian_releases_url = ('http://repo.mongodb.org/apt/debian/'
+                                 'dists/index.html')
+    mongo_rel_url_holder = ('http://repo.mongodb.org/apt/debian/'
+                            'dists/{0}/mongodb-org/index.html')
+    mongo_version_lower_limit = 3.2
+    mongo_version_upper_limit = 4.0
 
-    mongo_versions = sorted(mongo_versions_src_origin.keys())
+    logger.info('Getting Mongo versions')
+    mongo_debian_releases_html = lxml.html.parse(
+        mongo_debian_releases_url).getroot()
+    mongo_debian_releases = mongo_debian_releases_html.cssselect('a')
+    mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
+    mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
+    debian_codenames = list(map(lambda x: x[0], debian_versions))
+    mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
+                                   key=lambda x: debian_codenames.index(x))
 
+    mongo_versions = []
+    for debian_version in mongo_debian_releases:
+        mongo_rel_url = mongo_rel_url_holder.format(debian_version)
+        mongo_rel_html = lxml.html.parse(mongo_rel_url).getroot()
+        mongo_rel = mongo_rel_html.cssselect('a')
+        mongo_rel = [e.get('href') for e in mongo_rel]
+        mongo_rel = [e for e in mongo_rel if e != '..']
+        mongo_rel = list(filter(lambda x: not is_string_a_string(x),
+                                mongo_rel))
+        mongo_rel = [{e: debian_version} for e in mongo_rel
+                     if not any(e in v for v in mongo_versions)]
+        mongo_versions.extend(mongo_rel)
+
+    mongo_versions_src_origin = dict((key, d[key]) for d in mongo_versions
+                                     for key in d)
+    mongo_versions = mongo_versions_src_origin.keys()
+    mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
+    mongo_versions = [v for v in mongo_versions
+                      if (float(v) >= mongo_version_lower_limit and
+                          float(v) <= mongo_version_upper_limit)]
+    mongo_versions = sorted(set(mongo_versions), key=lambda x: Version(x))
+    mongo_latest_version = mongo_versions[-1]
+
+    logger.info('Erasing current Mongo folders')
     for deldir in find_dirs(mongodir):
         shutil.rmtree(deldir)
 
     for mongo_version in mongo_versions:
+        logger.info('Processing Mongo {0}'.format(mongo_version))
         mongo_version_dir = os.path.join(mongodir, mongo_version)
         mongo_dockerfile = os.path.join(mongo_version_dir, 'Dockerfile')
 
@@ -94,7 +135,12 @@ def update_mongo(basedir):
         mb_size_badge = mb_size_badge_holder.format(mongo_version)
         mb_size_url = mb_size_url_holder.format(mongo_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(mongo_version))
+        if mongo_version == mongo_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(mongo_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(mongo_version))
 
         mongo_readme_tablelist.append(
             mongo_readme_tablelist_holder.format(
@@ -123,6 +169,7 @@ def update_mongo(basedir):
 
     os.makedirs(mongo_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(mongo_build_hook, 'w') as mbh:
         mbh.write('#!/usr/bin/env bash\n')
         mbh.write('echo "This is a dummy build script that just allows to '
@@ -134,6 +181,7 @@ def update_mongo(basedir):
         mph.write('#!/usr/bin/env bash\n')
         mph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Mongo Readme')
     with open(mongo_readme_template, 'r') as prt:
         mongo_readme_template_content = prt.read()
 
@@ -150,5 +198,5 @@ def update_mongo(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_mongo(basedir)

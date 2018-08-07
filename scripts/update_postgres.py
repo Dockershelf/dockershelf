@@ -29,7 +29,10 @@ try:
 except ImportError:
     from urllib.request import urlopen, Request
 
+from packaging.version import Version
+
 from .utils import find_dirs, is_string_a_string, u
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -68,8 +71,11 @@ def update_postgres(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'postgres:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/postgres:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"')
     postgres_readme_tablelist_holder = ('|[`{0}`]({1})'
                                         '|`{2}`'
                                         '|[![]({3})]({4})'
@@ -79,10 +85,10 @@ def update_postgres(basedir):
 
     postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
                             'dists/sid-pgdg/Release')
-
     postgres_version_lower_limit = 9.3
     postgres_version_upper_limit = 11
 
+    logger.info('Getting Postgres versions')
     r = Request(postgres_release_url)
 
     with closing(urlopen(r)) as d:
@@ -95,12 +101,15 @@ def update_postgres(basedir):
     postgres_versions = [v for v in postgres_versions
                          if (float(v) >= postgres_version_lower_limit and
                              float(v) <= postgres_version_upper_limit)]
-    postgres_versions = sorted(postgres_versions)
+    postgres_versions = sorted(postgres_versions, key=lambda x: Version(x))
+    postgres_latest_version = postgres_versions[-1]
 
+    logger.info('Erasing current Postgres folders')
     for deldir in find_dirs(postgresdir):
         shutil.rmtree(deldir)
 
     for postgres_version in postgres_versions:
+        logger.info('Processing Postgres {0}'.format(postgres_version))
         postgres_version_dir = os.path.join(postgresdir, postgres_version)
         postgres_dockerfile = os.path.join(postgres_version_dir,
                                            'Dockerfile')
@@ -112,8 +121,12 @@ def update_postgres(basedir):
         mb_size_badge = mb_size_badge_holder.format(postgres_version)
         mb_size_url = mb_size_url_holder.format(postgres_version)
 
-        travis_matrixlist.append(
-            travis_matrixlist_str.format(postgres_version))
+        if postgres_version == postgres_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(postgres_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(postgres_version))
 
         postgres_readme_tablelist.append(
             postgres_readme_tablelist_holder.format(
@@ -140,6 +153,7 @@ def update_postgres(basedir):
 
     os.makedirs(postgres_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(postgres_build_hook, 'w') as pbh:
         pbh.write('#!/usr/bin/env bash\n')
         pbh.write('echo "This is a dummy build script that just allows to '
@@ -151,6 +165,7 @@ def update_postgres(basedir):
         pph.write('#!/usr/bin/env bash\n')
         pph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Postgres Readme')
     with open(postgres_readme_template, 'r') as prt:
         postgres_readme_template_content = prt.read()
 
@@ -168,5 +183,5 @@ def update_postgres(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_postgres(basedir)

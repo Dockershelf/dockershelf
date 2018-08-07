@@ -23,7 +23,10 @@ import re
 import sys
 import shutil
 
+from packaging.version import Version
+
 from .utils import find_dirs
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -62,6 +65,9 @@ def update_python(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'python:{0}')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:latest"')
     travis_matrixlist_py2_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
         ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"')
@@ -87,12 +93,17 @@ def update_python(basedir):
         '3.7': 'sid',
     }
 
-    python_versions = sorted(python_versions_src_origin.keys())
+    logger.info('Getting Python versions')
+    python_versions = python_versions_src_origin.keys()
+    python_versions = sorted(python_versions, key=lambda x: Version(x))
+    python_latest_version = python_versions[-1]
 
+    logger.info('Erasing current Python folders')
     for deldir in find_dirs(pythondir):
         shutil.rmtree(deldir)
 
     for python_version in python_versions:
+        logger.info('Processing Python {0}'.format(python_version))
         python_version_dir = os.path.join(pythondir, python_version)
         python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
 
@@ -110,6 +121,9 @@ def update_python(basedir):
         elif python_version == '3.5':
             travis_matrixlist.append(
                 travis_matrixlist_py3_str.format(python_version))
+        elif python_version == python_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(python_version))
         else:
             travis_matrixlist.append(
                 travis_matrixlist_str.format(python_version))
@@ -142,6 +156,7 @@ def update_python(basedir):
 
     os.makedirs(python_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(python_build_hook, 'w') as pbh:
         pbh.write('#!/usr/bin/env bash\n')
         pbh.write('echo "This is a dummy build script that just allows to '
@@ -149,6 +164,7 @@ def update_python(basedir):
                   'from GitHub."\n')
         pbh.write('echo "No real building is done here."')
 
+    logger.info('Writing Python Readme')
     with open(python_push_hook, 'w') as pph:
         pph.write('#!/usr/bin/env bash\n')
         pph.write('echo "We arent really pushing."')
@@ -169,5 +185,5 @@ def update_python(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_python(basedir)

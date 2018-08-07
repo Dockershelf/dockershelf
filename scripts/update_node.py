@@ -29,7 +29,10 @@ try:
 except ImportError:
     from urllib.request import urlopen
 
+from packaging.version import Version
+
 from .utils import find_dirs, u
+from .logger import logger
 
 if not sys.version_info < (3,):
     unicode = str
@@ -67,8 +70,11 @@ def update_node(basedir):
                             '?colorA=22313f&colorB=4a637b&maxAge=86400')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'node:{0}')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/node:{0}"')
+    travis_matrixlist_latest_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/node:{0}"'
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/node:latest"')
+    travis_matrixlist_str = (
+        '        - DOCKER_IMAGE_NAME="dockershelf/node:{0}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -78,18 +84,27 @@ def update_node(basedir):
 
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
+    node_version_lower_limit = 5
+    node_version_upper_limit = 10
 
+    logger.info('Getting Node versions')
     with closing(urlopen(node_versions_list_file)) as n:
         node_versions_list_content = n.read()
 
     node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
                                u(node_versions_list_content))
-    node_versions = sorted(set(node_versions))
+    node_versions = [v for v in node_versions
+                     if (float(v) >= node_version_lower_limit and
+                         float(v) <= node_version_upper_limit)]
+    node_versions = sorted(set(node_versions), key=lambda x: Version(x))
+    node_latest_version = node_versions[-1]
 
+    logger.info('Erasing current Node folders')
     for deldir in find_dirs(nodedir):
         shutil.rmtree(deldir)
 
     for node_version in node_versions:
+        logger.info('Processing Node {0}'.format(node_version))
         node_version_dir = os.path.join(nodedir, node_version)
         node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
 
@@ -101,7 +116,12 @@ def update_node(basedir):
         mb_size_badge = mb_size_badge_holder.format(node_version)
         mb_size_url = mb_size_url_holder.format(node_version)
 
-        travis_matrixlist.append(travis_matrixlist_str.format(node_version))
+        if node_version == node_latest_version:
+            travis_matrixlist.append(
+                travis_matrixlist_latest_str.format(node_version))
+        else:
+            travis_matrixlist.append(
+                travis_matrixlist_str.format(node_version))
 
         node_readme_tablelist.append(
             node_readme_tablelist_holder.format(
@@ -127,6 +147,7 @@ def update_node(basedir):
 
     os.makedirs(node_hooks_dir)
 
+    logger.info('Writing dummy hooks')
     with open(node_build_hook, 'w') as nbh:
         nbh.write('#!/usr/bin/env bash\n')
         nbh.write('echo "This is a dummy build script that just allows to '
@@ -138,6 +159,7 @@ def update_node(basedir):
         nph.write('#!/usr/bin/env bash\n')
         nph.write('echo "We arent really pushing."')
 
+    logger.info('Writing Node Readme')
     with open(node_readme_template, 'r') as prt:
         node_readme_template_content = prt.read()
 
@@ -154,5 +176,5 @@ def update_node(basedir):
 
 
 if __name__ == '__main__':
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_node(basedir)
