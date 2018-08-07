@@ -23,8 +23,9 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DEBMIRROR="http://deb.debian.org/debian"
 MIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
-WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/"\
+WKHTMLTOX_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/"\
 "releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb"
 
 # Some tools are needed.
@@ -53,9 +54,16 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # Odoo.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-{
-    echo "deb ${MIRROR} ./"
-} | tee /etc/apt/sources.list.d/odoo.list > /dev/null
+if [ "${ODOO_VER_NUM}" == "9.0" ] || [ "${ODOO_VER_NUM}" == "10.0" ]; then
+    {
+        echo "deb ${MIRROR} ./"
+        echo "deb ${DEBMIRROR} jessie main"
+    } | tee /etc/apt/sources.list.d/odoo.list > /dev/null
+else
+    {
+        echo "deb ${MIRROR} ./"
+    } | tee /etc/apt/sources.list.d/odoo.list > /dev/null
+fi
 
 cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv DEF2A2198183CBB5
@@ -72,12 +80,14 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs )"
 
-cmdretry apt-get install -d ${DPKG_DEPENDS} sudo
-cmdretry apt-get install ${DPKG_DEPENDS} sudo
+cmdretry apt-get install -d ${DPKG_DEPENDS} sudo nodejs node-less \
+    xfonts-75dpi xfonts-base
+cmdretry apt-get install ${DPKG_DEPENDS} sudo nodejs node-less \
+    xfonts-75dpi xfonts-base
 
-# Installing wkhtmltopdf
-curl -o wkhtmltopdf.deb -sLO "${WKHTMLTOPDF_URL}" && \
-    dpkg -i wkhtmltopdf.deb && rm wkhtmltopdf.deb
+# Installing wkhtmltox
+curl -o wkhtmltox.deb -sLO "${WKHTMLTOX_URL}" && \
+    dpkg -i wkhtmltox.deb && rm wkhtmltox.deb
 
 # Odoo: Configure
 # ------------------------------------------------------------------------------
