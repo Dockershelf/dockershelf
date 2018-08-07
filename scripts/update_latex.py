@@ -116,7 +116,7 @@ def update_latex(basedir):
         latex_dockerfile_content = re.sub(
             '%%DEBIAN_RELEASE%%', 'sid', latex_dockerfile_content)
         latex_dockerfile_content = re.sub(
-            '%%MONGO_VERSION%%', latex_version, latex_dockerfile_content)
+            '%%LATEX_VERSION%%', latex_version, latex_dockerfile_content)
 
         with open(latex_dockerfile, 'w') as ld:
             ld.write(latex_dockerfile_content)
