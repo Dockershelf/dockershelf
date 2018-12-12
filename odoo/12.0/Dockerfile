@@ -1,4 +1,4 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/python:3.5
 MAINTAINER Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ARG BUILD_DATE
@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="mongo3.2" \
-      org.label-schema.description="A Mongo 3.2 image based on Debian sid." \
+      org.label-schema.name="odoo12.0" \
+      org.label-schema.description="An Odoo 12.0 image based on Debian sid, Python 3.5 and Node 10." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,16 +15,20 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV MONGO_VER_NUM="3.2" MONGO_DEBIAN_SUITE="jessie"
+ENV ODOO_VER_NUM="12.0" NODE_VER_NUM="10"
 
-COPY aggregate.js articles.js /root/
+COPY odoo.conf /etc/odoo/
 COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
-RUN bash /usr/share/dockershelf/mongo/build-image.sh
+COPY build-image-node.sh /usr/share/dockershelf/node/build-image.sh
+COPY library.sh /usr/share/dockershelf/node/
+COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
 
-VOLUME /data/db /data/configdb
+RUN bash /usr/share/dockershelf/node/build-image.sh
+RUN bash /usr/share/dockershelf/odoo/build-image.sh
 
-EXPOSE 27017
+VOLUME /var/lib/odoo /mnt/extra-addons
+
+EXPOSE 8069 8071
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["mongod"]
+CMD ["odoo"]

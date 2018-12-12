@@ -105,6 +105,7 @@ fi
 if [ "${DOCKER_IMAGE_TYPE}" == "odoo" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf"  "${DOCKER_IMAGE_DIR}"
     cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+    cp "${BASEDIR}/node/build-image.sh" "${DOCKER_IMAGE_DIR}/build-image-node.sh"
 fi
 
 # Build the docker image
@@ -115,4 +116,5 @@ cd "${DOCKER_IMAGE_DIR}" && \
 
 # Remove unnecessary files
 sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+    "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
     "${DOCKER_IMAGE_DIR}/base" || true

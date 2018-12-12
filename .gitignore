@@ -73,3 +73,6 @@ ruby/*/*.sh
 node/*/*.sh
 mongo/*/*.sh
 postgres/*/*.sh
+
+# VSCode
+.vscode/

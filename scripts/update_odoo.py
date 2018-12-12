@@ -79,8 +79,8 @@ def update_odoo(basedir):
                                     '|[![]({7})]({8})'
                                     '|')
     odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-    odoo_version_lower_limit = 9.0
-    odoo_version_upper_limit = 11.0
+    odoo_version_lower_limit = 10.0
+    odoo_version_upper_limit = 12.0
 
     logger.info('Getting Odoo versions')
     odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()

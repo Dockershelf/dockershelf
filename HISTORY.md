@@ -1,6 +1,17 @@
 # Changelog
 
 
+## 2.1.1 (2018-12-12)
+
+### Changes
+
+* Updating Odoo and Mongo versions. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing Odoo build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.1.0 (2018-08-07)
 
 ### New
