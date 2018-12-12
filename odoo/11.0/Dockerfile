@@ -20,6 +20,8 @@ ENV ODOO_VER_NUM="11.0" NODE_VER_NUM="10"
 COPY odoo.conf /etc/odoo/
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY build-image-node.sh /usr/share/dockershelf/node/build-image.sh
+COPY library.sh /usr/share/dockershelf/node/
+
 COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
 
 RUN bash /usr/share/dockershelf/node/build-image.sh
