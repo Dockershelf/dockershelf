@@ -82,7 +82,7 @@ def update_mongo(basedir):
                                  'dists/index.html')
     mongo_rel_url_holder = ('http://repo.mongodb.org/apt/debian/'
                             'dists/{0}/mongodb-org/index.html')
-    mongo_version_lower_limit = 3.2
+    mongo_version_lower_limit = 3.4
     mongo_version_upper_limit = 4.0
 
     logger.info('Getting Mongo versions')
