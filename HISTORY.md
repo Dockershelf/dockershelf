@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 2.1.2 (2018-12-14)
+
+### Changes
+
+* Updating license file to match github's automatic recognition. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing python 2.7 tests. [Luis Alejandro Martínez Faneyth]
+
+* Fixing python 3.6 & 3.7 tests. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.1.1 (2018-12-12)
 
 ### Changes
