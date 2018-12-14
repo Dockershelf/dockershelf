@@ -16,7 +16,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     def python_version_long
-        command("python -c \"import sys; print('%s.%s.%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))\"").stdout.strip
+        command("python -c \"import sys; print(sys.version.split()[0])\"").stdout.strip
     end
 
     basic_tests = ['test_grammar', 'test_opcodes', 'test_dict', 'test_builtin', 'test_types',
