@@ -31,6 +31,7 @@ PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
 MIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
+UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 
 SETUPTOOLS_TEMP_DIR="$( mktemp -d )"
 SETUPTOOLS_GIT_REPO="https://github.com/pypa/setuptools"
@@ -50,7 +51,7 @@ else
 fi
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -83,6 +84,14 @@ elif [ "${PYTHON_DEBIAN_SUITE}" != "sid" ]; then
     } | tee /etc/apt/sources.list.d/python.list > /dev/null
 fi
 
+if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    {
+        echo "deb ${UBUNTUMIRROR} bionic main"
+    } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
+
+    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+fi
+
 cmdretry apt-get update
 
 # Apt: Install runtime dependencies
@@ -105,11 +114,6 @@ if [ "${PYTHON_DEBIAN_SUITE}" == "jessie" ]; then
     cmdretry apt-get -t jessie install findutils
 fi
 
-if [ "${PYTHON_VER_NUM}" == "3.6" ] || [ "${PYTHON_VER_NUM}" == "3.7" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-fi
-
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PYTHON_PKGS}
@@ -120,6 +124,17 @@ cmdretry apt-get install ${PYTHON_PKGS}
 
 if [ ! -f "/usr/bin/python" ]; then
     ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
+fi
+
+if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
+
+    rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
+    cmdretry apt-get update
+elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
 fi
 
 # Pip: Installation
