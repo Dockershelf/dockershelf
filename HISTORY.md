@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2.1.3 (2019-01-28)
+
+### Fix
+
+* Fixing Python 3.6 build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.1.2 (2018-12-14)
 
 ### Changes
