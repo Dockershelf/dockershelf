@@ -1,12 +1,13 @@
 sudo: required
 services: docker
-dist: trusty
+dist: xenial
 group: edge
 language: ruby
 addons:
     apt:
         sources:
-            - debian-sid
+            - sourceline: "deb http://deb.debian.org/debian sid main contrib non-free"
+              key_url: "https://ftp-master.debian.org/keys/archive-key-9.asc"
         packages:
             - debootstrap
 branches:
