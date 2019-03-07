@@ -1,6 +1,17 @@
 # Changelog
 
 
+## 2.1.4 (2019-03-07)
+
+### Changes
+
+* Updating Node versions. [FIX] Fixing python 3.7 build. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing repository authorization. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.1.3 (2019-01-28)
 
 ### Fix
