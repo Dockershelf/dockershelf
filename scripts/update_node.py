@@ -84,8 +84,8 @@ def update_node(basedir):
 
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
-    node_version_lower_limit = 5
-    node_version_upper_limit = 10
+    node_version_lower_limit = 6
+    node_version_upper_limit = 11
 
     logger.info('Getting Node versions')
     with closing(urlopen(node_versions_list_file)) as n:
