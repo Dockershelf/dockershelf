@@ -87,7 +87,7 @@ def update_python(basedir):
         '2.6': 'wheezy-security',
         '2.7': 'sid',
         '3.2': 'wheezy-security',
-        '3.4': 'jessie',
+        '3.4': 'jessie-security',
         '3.5': 'stretch',
         '3.6': 'sid',
         '3.7': 'sid',

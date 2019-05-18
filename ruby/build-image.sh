@@ -31,6 +31,9 @@ RUBY_VER_NUM_MINOR_STR="ruby${RUBY_VER_NUM_MINOR}"
 RUBY_VER_NUM_MAJOR_STR="ruby${RUBY_VER_NUM_MAJOR}"
 
 MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
+ARMIRROR="http://archive.debian.org/debian"
+ARSECMIRROR="http://archive.debian.org/debian-security"
 
 # This is the list of ruby packages from debian that make up a minimal
 # ruby installation. We will use them later.
@@ -59,7 +62,17 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of Ruby.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${RUBY_DEBIAN_SUITE}" != "sid" ]; then
+if [ "${RUBY_DEBIAN_SUITE}" == "wheezy-security" ]; then
+    {
+        echo "deb ${ARMIRROR} wheezy main"
+        echo "deb ${ARSECMIRROR} wheezy/updates main"
+    } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
+elif [ "${RUBY_DEBIAN_SUITE}" == "jessie-security" ]; then
+    {
+        echo "deb ${MIRROR} jessie main"
+        echo "deb ${SECMIRROR} jessie/updates main"
+    } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
+elif [ "${RUBY_DEBIAN_SUITE}" != "sid" ]; then
     {
         echo "deb ${MIRROR} ${RUBY_DEBIAN_SUITE} main"
     } | tee /etc/apt/sources.list.d/ruby.list > /dev/null

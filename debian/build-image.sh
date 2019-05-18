@@ -27,6 +27,8 @@ VARIANT="minbase"
 DEBIAN_RELEASE="${1}"
 MIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
+ARMIRROR="http://archive.debian.org/debian"
+ARSECMIRROR="http://archive.debian.org/debian-security"
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
 
@@ -47,6 +49,11 @@ fi
 if [ "$( id -u )" != "0" ]; then
     msgerror "This script must be run as root. Aborting."
     exit 1
+fi
+
+if [ "${DEBIAN_RELEASE}" == "wheezy" ]; then
+    MIRROR="${ARMIRROR}"
+    SECMIRROR="${ARSECMIRROR}"
 fi
 
 if [ "${DEBIAN_RELEASE}" == "wheezy" ]; then
@@ -98,6 +105,12 @@ cat > "${TARGET}/etc/apt/sources.list" << EOF
 # Dockershelf configuration for apt sources
 deb ${MIRROR} sid main
 deb ${MIRROR} ${DEBIAN_RELEASE} main
+EOF
+elif [ "${DEBIAN_RELEASE}" == "wheezy" ] || [ "${DEBIAN_RELEASE}" == "jessie" ]; then
+cat > "${TARGET}/etc/apt/sources.list" << EOF
+# Dockershelf configuration for apt sources
+deb ${MIRROR} ${DEBIAN_RELEASE} main
+deb ${SECMIRROR} ${DEBIAN_RELEASE}/updates main
 EOF
 else
 cat > "${TARGET}/etc/apt/sources.list" << EOF

@@ -78,9 +78,9 @@ def update_ruby(basedir):
                                     '|')
 
     ruby_versions_src_origin = {
-        '1.8': 'wheezy',
-        '1.9.1': 'wheezy',
-        '2.1': 'jessie',
+        '1.8': 'wheezy-security',
+        '1.9.1': 'wheezy-security',
+        '2.1': 'jessie-security',
         '2.3': 'stretch',
         '2.5': 'sid',
     }

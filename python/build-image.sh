@@ -31,6 +31,8 @@ PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
 MIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
+ARMIRROR="http://archive.debian.org/debian"
+ARSECMIRROR="http://archive.debian.org/debian-security"
 UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 
 SETUPTOOLS_TEMP_DIR="$( mktemp -d )"
@@ -75,8 +77,13 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 msginfo "Configuring /etc/apt/sources.list ..."
 if [ "${PYTHON_DEBIAN_SUITE}" == "wheezy-security" ]; then
     {
-        echo "deb ${MIRROR} wheezy main"
-        echo "deb ${SECMIRROR} wheezy/updates main"
+        echo "deb ${ARMIRROR} wheezy main"
+        echo "deb ${ARSECMIRROR} wheezy/updates main"
+    } | tee /etc/apt/sources.list.d/python.list > /dev/null
+elif [ "${PYTHON_DEBIAN_SUITE}" == "jessie-security" ]; then
+    {
+        echo "deb ${MIRROR} jessie main"
+        echo "deb ${SECMIRROR} jessie/updates main"
     } | tee /etc/apt/sources.list.d/python.list > /dev/null
 elif [ "${PYTHON_DEBIAN_SUITE}" != "sid" ]; then
     {
