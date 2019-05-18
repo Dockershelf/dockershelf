@@ -157,11 +157,14 @@ Acquire::Retries "3";
 # Don't download translations.
 Acquire::Languages "none";
 
-# Prefer download of gzipped indexes.
-Acquire::CompressionTypes::Order:: "gz";
+# Prefer download of xzipped indexes.
+Acquire::CompressionTypes::Order:: "xz";
 
 # Keep indexes gzipped.
 Acquire::GzipIndexes "true";
+
+# Don't check for expired resources
+Acquire::Check-Valid-Until "false";
 
 # Don't install Suggests or Recommends.
 Apt::Install-Suggests "false";
