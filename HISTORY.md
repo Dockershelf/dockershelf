@@ -1,6 +1,23 @@
 # Changelog
 
 
+## 2.1.5 (2019-05-19)
+
+### Changes
+
+* Updating new versions of Node and Python. [Luis Alejandro Martínez Faneyth]
+
+* Improving update scripts. [Luis Alejandro Martínez Faneyth]
+
+* Allow expired resources on debian mirrors. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing Python 3.8 build. [Luis Alejandro Martínez Faneyth]
+
+* Fixing erasing of wheezy and jessie from main debian archive. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.1.4 (2019-03-07)
 
 ### Changes
