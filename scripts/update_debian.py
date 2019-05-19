@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,16 +21,11 @@
 
 import os
 import re
-import sys
 import shutil
 
 from .config import debian_versions
 from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_debian(basedir):
@@ -114,7 +110,8 @@ def update_debian(basedir):
             debian_dockerfile_template_content = dct.read()
 
         debian_dockerfile_content = debian_dockerfile_template_content
-        debian_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
+        debian_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                           base_image,
                                            debian_dockerfile_content)
         debian_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
                                            debian_version,

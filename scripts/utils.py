@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -29,6 +30,11 @@ try:
 except ImportError:
     from urllib.request import urlopen, Request
 
+import lxml.html
+from packaging.version import Version
+
+from .logger import logger
+
 if not sys.version_info < (3,):
     unicode = str
     basestring = str
@@ -38,6 +44,12 @@ def u(u_string):
     if isinstance(u_string, unicode):
         return u_string
     return u_string.decode('utf-8')
+
+
+def s(s_string):
+    if isinstance(s_string, bytes):
+        return s_string
+    return s_string.encode('utf-8')
 
 
 def find_dirs(path=None, pattern='*'):
@@ -73,14 +85,19 @@ def is_string_a_string(s):
 
 
 def get_debian_versions():
+    logger.info('Getting Debian versions')
     debian_release_url_holder = ('https://deb.debian.org/debian/dists/{0}/'
                                  'Release')
-    debian_suites = ['oldoldstable', 'oldstable', 'stable', 'testing',
-                     'unstable']
+    debian_release_url_holder_ar = ('http://archive.debian.org/debian/dists/{0}/'
+                                    'Release')
+    debian_suites = ['oldoldstable', 'oldstable', 'stable', 'testing', 'unstable']
     debian_versions = []
 
     for debian_suite in debian_suites:
-        debian_release_url = debian_release_url_holder.format(debian_suite)
+        if debian_suite == 'oldoldstable':
+            debian_release_url = debian_release_url_holder_ar.format('wheezy')
+        else:
+            debian_release_url = debian_release_url_holder.format(debian_suite)
 
         r = Request(debian_release_url)
         r.add_header('Range', 'bytes={0}-{1}'.format(0, 256))
@@ -93,3 +110,147 @@ def get_debian_versions():
              debian_suite))
 
     return debian_versions
+
+
+def get_mongo_versions_src_origin(debian_versions):
+
+    logger.info('Getting Mongo versions')
+    mongo_debian_releases_url = ('http://repo.mongodb.org/apt/debian/'
+                                 'dists/index.html')
+    mongo_rel_url_holder = ('http://repo.mongodb.org/apt/debian/'
+                            'dists/{0}/mongodb-org/index.html')
+
+    mongo_debian_releases_html = lxml.html.parse(
+        mongo_debian_releases_url).getroot()
+    mongo_debian_releases = mongo_debian_releases_html.cssselect('a')
+    mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
+    mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
+    debian_codenames = list(map(lambda x: x[0], debian_versions))
+    mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
+                                   key=lambda x: debian_codenames.index(x))
+
+    mongo_versions = []
+    for debian_version in mongo_debian_releases:
+        mongo_rel_url = mongo_rel_url_holder.format(debian_version)
+        mongo_rel_html = lxml.html.parse(mongo_rel_url).getroot()
+        mongo_rel = mongo_rel_html.cssselect('a')
+        mongo_rel = [e.get('href') for e in mongo_rel]
+        mongo_rel = [e for e in mongo_rel if e != '..']
+        mongo_rel = list(filter(lambda x: not is_string_a_string(x),
+                                mongo_rel))
+        mongo_rel = [{e: debian_version} for e in mongo_rel
+                     if not any(e in v for v in mongo_versions)]
+        mongo_versions.extend(mongo_rel)
+
+    return dict((key, d[key]) for d in mongo_versions for key in d)
+
+
+def get_mongo_versions(mongo_versions_src_origin):
+    mongo_version_lower_limit = 3.4
+    mongo_version_upper_limit = 4.0
+    mongo_versions = mongo_versions_src_origin.keys()
+    mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
+    mongo_versions = [v for v in mongo_versions
+                      if (float(v) >= mongo_version_lower_limit and
+                          float(v) <= mongo_version_upper_limit)]
+    return sorted(set(mongo_versions), key=lambda x: Version(x))
+
+
+def get_node_versions():
+
+    logger.info('Getting Node versions')
+    node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
+                               'distributions/master/deb/src/build.sh')
+    node_version_lower_limit = 6
+    node_version_upper_limit = 11
+
+    with closing(urlopen(node_versions_list_file)) as n:
+        node_versions_list_content = n.read()
+
+    node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
+                               u(node_versions_list_content))
+    node_versions = [s(v) for v in node_versions
+                     if (float(v) >= node_version_lower_limit and
+                         float(v) <= node_version_upper_limit)]
+    return sorted(set(node_versions), key=lambda x: Version(x))
+
+
+def get_odoo_versions():
+    logger.info('Getting Odoo versions')
+    odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
+    odoo_version_lower_limit = 10.0
+    odoo_version_upper_limit = 12.0
+
+    odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()
+    odoo_versions = odoo_ver_html.cssselect('a.list-group-item')
+    odoo_versions = [e.get('href') for e in odoo_versions]
+    odoo_versions = [e.replace('/nightly', '') for e in odoo_versions]
+    odoo_versions = list(filter(lambda x: not is_string_a_string(x),
+                                odoo_versions))
+    odoo_versions = [v for v in odoo_versions
+                     if (float(v) >= odoo_version_lower_limit and
+                         float(v) <= odoo_version_upper_limit)]
+    return sorted(set(odoo_versions), key=lambda x: Version(x))
+
+
+def get_postgres_versions():
+
+    logger.info('Getting Postgres versions')
+    postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
+                            'dists/sid-pgdg/Release')
+    postgres_version_lower_limit = 9.3
+    postgres_version_upper_limit = 11
+
+    r = Request(postgres_release_url)
+
+    with closing(urlopen(r)) as d:
+        postgres_release_content = d.read()
+
+    postgres_versions = re.findall('Components: (.*)',
+                                   u(postgres_release_content))[0]
+    postgres_versions = list(filter(lambda x: not is_string_a_string(x),
+                                    postgres_versions.split()))
+    postgres_versions = [v for v in postgres_versions
+                         if (float(v) >= postgres_version_lower_limit and
+                             float(v) <= postgres_version_upper_limit)]
+    return sorted(postgres_versions, key=lambda x: Version(x))
+
+
+def get_python_versions_src_origin():
+
+    python_versions_src_origin = {
+        '2.6': 'wheezy-security',
+        '2.7': 'sid',
+        '3.2': 'wheezy-security',
+        '3.4': 'jessie-security',
+        '3.5': 'stretch',
+        '3.6': 'sid',
+        '3.7': 'sid',
+    }
+    return python_versions_src_origin
+
+
+def get_python_versions(python_versions_src_origin):
+
+    logger.info('Getting Python versions')
+    python_versions = python_versions_src_origin.keys()
+    return sorted(python_versions, key=lambda x: Version(x))
+
+
+def get_ruby_versions_src_origin():
+
+    ruby_versions_src_origin = {
+        '1.8': 'wheezy-security',
+        '1.9.1': 'wheezy-security',
+        '2.1': 'jessie-security',
+        '2.3': 'stretch',
+        '2.5': 'sid',
+    }
+    return ruby_versions_src_origin
+
+
+def get_ruby_versions(ruby_versions_src_origin):
+
+    logger.info('Getting Ruby versions')
+    ruby_versions = ruby_versions_src_origin.keys()
+    return sorted(ruby_versions, key=lambda x: Version(x))

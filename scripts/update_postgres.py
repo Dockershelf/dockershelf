@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,23 +21,11 @@
 
 import os
 import re
-import sys
 import shutil
-from contextlib import closing
 
-try:
-    from urllib2 import urlopen, Request
-except ImportError:
-    from urllib.request import urlopen, Request
-
-from packaging.version import Version
-
-from .utils import find_dirs, is_string_a_string, u
+from .config import postgres_versions
+from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_postgres(basedir):
@@ -82,26 +71,6 @@ def update_postgres(basedir):
                                         '|[![]({5})]({6})'
                                         '|[![]({7})]({8})'
                                         '|')
-
-    postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
-                            'dists/sid-pgdg/Release')
-    postgres_version_lower_limit = 9.3
-    postgres_version_upper_limit = 11
-
-    logger.info('Getting Postgres versions')
-    r = Request(postgres_release_url)
-
-    with closing(urlopen(r)) as d:
-        postgres_release_content = d.read()
-
-    postgres_versions = re.findall('Components: (.*)',
-                                   u(postgres_release_content))[0]
-    postgres_versions = list(filter(lambda x: not is_string_a_string(x),
-                                    postgres_versions.split()))
-    postgres_versions = [v for v in postgres_versions
-                         if (float(v) >= postgres_version_lower_limit and
-                             float(v) <= postgres_version_upper_limit)]
-    postgres_versions = sorted(postgres_versions, key=lambda x: Version(x))
     postgres_latest_version = postgres_versions[-1]
 
     logger.info('Erasing current Postgres folders')
@@ -140,13 +109,15 @@ def update_postgres(basedir):
             postgres_dockerfile_template_content = pdt.read()
 
         postgres_dockerfile_content = postgres_dockerfile_template_content
-        postgres_dockerfile_content = re.sub(
-            '%%BASE_IMAGE%%', base_image, postgres_dockerfile_content)
-        postgres_dockerfile_content = re.sub(
-            '%%DEBIAN_RELEASE%%', 'sid', postgres_dockerfile_content)
-        postgres_dockerfile_content = re.sub(
-            '%%POSTGRES_VERSION%%', postgres_version,
-            postgres_dockerfile_content)
+        postgres_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                             base_image,
+                                             postgres_dockerfile_content)
+        postgres_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                             'sid',
+                                             postgres_dockerfile_content)
+        postgres_dockerfile_content = re.sub('%%POSTGRES_VERSION%%',
+                                             postgres_version,
+                                             postgres_dockerfile_content)
 
         with open(postgres_dockerfile, 'w') as pd:
             pd.write(postgres_dockerfile_content)

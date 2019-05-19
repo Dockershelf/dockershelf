@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.

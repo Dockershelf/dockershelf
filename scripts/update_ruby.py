@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,17 +21,11 @@
 
 import os
 import re
-import sys
 import shutil
 
-from packaging.version import Version
-
+from .config import ruby_versions, ruby_versions_src_origin
 from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_ruby(basedir):
@@ -76,18 +71,6 @@ def update_ruby(basedir):
                                     '|[![]({5})]({6})'
                                     '|[![]({7})]({8})'
                                     '|')
-
-    ruby_versions_src_origin = {
-        '1.8': 'wheezy-security',
-        '1.9.1': 'wheezy-security',
-        '2.1': 'jessie-security',
-        '2.3': 'stretch',
-        '2.5': 'sid',
-    }
-
-    logger.info('Getting Ruby versions')
-    ruby_versions = ruby_versions_src_origin.keys()
-    ruby_versions = sorted(ruby_versions, key=lambda x: Version(x))
     ruby_latest_version = ruby_versions[-1]
 
     logger.info('Erasing current Ruby folders')
@@ -126,16 +109,18 @@ def update_ruby(basedir):
             ruby_dockerfile_template_content = pdt.read()
 
         ruby_dockerfile_content = ruby_dockerfile_template_content
-        ruby_dockerfile_content = re.sub(
-            '%%BASE_IMAGE%%', base_image, ruby_dockerfile_content)
-        ruby_dockerfile_content = re.sub(
-            '%%DEBIAN_RELEASE%%', 'sid', ruby_dockerfile_content)
-        ruby_dockerfile_content = re.sub(
-            '%%RUBY_VERSION%%', ruby_version, ruby_dockerfile_content)
-        ruby_dockerfile_content = re.sub(
-            '%%RUBY_DEBIAN_SUITE%%',
-            ruby_versions_src_origin[ruby_version],
-            ruby_dockerfile_content)
+        ruby_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                         base_image,
+                                         ruby_dockerfile_content)
+        ruby_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                         'sid',
+                                         ruby_dockerfile_content)
+        ruby_dockerfile_content = re.sub('%%RUBY_VERSION%%',
+                                         ruby_version,
+                                         ruby_dockerfile_content)
+        ruby_dockerfile_content = re.sub('%%RUBY_DEBIAN_SUITE%%',
+                                         ruby_versions_src_origin[ruby_version],
+                                         ruby_dockerfile_content)
 
         with open(ruby_dockerfile, 'w') as pd:
             pd.write(ruby_dockerfile_content)
@@ -161,8 +146,9 @@ def update_ruby(basedir):
     ruby_readme_table = '\n'.join(ruby_readme_tablelist)
 
     ruby_readme_content = ruby_readme_template_content
-    ruby_readme_content = re.sub(
-        '%%RUBY_TABLE%%', ruby_readme_table, ruby_readme_content)
+    ruby_readme_content = re.sub('%%RUBY_TABLE%%',
+                                 ruby_readme_table,
+                                 ruby_readme_content)
 
     with open(ruby_readme, 'w') as pr:
         pr.write(ruby_readme_content)

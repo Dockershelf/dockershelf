@@ -115,7 +115,7 @@ DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
 
-if [ "${PYTHON_DEBIAN_SUITE}" == "jessie" ]; then
+if [ "${PYTHON_DEBIAN_SUITE}" == "jessie-security" ]; then
     cmdretry apt-get --allow-remove-essential purge findutils
     cmdretry apt-get -d -t jessie install findutils
     cmdretry apt-get -t jessie install findutils
