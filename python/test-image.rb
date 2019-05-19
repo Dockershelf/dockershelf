@@ -52,10 +52,12 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     it "should pass basic internal tests" do
         expect(command("apt-get update", 120).exit_status).to eq(0)
         expect(command("apt-get install git rsync").exit_status).to eq(0)
-        expect(command("git clone --branch v#{python_version_long()} --depth 1 https://github.com/python/cpython /tmp/cpython").exit_status).to eq(0)
-        expect(command("rsync -avz /tmp/cpython/Lib/test/ /usr/lib/python#{python_version()}/test/").exit_status).to eq(0)
-        for test_suite in basic_tests
-            expect(command("python -m test.regrtest #{test_suite}").exit_status).to eq(0)
+        if python_version() != "3.8"
+            expect(command("git clone --branch v#{python_version_long()} --depth 1 https://github.com/python/cpython /tmp/cpython").exit_status).to eq(0)
+            expect(command("rsync -avz /tmp/cpython/Lib/test/ /usr/lib/python#{python_version()}/test/").exit_status).to eq(0)
+            for test_suite in basic_tests
+                expect(command("python -m test.regrtest #{test_suite}").exit_status).to eq(0)
+            end
         end
     end
 
