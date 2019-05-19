@@ -106,8 +106,8 @@ def get_debian_versions():
             debian_release_content = d.read()
 
         debian_versions.append(
-            (re.findall('Codename: (.*)', u(debian_release_content))[0],
-             debian_suite))
+            (s(re.findall('Codename: (.*)', u(debian_release_content))[0]),
+             s(debian_suite)))
 
     return debian_versions
 
@@ -150,7 +150,7 @@ def get_mongo_versions(mongo_versions_src_origin):
     mongo_version_upper_limit = 4.0
     mongo_versions = mongo_versions_src_origin.keys()
     mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
-    mongo_versions = [v for v in mongo_versions
+    mongo_versions = [s(v) for v in mongo_versions
                       if (float(v) >= mongo_version_lower_limit and
                           float(v) <= mongo_version_upper_limit)]
     return sorted(set(mongo_versions), key=lambda x: Version(x))
@@ -162,7 +162,7 @@ def get_node_versions():
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
     node_version_lower_limit = 6
-    node_version_upper_limit = 11
+    node_version_upper_limit = 12
 
     with closing(urlopen(node_versions_list_file)) as n:
         node_versions_list_content = n.read()
@@ -187,7 +187,7 @@ def get_odoo_versions():
     odoo_versions = [e.replace('/nightly', '') for e in odoo_versions]
     odoo_versions = list(filter(lambda x: not is_string_a_string(x),
                                 odoo_versions))
-    odoo_versions = [v for v in odoo_versions
+    odoo_versions = [s(v) for v in odoo_versions
                      if (float(v) >= odoo_version_lower_limit and
                          float(v) <= odoo_version_upper_limit)]
     return sorted(set(odoo_versions), key=lambda x: Version(x))
@@ -210,7 +210,7 @@ def get_postgres_versions():
                                    u(postgres_release_content))[0]
     postgres_versions = list(filter(lambda x: not is_string_a_string(x),
                                     postgres_versions.split()))
-    postgres_versions = [v for v in postgres_versions
+    postgres_versions = [s(v) for v in postgres_versions
                          if (float(v) >= postgres_version_lower_limit and
                              float(v) <= postgres_version_upper_limit)]
     return sorted(postgres_versions, key=lambda x: Version(x))
@@ -226,6 +226,7 @@ def get_python_versions_src_origin():
         '3.5': 'stretch',
         '3.6': 'sid',
         '3.7': 'sid',
+        '3.8': 'experimental',
     }
     return python_versions_src_origin
 
@@ -234,6 +235,7 @@ def get_python_versions(python_versions_src_origin):
 
     logger.info('Getting Python versions')
     python_versions = python_versions_src_origin.keys()
+    python_versions = [s(v) for v in python_versions]
     return sorted(python_versions, key=lambda x: Version(x))
 
 
@@ -253,4 +255,5 @@ def get_ruby_versions(ruby_versions_src_origin):
 
     logger.info('Getting Ruby versions')
     ruby_versions = ruby_versions_src_origin.keys()
+    ruby_versions = [s(v) for v in ruby_versions]
     return sorted(ruby_versions, key=lambda x: Version(x))

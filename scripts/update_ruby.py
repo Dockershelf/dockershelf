@@ -31,7 +31,6 @@ from .logger import logger
 def update_ruby(basedir):
 
     travis_matrixlist = []
-    ruby_versions = []
     ruby_readme_tablelist = []
     rubydir = os.path.join(basedir, 'ruby')
     ruby_dockerfile_template = os.path.join(rubydir, 'Dockerfile.template')
