@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,23 +21,11 @@
 
 import os
 import re
-import sys
 import shutil
-from contextlib import closing
 
-try:
-    from urllib2 import urlopen
-except ImportError:
-    from urllib.request import urlopen
-
-from packaging.version import Version
-
-from .utils import find_dirs, u
+from .config import node_versions
+from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_node(basedir):
@@ -81,22 +70,6 @@ def update_node(basedir):
                                     '|[![]({5})]({6})'
                                     '|[![]({7})]({8})'
                                     '|')
-
-    node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
-                               'distributions/master/deb/src/build.sh')
-    node_version_lower_limit = 6
-    node_version_upper_limit = 11
-
-    logger.info('Getting Node versions')
-    with closing(urlopen(node_versions_list_file)) as n:
-        node_versions_list_content = n.read()
-
-    node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
-                               u(node_versions_list_content))
-    node_versions = [v for v in node_versions
-                     if (float(v) >= node_version_lower_limit and
-                         float(v) <= node_version_upper_limit)]
-    node_versions = sorted(set(node_versions), key=lambda x: Version(x))
     node_latest_version = node_versions[-1]
 
     logger.info('Erasing current Node folders')
@@ -135,11 +108,14 @@ def update_node(basedir):
             node_dockerfile_template_content = pdt.read()
 
         node_dockerfile_content = node_dockerfile_template_content
-        node_dockerfile_content = re.sub('%%BASE_IMAGE%%', base_image,
+        node_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                         base_image,
                                          node_dockerfile_content)
-        node_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%', 'sid',
+        node_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                         'sid',
                                          node_dockerfile_content)
-        node_dockerfile_content = re.sub('%%NODE_VERSION%%', node_version,
+        node_dockerfile_content = re.sub('%%NODE_VERSION%%',
+                                         node_version,
                                          node_dockerfile_content)
 
         with open(node_dockerfile, 'w') as pd:
@@ -166,7 +142,8 @@ def update_node(basedir):
     node_readme_table = '\n'.join(node_readme_tablelist)
 
     node_readme_content = node_readme_template_content
-    node_readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
+    node_readme_content = re.sub('%%NODE_TABLE%%',
+                                 node_readme_table,
                                  node_readme_content)
 
     with open(node_readme, 'w') as pr:

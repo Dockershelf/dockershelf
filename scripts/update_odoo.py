@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,24 +21,16 @@
 
 import os
 import re
-import sys
 import shutil
 
-import lxml.html
-from packaging.version import Version
-
-from .utils import find_dirs, is_string_a_string
+from .config import odoo_versions
+from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_odoo(basedir):
 
     travis_matrixlist = []
-    odoo_versions = []
     odoo_readme_tablelist = []
     odoodir = os.path.join(basedir, 'odoo')
     odoo_dockerfile_template = os.path.join(odoodir, 'Dockerfile.template')
@@ -78,21 +71,6 @@ def update_odoo(basedir):
                                     '|[![]({5})]({6})'
                                     '|[![]({7})]({8})'
                                     '|')
-    odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-    odoo_version_lower_limit = 10.0
-    odoo_version_upper_limit = 12.0
-
-    logger.info('Getting Odoo versions')
-    odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()
-    odoo_versions = odoo_ver_html.cssselect('a.list-group-item')
-    odoo_versions = [e.get('href') for e in odoo_versions]
-    odoo_versions = [e.replace('/nightly', '') for e in odoo_versions]
-    odoo_versions = list(filter(lambda x: not is_string_a_string(x),
-                                odoo_versions))
-    odoo_versions = [v for v in odoo_versions
-                     if (float(v) >= odoo_version_lower_limit and
-                         float(v) <= odoo_version_upper_limit)]
-    odoo_versions = sorted(set(odoo_versions), key=lambda x: Version(x))
     odoo_latest_version = odoo_versions[-1]
 
     logger.info('Erasing current Odoo folders')
@@ -138,16 +116,21 @@ def update_odoo(basedir):
             odoo_dockerfile_template_content = pdt.read()
 
         odoo_dockerfile_content = odoo_dockerfile_template_content
-        odoo_dockerfile_content = re.sub(
-            '%%BASE_IMAGE%%', base_image, odoo_dockerfile_content)
-        odoo_dockerfile_content = re.sub(
-            '%%DEBIAN_RELEASE%%', 'sid', odoo_dockerfile_content)
-        odoo_dockerfile_content = re.sub(
-            '%%PYTHON_VERSION%%', python_version, odoo_dockerfile_content)
-        odoo_dockerfile_content = re.sub(
-            '%%NODE_VERSION%%', node_version, odoo_dockerfile_content)
-        odoo_dockerfile_content = re.sub(
-            '%%ODOO_VERSION%%', odoo_version, odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                         base_image,
+                                         odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                         'sid',
+                                         odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub('%%PYTHON_VERSION%%',
+                                         python_version,
+                                         odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub('%%NODE_VERSION%%',
+                                         node_version,
+                                         odoo_dockerfile_content)
+        odoo_dockerfile_content = re.sub('%%ODOO_VERSION%%',
+                                         odoo_version,
+                                         odoo_dockerfile_content)
 
         with open(odoo_dockerfile, 'w') as pd:
             pd.write(odoo_dockerfile_content)
@@ -173,7 +156,8 @@ def update_odoo(basedir):
     odoo_readme_table = '\n'.join(odoo_readme_tablelist)
 
     odoo_readme_content = odoo_readme_template_content
-    odoo_readme_content = re.sub('%%ODOO_TABLE%%', odoo_readme_table,
+    odoo_readme_content = re.sub('%%ODOO_TABLE%%',
+                                 odoo_readme_table,
                                  odoo_readme_content)
 
     with open(odoo_readme, 'w') as pr:

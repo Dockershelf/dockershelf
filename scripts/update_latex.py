@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,15 +21,11 @@
 
 import os
 import re
-import sys
 import shutil
 
+from .config import latex_versions
 from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_latex(basedir):
@@ -73,7 +70,6 @@ def update_latex(basedir):
                                      '|[![]({5})]({6})'
                                      '|[![]({7})]({8})'
                                      '|')
-    latex_versions = ['basic', 'full']
 
     logger.info('Erasing current Latex folders')
     for deldir in find_dirs(latexdir):
@@ -111,12 +107,15 @@ def update_latex(basedir):
             latex_dockerfile_template_content = ldt.read()
 
         latex_dockerfile_content = latex_dockerfile_template_content
-        latex_dockerfile_content = re.sub(
-            '%%BASE_IMAGE%%', base_image, latex_dockerfile_content)
-        latex_dockerfile_content = re.sub(
-            '%%DEBIAN_RELEASE%%', 'sid', latex_dockerfile_content)
-        latex_dockerfile_content = re.sub(
-            '%%LATEX_VERSION%%', latex_version, latex_dockerfile_content)
+        latex_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                          base_image,
+                                          latex_dockerfile_content)
+        latex_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                          'sid',
+                                          latex_dockerfile_content)
+        latex_dockerfile_content = re.sub('%%LATEX_VERSION%%',
+                                          latex_version,
+                                          latex_dockerfile_content)
 
         with open(latex_dockerfile, 'w') as ld:
             ld.write(latex_dockerfile_content)
@@ -142,7 +141,8 @@ def update_latex(basedir):
     latex_readme_table = '\n'.join(latex_readme_tablelist)
 
     latex_readme_content = latex_readme_template_content
-    latex_readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
+    latex_readme_content = re.sub('%%LATEX_TABLE%%',
+                                  latex_readme_table,
                                   latex_readme_content)
 
     with open(latex_readme, 'w') as lr:

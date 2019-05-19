@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,23 +21,16 @@
 
 import os
 import re
-import sys
 import shutil
 
-from packaging.version import Version
-
+from .config import python_versions, python_versions_src_origin
 from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_python(basedir):
 
     travis_matrixlist = []
-    python_versions = []
     python_readme_tablelist = []
     pythondir = os.path.join(basedir, 'python')
     python_dockerfile_template = os.path.join(pythondir, 'Dockerfile.template')
@@ -82,20 +76,6 @@ def update_python(basedir):
                                       '|[![]({5})]({6})'
                                       '|[![]({7})]({8})'
                                       '|')
-
-    python_versions_src_origin = {
-        '2.6': 'wheezy-security',
-        '2.7': 'sid',
-        '3.2': 'wheezy-security',
-        '3.4': 'jessie',
-        '3.5': 'stretch',
-        '3.6': 'sid',
-        '3.7': 'sid',
-    }
-
-    logger.info('Getting Python versions')
-    python_versions = python_versions_src_origin.keys()
-    python_versions = sorted(python_versions, key=lambda x: Version(x))
     python_latest_version = python_versions[-1]
 
     logger.info('Erasing current Python folders')
@@ -140,16 +120,18 @@ def update_python(basedir):
             python_dockerfile_template_content = pdt.read()
 
         python_dockerfile_content = python_dockerfile_template_content
-        python_dockerfile_content = re.sub(
-            '%%BASE_IMAGE%%', base_image, python_dockerfile_content)
-        python_dockerfile_content = re.sub(
-            '%%DEBIAN_RELEASE%%', 'sid', python_dockerfile_content)
-        python_dockerfile_content = re.sub(
-            '%%PYTHON_VERSION%%', python_version, python_dockerfile_content)
-        python_dockerfile_content = re.sub(
-            '%%PYTHON_DEBIAN_SUITE%%',
-            python_versions_src_origin[python_version],
-            python_dockerfile_content)
+        python_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                           base_image,
+                                           python_dockerfile_content)
+        python_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                           'sid',
+                                           python_dockerfile_content)
+        python_dockerfile_content = re.sub('%%PYTHON_VERSION%%',
+                                           python_version,
+                                           python_dockerfile_content)
+        python_dockerfile_content = re.sub('%%PYTHON_DEBIAN_SUITE%%',
+                                           python_versions_src_origin[python_version],
+                                           python_dockerfile_content)
 
         with open(python_dockerfile, 'w') as pd:
             pd.write(python_dockerfile_content)
@@ -175,7 +157,8 @@ def update_python(basedir):
     python_readme_table = '\n'.join(python_readme_tablelist)
 
     python_readme_content = python_readme_template_content
-    python_readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,
+    python_readme_content = re.sub('%%PYTHON_TABLE%%',
+                                   python_readme_table,
                                    python_readme_content)
 
     with open(python_readme, 'w') as pr:

@@ -6,8 +6,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="python3.4" \
-      org.label-schema.description="A Python 3.4 image based on Debian sid." \
+      org.label-schema.name="node12" \
+      org.label-schema.description="A Node 12 image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,10 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV PYTHON_VER_NUM="3.4" PYTHON_DEBIAN_SUITE="jessie-security" \
-	PYTHONIOENCODING="UTF-8"
+ENV NODE_VER_NUM="12"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/python/
-RUN bash /usr/share/dockershelf/python/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/node/
+RUN bash /usr/share/dockershelf/node/build-image.sh
 
-CMD ["python"]
+CMD ["/bin/bash"]

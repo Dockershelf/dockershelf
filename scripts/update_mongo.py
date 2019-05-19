@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
 #   Copyright (C) 2016-2018, Dockershelf Developers.
@@ -20,19 +21,11 @@
 
 import os
 import re
-import sys
 import shutil
 
-import lxml.html
-from packaging.version import Version
-
-from .config import debian_versions
-from .utils import find_dirs, is_string_a_string
+from .config import mongo_versions, mongo_versions_src_origin
+from .utils import find_dirs
 from .logger import logger
-
-if not sys.version_info < (3,):
-    unicode = str
-    basestring = str
 
 
 def update_mongo(basedir):
@@ -77,45 +70,6 @@ def update_mongo(basedir):
                                      '|[![]({5})]({6})'
                                      '|[![]({7})]({8})'
                                      '|')
-
-    mongo_debian_releases_url = ('http://repo.mongodb.org/apt/debian/'
-                                 'dists/index.html')
-    mongo_rel_url_holder = ('http://repo.mongodb.org/apt/debian/'
-                            'dists/{0}/mongodb-org/index.html')
-    mongo_version_lower_limit = 3.4
-    mongo_version_upper_limit = 4.0
-
-    logger.info('Getting Mongo versions')
-    mongo_debian_releases_html = lxml.html.parse(
-        mongo_debian_releases_url).getroot()
-    mongo_debian_releases = mongo_debian_releases_html.cssselect('a')
-    mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
-    mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
-    debian_codenames = list(map(lambda x: x[0], debian_versions))
-    mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
-                                   key=lambda x: debian_codenames.index(x))
-
-    mongo_versions = []
-    for debian_version in mongo_debian_releases:
-        mongo_rel_url = mongo_rel_url_holder.format(debian_version)
-        mongo_rel_html = lxml.html.parse(mongo_rel_url).getroot()
-        mongo_rel = mongo_rel_html.cssselect('a')
-        mongo_rel = [e.get('href') for e in mongo_rel]
-        mongo_rel = [e for e in mongo_rel if e != '..']
-        mongo_rel = list(filter(lambda x: not is_string_a_string(x),
-                                mongo_rel))
-        mongo_rel = [{e: debian_version} for e in mongo_rel
-                     if not any(e in v for v in mongo_versions)]
-        mongo_versions.extend(mongo_rel)
-
-    mongo_versions_src_origin = dict((key, d[key]) for d in mongo_versions
-                                     for key in d)
-    mongo_versions = mongo_versions_src_origin.keys()
-    mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
-    mongo_versions = [v for v in mongo_versions
-                      if (float(v) >= mongo_version_lower_limit and
-                          float(v) <= mongo_version_upper_limit)]
-    mongo_versions = sorted(set(mongo_versions), key=lambda x: Version(x))
     mongo_latest_version = mongo_versions[-1]
 
     logger.info('Erasing current Mongo folders')
@@ -154,15 +108,18 @@ def update_mongo(basedir):
             mongo_dockerfile_template_content = pdt.read()
 
         mongo_dockerfile_content = mongo_dockerfile_template_content
-        mongo_dockerfile_content = re.sub(
-            '%%BASE_IMAGE%%', base_image, mongo_dockerfile_content)
-        mongo_dockerfile_content = re.sub(
-            '%%DEBIAN_RELEASE%%', 'sid', mongo_dockerfile_content)
-        mongo_dockerfile_content = re.sub(
-            '%%MONGO_VERSION%%', mongo_version, mongo_dockerfile_content)
-        mongo_dockerfile_content = re.sub(
-            '%%MONGO_DEBIAN_SUITE%%', mongo_versions_src_origin[mongo_version],
-            mongo_dockerfile_content)
+        mongo_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                          base_image,
+                                          mongo_dockerfile_content)
+        mongo_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                          'sid',
+                                          mongo_dockerfile_content)
+        mongo_dockerfile_content = re.sub('%%MONGO_VERSION%%',
+                                          mongo_version,
+                                          mongo_dockerfile_content)
+        mongo_dockerfile_content = re.sub('%%MONGO_DEBIAN_SUITE%%',
+                                          mongo_versions_src_origin[mongo_version],
+                                          mongo_dockerfile_content)
 
         with open(mongo_dockerfile, 'w') as pd:
             pd.write(mongo_dockerfile_content)
@@ -188,7 +145,8 @@ def update_mongo(basedir):
     mongo_readme_table = '\n'.join(mongo_readme_tablelist)
 
     mongo_readme_content = mongo_readme_template_content
-    mongo_readme_content = re.sub('%%MONGO_TABLE%%', mongo_readme_table,
+    mongo_readme_content = re.sub('%%MONGO_TABLE%%',
+                                  mongo_readme_table,
                                   mongo_readme_content)
 
     with open(mongo_readme, 'w') as pr:

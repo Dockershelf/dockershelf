@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1"
 
-ENV RUBY_VER_NUM="1.9.1" RUBY_DEBIAN_SUITE="wheezy"
+ENV RUBY_VER_NUM="1.9.1" RUBY_DEBIAN_SUITE="wheezy-security"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
 RUN bash /usr/share/dockershelf/ruby/build-image.sh
