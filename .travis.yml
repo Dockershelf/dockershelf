@@ -60,6 +60,9 @@ env:
         - DOCKER_IMAGE_NAME="dockershelf/odoo:10.0"
         - DOCKER_IMAGE_NAME="dockershelf/odoo:11.0"
         - DOCKER_IMAGE_NAME="dockershelf/odoo:12.0" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/odoo:latest"
+        - DOCKER_IMAGE_NAME="dockershelf/php:7.0"
+        - DOCKER_IMAGE_NAME="dockershelf/php:7.2"
+        - DOCKER_IMAGE_NAME="dockershelf/php:7.3" DOCKER_IMAGE_EXTRA_TAGS="dockershelf/php:latest"
 install:
     - gem install docker-api serverspec
 before_script:

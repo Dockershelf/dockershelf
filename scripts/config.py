@@ -22,10 +22,12 @@
 from .utils import get_debian_versions, get_mongo_versions, \
     get_mongo_versions_src_origin, get_node_versions, get_odoo_versions, \
     get_postgres_versions, get_python_versions_src_origin, get_python_versions, \
-    get_ruby_versions_src_origin, get_ruby_versions
+    get_ruby_versions_src_origin, get_ruby_versions, get_php_versions_src_origin, \
+    get_php_versions
 
 debian_versions = get_debian_versions()
 latex_versions = ['basic', 'full']
+print(debian_versions)
 mongo_versions_src_origin = get_mongo_versions_src_origin(debian_versions)
 mongo_versions = get_mongo_versions(mongo_versions_src_origin)
 node_versions = get_node_versions()
@@ -35,3 +37,5 @@ python_versions_src_origin = get_python_versions_src_origin()
 python_versions = get_python_versions(python_versions_src_origin)
 ruby_versions_src_origin = get_ruby_versions_src_origin()
 ruby_versions = get_ruby_versions(ruby_versions_src_origin)
+php_versions_src_origin = get_php_versions_src_origin()
+php_versions = get_php_versions(php_versions_src_origin)

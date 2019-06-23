@@ -106,14 +106,13 @@ def get_debian_versions():
             debian_release_content = d.read()
 
         debian_versions.append(
-            (s(re.findall('Codename: (.*)', u(debian_release_content))[0]),
-             s(debian_suite)))
+            (u(re.findall('Codename: (.*)', u(debian_release_content))[0]),
+             u(debian_suite)))
 
     return debian_versions
 
 
 def get_mongo_versions_src_origin(debian_versions):
-
     logger.info('Getting Mongo versions')
     mongo_debian_releases_url = ('http://repo.mongodb.org/apt/debian/'
                                  'dists/index.html')
@@ -126,6 +125,7 @@ def get_mongo_versions_src_origin(debian_versions):
     mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
     mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
     debian_codenames = list(map(lambda x: x[0], debian_versions))
+    print(debian_codenames)
     mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
                                    key=lambda x: debian_codenames.index(x))
 
@@ -150,14 +150,13 @@ def get_mongo_versions(mongo_versions_src_origin):
     mongo_version_upper_limit = 4.0
     mongo_versions = mongo_versions_src_origin.keys()
     mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
-    mongo_versions = [s(v) for v in mongo_versions
+    mongo_versions = [u(v) for v in mongo_versions
                       if (float(v) >= mongo_version_lower_limit and
                           float(v) <= mongo_version_upper_limit)]
     return sorted(set(mongo_versions), key=lambda x: Version(x))
 
 
 def get_node_versions():
-
     logger.info('Getting Node versions')
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
@@ -169,7 +168,7 @@ def get_node_versions():
 
     node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
                                u(node_versions_list_content))
-    node_versions = [s(v) for v in node_versions
+    node_versions = [u(v) for v in node_versions
                      if (float(v) >= node_version_lower_limit and
                          float(v) <= node_version_upper_limit)]
     return sorted(set(node_versions), key=lambda x: Version(x))
@@ -187,14 +186,13 @@ def get_odoo_versions():
     odoo_versions = [e.replace('/nightly', '') for e in odoo_versions]
     odoo_versions = list(filter(lambda x: not is_string_a_string(x),
                                 odoo_versions))
-    odoo_versions = [s(v) for v in odoo_versions
+    odoo_versions = [u(v) for v in odoo_versions
                      if (float(v) >= odoo_version_lower_limit and
                          float(v) <= odoo_version_upper_limit)]
     return sorted(set(odoo_versions), key=lambda x: Version(x))
 
 
 def get_postgres_versions():
-
     logger.info('Getting Postgres versions')
     postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
                             'dists/sid-pgdg/Release')
@@ -210,14 +208,29 @@ def get_postgres_versions():
                                    u(postgres_release_content))[0]
     postgres_versions = list(filter(lambda x: not is_string_a_string(x),
                                     postgres_versions.split()))
-    postgres_versions = [s(v) for v in postgres_versions
+    postgres_versions = [u(v) for v in postgres_versions
                          if (float(v) >= postgres_version_lower_limit and
                              float(v) <= postgres_version_upper_limit)]
     return sorted(postgres_versions, key=lambda x: Version(x))
 
 
-def get_python_versions_src_origin():
+def get_php_versions_src_origin():
+    php_versions_src_origin = {
+        '7.0': 'stretch',
+        '7.2': 'sid',
+        '7.3': 'sid',
+    }
+    return php_versions_src_origin
 
+
+def get_php_versions(php_versions_src_origin):
+    logger.info('Getting PHP versions')
+    php_versions = php_versions_src_origin.keys()
+    php_versions = [u(v) for v in php_versions]
+    return sorted(php_versions, key=lambda x: Version(x))
+
+
+def get_python_versions_src_origin():
     python_versions_src_origin = {
         '2.6': 'wheezy-security',
         '2.7': 'sid',
@@ -232,15 +245,13 @@ def get_python_versions_src_origin():
 
 
 def get_python_versions(python_versions_src_origin):
-
     logger.info('Getting Python versions')
     python_versions = python_versions_src_origin.keys()
-    python_versions = [s(v) for v in python_versions]
+    python_versions = [u(v) for v in python_versions]
     return sorted(python_versions, key=lambda x: Version(x))
 
 
 def get_ruby_versions_src_origin():
-
     ruby_versions_src_origin = {
         '1.8': 'wheezy-security',
         '1.9.1': 'wheezy-security',
@@ -252,8 +263,7 @@ def get_ruby_versions_src_origin():
 
 
 def get_ruby_versions(ruby_versions_src_origin):
-
     logger.info('Getting Ruby versions')
     ruby_versions = ruby_versions_src_origin.keys()
-    ruby_versions = [s(v) for v in ruby_versions]
+    ruby_versions = [u(v) for v in ruby_versions]
     return sorted(ruby_versions, key=lambda x: Version(x))
