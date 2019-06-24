@@ -17,7 +17,14 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV PHP_VER_NUM="7.0" PHP_DEBIAN_SUITE="stretch"
 
+COPY docker-entrypoint.sh apache2-foreground /usr/local/bin/
 COPY build-image.sh library.sh /usr/share/dockershelf/php/
 RUN bash /usr/share/dockershelf/php/build-image.sh
 
-CMD ["php"]
+VOLUME /var/www/html
+WORKDIR /var/www/html
+
+EXPOSE 80
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["apache2-foreground"]

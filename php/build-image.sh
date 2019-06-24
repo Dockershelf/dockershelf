@@ -35,6 +35,7 @@ UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 # php installation. We will use them later.
 PHP_PKGS="${PHP_VER_NUM_STR} \
     ${PHP_VER_NUM_STR}-cli \
+    apache2 \
     composer"
 
 # Some tools are needed.
@@ -60,9 +61,11 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of PHP.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-{
-    echo "deb ${MIRROR} ${PHP_DEBIAN_SUITE} main"
-} | tee /etc/apt/sources.list.d/php.list > /dev/null
+if [ "${PHP_DEBIAN_SUITE}" != "sid" ]; then
+    {
+        echo "deb ${MIRROR} ${PHP_DEBIAN_SUITE} main"
+    } | tee /etc/apt/sources.list.d/php.list > /dev/null
+fi
 
 if [ "${PHP_VER_NUM}" == "7.2" ]; then
     {
@@ -73,6 +76,13 @@ if [ "${PHP_VER_NUM}" == "7.2" ]; then
 fi
 
 cmdretry apt-get update
+
+# PHP: Configure
+# ------------------------------------------------------------------------------
+
+mkdir -p /var/www/html
+chown www-data:www-data /var/www/html
+chmod 777 /var/www/html
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
@@ -95,6 +105,77 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 msginfo "Installing PHP ..."
 cmdretry apt-get install -d ${PHP_PKGS}
 cmdretry apt-get install ${PHP_PKGS}
+
+# PHP: Configure
+# ------------------------------------------------------------------------------
+
+PHP_CONFDIR="/etc/php/conf.d"
+APACHE_CONFDIR="/etc/apache2"
+APACHE_CONF_AVAILABLE="${APACHE_CONFDIR}/conf-available"
+APACHE_ENVVARS="${APACHE_CONFDIR}/envvars"
+
+mkdir -p "${APACHE_CONF_AVAILABLE}" "${PHP_CONFDIR}"
+
+# PHP files should be handled by PHP, and should be preferred over any other file type
+{
+    echo '<FilesMatch \.php$>'
+    echo '\tSetHandler application/x-httpd-php'
+    echo '</FilesMatch>'
+    echo
+    echo 'DirectoryIndex disabled'
+    echo 'DirectoryIndex index.php index.html'
+    echo
+    echo '<Directory /var/www/>'
+    echo '\tOptions -Indexes'
+    echo '\tAllowOverride All'
+    echo '</Directory>'
+} | tee "${APACHE_CONF_AVAILABLE}/docker-php.conf"
+
+{
+    echo 'opcache.memory_consumption=128'
+    echo 'opcache.interned_strings_buffer=8'
+    echo 'opcache.max_accelerated_files=4000'
+    echo 'opcache.revalidate_freq=2'
+    echo 'opcache.fast_shutdown=1'
+    echo 'opcache.enable_cli=1'
+} | tee "${PHP_CONFDIR}/opcache-recommended.ini"
+
+{
+    echo 'error_reporting = 4339'
+    echo 'display_errors = Off'
+    echo 'display_startup_errors = Off'
+    echo 'log_errors = On'
+    echo 'error_log = /dev/stderr'
+    echo 'log_errors_max_len = 1024'
+    echo 'ignore_repeated_errors = On'
+    echo 'ignore_repeated_source = Off'
+    echo 'html_errors = Off'
+} | tee "${PHP_CONFDIR}/error-logging.ini"
+
+sed -ri 's/^export ([^=]+)=(.*)$/: ${\1:=\2}\nexport \1/' "${APACHE_ENVVARS}"
+
+. "${APACHE_ENVVARS}"
+
+for DIR in "${APACHE_LOCK_DIR}" "${APACHE_RUN_DIR}" "${APACHE_LOG_DIR}"; do
+    rm -rvf "${DIR}"
+    mkdir -p "${DIR}"
+    chown "${APACHE_RUN_USER}:${APACHE_RUN_GROUP}" "${DIR}"
+    # allow running as an arbitrary user (https://github.com/docker-library/php/issues/743)
+    chmod 777 "${DIR}"
+done
+
+# delete the "index.html" that installing Apache drops in here
+rm -rvf /var/www/html/*
+
+# logs should go to stdout / stderr
+ln -sfT /dev/stderr "${APACHE_LOG_DIR}/error.log"
+ln -sfT /dev/stdout "${APACHE_LOG_DIR}/access.log"
+ln -sfT /dev/stdout "${APACHE_LOG_DIR}/other_vhosts_access.log"
+chown -R --no-dereference "${APACHE_RUN_USER}:${APACHE_RUN_GROUP}" "${APACHE_LOG_DIR}"
+
+a2dismod mpm_event
+a2enmod mpm_prefork
+a2enconf docker-php
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

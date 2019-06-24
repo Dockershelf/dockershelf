@@ -21,10 +21,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     it "should have a php interpreter" do
         expect(file("/usr/bin/php#{php_version()}")).to be_executable
-        expect(file("/usr/bin/php")).to be_symlink
-        expect(file("/usr/bin/php")).to be_linked_to("/usr/bin/php#{php_version()}")
     end
-
 
     after(:all) do
         @container.kill
