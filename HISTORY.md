@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 2.2.0 (2019-06-24)
+
+### Changes
+
+* Improving PHP shelves. [Luis Alejandro Martínez Faneyth]
+
+* Adding PHP shelves. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.1.5 (2019-05-19)
 
 ### Changes
