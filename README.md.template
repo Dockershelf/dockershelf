@@ -92,6 +92,15 @@ These images are similar to the official ones, but with some improved configurat
 
 ![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
 
+### PHP
+
+
+|Image  |Release  |Dockerfile  |Layers  |Size  |
+|-------|---------|------------|--------|------|
+%%PHP_TABLE%%
+
+![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+
 ## How to download
 
 Pull one of the available images and start hacking!
