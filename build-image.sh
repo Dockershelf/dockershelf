@@ -96,6 +96,12 @@ if [ "${DOCKER_IMAGE_TYPE}" == "postgres" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
 fi
 
+# Copy entrypoint if we are building PHP
+if [ "${DOCKER_IMAGE_TYPE}" == "php" ]; then
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/apache2-foreground"  "${DOCKER_IMAGE_DIR}"
+fi
+
 # Copy latex sample if we are building Latex
 if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"
