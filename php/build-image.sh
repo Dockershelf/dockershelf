@@ -119,15 +119,15 @@ mkdir -p "${APACHE_CONF_AVAILABLE}" "${PHP_CONFDIR}"
 # PHP files should be handled by PHP, and should be preferred over any other file type
 {
     echo '<FilesMatch \.php$>'
-    echo '\tSetHandler application/x-httpd-php'
+    echo 'SetHandler application/x-httpd-php'
     echo '</FilesMatch>'
     echo
     echo 'DirectoryIndex disabled'
     echo 'DirectoryIndex index.php index.html'
     echo
     echo '<Directory /var/www/>'
-    echo '\tOptions -Indexes'
-    echo '\tAllowOverride All'
+    echo 'Options -Indexes'
+    echo 'AllowOverride All'
     echo '</Directory>'
 } | tee "${APACHE_CONF_AVAILABLE}/docker-php.conf"
 
