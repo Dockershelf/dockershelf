@@ -139,12 +139,9 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
 
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+elif [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.8" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t experimental
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t experimental
 fi
 
 # Pip: Installation
@@ -186,6 +183,14 @@ cmdretry apt-get autoremove
 # To distinguish images.
 
 cat >> "/etc/bash.bashrc" << 'EOF'
+
+COLOR_YELLOW="\[\033[38;5;220m\]"
+COLOR_BLUE="\[\033[38;5;33m\]"
+COLOR_OFF="\[\033[0m\]"
+PS1="${COLOR_YELLOW}[\u@${COLOR_BLUE}\h]${COLOR_OFF}:\w\$ "
+EOF
+
+cat >> "/etc/skel/.bashrc" << 'EOF'
 
 COLOR_YELLOW="\[\033[38;5;220m\]"
 COLOR_BLUE="\[\033[38;5;33m\]"

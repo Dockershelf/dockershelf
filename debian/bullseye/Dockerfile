@@ -1,12 +1,12 @@
-FROM %%BASE_IMAGE%%
+FROM scratch
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="ruby%%RUBY_VERSION%%" \
-      org.label-schema.description="A Ruby %%RUBY_VERSION%% image based on Debian %%DEBIAN_RELEASE%%." \
+      org.label-schema.name="debian-bullseye" \
+      org.label-schema.description="A Debian bullseye minimal image built from scratch." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,9 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
-ENV RUBY_VER_NUM="%%RUBY_VERSION%%" RUBY_DEBIAN_SUITE="%%RUBY_DEBIAN_SUITE%%"
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="bullseye"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
-RUN bash /usr/share/dockershelf/ruby/build-image.sh
+ADD base /
 
-CMD ["ruby"]
+CMD ["/bin/bash"]

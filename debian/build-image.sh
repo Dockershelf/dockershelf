@@ -51,7 +51,7 @@ if [ "$( id -u )" != "0" ]; then
     exit 1
 fi
 
-if [ "${DEBIAN_RELEASE}" == "wheezy" ]; then
+if [ "${DEBIAN_RELEASE}" == "wheezy" ] || [ "${DEBIAN_RELEASE}" == "jessie" ]; then
     MIRROR="${ARMIRROR}"
     SECMIRROR="${ARSECMIRROR}"
 fi
@@ -229,13 +229,35 @@ COLOR_OFF="\[\033[0m\]"
 PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
+cat >> "${TARGET}/etc/skel/.bashrc" << 'EOF'
+# Enable bash auto completion
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
+# Show motd on login
+if [ -n "${TERM}" ] && [ -r /etc/motd ]; then
+    cat /etc/motd
+fi
+
+# Changing prompt
+COLOR_LIGHT_RED="\[\033[38;5;167m\]"
+COLOR_DARK_RED="\[\033[38;5;88m\]"
+COLOR_OFF="\[\033[0m\]"
+PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
+EOF
+
 cat > "${TARGET}/etc/motd" << 'EOF'
 
          This image was built using         
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
  |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
- |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
+ |  / | | |   |<  |-´ |   `-. | | |-´ |  |-  
  `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
                                         -´  
         For more information, visit         

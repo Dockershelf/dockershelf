@@ -175,6 +175,7 @@ chown -R --no-dereference "${APACHE_RUN_USER}:${APACHE_RUN_GROUP}" "${APACHE_LOG
 
 a2dismod mpm_event
 a2enmod mpm_prefork
+a2enmod "${PHP_VER_NUM_STR}"
 a2enconf docker-php
 
 # Apt: Remove unnecessary packages

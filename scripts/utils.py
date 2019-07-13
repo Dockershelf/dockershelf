@@ -90,14 +90,11 @@ def get_debian_versions():
                                  'Release')
     debian_release_url_holder_ar = ('http://archive.debian.org/debian/dists/{0}/'
                                     'Release')
+    debian_versions = [(u('wheezy'), u('wheezy'))]
     debian_suites = ['oldoldstable', 'oldstable', 'stable', 'testing', 'unstable']
-    debian_versions = []
 
     for debian_suite in debian_suites:
-        if debian_suite == 'oldoldstable':
-            debian_release_url = debian_release_url_holder_ar.format('wheezy')
-        else:
-            debian_release_url = debian_release_url_holder.format(debian_suite)
+        debian_release_url = debian_release_url_holder.format(debian_suite)
 
         r = Request(debian_release_url)
         r.add_header('Range', 'bytes={0}-{1}'.format(0, 256))
@@ -125,7 +122,6 @@ def get_mongo_versions_src_origin(debian_versions):
     mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
     mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
     debian_codenames = list(map(lambda x: x[0], debian_versions))
-    print(debian_codenames)
     mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
                                    key=lambda x: debian_codenames.index(x))
 

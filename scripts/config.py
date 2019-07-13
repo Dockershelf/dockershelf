@@ -27,7 +27,6 @@ from .utils import get_debian_versions, get_mongo_versions, \
 
 debian_versions = get_debian_versions()
 latex_versions = ['basic', 'full']
-print(debian_versions)
 mongo_versions_src_origin = get_mongo_versions_src_origin(debian_versions)
 mongo_versions = get_mongo_versions(mongo_versions_src_origin)
 node_versions = get_node_versions()
