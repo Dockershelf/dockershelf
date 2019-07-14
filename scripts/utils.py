@@ -122,10 +122,8 @@ def get_mongo_versions_src_origin(debian_versions):
     mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
     mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
     debian_codenames = list(map(lambda x: x[0], debian_versions))
-    print(mongo_debian_releases)
     mongo_debian_releases = list(filter(lambda x: x in debian_codenames,
                                         mongo_debian_releases))
-    print(mongo_debian_releases)
     mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
                                    key=lambda x: debian_codenames.index(x))
 
