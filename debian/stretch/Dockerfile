@@ -16,7 +16,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
-    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="stretch"
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="stretch" \
+    DEBIAN_SUITE="%%DEBIAN_SUITE%%"
 
 ADD base /
 

@@ -62,10 +62,10 @@ def update_debian(basedir):
     travis_matrixlist_latest_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
         ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1} '
-        'dockershelf/debian:latest"')
+        'dockershelf/debian:latest" DEBIAN_SUITE="{1}"')
     travis_matrixlist_str = (
         '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}"')
+        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}" DEBIAN_SUITE="{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'

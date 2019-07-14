@@ -1,12 +1,12 @@
-FROM scratch
+FROM dockershelf/debian:sid
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="debian-wheezy" \
-      org.label-schema.description="A Debian wheezy minimal image built from scratch." \
+      org.label-schema.name="postgres12" \
+      org.label-schema.description="A Postgres 12 image based on Debian sid." \
       org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
@@ -15,9 +15,17 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
-ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
-    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="wheezy"
+ENV POSTGRES_VER_NUM="12" \
+	PATH="${PATH}:/usr/lib/postgresql/12/bin" \
+	PGDATA="/var/lib/postgresql/data"
 
-ADD base /
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY build-image.sh library.sh /usr/share/dockershelf/postgres/
+RUN bash /usr/share/dockershelf/postgres/build-image.sh
 
-CMD ["/bin/bash"]
+VOLUME /var/lib/postgresql/data
+
+EXPOSE 5432
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["postgres"]

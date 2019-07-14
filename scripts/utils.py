@@ -90,7 +90,7 @@ def get_debian_versions():
                                  'Release')
     debian_release_url_holder_ar = ('http://archive.debian.org/debian/dists/{0}/'
                                     'Release')
-    debian_versions = [(u('wheezy'), u('wheezy'))]
+    debian_versions = []
     debian_suites = ['oldoldstable', 'oldstable', 'stable', 'testing', 'unstable']
 
     for debian_suite in debian_suites:
@@ -122,6 +122,10 @@ def get_mongo_versions_src_origin(debian_versions):
     mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
     mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
     debian_codenames = list(map(lambda x: x[0], debian_versions))
+    print(mongo_debian_releases)
+    mongo_debian_releases = list(filter(lambda x: x in debian_codenames,
+                                        mongo_debian_releases))
+    print(mongo_debian_releases)
     mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
                                    key=lambda x: debian_codenames.index(x))
 
@@ -193,7 +197,7 @@ def get_postgres_versions():
     postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
                             'dists/sid-pgdg/Release')
     postgres_version_lower_limit = 9.3
-    postgres_version_upper_limit = 11
+    postgres_version_upper_limit = 12
 
     r = Request(postgres_release_url)
 
