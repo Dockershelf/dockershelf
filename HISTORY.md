@@ -1,6 +1,23 @@
 # Changelog
 
 
+## 2.3.0 (2019-07-14)
+
+### Changes
+
+* Removing print. [Luis Alejandro Martínez Faneyth]
+
+* Adding Postgres 12. [DEL] Removing Wheezy from Debian images. [Luis Alejandro Martínez Faneyth]
+
+* Adding Bullseye Debian release. [FIX] Fixing Python 3.8 build. [REF] Changing MAINTAINER field to LABEL. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing Apache conf. [Luis Alejandro Martínez Faneyth]
+
+* Fixing execution permissions for php cmd. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.2.0 (2019-06-24)
 
 ### Changes
