@@ -1,6 +1,40 @@
 # Changelog
 
 
+## 2.3.1 (2020-01-18)
+
+### Changes
+
+* Enabling build for all images. [Luis Alejandro Martínez Faneyth]
+
+* Correcting URLs. [Luis Alejandro Martínez Faneyth]
+
+* Removing support for Debian oldoldstable suite. [Luis Alejandro Martínez Faneyth]
+
+* Removing support for: [Luis Alejandro Martínez Faneyth]
+
+  * Python 2.6, 3.2 and 3.4
+  * Node 6 and 7
+  * Odoo 10
+  * Mongo 3.4
+  * Postgres 9.3, 9.4 and 9.5
+
+  [REF] Adding support for:
+
+  * PHP 7.4
+  * Odoo 13
+  * Node 13
+  * Mongo 4.2
+
+* Applying rebranding. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing mongo 4.2 test. [Luis Alejandro Martínez Faneyth]
+
+* Fixing mongo 4.2 image build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.3.0 (2019-07-14)
 
 ### Changes
