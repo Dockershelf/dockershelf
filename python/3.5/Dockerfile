@@ -13,7 +13,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.vendor="Luis Alejandro Martínez Faneyth" \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
-      maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
+      maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
 ENV PYTHON_VER_NUM="3.5" PYTHON_DEBIAN_SUITE="stretch" \
 	PYTHONIOENCODING="UTF-8"

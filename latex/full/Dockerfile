@@ -4,7 +4,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-LABEL maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
+LABEL maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="latex-full" \
       org.label-schema.description="A Latex (full) image based on Debian sid." \
