@@ -58,21 +58,15 @@ msginfo "Configuring /etc/apt/sources.list ..."
     echo "deb ${MIRROR} ${MONGO_DEBIAN_SUITE}/mongodb-org/${MONGO_VER_NUM} main"
 } | tee /etc/apt/sources.list.d/mongo.list > /dev/null
 
-if [ "${MONGO_VER_NUM}" == "4.0" ]; then
-    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv 68818C72E52529D4
-elif [ "${MONGO_VER_NUM}" == "3.6" ]; then
+if [ "${MONGO_VER_NUM}" == "3.6" ]; then
     cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
         --recv 58712A2291FA4AD5
-elif [ "${MONGO_VER_NUM}" == "3.4" ]; then
+elif [ "${MONGO_VER_NUM}" == "4.0" ]; then
     cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv BC711F9BA15703C6
-elif [ "${MONGO_VER_NUM}" == "3.2" ]; then
+        --recv 68818C72E52529D4
+elif [ "${MONGO_VER_NUM}" == "4.2" ]; then
     cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv D68FA50FEA312927
-elif [ "${MONGO_VER_NUM}" == "3.0" ]; then
-    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv 9ECBEC467F0CEB10
+        --recv 4B7C549A058F8B6B
 fi
 
 cmdretry apt-get update
