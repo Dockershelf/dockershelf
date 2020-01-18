@@ -88,10 +88,8 @@ def get_debian_versions():
     logger.info('Getting Debian versions')
     debian_release_url_holder = ('https://deb.debian.org/debian/dists/{0}/'
                                  'Release')
-    debian_release_url_holder_ar = ('http://archive.debian.org/debian/dists/{0}/'
-                                    'Release')
     debian_versions = []
-    debian_suites = ['oldoldstable', 'oldstable', 'stable', 'testing', 'unstable']
+    debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
     for debian_suite in debian_suites:
         debian_release_url = debian_release_url_holder.format(debian_suite)
