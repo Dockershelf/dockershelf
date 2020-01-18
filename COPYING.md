@@ -1,5 +1,5 @@
 
-Copyright (C) 2016-20020, Dockershelf Developers.
+Copyright (C) 2016-2020, Dockershelf Developers.
 
 Please refer to AUTHORS.md for a complete list of Copyright holders.
 

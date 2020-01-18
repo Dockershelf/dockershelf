@@ -1,12 +1,12 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/python:3.5
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="postgres9.3" \
-      org.label-schema.description="A Postgres 9.3 image based on Debian sid." \
+      org.label-schema.name="odoo13.0" \
+      org.label-schema.description="An Odoo 13.0 image based on Debian sid, Python 3.5 and Node 10." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,17 +15,20 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
-ENV POSTGRES_VER_NUM="9.3" \
-	PATH="${PATH}:/usr/lib/postgresql/9.3/bin" \
-	PGDATA="/var/lib/postgresql/data"
+ENV ODOO_VER_NUM="13.0" NODE_VER_NUM="10"
 
+COPY odoo.conf /etc/odoo/
 COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/postgres/
-RUN bash /usr/share/dockershelf/postgres/build-image.sh
+COPY build-image-node.sh /usr/share/dockershelf/node/build-image.sh
+COPY library.sh /usr/share/dockershelf/node/
+COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
 
-VOLUME /var/lib/postgresql/data
+RUN bash /usr/share/dockershelf/node/build-image.sh
+RUN bash /usr/share/dockershelf/odoo/build-image.sh
 
-EXPOSE 5432
+VOLUME /var/lib/odoo /mnt/extra-addons
+
+EXPOSE 8069 8071
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["postgres"]
+CMD ["odoo"]

@@ -20,7 +20,7 @@ These images are similar to the official ones, but with some improved configurat
 |-------|---------|------------|--------|------|
 %%DEBIAN_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Python
 
@@ -30,7 +30,7 @@ These are python images with native debian packages that are extracted from diff
 |-------|---------|------------|--------|------|
 %%PYTHON_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Ruby
 
@@ -40,7 +40,7 @@ These are ruby images with native debian packages that are extracted from differ
 |-------|---------|------------|--------|------|
 %%RUBY_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Node
 
@@ -50,7 +50,7 @@ These are Node images built using the [nodesource installation script](https://n
 |-------|---------|------------|--------|------|
 %%NODE_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Mongo
 
@@ -60,7 +60,7 @@ These are Mongo images built using the [official installation guide](https://doc
 |-------|---------|------------|--------|------|
 %%MONGO_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Postgres
 
@@ -70,7 +70,7 @@ These are PostgreSQL images built using the [official installation guide](https:
 |-------|---------|------------|--------|------|
 %%POSTGRES_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Latex
 
@@ -80,7 +80,7 @@ This is a Latex image built with the following packages installed: `texlive-font
 |-------|---------|------------|--------|------|
 %%LATEX_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### Odoo
 
@@ -90,7 +90,7 @@ These images are similar to the official ones, but with some improved configurat
 |-------|---------|------------|--------|------|
 %%ODOO_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ### PHP
 
@@ -99,7 +99,7 @@ These images are similar to the official ones, but with some improved configurat
 |-------|---------|------------|--------|------|
 %%PHP_TABLE%%
 
-![](https://cdn.rawgit.com/LuisAlejandro/dockershelf/master/images/table.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/table.svg)
 
 ## How to download
 
@@ -129,6 +129,6 @@ bash build-image.sh [docker image name]
 
 ## Made with :heart: and :hamburger:
 
-![Banner](https://rawcdn.githack.com/CollageLabs/collagelabs.org/57557046050b6515823f6c4ac819debcee40b346/_images/promo-open-source.svg)
+![Banner](https://rawcdn.githack.com/Dockershelf/dockershelf/42161077720b74d46b2ed8e51cb5bb958bb0406a/images/promo-open-source.svg)
 
 > Web [collagelabs.org](http://collagelabs.org/) · GitHub [@CollageLabs](https://github.com/CollageLabs) · Twitter [@CollageLabs](https://twitter.com/CollageLabs)

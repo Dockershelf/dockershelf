@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-20020, Dockershelf Developers.
+#   Copyright (C) 2016-2020, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -144,8 +144,8 @@ def get_mongo_versions_src_origin(debian_versions):
 
 
 def get_mongo_versions(mongo_versions_src_origin):
-    mongo_version_lower_limit = 3.4
-    mongo_version_upper_limit = 4.0
+    mongo_version_lower_limit = 3.6
+    mongo_version_upper_limit = 4.2
     mongo_versions = mongo_versions_src_origin.keys()
     mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
     mongo_versions = [u(v) for v in mongo_versions
@@ -158,8 +158,8 @@ def get_node_versions():
     logger.info('Getting Node versions')
     node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
                                'distributions/master/deb/src/build.sh')
-    node_version_lower_limit = 6
-    node_version_upper_limit = 12
+    node_version_lower_limit = 8
+    node_version_upper_limit = 13
 
     with closing(urlopen(node_versions_list_file)) as n:
         node_versions_list_content = n.read()
@@ -175,8 +175,8 @@ def get_node_versions():
 def get_odoo_versions():
     logger.info('Getting Odoo versions')
     odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-    odoo_version_lower_limit = 10.0
-    odoo_version_upper_limit = 12.0
+    odoo_version_lower_limit = 11.0
+    odoo_version_upper_limit = 13.0
 
     odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()
     odoo_versions = odoo_ver_html.cssselect('a.list-group-item')
@@ -194,7 +194,7 @@ def get_postgres_versions():
     logger.info('Getting Postgres versions')
     postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
                             'dists/sid-pgdg/Release')
-    postgres_version_lower_limit = 9.3
+    postgres_version_lower_limit = 9.6
     postgres_version_upper_limit = 12
 
     r = Request(postgres_release_url)
@@ -217,6 +217,7 @@ def get_php_versions_src_origin():
         '7.0': 'stretch',
         '7.2': 'sid',
         '7.3': 'sid',
+        '7.4': 'experimental',
     }
     return php_versions_src_origin
 
@@ -230,10 +231,7 @@ def get_php_versions(php_versions_src_origin):
 
 def get_python_versions_src_origin():
     python_versions_src_origin = {
-        '2.6': 'wheezy-security',
         '2.7': 'sid',
-        '3.2': 'wheezy-security',
-        '3.4': 'jessie-security',
         '3.5': 'stretch',
         '3.6': 'sid',
         '3.7': 'sid',
