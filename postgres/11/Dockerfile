@@ -7,13 +7,13 @@ ARG VERSION
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="postgres11" \
       org.label-schema.description="A Postgres 11 image based on Debian sid." \
-      org.label-schema.url="https://github.com/LuisAlejandro/dockershelf" \
+      org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
-      org.label-schema.vcs-url="https://github.com/LuisAlejandro/dockershelf" \
+      org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vendor="Luis Alejandro Martínez Faneyth" \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
-      maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
+      maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
 ENV POSTGRES_VER_NUM="11" \
 	PATH="${PATH}:/usr/lib/postgresql/11/bin" \

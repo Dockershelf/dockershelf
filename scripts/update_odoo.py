@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2018, Dockershelf Developers.
+#   Copyright (C) 2016-2020, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -48,7 +48,7 @@ def update_odoo(basedir):
                                '-odoo%2F{0}%2FDockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&maxAge=86400'
                                '&logo=docker')
-    dockerfile_url_holder = ('https://github.com/LuisAlejandro/dockershelf/'
+    dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/odoo/{0}/Dockerfile')
     mb_layers_badge_holder = ('https://img.shields.io/microbadger/layers/'
                               'dockershelf/odoo/{0}.svg'
