@@ -74,7 +74,7 @@ if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
         sudo docker run -it \
             -v "${DOCKER_IMAGE_DIR}:/tmp/dockershelf" \
             -w "/tmp/dockershelf" \
-            debian:sid \
+            debian:stable \
             bash -c "apt-get update && \
                 apt-get install -y debootstrap && \
                 bash build-image.sh ${DOCKER_IMAGE_TAG} ${DEBIAN_SUITE}"
@@ -82,31 +82,31 @@ fi
 
 # Copy entrypoint and operation samples if we are building Mongo
 if [ "${DOCKER_IMAGE_TYPE}" == "mongo" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
-    cp "${DOCKER_IMAGE_TYPE_DIR}/aggregate.js"  "${DOCKER_IMAGE_DIR}"
-    cp "${DOCKER_IMAGE_TYPE_DIR}/articles.js"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh" "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/aggregate.js" "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/articles.js" "${DOCKER_IMAGE_DIR}"
 fi
 
 # Copy entrypoint if we are building Postgres
 if [ "${DOCKER_IMAGE_TYPE}" == "postgres" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh" "${DOCKER_IMAGE_DIR}"
 fi
 
 # Copy entrypoint if we are building PHP
 if [ "${DOCKER_IMAGE_TYPE}" == "php" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
-    cp "${DOCKER_IMAGE_TYPE_DIR}/apache2-foreground"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh" "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/apache2-foreground" "${DOCKER_IMAGE_DIR}"
 fi
 
 # Copy latex sample if we are building Latex
 if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex" "${DOCKER_IMAGE_DIR}"
 fi
 
 # Copy Node build script and Odoo config if we are building Odoo
 if [ "${DOCKER_IMAGE_TYPE}" == "odoo" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf"  "${DOCKER_IMAGE_DIR}"
-    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh"  "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf" "${DOCKER_IMAGE_DIR}"
+    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh" "${DOCKER_IMAGE_DIR}"
     cp "${BASEDIR}/node/build-image.sh" "${DOCKER_IMAGE_DIR}/build-image-node.sh"
 fi
 

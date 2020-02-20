@@ -5,7 +5,7 @@ language: ruby
 addons:
     apt:
         sources:
-            - sourceline: "deb http://deb.debian.org/debian sid main contrib non-free"
+            - sourceline: "deb https://deb.debian.org/debian sid main contrib non-free"
               key_url: "https://ftp-master.debian.org/keys/archive-key-9.asc"
         packages:
             - debootstrap

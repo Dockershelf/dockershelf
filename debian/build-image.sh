@@ -26,8 +26,8 @@ ARCH="amd64"
 VARIANT="minbase"
 DEBIAN_RELEASE="${1}"
 DEBIAN_SUITE="${2}"
-MIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
+MIRROR="https://deb.debian.org/debian"
+SECMIRROR="https://deb.debian.org/debian-security"
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
 
@@ -64,12 +64,12 @@ fi
 msginfo "Downloading packages for base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
     --download-only --no-check-gpg --no-check-certificate ${MERGED_USR} \
-        "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
+        "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Building base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
     --no-check-gpg --no-check-certificate ${MERGED_USR} \
-        "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
+        "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Configuring base filesystem ..."
 cat > "${TARGET}/etc/resolv.conf" << EOF
