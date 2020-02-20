@@ -28,7 +28,7 @@ PHP_VER_NUM_MAJOR="$( echo ${PHP_VER_NUM} | awk -F'.' '{print $1}' )"
 PHP_VER_NUM_STR="php${PHP_VER_NUM}"
 PHP_VER_NUM_MAJOR_STR="php${PHP_VER_NUM_MAJOR}"
 
-MIRROR="https://deb.debian.org/debian"
+MIRROR="http://deb.debian.org/debian"
 UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 
 # This is the list of php packages from debian that make up a minimal

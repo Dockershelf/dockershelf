@@ -26,8 +26,8 @@ ARCH="amd64"
 VARIANT="minbase"
 DEBIAN_RELEASE="${1}"
 DEBIAN_SUITE="${2}"
-MIRROR="https://deb.debian.org/debian"
-SECMIRROR="https://deb.debian.org/debian-security"
+MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
 
@@ -246,7 +246,7 @@ cat > "${TARGET}/etc/motd" << 'EOF'
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
  |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
- |  / | | |   |<  |-´ |   `-. | | |-´ |  |-  
+ |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
  `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
                                         -´  
         For more information, visit         

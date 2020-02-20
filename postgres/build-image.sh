@@ -24,7 +24,7 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 MIRROR="http://apt.postgresql.org/pub/repos/apt"
-DEBMIRROR="https://deb.debian.org/debian"
+DEBMIRROR="http://deb.debian.org/debian"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"

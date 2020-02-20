@@ -86,7 +86,7 @@ def is_string_a_string(s):
 
 def get_debian_versions():
     logger.info('Getting Debian versions')
-    debian_release_url_holder = ('https://deb.debian.org/debian/dists/{0}/'
+    debian_release_url_holder = ('http://deb.debian.org/debian/dists/{0}/'
                                  'Release')
     debian_versions = []
     debian_suites = ['oldstable', 'stable', 'testing', 'unstable']

@@ -30,8 +30,8 @@ RUBY_VER_NUM_STR="ruby${RUBY_VER_NUM}"
 RUBY_VER_NUM_MINOR_STR="ruby${RUBY_VER_NUM_MINOR}"
 RUBY_VER_NUM_MAJOR_STR="ruby${RUBY_VER_NUM_MAJOR}"
 
-MIRROR="https://deb.debian.org/debian"
-SECMIRROR="https://deb.debian.org/debian-security"
+MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 ARMIRROR="http://archive.debian.org/debian"
 ARSECMIRROR="http://archive.debian.org/debian-security"
 
