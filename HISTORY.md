@@ -1,6 +1,21 @@
 # Changelog
 
 
+## 2.3.2 (2020-02-20)
+
+### Changes
+
+* Reorganizing url holders. [Luis Alejandro Martínez Faneyth]
+
+* Replacing banner images on readmes. [Luis Alejandro Martínez Faneyth]
+
+* Disabling https pn debian mirrors to avoid installing ca-certificates. [REF] Updating logo images. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing debian images building. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.3.1 (2020-01-18)
 
 ### Changes
