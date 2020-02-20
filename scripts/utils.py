@@ -40,6 +40,55 @@ if not sys.version_info < (3,):
     basestring = str
 
 
+debian_release_url_holder = ('http://deb.debian.org/debian/dists/{0}/'
+                             'Release')
+debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
+
+mongo_debian_releases_url = ('http://repo.mongodb.org/apt/debian/'
+                             'dists/index.html')
+mongo_rel_url_holder = ('http://repo.mongodb.org/apt/debian/'
+                        'dists/{0}/mongodb-org/index.html')
+mongo_version_lower_limit = 3.6
+mongo_version_upper_limit = 4.2
+
+node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
+                           'distributions/master/deb/src/build.sh')
+node_version_lower_limit = 8
+node_version_upper_limit = 13
+
+odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
+odoo_version_lower_limit = 11.0
+odoo_version_upper_limit = 13.0
+
+postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
+                        'dists/sid-pgdg/Release')
+postgres_version_lower_limit = 9.6
+postgres_version_upper_limit = 12
+
+php_versions_src_origin = {
+    '7.0': 'stretch',
+    '7.2': 'sid',
+    '7.3': 'sid',
+    '7.4': 'experimental',
+}
+
+python_versions_src_origin = {
+    '2.7': 'sid',
+    '3.5': 'stretch',
+    '3.6': 'sid',
+    '3.7': 'sid',
+    '3.8': 'experimental',
+}
+
+ruby_versions_src_origin = {
+    '1.8': 'wheezy-security',
+    '1.9.1': 'wheezy-security',
+    '2.1': 'jessie-security',
+    '2.3': 'stretch',
+    '2.5': 'sid',
+}
+
+
 def u(u_string):
     if isinstance(u_string, unicode):
         return u_string
@@ -86,10 +135,7 @@ def is_string_a_string(s):
 
 def get_debian_versions():
     logger.info('Getting Debian versions')
-    debian_release_url_holder = ('http://deb.debian.org/debian/dists/{0}/'
-                                 'Release')
     debian_versions = []
-    debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
     for debian_suite in debian_suites:
         debian_release_url = debian_release_url_holder.format(debian_suite)
@@ -109,10 +155,6 @@ def get_debian_versions():
 
 def get_mongo_versions_src_origin(debian_versions):
     logger.info('Getting Mongo versions')
-    mongo_debian_releases_url = ('http://repo.mongodb.org/apt/debian/'
-                                 'dists/index.html')
-    mongo_rel_url_holder = ('http://repo.mongodb.org/apt/debian/'
-                            'dists/{0}/mongodb-org/index.html')
 
     mongo_debian_releases_html = lxml.html.parse(
         mongo_debian_releases_url).getroot()
@@ -142,8 +184,6 @@ def get_mongo_versions_src_origin(debian_versions):
 
 
 def get_mongo_versions(mongo_versions_src_origin):
-    mongo_version_lower_limit = 3.6
-    mongo_version_upper_limit = 4.2
     mongo_versions = mongo_versions_src_origin.keys()
     mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
     mongo_versions = [u(v) for v in mongo_versions
@@ -154,10 +194,6 @@ def get_mongo_versions(mongo_versions_src_origin):
 
 def get_node_versions():
     logger.info('Getting Node versions')
-    node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
-                               'distributions/master/deb/src/build.sh')
-    node_version_lower_limit = 8
-    node_version_upper_limit = 13
 
     with closing(urlopen(node_versions_list_file)) as n:
         node_versions_list_content = n.read()
@@ -172,9 +208,6 @@ def get_node_versions():
 
 def get_odoo_versions():
     logger.info('Getting Odoo versions')
-    odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-    odoo_version_lower_limit = 11.0
-    odoo_version_upper_limit = 13.0
 
     odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()
     odoo_versions = odoo_ver_html.cssselect('a.list-group-item')
@@ -190,10 +223,6 @@ def get_odoo_versions():
 
 def get_postgres_versions():
     logger.info('Getting Postgres versions')
-    postgres_release_url = ('http://apt.postgresql.org/pub/repos/apt/'
-                            'dists/sid-pgdg/Release')
-    postgres_version_lower_limit = 9.6
-    postgres_version_upper_limit = 12
 
     r = Request(postgres_release_url)
 
@@ -211,12 +240,6 @@ def get_postgres_versions():
 
 
 def get_php_versions_src_origin():
-    php_versions_src_origin = {
-        '7.0': 'stretch',
-        '7.2': 'sid',
-        '7.3': 'sid',
-        '7.4': 'experimental',
-    }
     return php_versions_src_origin
 
 
@@ -228,13 +251,6 @@ def get_php_versions(php_versions_src_origin):
 
 
 def get_python_versions_src_origin():
-    python_versions_src_origin = {
-        '2.7': 'sid',
-        '3.5': 'stretch',
-        '3.6': 'sid',
-        '3.7': 'sid',
-        '3.8': 'experimental',
-    }
     return python_versions_src_origin
 
 
@@ -246,13 +262,6 @@ def get_python_versions(python_versions_src_origin):
 
 
 def get_ruby_versions_src_origin():
-    ruby_versions_src_origin = {
-        '1.8': 'wheezy-security',
-        '1.9.1': 'wheezy-security',
-        '2.1': 'jessie-security',
-        '2.3': 'stretch',
-        '2.5': 'sid',
-    }
     return ruby_versions_src_origin
 
 
