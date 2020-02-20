@@ -1,4 +1,4 @@
-![](https://rawcdn.githack.com/Dockershelf/dockershelf/d97c0e447644f70a8ec62a2a84b49e4438513cbf/images/banner.svg)
+![](https://rawcdn.githack.com/Dockershelf/dockershelf/4db25518b4ed4507a278c56575072649fc52503a/images/banner.svg)
 
 ---
 

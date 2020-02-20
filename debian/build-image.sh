@@ -64,12 +64,12 @@ fi
 msginfo "Downloading packages for base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
     --download-only --no-check-gpg --no-check-certificate ${MERGED_USR} \
-        "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
+        "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Building base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
     --no-check-gpg --no-check-certificate ${MERGED_USR} \
-        "${DEBIAN_RELEASE}" "${TARGET}" "${MIRROR}"
+        "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Configuring base filesystem ..."
 cat > "${TARGET}/etc/resolv.conf" << EOF
@@ -246,7 +246,7 @@ cat > "${TARGET}/etc/motd" << 'EOF'
  ,-.          .               .       .     
  |  \         |               |       |  ,- 
  |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
- |  / | | |   |<  |-´ |   `-. | | |-´ |  |-  
+ |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
  `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
                                         -´  
         For more information, visit         
