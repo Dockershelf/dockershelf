@@ -68,7 +68,7 @@ postgres_version_upper_limit = 12
 php_versions_src_origin = {
     '7.0': 'stretch',
     '7.2': 'sid',
-    '7.3': 'sid',
+    '7.3': 'bullseye',
     '7.4': 'experimental',
 }
 
