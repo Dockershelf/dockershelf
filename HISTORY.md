@@ -1,6 +1,17 @@
 # Changelog
 
 
+## 2.4.0 (2020-03-27)
+
+### Changes
+
+* Removing support for Ruby 1.8 && 1.9.1 and adding support for Ruby 2.7. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing php 7.3 build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.3.2 (2020-02-20)
 
 ### Changes
