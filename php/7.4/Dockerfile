@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PHP_VER_NUM="7.4" PHP_DEBIAN_SUITE="experimental"
+ENV PHP_VER_NUM="7.4" PHP_DEBIAN_SUITE="sid"
 
 COPY docker-entrypoint.sh apache2-foreground /usr/local/bin/
 COPY build-image.sh library.sh /usr/share/dockershelf/php/

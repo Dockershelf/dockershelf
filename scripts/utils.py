@@ -69,7 +69,7 @@ php_versions_src_origin = {
     '7.0': 'stretch',
     '7.2': 'sid',
     '7.3': 'bullseye',
-    '7.4': 'experimental',
+    '7.4': 'sid',
 }
 
 python_versions_src_origin = {
@@ -77,15 +77,14 @@ python_versions_src_origin = {
     '3.5': 'stretch',
     '3.6': 'sid',
     '3.7': 'sid',
-    '3.8': 'experimental',
+    '3.8': 'sid',
 }
 
 ruby_versions_src_origin = {
-    '1.8': 'wheezy-security',
-    '1.9.1': 'wheezy-security',
     '2.1': 'jessie-security',
     '2.3': 'stretch',
     '2.5': 'sid',
+    '2.7': 'sid',
 }
 
 
