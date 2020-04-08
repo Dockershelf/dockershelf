@@ -184,6 +184,7 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# Python colors
 COLOR_YELLOW="\[\033[38;5;220m\]"
 COLOR_BLUE="\[\033[38;5;33m\]"
 COLOR_OFF="\[\033[0m\]"
@@ -192,6 +193,7 @@ EOF
 
 cat >> "/etc/skel/.bashrc" << 'EOF'
 
+# Python colors
 COLOR_YELLOW="\[\033[38;5;220m\]"
 COLOR_BLUE="\[\033[38;5;33m\]"
 COLOR_OFF="\[\033[0m\]"

@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2.4.1 (2020-04-08)
+
+### Fix
+
+* Fixing MOTD behavior. [FIX] Fixing DEBIAN_SUITE variable. [FIX] Fixing python tests. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.4.0 (2020-03-27)
 
 ### Changes

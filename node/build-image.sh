@@ -104,6 +104,15 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# Node colors
+COLOR_DARK_GREEN="\[\033[38;5;35m\]"
+COLOR_LIGHT_GREEN="\[\033[38;5;77m\]"
+PS1="${COLOR_LIGHT_GREEN}[\u@${COLOR_DARK_GREEN}\h]${COLOR_OFF}:\w\$ "
+EOF
+
+cat >> "/etc/skel/.bashrc" << 'EOF'
+
+# Node colors
 COLOR_DARK_GREEN="\[\033[38;5;35m\]"
 COLOR_LIGHT_GREEN="\[\033[38;5;77m\]"
 PS1="${COLOR_LIGHT_GREEN}[\u@${COLOR_DARK_GREEN}\h]${COLOR_OFF}:\w\$ "
