@@ -26,10 +26,10 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Latex packages
 if [ "${LATEX_VER_NUM}" == "basic" ]; then
-	DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
-	    texlive-latex-recommended"
+    DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
+        texlive-latex-recommended"
 else
-	DPKG_DEPENDS="texlive-full"
+    DPKG_DEPENDS="texlive-full"
 fi
 
 # Load helper functions
@@ -53,6 +53,13 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# Latex colors
+PS1="[\u@\h]:\w\$ "
+EOF
+
+cat >> "/etc/skel/.bashrc" << 'EOF'
+
+# Latex colors
 PS1="[\u@\h]:\w\$ "
 EOF
 

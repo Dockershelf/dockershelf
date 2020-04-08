@@ -132,6 +132,15 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# Mongo colors
+COLOR_DARK_GREEN="\[\033[38;5;29m\]"
+COLOR_LIGHT_GREEN="\[\033[38;5;47m\]"
+PS1="${COLOR_LIGHT_GREEN}[\u@${COLOR_DARK_GREEN}\h]${COLOR_OFF}:\w\$ "
+EOF
+
+cat >> "/etc/skel/.bashrc" << 'EOF'
+
+# Mongo colors
 COLOR_DARK_GREEN="\[\033[38;5;29m\]"
 COLOR_LIGHT_GREEN="\[\033[38;5;47m\]"
 PS1="${COLOR_LIGHT_GREEN}[\u@${COLOR_DARK_GREEN}\h]${COLOR_OFF}:\w\$ "

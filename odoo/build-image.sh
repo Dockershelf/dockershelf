@@ -146,6 +146,15 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# Odoo colors
+COLOR_LIGHT_PURPLE="\[\033[38;5;131m\]"
+COLOR_LIGHT_GRAY="\[\033[38;5;250m\]"
+PS1="${COLOR_LIGHT_GRAY}[\u@${COLOR_LIGHT_PURPLE}\h]${COLOR_OFF}:\w\$ "
+EOF
+
+cat >> "/etc/skel/.bashrc" << 'EOF'
+
+# Odoo colors
 COLOR_LIGHT_PURPLE="\[\033[38;5;131m\]"
 COLOR_LIGHT_GRAY="\[\033[38;5;250m\]"
 PS1="${COLOR_LIGHT_GRAY}[\u@${COLOR_LIGHT_PURPLE}\h]${COLOR_OFF}:\w\$ "

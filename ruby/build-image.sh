@@ -126,6 +126,7 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# Postgres colors
 COLOR_DARK_RED="\[\033[38;5;52m\]"
 COLOR_LIGHT_RED="\[\033[38;5;88m\]"
 PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
@@ -133,6 +134,7 @@ EOF
 
 cat >> "/etc/skel/.bashrc" << 'EOF'
 
+# Postgres colors
 COLOR_DARK_RED="\[\033[38;5;52m\]"
 COLOR_LIGHT_RED="\[\033[38;5;88m\]"
 PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "

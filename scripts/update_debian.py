@@ -116,6 +116,9 @@ def update_debian(basedir):
         debian_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
                                            debian_version,
                                            debian_dockerfile_content)
+        debian_dockerfile_content = re.sub('%%DEBIAN_SUITE%%',
+                                           debian_suite,
+                                           debian_dockerfile_content)
 
         with open(debian_dockerfile, 'w') as dd:
             dd.write(debian_dockerfile_content)

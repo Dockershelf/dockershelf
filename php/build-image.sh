@@ -202,6 +202,16 @@ cmdretry apt-get autoremove
 
 cat >> "/etc/bash.bashrc" << 'EOF'
 
+# PHP colors
+COLOR_LILAC="\[\033[38;5;105m\]"
+COLOR_PURPLE="\[\033[38;5;56m\]"
+COLOR_OFF="\[\033[0m\]"
+PS1="${COLOR_LILAC}[\u@${COLOR_PURPLE}\h]${COLOR_OFF}:\w\$ "
+EOF
+
+cat >> "/etc/skel/.bashrc" << 'EOF'
+
+# PHP colors
 COLOR_LILAC="\[\033[38;5;105m\]"
 COLOR_PURPLE="\[\033[38;5;56m\]"
 COLOR_OFF="\[\033[0m\]"
