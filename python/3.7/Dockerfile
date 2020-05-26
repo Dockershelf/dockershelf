@@ -15,8 +15,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PYTHON_VER_NUM="3.7" PYTHON_DEBIAN_SUITE="sid" \
-	PYTHONIOENCODING="UTF-8"
+ENV PYTHON_VER_NUM="3.7" PYTHON_DEBIAN_SUITE="buster" \
+    PYTHONIOENCODING="UTF-8"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/python/
 RUN bash /usr/share/dockershelf/python/build-image.sh

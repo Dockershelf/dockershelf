@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV RUBY_VER_NUM="2.5" RUBY_DEBIAN_SUITE="sid"
+ENV RUBY_VER_NUM="2.5" RUBY_DEBIAN_SUITE="buster"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
 RUN bash /usr/share/dockershelf/ruby/build-image.sh
