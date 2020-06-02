@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 2.4.2 (2020-06-02)
+
+### Changes
+
+* Fixing libgcc1 Debian error (see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=961990). [REF] Fixing PHP build. [Luis Alejandro Martínez Faneyth]
+
+* Fixing Python and Ruby builds. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.4.1 (2020-04-08)
 
 ### Fix

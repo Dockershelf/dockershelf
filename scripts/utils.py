@@ -66,8 +66,8 @@ postgres_version_lower_limit = 9.6
 postgres_version_upper_limit = 12
 
 php_versions_src_origin = {
-    '7.0': 'stretch',
-    '7.2': 'sid',
+    '7.0': 'stretch-security',
+    '7.2': 'bionic',
     '7.3': 'bullseye',
     '7.4': 'sid',
 }
@@ -76,14 +76,14 @@ python_versions_src_origin = {
     '2.7': 'sid',
     '3.5': 'stretch',
     '3.6': 'sid',
-    '3.7': 'sid',
+    '3.7': 'buster',
     '3.8': 'sid',
 }
 
 ruby_versions_src_origin = {
     '2.1': 'jessie-security',
     '2.3': 'stretch',
-    '2.5': 'sid',
+    '2.5': 'buster',
     '2.7': 'sid',
 }
 

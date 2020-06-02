@@ -80,10 +80,13 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     $( printf '~RDepends:~n^%s$ ' ${MONGO_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${MONGO_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs )"
+    uniq | xargs | sed 's/libgcc1//g' )"
 
-cmdretry apt-get install -d ${DPKG_DEPENDS} sudo jq numactl lsb-base
-cmdretry apt-get install ${DPKG_DEPENDS} sudo jq numactl lsb-base
+cmdretry apt-get install -d libgcc-s1 sudo jq numactl lsb-base
+cmdretry apt-get install libgcc-s1 sudo jq numactl lsb-base
+
+cmdretry apt-get install -d ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Mongo: Configure
 # ------------------------------------------------------------------------------
