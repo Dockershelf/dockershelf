@@ -29,14 +29,21 @@ PHP_VER_NUM_STR="php${PHP_VER_NUM}"
 PHP_VER_NUM_MAJOR_STR="php${PHP_VER_NUM_MAJOR}"
 
 MIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 
 # This is the list of php packages from debian that make up a minimal
 # php installation. We will use them later.
-PHP_PKGS="${PHP_VER_NUM_STR} \
-    ${PHP_VER_NUM_STR}-cli \
-    apache2 \
-    composer"
+if [ "${PHP_VER_NUM}" == "7.2" ]; then
+    PHP_PKGS="${PHP_VER_NUM_STR} \
+        ${PHP_VER_NUM_STR}-cli \
+        apache2"
+else
+    PHP_PKGS="${PHP_VER_NUM_STR} \
+        ${PHP_VER_NUM_STR}-cli \
+        ${PHP_VER_NUM_STR}-mbstring \
+        apache2"
+fi
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
@@ -61,18 +68,20 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of PHP.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${PHP_DEBIAN_SUITE}" != "sid" ]; then
+if [ "${PHP_DEBIAN_SUITE}" == "stretch-security" ]; then
     {
-        echo "deb ${MIRROR} ${PHP_DEBIAN_SUITE} main"
+        echo "deb ${MIRROR} stretch main"
+        echo "deb ${SECMIRROR} stretch/updates main"
     } | tee /etc/apt/sources.list.d/php.list > /dev/null
-fi
-
-if [ "${PHP_VER_NUM}" == "7.2" ]; then
+elif [ "${PHP_DEBIAN_SUITE}" == "bionic" ]; then
     {
         echo "deb ${UBUNTUMIRROR} bionic main"
     } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
-
     cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+elif [ "${PHP_DEBIAN_SUITE}" != "sid" ]; then
+    {
+        echo "deb ${MIRROR} ${PHP_DEBIAN_SUITE} main"
+    } | tee /etc/apt/sources.list.d/php.list > /dev/null
 fi
 
 cmdretry apt-get update
@@ -92,19 +101,30 @@ msginfo "Installing php runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     $( printf '~RDepends:~n^%s$ ' ${PHP_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${PHP_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs )"
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
+if [ "${PHP_DEBIAN_SUITE}" == "stretch-security" ]; then
+    cmdretry apt-get install -d libncurses5 libncursesw5 libtinfo5
+    cmdretry apt-get install libncurses5 libncursesw5 libtinfo5
+    cmdretry apt-get install -d ${DPKG_DEPENDS} -t stretch
+    cmdretry apt-get install ${DPKG_DEPENDS} -t stretch
+else
+    cmdretry apt-get install -d ${DPKG_DEPENDS} -t ${PHP_DEBIAN_SUITE}
+    cmdretry apt-get install ${DPKG_DEPENDS} -t ${PHP_DEBIAN_SUITE}
+fi
 
 # PHP: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PHP_PKGS}
 
 msginfo "Installing PHP ..."
-cmdretry apt-get install -d ${PHP_PKGS}
-cmdretry apt-get install ${PHP_PKGS}
+if [ "${PHP_DEBIAN_SUITE}" == "stretch-security" ]; then
+    cmdretry apt-get install -d ${PHP_PKGS} -t stretch
+    cmdretry apt-get install ${PHP_PKGS} -t stretch
+else
+    cmdretry apt-get install -d ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
+    cmdretry apt-get install ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
+fi
 
 # PHP: Configure
 # ------------------------------------------------------------------------------
@@ -177,6 +197,15 @@ a2dismod mpm_event
 a2enmod mpm_prefork
 a2enmod "${PHP_VER_NUM_STR}"
 a2enconf docker-php
+
+# Composer: Installation
+# ------------------------------------------------------------------------------
+# Let's bring in the artsy composer dude.
+
+msginfo "Installing composer ..."
+export HOME="/root/"
+curl -fsSL https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer | \
+    php -- --install-dir=/usr/local/bin --filename=composer
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

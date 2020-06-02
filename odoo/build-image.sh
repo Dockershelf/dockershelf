@@ -78,12 +78,15 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     $( printf '~RDepends:~n^%s$ ' ${ODOO_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${ODOO_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs )"
+    uniq | xargs | sed 's/libgcc1//g' )"
 
-cmdretry apt-get install -d ${DPKG_DEPENDS} sudo nodejs node-less \
+cmdretry apt-get install -d libgcc-s1 sudo nodejs node-less \
     xfonts-75dpi xfonts-base
-cmdretry apt-get install ${DPKG_DEPENDS} sudo nodejs node-less \
+cmdretry apt-get install libgcc-s1 sudo nodejs node-less \
     xfonts-75dpi xfonts-base
+
+cmdretry apt-get install -d ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Installing wkhtmltox
 curl -o wkhtmltox.deb -sLO "${WKHTMLTOX_URL}" && \
