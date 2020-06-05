@@ -76,7 +76,7 @@ python_versions_src_origin = {
     '2.7': 'sid',
     '3.5': 'stretch',
     '3.6': 'sid',
-    '3.7': 'buster',
+    '3.7': 'bullseye',
     '3.8': 'sid',
 }
 
