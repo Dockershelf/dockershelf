@@ -88,8 +88,7 @@ msginfo "Installing ruby runtime dependencies ..."
 DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     $( printf '~RDepends:~n^%s$ ' ${RUBY_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${RUBY_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs )"
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}

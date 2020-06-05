@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2.4.3 (2020-06-05)
+
+### Changes
+
+* Fixing python build. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.4.2 (2020-06-02)
 
 ### Changes
