@@ -1,6 +1,7 @@
 sudo: required
 services: docker
-dist: xenial
+dist: bionic
+group: edge
 language: ruby
 addons:
     apt:
@@ -32,7 +33,7 @@ before_script:
         fi
     - bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}"
 script:
-    - bash test-image.sh "${DOCKER_IMAGE_NAME}"
+    - bash test-image.sh "${DOCKER_IMAGE_NAME}" "${DOCKER_IMAGE_EXTRA_TAGS}"
 after_success:
     - |
         if [ "${TRAVIS_BRANCH}" == "develop" ]; then

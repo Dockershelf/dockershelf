@@ -90,8 +90,8 @@ cmdretry aptitude install ${NODE_PKGS_VER}
 msginfo "Removing unnecessary packages ..."
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                                --no-show-section --guess-all --libdevel \
-                                -p standard ) )
+                            --no-show-section --guess-all --libdevel \
+                            -p standard ) )
 cmdretry apt-get autoremove
 
 # This too

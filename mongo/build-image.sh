@@ -67,6 +67,9 @@ elif [ "${MONGO_VER_NUM}" == "4.0" ]; then
 elif [ "${MONGO_VER_NUM}" == "4.2" ]; then
     cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
         --recv 4B7C549A058F8B6B
+elif [ "${MONGO_VER_NUM}" == "4.4" ]; then
+    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv 656408E390CFB1F5
 fi
 
 cmdretry apt-get update
@@ -118,8 +121,8 @@ cmdretry aptitude install ${MONGO_PKGS_VER}
 msginfo "Removing unnecessary packages ..."
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                                --no-show-section --guess-all --libdevel \
-                                -p standard ) )
+                            --no-show-section --guess-all --libdevel \
+                            -p standard ) )
 cmdretry apt-get autoremove
 
 # This too

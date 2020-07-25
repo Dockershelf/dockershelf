@@ -116,6 +116,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to install a package" do
+        expect(command("apt-get update", 120).exit_status).to eq(0)
         expect(command("apt-get install make").exit_status).to eq(0)
         expect(file('/usr/bin/make')).to be_executable
     end

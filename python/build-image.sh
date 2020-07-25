@@ -108,9 +108,11 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t ${PYTHON_DEBIAN_SUITE}
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t ${PYTHON_DEBIAN_SUITE}
+elif [ "${PYTHON_VER_NUM}" == "3.7" ] || \
+     [ "${PYTHON_VER_NUM}" == "3.8" ] || \
+     [ "${PYTHON_VER_NUM}" == "3.9" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
 fi
 
 # Pip: Installation
@@ -128,8 +130,8 @@ curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
 msginfo "Removing unnecessary packages ..."
 # This is clever uh? I figured it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                                --no-show-section --guess-all --libdevel \
-                                -p standard ) )
+                            --no-show-section --guess-all --libdevel \
+                            -p standard ) )
 cmdretry apt-get autoremove
 
 # This too

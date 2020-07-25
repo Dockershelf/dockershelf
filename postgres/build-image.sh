@@ -118,8 +118,8 @@ sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" \
 msginfo "Removing unnecessary packages ..."
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                                --no-show-section --guess-all --libdevel \
-                                -p standard ) )
+                            --no-show-section --guess-all --libdevel \
+                            -p standard ) )
 cmdretry apt-get autoremove
 
 # This too
