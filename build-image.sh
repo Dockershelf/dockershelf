@@ -117,6 +117,6 @@ cd "${DOCKER_IMAGE_DIR}" && \
         -t ${DOCKER_IMAGE_NAME} .
 
 # Remove unnecessary files
-sudo rm -rf "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+sudo rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
     "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
-    "${DOCKER_IMAGE_DIR}/base" || true
+    "${DOCKER_IMAGE_DIR}/base"

@@ -68,10 +68,10 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of PHP.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${PHP_DEBIAN_SUITE}" == "stretch-security" ]; then
+if [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
     {
-        echo "deb ${MIRROR} stretch main"
-        echo "deb ${SECMIRROR} stretch/updates main"
+        echo "deb ${MIRROR} buster main"
+        echo "deb ${SECMIRROR} buster/updates main"
     } | tee /etc/apt/sources.list.d/php.list > /dev/null
 elif [ "${PHP_DEBIAN_SUITE}" == "bionic" ]; then
     {
@@ -103,11 +103,16 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     sed "$( printf 's/\s%s\s/ /g;' ${PHP_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
-if [ "${PHP_DEBIAN_SUITE}" == "stretch-security" ]; then
+if [ "${PHP_DEBIAN_SUITE}" == "stretch" ]; then
     cmdretry apt-get install -d libncurses5 libncursesw5 libtinfo5
     cmdretry apt-get install libncurses5 libncursesw5 libtinfo5
     cmdretry apt-get install -d ${DPKG_DEPENDS} -t stretch
     cmdretry apt-get install ${DPKG_DEPENDS} -t stretch
+elif [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
+    cmdretry apt-get install -d libncurses6 libncursesw6 libtinfo6
+    cmdretry apt-get install libncurses6 libncursesw6 libtinfo6
+    cmdretry apt-get install -d ${DPKG_DEPENDS} -t buster
+    cmdretry apt-get install ${DPKG_DEPENDS} -t buster
 else
     cmdretry apt-get install -d ${DPKG_DEPENDS} -t ${PHP_DEBIAN_SUITE}
     cmdretry apt-get install ${DPKG_DEPENDS} -t ${PHP_DEBIAN_SUITE}
@@ -118,9 +123,12 @@ fi
 # We will install the packages listed in ${PHP_PKGS}
 
 msginfo "Installing PHP ..."
-if [ "${PHP_DEBIAN_SUITE}" == "stretch-security" ]; then
+if [ "${PHP_DEBIAN_SUITE}" == "stretch" ]; then
     cmdretry apt-get install -d ${PHP_PKGS} -t stretch
     cmdretry apt-get install ${PHP_PKGS} -t stretch
+elif [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
+    cmdretry apt-get install -d ${PHP_PKGS} -t buster
+    cmdretry apt-get install ${PHP_PKGS} -t buster
 else
     cmdretry apt-get install -d ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
     cmdretry apt-get install ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
@@ -204,7 +212,7 @@ a2enconf docker-php
 
 msginfo "Installing composer ..."
 export HOME="/root/"
-curl -fsSL https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer | \
+curl -fsSL "https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer" | \
     php -- --install-dir=/usr/local/bin --filename=composer
 
 # Apt: Remove unnecessary packages
@@ -214,8 +222,8 @@ curl -fsSL https://raw.githubusercontent.com/composer/getcomposer.org/master/web
 msginfo "Removing unnecessary packages ..."
 # This is clever uh? I figured it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                                --no-show-section --guess-all --libdevel \
-                                -p standard ) )
+                            --no-show-section --guess-all --libdevel \
+                            -p standard ) )
 cmdretry apt-get autoremove
 
 # This too

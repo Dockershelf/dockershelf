@@ -24,6 +24,7 @@ set -euxo pipefail
 # Some initial configuration
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DOCKER_IMAGE_NAME="${1}"
+DOCKER_IMAGE_EXTRA_TAGS="${2}"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -40,5 +41,8 @@ DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
 DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TARGET%%:*}"
 
 # Execute rspec for our test suite
-DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" \
-	DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" rspec -c -f d "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
+DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
+DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" \
+DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
+DOCKER_IMAGE_EXTRA_TAGS="${DOCKER_IMAGE_EXTRA_TAGS}" \
+    rspec -c -f d "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
