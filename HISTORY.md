@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2.5.0 (2020-07-25)
+
+### Changes
+
+* Adding support for Node 14, Postgres 13, Python 3.9 and removing support for Python 3.7. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.4.3 (2020-06-05)
 
 ### Changes
