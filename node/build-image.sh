@@ -24,6 +24,9 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+MIRROR="http://deb.debian.org/debian"
+NODEMIRROR="https://deb.nodesource.com/node_${NODE_VER_NUM}.x"
+
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
 NODE_PKGS="nodejs"
@@ -49,7 +52,14 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # ------------------------------------------------------------------------------
 # We will use Nodesource's configuration script to configure sources.
 
-curl -fsSL "https://deb.nodesource.com/setup_${NODE_VER_NUM}.x" | bash
+msginfo "Configuring /etc/apt/sources.list ..."
+{
+    echo "deb ${MIRROR} bullseye main"
+    echo "deb ${NODEMIRROR} sid main"
+} | tee /etc/apt/sources.list.d/node.list > /dev/null
+
+curl -fsSL "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
+cmdretry apt-get update
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
@@ -64,6 +74,9 @@ DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
 
 cmdretry apt-get install -d libgcc-s1
 cmdretry apt-get install libgcc-s1
+
+cmdretry apt-get install -d python-minimal -t bullseye
+cmdretry apt-get install python-minimal -t bullseye
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}

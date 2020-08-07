@@ -108,8 +108,7 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.7" ] || \
-     [ "${PYTHON_VER_NUM}" == "3.8" ] || \
+elif [ "${PYTHON_VER_NUM}" == "3.8" ] || \
      [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils

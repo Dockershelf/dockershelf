@@ -98,7 +98,7 @@ def update_python(basedir):
         if python_version == '2.7':
             travis_matrixlist.append(
                 travis_matrixlist_py2_str.format(python_version))
-        elif python_version == '3.7':
+        elif python_version == '3.8':
             travis_matrixlist.append(
                 travis_matrixlist_py3_str.format(python_version))
         elif python_version == python_latest_version:
