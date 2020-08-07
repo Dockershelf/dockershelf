@@ -1,6 +1,21 @@
 # Changelog
 
 
+## 2.5.1 (2020-08-07)
+
+### Changes
+
+* Minor clean. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing test for mongo 4.4. [Luis Alejandro Martínez Faneyth]
+
+* Fixing Mongo build. [Luis Alejandro Martínez Faneyth]
+
+* Fixing Node images. [REF] Adding support for Mongo 4.4. [REF] Updating Odoo images to use Node 12. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.5.0 (2020-07-25)
 
 ### Changes
