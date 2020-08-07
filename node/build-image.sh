@@ -51,12 +51,14 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # Node: Configure sources
 # ------------------------------------------------------------------------------
 # We will use Nodesource's configuration script to configure sources.
-curl -fsSL "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
+
+msginfo "Configuring /etc/apt/sources.list ..."
 {
     echo "deb ${MIRROR} bullseye main"
     echo "deb ${NODEMIRROR} sid main"
 } | tee /etc/apt/sources.list.d/node.list > /dev/null
 
+curl -fsSL "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
 cmdretry apt-get update
 
 # Apt: Install runtime dependencies
@@ -69,6 +71,9 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     sed "$( printf 's/\s%s\s/ /g;' ${NODE_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs | sed 's/libgcc1//g' )"
+
+cmdretry apt-get install -d libgcc-s1
+cmdretry apt-get install libgcc-s1
 
 cmdretry apt-get install -d python-minimal -t bullseye
 cmdretry apt-get install python-minimal -t bullseye

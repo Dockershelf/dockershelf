@@ -85,8 +85,8 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs | sed 's/libgcc1//g' )"
 
-cmdretry apt-get install -d libgcc-s1 sudo jq numactl lsb-base
-cmdretry apt-get install libgcc-s1 sudo jq numactl lsb-base
+cmdretry apt-get install -d libgcc-s1 sudo systemctl jq numactl lsb-base
+cmdretry apt-get install libgcc-s1 sudo systemctl jq numactl lsb-base
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}

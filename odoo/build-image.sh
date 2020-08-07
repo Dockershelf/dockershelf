@@ -54,16 +54,9 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # Odoo.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${ODOO_VER_NUM}" == "9.0" ] || [ "${ODOO_VER_NUM}" == "10.0" ]; then
-    {
-        echo "deb ${MIRROR} ./"
-        echo "deb ${DEBMIRROR} jessie main"
-    } | tee /etc/apt/sources.list.d/odoo.list > /dev/null
-else
-    {
-        echo "deb ${MIRROR} ./"
-    } | tee /etc/apt/sources.list.d/odoo.list > /dev/null
-fi
+{
+    echo "deb ${MIRROR} ./"
+} | tee /etc/apt/sources.list.d/odoo.list > /dev/null
 
 cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv DEF2A2198183CBB5
@@ -80,10 +73,8 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
     uniq | xargs | sed 's/libgcc1//g' )"
 
-cmdretry apt-get install -d libgcc-s1 sudo nodejs node-less \
-    xfonts-75dpi xfonts-base
-cmdretry apt-get install libgcc-s1 sudo nodejs node-less \
-    xfonts-75dpi xfonts-base
+cmdretry apt-get install -d libgcc-s1 sudo node-less xfonts-75dpi xfonts-base
+cmdretry apt-get install libgcc-s1 sudo node-less xfonts-75dpi xfonts-base
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
