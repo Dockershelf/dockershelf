@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2.5.2 (2020-08-07)
+
+### Fix
+
+* Fixing Docker Hub credentials. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.5.1 (2020-08-07)
 
 ### Changes
