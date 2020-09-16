@@ -29,7 +29,7 @@ if [ "${LATEX_VER_NUM}" == "basic" ]; then
     DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
         texlive-latex-recommended"
 else
-    DPKG_DEPENDS="texlive-full"
+    DPKG_DEPENDS="texlive-full python3-pygments"
 fi
 
 # Load helper functions
