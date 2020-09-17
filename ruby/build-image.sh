@@ -48,12 +48,15 @@ source "${BASEDIR}/library.sh"
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
-# some commands are needed to download and process dependencies.
+# some commands are needed to process information before installing
+# actual dependencies
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
+
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
+
 cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 

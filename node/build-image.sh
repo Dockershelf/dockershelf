@@ -38,21 +38,24 @@ source "${BASEDIR}/library.sh"
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
-# some commands are needed to download the source code before installing the
-# build dependencies.
+# some commands are needed to process information before installing
+# actual dependencies
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
+
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
+
 cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
-# Node: Configure sources
+# Node: python-minimal fix
 # ------------------------------------------------------------------------------
-# We will use Nodesource's configuration script to configure sources.
+# There's a bug in nodesources's packaging, this fixes it
+# ref: https://github.com/nodesource/distributions/issues/1100
 
-msginfo "Configuring /etc/apt/sources.list ..."
+msginfo "Applying python-minimal fix ..."
 {
     echo "deb ${MIRROR} buster main"
 } | tee /etc/apt/sources.list.d/python-minimal.list > /dev/null
@@ -61,6 +64,7 @@ cmdretry apt-get update
 
 cmdretry apt-get install -d libgcc-s1
 cmdretry apt-get install libgcc-s1
+
 cmdretry apt-get install -d python-minimal -t buster
 cmdretry apt-get install python-minimal -t buster
 
@@ -68,9 +72,11 @@ rm /etc/apt/sources.list.d/python-minimal.list
 
 # Node: Configure sources
 # ------------------------------------------------------------------------------
-# We will use Nodesource's configuration script to configure sources.
+# We will use Nodesource's official repository to install the different versions
+# of Node.
 
 msginfo "Configuring /etc/apt/sources.list ..."
+
 {
     echo "deb ${NODEMIRROR} sid main"
 } | tee /etc/apt/sources.list.d/node.list > /dev/null
