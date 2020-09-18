@@ -24,28 +24,92 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+MIRROR="http://deb.debian.org/debian"
+
+# Some tools are needed.
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+
 # Latex packages
 if [ "${LATEX_VER_NUM}" == "basic" ]; then
-    DPKG_DEPENDS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
+    LATEX_PKGS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
         texlive-latex-recommended"
 else
-    DPKG_DEPENDS="texlive-full"
+    LATEX_PKGS="texlive-full"
 fi
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
 
-# Latex: Install
+# Apt: Install tools
 # ------------------------------------------------------------------------------
-# We need to install the packages defined at ${DPKG_DEPENDS} which is a basic
-# installation of latex.
+# We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
+# some commands are needed to process information before installing
+# actual dependencies
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
+
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
+
+cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
+
+# Latex: ghostscript fix
+# ------------------------------------------------------------------------------
+# There's a bug in Sid right now concerning ghostscript, this fixes it
+# ref: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=970473
+
+msginfo "Applying ghostscript fix ..."
+{
+    echo "deb ${MIRROR} buster main"
+} | tee /etc/apt/sources.list.d/bugfix.list > /dev/null
+
+cmdretry apt-get update
+
+cmdretry apt-get install -d fonts-urw-base35 -t buster
+cmdretry apt-get install fonts-urw-base35 -t buster
+
+rm /etc/apt/sources.list.d/bugfix.list
+
+# Apt: Install runtime dependencies
+# ------------------------------------------------------------------------------
+# Now we use some shell/apt plumbing to get runtime dependencies.
+
+msginfo "Installing latex runtime dependencies ..."
+DPKG_RUN_DEPENDS="$( aptitude search -F%p \
+    $( printf '~RDepends:~n^%s$ ' ${LATEX_PKGS} ) | xargs printf ' %s ' | \
+    sed "$( printf 's/\s%s\s/ /g;' ${LATEX_PKGS} )" )"
+DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
+
+cmdretry aptitude install -d ${DPKG_DEPENDS} python3-pygments
+cmdretry aptitude install ${DPKG_DEPENDS} python3-pygments
+
+# Latex: Installation
+# ------------------------------------------------------------------------------
+# We will install the packages listed in ${LATEX_PKGS}
+
+msginfo "Installing Latex ..."
+cmdretry apt-get install -d ${LATEX_PKGS}
+cmdretry apt-get install ${LATEX_PKGS}
+
+# Apt: Remove unnecessary packages
+# ------------------------------------------------------------------------------
+# We need to clear the filesystem of unwanted packages to shrink image size.
+
+msginfo "Removing unnecessary packages ..."
+# This is clever uh? I figured it out myself, ha!
+cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
+                            --no-show-section --guess-all --libdevel \
+                            -p standard ) )
+cmdretry apt-get autoremove
+
+# This too
+cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get autoremove
+
+cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
+cmdretry apt-get autoremove
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

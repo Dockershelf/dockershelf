@@ -38,23 +38,46 @@ source "${BASEDIR}/library.sh"
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
-# some commands are needed to download the source code before installing the
-# build dependencies.
+# some commands are needed to process information before installing
+# actual dependencies
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
+
 cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
+
 cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
+# Node: python-minimal fix
+# ------------------------------------------------------------------------------
+# There's a bug in nodesources's packaging, this fixes it
+# ref: https://github.com/nodesource/distributions/issues/1100
+
+msginfo "Applying python-minimal fix ..."
+{
+    echo "deb ${MIRROR} buster main"
+} | tee /etc/apt/sources.list.d/python-minimal.list > /dev/null
+
+cmdretry apt-get update
+
+cmdretry apt-get install -d libgcc-s1
+cmdretry apt-get install libgcc-s1
+
+cmdretry apt-get install -d python-minimal -t buster
+cmdretry apt-get install python-minimal -t buster
+
+rm /etc/apt/sources.list.d/python-minimal.list
+
 # Node: Configure sources
 # ------------------------------------------------------------------------------
-# We will use Nodesource's configuration script to configure sources.
+# We will use Nodesource's official repository to install the different versions
+# of Node.
 
 msginfo "Configuring /etc/apt/sources.list ..."
+
 {
-    echo "deb ${MIRROR} bullseye main"
     echo "deb ${NODEMIRROR} sid main"
 } | tee /etc/apt/sources.list.d/node.list > /dev/null
 
@@ -70,13 +93,7 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     $( printf '~RDepends:~n^%s$ ' ${NODE_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${NODE_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs | sed 's/libgcc1//g' )"
-
-cmdretry apt-get install -d libgcc-s1
-cmdretry apt-get install libgcc-s1
-
-cmdretry apt-get install -d python-minimal -t bullseye
-cmdretry apt-get install python-minimal -t bullseye
+    uniq | xargs | sed 's/libgcc1//g' | sed 's/python-minimal//g' )"
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
@@ -94,6 +111,10 @@ done
 
 cmdretry aptitude install -d ${NODE_PKGS_VER}
 cmdretry aptitude install ${NODE_PKGS_VER}
+
+if [ ! -f "/usr/bin/nodejs" ]; then
+    ln -s /usr/bin/node /usr/bin/nodejs
+fi
 
 # Apt: Remove build depends
 # ------------------------------------------------------------------------------
