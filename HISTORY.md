@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 2.5.3 (2020-09-18)
+
+### Changes
+
+* Improving latex:full building script. [Luis Alejandro Martínez Faneyth]
+
+* Adding python3-pygments to latex:full so that pygmentize can work properly (fixes #33). [FIX] Fixing Node builds. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.5.2 (2020-08-07)
 
 ### Fix
