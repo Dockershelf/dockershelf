@@ -7,12 +7,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="900"
-   height="30"
-   viewBox="0 0 900 30"
+   width="1190"
+   height="40"
+   viewBox="0 0 1190 40"
    version="1.1"
    id="svg2"
-   inkscape:version="0.91 r13725"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    sodipodi:docname="table.svg"
    inkscape:export-filename="/home/huntingbears/Desarrollo/dockershelf/x.png"
    inkscape:export-xdpi="300"
@@ -38,27 +38,28 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1600"
-     inkscape:window-height="873"
+     inkscape:window-width="1920"
+     inkscape:window-height="1000"
      id="namedview62"
      showgrid="false"
      inkscape:zoom="1.2470309"
-     inkscape:cx="92.846403"
-     inkscape:cy="67.740546"
+     inkscape:cx="859.25623"
+     inkscape:cy="119.52132"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="48"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg2"
+     inkscape:document-rotation="0" />
   <title
      id="title4">docker_wave_whale</title>
   <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
   <defs
      id="defs6" />
   <rect
-     style="fill:#dec5ae"
+     style="fill:#dec5ae;stroke-width:1.32777"
      id="rect26"
-     height="15"
-     width="900"
-     y="7.5"
+     height="20"
+     width="1190"
+     y="10"
      x="0" />
 </svg>

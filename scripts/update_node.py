@@ -45,18 +45,18 @@ def update_node(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/node'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-node%2F{0}%2FDockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&maxAge=86400'
+                               '?colorA=22313f&colorB=4a637b&cacheSeconds=120'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/node/{0}/Dockerfile')
     mb_layers_badge_holder = ('https://img.shields.io/microbadger/layers/'
                               'dockershelf/node/{0}.svg'
-                              '?colorA=22313f&colorB=4a637b&maxAge=86400')
+                              '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_layers_url_holder = ('https://microbadger.com/images/dockershelf/'
                             'node:{0}')
-    mb_size_badge_holder = ('https://img.shields.io/microbadger/image-size/'
+    mb_size_badge_holder = ('https://img.shields.io/docker/image-size/'
                             'dockershelf/node/{0}.svg'
-                            '?colorA=22313f&colorB=4a637b&maxAge=86400')
+                            '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'node:{0}')
     travis_matrixlist_latest_str = (

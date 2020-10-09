@@ -31,6 +31,7 @@ PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
 MIRROR="http://deb.debian.org/debian"
 UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
+UBUNTUSECMIRROR="http://security.ubuntu.com/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
@@ -73,10 +74,18 @@ if [ "${PYTHON_DEBIAN_SUITE}" != "sid" ]; then
 fi
 
 if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
     {
         echo "deb ${UBUNTUMIRROR} bionic main"
+        echo "deb ${UBUNTUSECMIRROR} bionic-security main universe"
     } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
+elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
     cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+    {
+        echo "deb ${UBUNTUMIRROR} focal main"
+    } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
+    cmdretry apt-get update
+    cmdretry apt-get install --allow-downgrades libc6/focal libc6-dev/focal libc-dev-bin/focal
 fi
 
 cmdretry apt-get update
@@ -90,6 +99,11 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     $( printf '~RDepends:~n^%s$ ' ${PYTHON_PKGS} ) | xargs printf ' %s ' | \
     sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
+
+if [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+    DPKG_DEPENDS="$( echo ${DPKG_DEPENDS} | sed 's/libc6-dev//g' | \
+    sed 's/libc6//g' | sed 's/libc-dev-bin//g' )"
+fi
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
@@ -109,6 +123,11 @@ fi
 if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
+    rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
+    cmdretry apt-get update
+elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t buster
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t buster
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
 elif [ "${PYTHON_VER_NUM}" == "3.8" ] || \
