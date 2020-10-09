@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 2.5.4 (2020-10-09)
+
+### New
+
+* Adding Python 3.7 and Odoo 14 support. [REF] Improving badges. [Luis Alejandro Martínez Faneyth]
+
+### Changes
+
+* Changing references to art images. [Luis Alejandro Martínez Faneyth]
+
+* Resizing art images. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.5.3 (2020-09-18)
 
 ### Changes
