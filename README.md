@@ -1,3 +1,10 @@
+**Alert**: The Dockerfile project enters a short pause after the #TravisCI policy update. This update limits free open source builds and Dockerfile image testing was entirely based on it. No worries, we'll be migrating soon to another CI, but it will take a while.
+
+https://twitter.com/LuisAlejandro/status/1349746767387127810
+
+
+---
+
 ![](https://rawcdn.githack.com/Dockershelf/dockershelf/91d2963fe6771cf92350fd81b27572370381b074/images/banner.svg)
 
 ---
