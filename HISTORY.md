@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 2.5.5 (2021-02-14)
+
+### Changes
+
+* Adding maintainer requirements. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for Node 15. [Luis Alejandro Martínez Faneyth]
+
+* Migrating from Travis to Github Actions. [Luis Alejandro Martínez Faneyth]
+
+* Updating Readme. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.5.4 (2020-10-09)
 
 ### New
