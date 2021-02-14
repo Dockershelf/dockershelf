@@ -71,7 +71,7 @@ fi
 # Create a base filesystem if we are building a debian image
 if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
     cd "${DOCKER_IMAGE_DIR}" && \
-        sudo docker run -it \
+        sudo docker run \
             -v "${DOCKER_IMAGE_DIR}:/tmp/dockershelf" \
             -w "/tmp/dockershelf" \
             debian:stable \

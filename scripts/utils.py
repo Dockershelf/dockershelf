@@ -50,7 +50,7 @@ mongo_version_upper_limit = 4.4
 
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
 node_version_lower_limit = 8
-node_version_upper_limit = 14
+node_version_upper_limit = 15
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
 odoo_version_lower_limit = 11.0

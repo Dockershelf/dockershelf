@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_php(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     php_readme_tablelist = []
     phpdir = os.path.join(basedir, 'php')
     php_dockerfile_template = os.path.join(phpdir, 'Dockerfile.template')
@@ -59,11 +59,11 @@ def update_php(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'php:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/php:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/php:latest"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/php:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/php:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/php:latest"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/php:{0}"')
     php_readme_tablelist_holder = ('|[`{0}`]({1})'
                                    '|`{2}`'
                                    '|[![]({3})]({4})'
@@ -90,11 +90,11 @@ def update_php(basedir):
         mb_size_url = mb_size_url_holder.format(php_version)
 
         if php_version == php_latest_version:
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(php_version))
+            matrix.append(
+                matrix_latest_str.format(php_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(php_version))
+            matrix.append(
+                matrix_str.format(php_version))
 
         php_readme_tablelist.append(
             php_readme_tablelist_holder.format(
@@ -152,7 +152,7 @@ def update_php(basedir):
     with open(php_readme, 'w') as pr:
         pr.write(php_readme_content)
 
-    return travis_matrixlist, php_readme_table
+    return matrix, php_readme_table
 
 
 if __name__ == '__main__':

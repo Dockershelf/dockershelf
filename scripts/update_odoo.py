@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_odoo(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     odoo_readme_tablelist = []
     odoodir = os.path.join(basedir, 'odoo')
     odoo_dockerfile_template = os.path.join(odoodir, 'Dockerfile.template')
@@ -60,11 +60,11 @@ def update_odoo(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'odoo:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/odoo:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/odoo:latest"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/odoo:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/odoo:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/odoo:latest"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/odoo:{0}"')
     odoo_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -98,11 +98,11 @@ def update_odoo(basedir):
         mb_size_url = mb_size_url_holder.format(odoo_version)
 
         if odoo_version == odoo_latest_version:
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(odoo_version))
+            matrix.append(
+                matrix_latest_str.format(odoo_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(odoo_version))
+            matrix.append(
+                matrix_str.format(odoo_version))
 
         odoo_readme_tablelist.append(
             odoo_readme_tablelist_holder.format(
@@ -163,7 +163,7 @@ def update_odoo(basedir):
     with open(odoo_readme, 'w') as pr:
         pr.write(odoo_readme_content)
 
-    return travis_matrixlist, odoo_readme_table
+    return matrix, odoo_readme_table
 
 
 if __name__ == '__main__':

@@ -41,10 +41,13 @@ if not sys.version_info < (3,):
 
 if __name__ == '__main__':
 
-    travis_matrixlist = []
+    matrix = []
     basedir = os.path.dirname(os.path.realpath(__file__))
-    travis_template = os.path.join(basedir, '.travis.yml.template')
-    travis = os.path.join(basedir, '.travis.yml')
+    workflowsdir = os.path.join(basedir, '.github', 'workflows')
+    gha_develop_template = os.path.join(workflowsdir, 'push-develop.yml.template')
+    gha_master_template = os.path.join(workflowsdir, 'push-master.yml.template')
+    gha_develop = os.path.join(workflowsdir, 'push-develop.yml')
+    gha_master = os.path.join(workflowsdir, 'push-master.yml')
     readme_template = os.path.join(basedir, 'README.md.template')
     readme = os.path.join(basedir, 'README.md')
 
@@ -62,27 +65,30 @@ if __name__ == '__main__':
     odoo_matrix_list, odoo_readme_table = update_odoo(basedir)
     php_matrix_list, php_readme_table = update_php(basedir)
 
-    logger.info('Writing Travis CI matrix')
-    travis_matrixlist.extend(debian_matrix_list)
-    travis_matrixlist.extend(latex_matrix_list)
-    travis_matrixlist.extend(python_matrix_list)
-    travis_matrixlist.extend(ruby_matrix_list)
-    travis_matrixlist.extend(node_matrix_list)
-    travis_matrixlist.extend(mongo_matrix_list)
-    travis_matrixlist.extend(postgres_matrix_list)
-    travis_matrixlist.extend(odoo_matrix_list)
-    travis_matrixlist.extend(php_matrix_list)
+    logger.info('Writing github actions matrix')
+    matrix.extend(debian_matrix_list)
+    matrix.extend(latex_matrix_list)
+    matrix.extend(python_matrix_list)
+    matrix.extend(ruby_matrix_list)
+    matrix.extend(node_matrix_list)
+    matrix.extend(mongo_matrix_list)
+    matrix.extend(postgres_matrix_list)
+    matrix.extend(odoo_matrix_list)
+    matrix.extend(php_matrix_list)
+    gha_matrix = '\n'.join(matrix)
 
-    with open(travis_template, 'r') as tt:
-        travis_template_content = tt.read()
+    with open(gha_develop_template, 'r') as gdt:
+        gha_develop_template_content = gdt.read()
+    with open(gha_master_template, 'r') as gmt:
+        gha_master_template_content = gmt.read()
 
-    travis_matrix = '\n'.join(travis_matrixlist)
+    gha_develop_template_content = re.sub('%%MATRIX%%', gha_matrix, gha_develop_template_content)
+    gha_master_template_content = re.sub('%%MATRIX%%', gha_matrix, gha_master_template_content)
 
-    travis_content = travis_template_content
-    travis_content = re.sub('%%MATRIX%%', travis_matrix, travis_content)
-
-    with open(travis, 'w') as t:
-        t.write(travis_content)
+    with open(gha_develop, 'w') as t:
+        t.write(gha_develop_template_content)
+    with open(gha_master, 'w') as t:
+        t.write(gha_master_template_content)
 
     logger.info('Writing top level Readme')
     with open(readme_template, 'r') as rt:
