@@ -1,0 +1,49 @@
+name: Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+%%MATRIX%%
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Installing dependencies
+        run: |
+          sudo apt-get install debootstrap
+          sudo gem install docker-api serverspec
+      - name: Building docker image
+        env:
+          DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
+          DEBIAN_SUITE: ${{ matrix.debian-suite }}
+        run: |
+          bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}"
+      - name: Testing docker image
+        env:
+          DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
+          DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
+        run: |
+          bash test-image.sh "${DOCKER_IMAGE_NAME}" "${DOCKER_IMAGE_EXTRA_TAGS}"
+      - name: Pushing docker image
+        env:
+          DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
+          DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
+          DH_USERNAME: ${{ secrets.DH_USERNAME }}
+          DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
+        run: |
+          bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
+          if [ -n "${DOCKER_IMAGE_EXTRA_TAGS}" ]; then
+            for EXTRA_TAG in ${DOCKER_IMAGE_EXTRA_TAGS}; do
+              docker tag ${DOCKER_IMAGE_NAME} ${EXTRA_TAG}
+              bash push-image.sh ${EXTRA_TAG} ${DH_USERNAME} ${DH_PASSWORD}
+            done
+          fi
