@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_ruby(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     ruby_readme_tablelist = []
     rubydir = os.path.join(basedir, 'ruby')
     ruby_dockerfile_template = os.path.join(rubydir, 'Dockerfile.template')
@@ -59,11 +59,11 @@ def update_ruby(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'ruby:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/ruby:latest"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/ruby:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/ruby:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/ruby:latest"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/ruby:{0}"')
     ruby_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -90,11 +90,11 @@ def update_ruby(basedir):
         mb_size_url = mb_size_url_holder.format(ruby_version)
 
         if ruby_version == ruby_latest_version:
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(ruby_version))
+            matrix.append(
+                matrix_latest_str.format(ruby_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(ruby_version))
+            matrix.append(
+                matrix_str.format(ruby_version))
 
         ruby_readme_tablelist.append(
             ruby_readme_tablelist_holder.format(
@@ -152,7 +152,7 @@ def update_ruby(basedir):
     with open(ruby_readme, 'w') as pr:
         pr.write(ruby_readme_content)
 
-    return travis_matrixlist, ruby_readme_table
+    return matrix, ruby_readme_table
 
 
 if __name__ == '__main__':

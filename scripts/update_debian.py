@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_debian(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     debian_readme_tablelist = []
     debiandir = os.path.join(basedir, 'debian')
     debian_dockerfile_template = os.path.join(debiandir, 'Dockerfile.template')
@@ -59,13 +59,13 @@ def update_debian(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'debian:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1} '
-        'dockershelf/debian:latest" DEBIAN_SUITE="{1}"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/debian:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/debian:{1}" DEBIAN_SUITE="{1}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/debian:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/debian:{1} '
+        'dockershelf/debian:latest"\n            debian-suite: "{1}"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/debian:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/debian:{1}"\n            debian-suite: "{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
@@ -92,10 +92,10 @@ def update_debian(basedir):
         mb_size_url = mb_size_url_holder.format(debian_version)
 
         if debian_version == debian_latest_version:
-            travis_matrixlist.append(travis_matrixlist_latest_str.format(
+            matrix.append(matrix_latest_str.format(
                 debian_version, debian_suite))
         else:
-            travis_matrixlist.append(travis_matrixlist_str.format(
+            matrix.append(matrix_str.format(
                 debian_version, debian_suite))
 
         debian_readme_tablelist.append(
@@ -151,7 +151,7 @@ def update_debian(basedir):
     with open(debian_readme, 'w') as dr:
         dr.write(debian_readme_content)
 
-        return travis_matrixlist, debian_readme_table
+        return matrix, debian_readme_table
 
 
 if __name__ == '__main__':

@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_latex(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     latex_readme_tablelist = []
     latexdir = os.path.join(basedir, 'latex')
     latex_dockerfile_template = os.path.join(latexdir, 'Dockerfile.template')
@@ -59,11 +59,11 @@ def update_latex(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'latex:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/latex:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/latex:latest"')
-    travis_matrixlist_str = ('        '
-                             '- DOCKER_IMAGE_NAME="dockershelf/latex:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/latex:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/latex:latest"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/latex:{0}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
@@ -89,11 +89,11 @@ def update_latex(basedir):
         mb_size_url = mb_size_url_holder.format(latex_version)
 
         if latex_version == 'basic':
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(latex_version))
+            matrix.append(
+                matrix_latest_str.format(latex_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(latex_version))
+            matrix.append(
+                matrix_str.format(latex_version))
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
@@ -148,7 +148,7 @@ def update_latex(basedir):
     with open(latex_readme, 'w') as lr:
         lr.write(latex_readme_content)
 
-    return travis_matrixlist, latex_readme_table
+    return matrix, latex_readme_table
 
 
 if __name__ == '__main__':

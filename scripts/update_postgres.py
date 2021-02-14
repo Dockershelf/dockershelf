@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_postgres(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     postgres_readme_tablelist = []
     postgresdir = os.path.join(basedir, 'postgres')
     postgres_dockerfile_template = os.path.join(postgresdir,
@@ -60,11 +60,11 @@ def update_postgres(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'postgres:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/postgres:latest"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/postgres:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/postgres:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/postgres:latest"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/postgres:{0}"')
     postgres_readme_tablelist_holder = ('|[`{0}`]({1})'
                                         '|`{2}`'
                                         '|[![]({3})]({4})'
@@ -91,11 +91,11 @@ def update_postgres(basedir):
         mb_size_url = mb_size_url_holder.format(postgres_version)
 
         if postgres_version == postgres_latest_version:
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(postgres_version))
+            matrix.append(
+                matrix_latest_str.format(postgres_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(postgres_version))
+            matrix.append(
+                matrix_str.format(postgres_version))
 
         postgres_readme_tablelist.append(
             postgres_readme_tablelist_holder.format(
@@ -150,7 +150,7 @@ def update_postgres(basedir):
     with open(postgres_readme, 'w') as pr:
         pr.write(postgres_readme_content)
 
-    return travis_matrixlist, postgres_readme_table
+    return matrix, postgres_readme_table
 
 
 if __name__ == '__main__':

@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_python(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     python_readme_tablelist = []
     pythondir = os.path.join(basedir, 'python')
     python_dockerfile_template = os.path.join(pythondir, 'Dockerfile.template')
@@ -59,17 +59,14 @@ def update_python(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'python:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:latest"')
-    travis_matrixlist_py2_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:2"')
-    travis_matrixlist_py3_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/python:3"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/python:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/python:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/python:latest"')
+    matrix_py3_str = (
+        '          - docker-image-name: "dockershelf/python:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/python:3"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/python:{0}"')
     python_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
@@ -95,18 +92,15 @@ def update_python(basedir):
         mb_size_badge = mb_size_badge_holder.format(python_version)
         mb_size_url = mb_size_url_holder.format(python_version)
 
-        if python_version == '2.7':
-            travis_matrixlist.append(
-                travis_matrixlist_py2_str.format(python_version))
-        elif python_version == '3.8':
-            travis_matrixlist.append(
-                travis_matrixlist_py3_str.format(python_version))
+        if python_version == '3.9':
+            matrix.append(
+                matrix_py3_str.format(python_version))
         elif python_version == python_latest_version:
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(python_version))
+            matrix.append(
+                matrix_latest_str.format(python_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(python_version))
+            matrix.append(
+                matrix_str.format(python_version))
 
         python_readme_tablelist.append(
             python_readme_tablelist_holder.format(
@@ -164,7 +158,7 @@ def update_python(basedir):
     with open(python_readme, 'w') as pr:
         pr.write(python_readme_content)
 
-    return travis_matrixlist, python_readme_table
+    return matrix, python_readme_table
 
 
 if __name__ == '__main__':

@@ -79,10 +79,11 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
         echo "deb ${UBUNTUMIRROR} bionic main"
         echo "deb ${UBUNTUSECMIRROR} bionic-security main universe"
     } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
-elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+elif [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.8" ]; then
     cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
     {
         echo "deb ${UBUNTUMIRROR} focal main"
+        echo "deb ${UBUNTUSECMIRROR} focal-security main universe"
     } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
     cmdretry apt-get update
     cmdretry apt-get install --allow-downgrades libc6/focal libc6-dev/focal libc-dev-bin/focal
@@ -100,7 +101,7 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
-if [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.8" ]; then
     DPKG_DEPENDS="$( echo ${DPKG_DEPENDS} | sed 's/libc6-dev//g' | \
     sed 's/libc6//g' | sed 's/libc-dev-bin//g' )"
 fi
@@ -128,10 +129,12 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
 elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t buster
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t buster
+elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t focal
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t focal
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.8" ] || \
-     [ "${PYTHON_VER_NUM}" == "3.9" ]; then
+elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
 fi
@@ -141,8 +144,17 @@ fi
 # Let's bring in the old reliable pip guy.
 
 msginfo "Installing pip ..."
-curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
-    ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+
+if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/2.7/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+elif [ "${PYTHON_VER_NUM}" == "3.5" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/3.5/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+else
+    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+fi
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

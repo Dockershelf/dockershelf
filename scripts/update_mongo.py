@@ -30,7 +30,7 @@ from .logger import logger
 
 def update_mongo(basedir):
 
-    travis_matrixlist = []
+    matrix = []
     mongo_readme_tablelist = []
     mongodir = os.path.join(basedir, 'mongo')
     mongo_dockerfile_template = os.path.join(mongodir, 'Dockerfile.template')
@@ -59,11 +59,11 @@ def update_mongo(basedir):
                             '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
     mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
                           'mongo:{0}')
-    travis_matrixlist_latest_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"'
-        ' DOCKER_IMAGE_EXTRA_TAGS="dockershelf/mongo:latest"')
-    travis_matrixlist_str = (
-        '        - DOCKER_IMAGE_NAME="dockershelf/mongo:{0}"')
+    matrix_latest_str = (
+        '          - docker-image-name: "dockershelf/mongo:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/mongo:latest"')
+    matrix_str = (
+        '          - docker-image-name: "dockershelf/mongo:{0}"')
     mongo_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|`{2}`'
                                      '|[![]({3})]({4})'
@@ -90,11 +90,11 @@ def update_mongo(basedir):
         mb_size_url = mb_size_url_holder.format(mongo_version)
 
         if mongo_version == mongo_latest_version:
-            travis_matrixlist.append(
-                travis_matrixlist_latest_str.format(mongo_version))
+            matrix.append(
+                matrix_latest_str.format(mongo_version))
         else:
-            travis_matrixlist.append(
-                travis_matrixlist_str.format(mongo_version))
+            matrix.append(
+                matrix_str.format(mongo_version))
 
         mongo_readme_tablelist.append(
             mongo_readme_tablelist_holder.format(
@@ -152,7 +152,7 @@ def update_mongo(basedir):
     with open(mongo_readme, 'w') as pr:
         pr.write(mongo_readme_content)
 
-    return travis_matrixlist, mongo_readme_table
+    return matrix, mongo_readme_table
 
 
 if __name__ == '__main__':
