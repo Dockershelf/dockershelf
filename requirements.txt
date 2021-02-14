@@ -1,3 +1,5 @@
 packaging
 lxml
 cssselect
+gitchangelog
+bumpversion
