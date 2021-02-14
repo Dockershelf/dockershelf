@@ -3,3 +3,4 @@ lxml
 cssselect
 gitchangelog
 bumpversion
+pystache
