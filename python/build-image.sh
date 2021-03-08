@@ -146,13 +146,13 @@ fi
 msginfo "Installing pip ..."
 
 if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/2.7/get-pip.py" | \
+    curl -fsSL "https://bootstrap.pypa.io/pip/2.7/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 elif [ "${PYTHON_VER_NUM}" == "3.5" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/3.5/get-pip.py" | \
+    curl -fsSL "https://bootstrap.pypa.io/pip/3.5/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 else
-    curl -fsSL "https://bootstrap.pypa.io/get-pip.py" | \
+    curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 fi
 

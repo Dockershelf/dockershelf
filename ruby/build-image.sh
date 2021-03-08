@@ -40,7 +40,7 @@ ARSECMIRROR="http://archive.debian.org/debian-security"
 RUBY_PKGS="${RUBY_VER_NUM_STR} ${RUBY_VER_NUM_STR}-dev"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -66,6 +66,8 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 if [ "${RUBY_DEBIAN_SUITE}" == "jessie-security" ]; then
+    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
+    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBF8D6FD518E17E1
     {
         echo "deb ${MIRROR} jessie main"
         echo "deb ${SECMIRROR} jessie/updates main"
