@@ -1,10 +1,8 @@
-name: Push (develop branch)
+name: Schedule (master branch)
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - develop
+  schedule:
+    - cron: '00 3 * * 1'
 
 jobs:
   build:
@@ -75,7 +73,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
-          ref: develop
+          ref: master
       - name: Installing dependencies
         run: |
           sudo apt-get install debootstrap
@@ -85,9 +83,6 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DEBIAN_SUITE: ${{ matrix.debian-suite }}
         run: |
-          DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
-          sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
-          sed -i -r 's|FROM scratch-dev|FROM scratch|g' "${DOCKER_IMAGE_TARGET/://}/Dockerfile"
           bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}"
       - name: Testing docker image
         env:
@@ -102,12 +97,9 @@ jobs:
           DH_USERNAME: ${{ secrets.DH_USERNAME }}
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
-          docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}-dev
-          DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-dev"
           bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
           if [ -n "${DOCKER_IMAGE_EXTRA_TAGS}" ]; then
             for EXTRA_TAG in ${DOCKER_IMAGE_EXTRA_TAGS}; do
-              EXTRA_TAG="${EXTRA_TAG}-dev"
               docker tag ${DOCKER_IMAGE_NAME} ${EXTRA_TAG}
               bash push-image.sh ${EXTRA_TAG} ${DH_USERNAME} ${DH_PASSWORD}
             done

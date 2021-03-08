@@ -46,8 +46,10 @@ if __name__ == '__main__':
     workflowsdir = os.path.join(basedir, '.github', 'workflows')
     gha_develop_template = os.path.join(workflowsdir, 'push-develop.yml.template')
     gha_master_template = os.path.join(workflowsdir, 'push-master.yml.template')
+    gha_schedule_template = os.path.join(workflowsdir, 'schedule-master.yml.template')
     gha_develop = os.path.join(workflowsdir, 'push-develop.yml')
     gha_master = os.path.join(workflowsdir, 'push-master.yml')
+    gha_schedule = os.path.join(workflowsdir, 'schedule-master.yml')
     readme_template = os.path.join(basedir, 'README.md.template')
     readme = os.path.join(basedir, 'README.md')
 
@@ -81,14 +83,19 @@ if __name__ == '__main__':
         gha_develop_template_content = gdt.read()
     with open(gha_master_template, 'r') as gmt:
         gha_master_template_content = gmt.read()
+    with open(gha_schedule_template, 'r') as gst:
+        gha_schedule_template_content = gst.read()
 
     gha_develop_template_content = re.sub('%%MATRIX%%', gha_matrix, gha_develop_template_content)
     gha_master_template_content = re.sub('%%MATRIX%%', gha_matrix, gha_master_template_content)
+    gha_schedule_template_content = re.sub('%%MATRIX%%', gha_matrix, gha_schedule_template_content)
 
     with open(gha_develop, 'w') as t:
         t.write(gha_develop_template_content)
     with open(gha_master, 'w') as t:
         t.write(gha_master_template_content)
+    with open(gha_schedule, 'w') as t:
+        t.write(gha_schedule_template_content)
 
     logger.info('Writing top level Readme')
     with open(readme_template, 'r') as rt:
