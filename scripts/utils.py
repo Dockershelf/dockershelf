@@ -49,7 +49,7 @@ mongo_version_lower_limit = 3.6
 mongo_version_upper_limit = 4.4
 
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
-node_version_lower_limit = 8
+node_version_lower_limit = 10
 node_version_upper_limit = 15
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
@@ -65,6 +65,7 @@ php_versions_src_origin = {
     '7.2': 'bionic',
     '7.3': 'buster-security',
     '7.4': 'sid',
+    '8.0': 'experimental',
 }
 
 python_versions_src_origin = {

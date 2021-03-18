@@ -1,0 +1,9 @@
+version: "3"
+services:
+  dockershelf:
+    image: dockershelf/dockershelf:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/dockershelf/app

@@ -1,7 +1,6 @@
 name: Push (develop branch)
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - develop
@@ -40,8 +39,6 @@ jobs:
           - docker-image-name: "dockershelf/ruby:2.5"
           - docker-image-name: "dockershelf/ruby:2.7"
             docker-image-extra-tags: "dockershelf/ruby:latest"
-          - docker-image-name: "dockershelf/node:8"
-          - docker-image-name: "dockershelf/node:9"
           - docker-image-name: "dockershelf/node:10"
           - docker-image-name: "dockershelf/node:11"
           - docker-image-name: "dockershelf/node:12"
@@ -69,6 +66,7 @@ jobs:
           - docker-image-name: "dockershelf/php:7.2"
           - docker-image-name: "dockershelf/php:7.3"
           - docker-image-name: "dockershelf/php:7.4"
+          - docker-image-name: "dockershelf/php:8.0"
             docker-image-extra-tags: "dockershelf/php:latest"
 
     steps:

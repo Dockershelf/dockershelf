@@ -76,10 +76,15 @@ if [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
         echo "deb ${MIRROR} buster main"
         echo "deb ${SECMIRROR} buster/updates main"
     } | tee /etc/apt/sources.list.d/php.list > /dev/null
+elif [ "${PHP_DEBIAN_SUITE}" == "experimental" ]; then
+    {
+        echo "deb ${MIRROR} sid main"
+        echo "deb ${MIRROR} experimental main"
+    } | tee /etc/apt/sources.list.d/php.list > /dev/null
 elif [ "${PHP_DEBIAN_SUITE}" == "bionic" ]; then
     {
         echo "deb ${UBUNTUMIRROR} bionic main"
-    } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
+    } | tee /etc/apt/sources.list.d/php.list > /dev/null
     cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 elif [ "${PHP_DEBIAN_SUITE}" != "sid" ]; then
     {
