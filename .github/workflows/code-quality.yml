@@ -1,0 +1,28 @@
+name: Code Quality
+
+on:
+  schedule:
+    - cron: '00 3 * * 1'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.9"
+            toxenv: "py39"
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: python
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1

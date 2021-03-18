@@ -1,0 +1,88 @@
+name: Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - synchronize
+      - reopened
+    branches:
+      - develop
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.5"
+            toxenv: "py35"
+          - python-version: "3.6"
+            toxenv: "py36"
+          - python-version: "3.7"
+            toxenv: "py37"
+          - python-version: "3.8"
+            toxenv: "py38"
+          - python-version: "3.9"
+            toxenv: "py39"
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Measuring coverage
+        env:
+          TOXENV: ${{ matrix.toxenv }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements-dev.txt
+          python3 update_shelf.py
+
+  approve:
+    name: Approve pull request
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - name: Approve
+        uses: hmarr/auto-approve-action@v2.0.0
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        with:
+          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+      - name: Approve
+        uses: hmarr/auto-approve-action@v2.0.0
+        if: github.actor == 'LuisAlejandro'
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  merge:
+    name: Merge pull request
+    runs-on: ubuntu-20.04
+    needs: approve
+    steps:
+      - name: Merge
+        uses: actions/github-script@v3
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        with:
+          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+          script: |
+            await github.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            })
+      - name: Merge
+        uses: actions/github-script@v3
+        if: github.actor == 'LuisAlejandro'
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            await github.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            })
