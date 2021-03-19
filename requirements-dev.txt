@@ -1,6 +1,6 @@
 setuptools==54.1.2
 pip==20.3
-flake8==3.8.4
+flake8==3.9.0
 pydocstyle==5.1.1
 virtualenv==20.4.2
 coverage==5.5
