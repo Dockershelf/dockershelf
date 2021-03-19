@@ -40,7 +40,7 @@ jobs:
           PYTHON_VERSION: ${{ matrix.python-version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pip install -r requirements-dev.txt
+          pip install -r requirements.txt -r requirements-dev.txt
           python3 update_shelf.py
 
   approve:
