@@ -8,5 +8,5 @@ gitchangelog==3.0.4
 bumpversion==0.6.0
 pystache==0.5.4
 wheel==0.36.2
-tox==3.23.1
+tox==3.24.0
 coveralls==3.1.0
