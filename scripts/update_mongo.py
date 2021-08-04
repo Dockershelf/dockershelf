@@ -45,20 +45,17 @@ def update_mongo(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/mongo'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-mongo%2F{0}%2FDockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=120'
+                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/mongo/{0}/Dockerfile')
-    mb_layers_badge_holder = ('https://img.shields.io/microbadger/layers/'
-                              'dockershelf/mongo/{0}.svg'
-                              '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
-    mb_layers_url_holder = ('https://microbadger.com/images/dockershelf/'
-                            'mongo:{0}')
-    mb_size_badge_holder = ('https://img.shields.io/docker/image-size/'
-                            'dockershelf/mongo/{0}.svg'
-                            '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
-    mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
-                          'mongo:{0}')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/mongo'
+                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_url_holder = ('https://hub.docker.com/r/dockershelf/mongo')
+    size_badge_holder = ('https://img.shields.io/docker/image-size/'
+                         'dockershelf/mongo/{0}.svg'
+                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    size_url_holder = ('https://hub.docker.com/r/dockershelf/mongo')
     matrix_latest_str = (
         '          - docker-image-name: "dockershelf/mongo:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/mongo:latest"')
@@ -84,10 +81,10 @@ def update_mongo(basedir):
         docker_tag = docker_tag_holder.format(mongo_version)
         dockerfile_badge = dockerfile_badge_holder.format(mongo_version)
         dockerfile_url = dockerfile_url_holder.format(mongo_version)
-        mb_layers_badge = mb_layers_badge_holder.format(mongo_version)
-        mb_layers_url = mb_layers_url_holder.format(mongo_version)
-        mb_size_badge = mb_size_badge_holder.format(mongo_version)
-        mb_size_url = mb_size_url_holder.format(mongo_version)
+        pulls_badge = pulls_badge_holder.format(mongo_version)
+        pulls_url = pulls_url_holder.format(mongo_version)
+        size_badge = size_badge_holder.format(mongo_version)
+        size_url = size_url_holder.format(mongo_version)
 
         if mongo_version == mongo_latest_version:
             matrix.append(
@@ -99,8 +96,8 @@ def update_mongo(basedir):
         mongo_readme_tablelist.append(
             mongo_readme_tablelist_holder.format(
                 docker_tag, docker_url, mongo_version, dockerfile_badge,
-                dockerfile_url, mb_layers_badge, mb_layers_url,
-                mb_size_badge, mb_size_url))
+                dockerfile_url, pulls_badge, pulls_url,
+                size_badge, size_url))
 
         os.makedirs(mongo_version_dir)
 

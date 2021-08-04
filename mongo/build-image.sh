@@ -73,9 +73,21 @@ elif [ "${MONGO_VER_NUM}" == "4.2" ]; then
 elif [ "${MONGO_VER_NUM}" == "4.4" ]; then
     cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
         --recv 656408E390CFB1F5
+elif [ "${MONGO_VER_NUM}" == "5.0" ]; then
+    cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv B00A0BD1E2C63C11
 fi
 
 cmdretry apt-get update
+
+# Mongo: Configure
+# ------------------------------------------------------------------------------
+# We need to configure proper volumes and users.
+
+groupadd -r mongodb
+useradd -r -g mongodb mongodb
+mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d /var/log/mongodb
+chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
@@ -93,15 +105,6 @@ cmdretry apt-get install libgcc-s1 sudo systemctl jq numactl lsb-base
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
 cmdretry apt-get install ${DPKG_DEPENDS}
-
-# Mongo: Configure
-# ------------------------------------------------------------------------------
-# We need to configure proper volumes and users.
-
-mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d /var/log/mongodb
-groupadd -r mongodb
-useradd -r -g mongodb mongodb
-chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb
 
 # Mongo: Installation
 # ------------------------------------------------------------------------------

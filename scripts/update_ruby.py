@@ -45,20 +45,17 @@ def update_ruby(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/ruby'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-ruby%2F{0}%2FDockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=120'
+                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/ruby/{0}/Dockerfile')
-    mb_layers_badge_holder = ('https://img.shields.io/microbadger/layers/'
-                              'dockershelf/ruby/{0}.svg'
-                              '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
-    mb_layers_url_holder = ('https://microbadger.com/images/dockershelf/'
-                            'ruby:{0}')
-    mb_size_badge_holder = ('https://img.shields.io/docker/image-size/'
-                            'dockershelf/ruby/{0}.svg'
-                            '?colorA=22313f&colorB=4a637b&cacheSeconds=120')
-    mb_size_url_holder = ('https://microbadger.com/images/dockershelf/'
-                          'ruby:{0}')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/ruby'
+                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_url_holder = ('https://hub.docker.com/r/dockershelf/ruby')
+    size_badge_holder = ('https://img.shields.io/docker/image-size/'
+                         'dockershelf/ruby/{0}.svg'
+                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    size_url_holder = ('https://hub.docker.com/r/dockershelf/ruby')
     matrix_latest_str = (
         '          - docker-image-name: "dockershelf/ruby:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/ruby:latest"')
@@ -84,10 +81,10 @@ def update_ruby(basedir):
         docker_tag = docker_tag_holder.format(ruby_version)
         dockerfile_badge = dockerfile_badge_holder.format(ruby_version)
         dockerfile_url = dockerfile_url_holder.format(ruby_version)
-        mb_layers_badge = mb_layers_badge_holder.format(ruby_version)
-        mb_layers_url = mb_layers_url_holder.format(ruby_version)
-        mb_size_badge = mb_size_badge_holder.format(ruby_version)
-        mb_size_url = mb_size_url_holder.format(ruby_version)
+        pulls_badge = pulls_badge_holder.format(ruby_version)
+        pulls_url = pulls_url_holder.format(ruby_version)
+        size_badge = size_badge_holder.format(ruby_version)
+        size_url = size_url_holder.format(ruby_version)
 
         if ruby_version == ruby_latest_version:
             matrix.append(
@@ -99,8 +96,8 @@ def update_ruby(basedir):
         ruby_readme_tablelist.append(
             ruby_readme_tablelist_holder.format(
                 docker_tag, docker_url, ruby_version, dockerfile_badge,
-                dockerfile_url, mb_layers_badge, mb_layers_url,
-                mb_size_badge, mb_size_url))
+                dockerfile_url, pulls_badge, pulls_url,
+                size_badge, size_url))
 
         os.makedirs(ruby_version_dir)
 

@@ -5,8 +5,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="python2.7" \
-      org.label-schema.description="A Python 2.7 image based on Debian sid." \
+      org.label-schema.name="node16" \
+      org.label-schema.description="A Node 16 image based on Debian sid." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,10 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PYTHON_VER_NUM="2.7" PYTHON_DEBIAN_SUITE="sid" \
-    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python2.7/dist-packages"
+ENV NODE_VER_NUM="16"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/python/
-RUN bash /usr/share/dockershelf/python/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/node/
+RUN bash /usr/share/dockershelf/node/build-image.sh
 
-CMD ["python"]
+CMD ["/bin/bash"]

@@ -5,8 +5,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="python2.7" \
-      org.label-schema.description="A Python 2.7 image based on Debian sid." \
+      org.label-schema.name="mongo5.0" \
+      org.label-schema.description="A Mongo 5.0 image based on Debian sid." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,10 +15,16 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PYTHON_VER_NUM="2.7" PYTHON_DEBIAN_SUITE="sid" \
-    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python2.7/dist-packages"
+ENV MONGO_VER_NUM="5.0" MONGO_DEBIAN_SUITE="buster"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/python/
-RUN bash /usr/share/dockershelf/python/build-image.sh
+COPY aggregate.js articles.js /root/
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
+RUN bash /usr/share/dockershelf/mongo/build-image.sh
 
-CMD ["python"]
+VOLUME /data/db /data/configdb
+
+EXPOSE 27017
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mongod"]

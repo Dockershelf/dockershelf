@@ -6,7 +6,7 @@
 
 ## Mongo shelf
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%MONGO_TABLE%%
 
