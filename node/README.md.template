@@ -6,7 +6,7 @@
 
 ## Node shelf
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%NODE_TABLE%%
 

@@ -137,6 +137,9 @@ elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
 elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
+elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t experimental
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t experimental
 fi
 
 # Pip: Installation

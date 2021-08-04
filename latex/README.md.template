@@ -6,7 +6,7 @@
 
 ## Latex shelf
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%LATEX_TABLE%%
 

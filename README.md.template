@@ -4,7 +4,7 @@
 
 [![](https://img.shields.io/github/release/Dockershelf/dockershelf.svg)](https://github.com/Dockershelf/dockershelf/releases) [![](https://img.shields.io/travis/Dockershelf/dockershelf.svg)](https://travis-ci.org/Dockershelf/dockershelf) [![](https://img.shields.io/github/issues-raw/Dockershelf/dockershelf/in%20progress.svg?label=in%20progress)](https://github.com/Dockershelf/dockershelf/issues?q=is%3Aissue+is%3Aopen+label%3A%22in+progress%22) [![](https://badges.gitter.im/Dockershelf/dockershelf.svg)](https://gitter.im/Dockershelf/dockershelf) [![](https://cla-assistant.io/readme/badge/Dockershelf/dockershelf)](https://cla-assistant.io/Dockershelf/dockershelf)
 
-Current version: 2.5.5
+Current version: 2.6.0
 
 *Dockershelf* is a repository that serves as a collector for docker recipes that are universal, efficient and slim. We keep adding "shelves", which are holders for the different versions of a popular language or application.
 
@@ -16,7 +16,7 @@ All shelves are currently based off Debian Sid, the development version of Debia
 
 These images are similar to the official ones, but with some improved configurations. Check out [debian/README.md](https://github.com/Dockershelf/dockershelf/blob/master/debian/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%DEBIAN_TABLE%%
 
@@ -26,7 +26,7 @@ These images are similar to the official ones, but with some improved configurat
 
 These are python images with native debian packages that are extracted from different debian releases. Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%PYTHON_TABLE%%
 
@@ -36,7 +36,7 @@ These are python images with native debian packages that are extracted from diff
 
 These are ruby images with native debian packages that are extracted from different debian releases. Check out [ruby/README.md](https://github.com/Dockershelf/dockershelf/blob/master/ruby/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%RUBY_TABLE%%
 
@@ -46,7 +46,7 @@ These are ruby images with native debian packages that are extracted from differ
 
 These are Node images built using the [nodesource installation script](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%NODE_TABLE%%
 
@@ -56,7 +56,7 @@ These are Node images built using the [nodesource installation script](https://n
 
 These are Mongo images built using the [official installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/). Check out [mongo/README.md](https://github.com/Dockershelf/dockershelf/blob/master/mongo/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%MONGO_TABLE%%
 
@@ -66,7 +66,7 @@ These are Mongo images built using the [official installation guide](https://doc
 
 These are PostgreSQL images built using the [official installation guide](https://www.postgresql.org/download/linux/debian/). Check out [postgres/README.md](https://github.com/Dockershelf/dockershelf/blob/master/postgres/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%POSTGRES_TABLE%%
 
@@ -76,7 +76,7 @@ These are PostgreSQL images built using the [official installation guide](https:
 
 This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%LATEX_TABLE%%
 
@@ -86,7 +86,7 @@ This is a Latex image built with the following packages installed: `texlive-font
 
 These images are similar to the official ones, but with some improved configurations. Check out [odoo/README.md](https://github.com/Dockershelf/dockershelf/blob/master/odoo/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%ODOO_TABLE%%
 
@@ -95,7 +95,7 @@ These images are similar to the official ones, but with some improved configurat
 ### PHP
 
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%PHP_TABLE%%
 

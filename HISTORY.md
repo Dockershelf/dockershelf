@@ -1,6 +1,221 @@
 # Changelog
 
 
+## 2.6.0 (2021-08-04)
+
+### Changes
+
+* Adding support for Mongo 5.0, Python 3.10, Node 16, Postgres 14 and Ruby 3.0. [Luis Alejandro Martínez Faneyth]
+
+* Removing support for python 3.5 & 3.6. [Luis Alejandro Martínez Faneyth]
+
+* Restricting update of pydocstyle. [Luis Alejandro Martínez Faneyth]
+
+* Restricting update of conflicting python packages. [Luis Alejandro Martínez Faneyth]
+
+* Adding auto approve pull request. [Luis Alejandro Martínez Faneyth]
+
+* No longer updating Node 8 and 9 images. [Luis Alejandro Martínez Faneyth]
+
+* Fixing python and ruby images. [Luis Alejandro Martínez Faneyth]
+
+* Separating schedule workflow. [Luis Alejandro Martínez Faneyth]
+
+### Fix
+
+* Fixing setuptools version. [Luis Alejandro Martínez Faneyth]
+
+* Fixing github actions workflow. [Luis Alejandro Martínez Faneyth]
+
+* Fixing pull request permissions. [Luis Alejandro Martínez Faneyth]
+
+### Other
+
+* Bump virtualenv from 20.6.0 to 20.7.0. [dependabot[bot]]
+
+  Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.6.0 to 20.7.0.
+  - [Release notes](https://github.com/pypa/virtualenv/releases)
+  - [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
+  - [Commits](https://github.com/pypa/virtualenv/compare/20.6.0...20.7.0)
+
+  ---
+  updated-dependencies:
+  - dependency-name: virtualenv
+    dependency-type: direct:development
+    update-type: version-update:semver-minor
+  ...
+
+* Bump tox from 3.23.1 to 3.24.1. [dependabot[bot]]
+
+  Bumps [tox](https://github.com/tox-dev/tox) from 3.23.1 to 3.24.1.
+  - [Release notes](https://github.com/tox-dev/tox/releases)
+  - [Changelog](https://github.com/tox-dev/tox/blob/master/docs/changelog.rst)
+  - [Commits](https://github.com/tox-dev/tox/compare/3.23.1...3.24.1)
+
+  ---
+  updated-dependencies:
+  - dependency-name: tox
+    dependency-type: direct:development
+    update-type: version-update:semver-minor
+  ...
+
+* Bump virtualenv from 20.4.7 to 20.6.0. [dependabot[bot]]
+
+  Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.4.7 to 20.6.0.
+  - [Release notes](https://github.com/pypa/virtualenv/releases)
+  - [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
+  - [Commits](https://github.com/pypa/virtualenv/compare/20.4.7...20.6.0)
+
+  ---
+  updated-dependencies:
+  - dependency-name: virtualenv
+    dependency-type: direct:development
+    update-type: version-update:semver-minor
+  ...
+
+* Bump coveralls from 3.1.0 to 3.2.0. [dependabot[bot]]
+
+  Bumps [coveralls](https://github.com/TheKevJames/coveralls-python) from 3.1.0 to 3.2.0.
+  - [Release notes](https://github.com/TheKevJames/coveralls-python/releases)
+  - [Changelog](https://github.com/TheKevJames/coveralls-python/blob/master/CHANGELOG.md)
+  - [Commits](https://github.com/TheKevJames/coveralls-python/compare/3.1.0...3.2.0)
+
+  ---
+  updated-dependencies:
+  - dependency-name: coveralls
+    dependency-type: direct:development
+    update-type: version-update:semver-minor
+  ...
+
+* Bump packaging from 20.9 to 21.0. [dependabot[bot]]
+
+  Bumps [packaging](https://github.com/pypa/packaging) from 20.9 to 21.0.
+  - [Release notes](https://github.com/pypa/packaging/releases)
+  - [Changelog](https://github.com/pypa/packaging/blob/main/CHANGELOG.rst)
+  - [Commits](https://github.com/pypa/packaging/compare/20.9...21.0)
+
+  ---
+  updated-dependencies:
+  - dependency-name: packaging
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Bump coveralls from 3.0.1 to 3.1.0. [dependabot[bot]]
+
+  Bumps [coveralls](https://github.com/TheKevJames/coveralls-python) from 3.0.1 to 3.1.0.
+  - [Release notes](https://github.com/TheKevJames/coveralls-python/releases)
+  - [Changelog](https://github.com/TheKevJames/coveralls-python/blob/master/CHANGELOG.md)
+  - [Commits](https://github.com/TheKevJames/coveralls-python/compare/3.0.1...3.1.0)
+
+* Bump virtualenv from 20.4.6 to 20.4.7. [dependabot[bot]]
+
+  Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.4.6 to 20.4.7.
+  - [Release notes](https://github.com/pypa/virtualenv/releases)
+  - [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
+  - [Commits](https://github.com/pypa/virtualenv/compare/20.4.6...20.4.7)
+
+* Bump virtualenv from 20.4.4 to 20.4.6. [dependabot[bot]]
+
+  Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.4.4 to 20.4.6.
+  - [Release notes](https://github.com/pypa/virtualenv/releases)
+  - [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
+  - [Commits](https://github.com/pypa/virtualenv/compare/20.4.4...20.4.6)
+
+* Bump flake8 from 3.9.1 to 3.9.2. [dependabot[bot]]
+
+  Bumps [flake8](https://gitlab.com/pycqa/flake8) from 3.9.1 to 3.9.2.
+  - [Release notes](https://gitlab.com/pycqa/flake8/tags)
+  - [Commits](https://gitlab.com/pycqa/flake8/compare/3.9.1...3.9.2)
+
+* Bump tox from 3.23.0 to 3.23.1. [dependabot[bot]]
+
+  Bumps [tox](https://github.com/tox-dev/tox) from 3.23.0 to 3.23.1.
+  - [Release notes](https://github.com/tox-dev/tox/releases)
+  - [Changelog](https://github.com/tox-dev/tox/blob/3.23.1/docs/changelog.rst)
+  - [Commits](https://github.com/tox-dev/tox/compare/3.23.0...3.23.1)
+
+* Bump virtualenv from 20.4.3 to 20.4.4. [dependabot[bot]]
+
+  Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.4.3 to 20.4.4.
+  - [Release notes](https://github.com/pypa/virtualenv/releases)
+  - [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
+  - [Commits](https://github.com/pypa/virtualenv/compare/20.4.3...20.4.4)
+
+* Bump actions/github-script from v3 to v4.0.2. [dependabot[bot]]
+
+  Bumps [actions/github-script](https://github.com/actions/github-script) from v3 to v4.0.2.
+  - [Release notes](https://github.com/actions/github-script/releases)
+  - [Commits](https://github.com/actions/github-script/compare/v3...a3e7071a34d7e1f219a8a4de9a5e0a34d1ee1293)
+
+* Bump flake8 from 3.9.0 to 3.9.1. [dependabot[bot]]
+
+  Bumps [flake8](https://gitlab.com/pycqa/flake8) from 3.9.0 to 3.9.1.
+  - [Release notes](https://gitlab.com/pycqa/flake8/tags)
+  - [Commits](https://gitlab.com/pycqa/flake8/compare/3.9.0...3.9.1)
+
+* Bump lxml from 4.6.2 to 4.6.3. [dependabot[bot]]
+
+  Bumps [lxml](https://github.com/lxml/lxml) from 4.6.2 to 4.6.3.
+  - [Release notes](https://github.com/lxml/lxml/releases)
+  - [Changelog](https://github.com/lxml/lxml/blob/master/CHANGES.txt)
+  - [Commits](https://github.com/lxml/lxml/compare/lxml-4.6.2...lxml-4.6.3)
+
+* Bump coveralls from 3.0.0 to 3.0.1. [dependabot[bot]]
+
+  Bumps [coveralls](https://github.com/TheKevJames/coveralls-python) from 3.0.0 to 3.0.1.
+  - [Release notes](https://github.com/TheKevJames/coveralls-python/releases)
+  - [Changelog](https://github.com/TheKevJames/coveralls-python/blob/master/CHANGELOG.md)
+  - [Commits](https://github.com/TheKevJames/coveralls-python/compare/3.0.0...3.0.1)
+
+* Bump hmarr/auto-approve-action from v2.0.0 to v2.1.0. [dependabot[bot]]
+
+  Bumps [hmarr/auto-approve-action](https://github.com/hmarr/auto-approve-action) from v2.0.0 to v2.1.0.
+  - [Release notes](https://github.com/hmarr/auto-approve-action/releases)
+  - [Commits](https://github.com/hmarr/auto-approve-action/compare/v2.0.0...5d04a5ca6da9aeb8ca9f31a5239b96fc3e003029)
+
+* Bump virtualenv from 20.4.2 to 20.4.3. [dependabot[bot]]
+
+  Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.4.2 to 20.4.3.
+  - [Release notes](https://github.com/pypa/virtualenv/releases)
+  - [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
+  - [Commits](https://github.com/pypa/virtualenv/compare/20.4.2...20.4.3)
+
+* Bump pydocstyle from 5.1.1 to 6.0.0. [dependabot[bot]]
+
+  Bumps [pydocstyle](https://github.com/PyCQA/pydocstyle) from 5.1.1 to 6.0.0.
+  - [Release notes](https://github.com/PyCQA/pydocstyle/releases)
+  - [Changelog](https://github.com/PyCQA/pydocstyle/blob/master/docs/release_notes.rst)
+  - [Commits](https://github.com/PyCQA/pydocstyle/compare/5.1.1...6.0.0)
+
+* Bump tox from 3.21.4 to 3.23.0. [dependabot[bot]]
+
+  Bumps [tox](https://github.com/tox-dev/tox) from 3.21.4 to 3.23.0.
+  - [Release notes](https://github.com/tox-dev/tox/releases)
+  - [Changelog](https://github.com/tox-dev/tox/blob/master/docs/changelog.rst)
+  - [Commits](https://github.com/tox-dev/tox/compare/3.21.4...3.23.0)
+
+* Bump flake8 from 3.8.4 to 3.9.0. [dependabot[bot]]
+
+  Bumps [flake8](https://gitlab.com/pycqa/flake8) from 3.8.4 to 3.9.0.
+  - [Release notes](https://gitlab.com/pycqa/flake8/tags)
+  - [Commits](https://gitlab.com/pycqa/flake8/compare/3.8.4...3.9.0)
+
+* Bump coverage from 5.4 to 5.5. [dependabot[bot]]
+
+  Bumps [coverage](https://github.com/nedbat/coveragepy) from 5.4 to 5.5.
+  - [Release notes](https://github.com/nedbat/coveragepy/releases)
+  - [Changelog](https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst)
+  - [Commits](https://github.com/nedbat/coveragepy/compare/coverage-5.4...coverage-5.5)
+
+* Bump setuptools from 50.3.2 to 54.1.2. [dependabot[bot]]
+
+  Bumps [setuptools](https://github.com/pypa/setuptools) from 50.3.2 to 54.1.2.
+  - [Release notes](https://github.com/pypa/setuptools/releases)
+  - [Changelog](https://github.com/pypa/setuptools/blob/main/CHANGES.rst)
+  - [Commits](https://github.com/pypa/setuptools/compare/v50.3.2...v54.1.2)
+
+
 ## 2.5.5 (2021-02-14)
 
 ### Changes

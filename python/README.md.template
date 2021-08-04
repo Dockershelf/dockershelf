@@ -6,7 +6,7 @@
 
 ## Python shelf
 
-|Image  |Release  |Dockerfile  |Layers  |Size  |
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%PYTHON_TABLE%%
 

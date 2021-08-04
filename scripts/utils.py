@@ -46,11 +46,11 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 mongo_debian_releases_url = 'http://repo.mongodb.org/apt/debian/dists/index.html'
 mongo_rel_url_holder = 'http://repo.mongodb.org/apt/debian/dists/{0}/mongodb-org/index.html'
 mongo_version_lower_limit = 3.6
-mongo_version_upper_limit = 4.4
+mongo_version_upper_limit = 5.0
 
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
 node_version_lower_limit = 10
-node_version_upper_limit = 15
+node_version_upper_limit = 16
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
 odoo_version_lower_limit = 11.0
@@ -58,7 +58,7 @@ odoo_version_upper_limit = 14.0
 
 postgres_release_url = 'http://apt.postgresql.org/pub/repos/apt/dists/sid-pgdg/Release'
 postgres_version_lower_limit = 9.6
-postgres_version_upper_limit = 13
+postgres_version_upper_limit = 14
 
 php_versions_src_origin = {
     '7.0': 'stretch',
@@ -75,6 +75,7 @@ python_versions_src_origin = {
     '3.7': 'buster',
     '3.8': 'sid',
     '3.9': 'sid',
+    '3.10': 'experimental',
 }
 
 ruby_versions_src_origin = {
@@ -82,6 +83,7 @@ ruby_versions_src_origin = {
     '2.3': 'stretch',
     '2.5': 'buster-security',
     '2.7': 'sid',
+    '3.0': 'experimental',
 }
 
 
