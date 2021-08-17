@@ -45,7 +45,7 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
 mongo_debian_releases_url = 'http://repo.mongodb.org/apt/debian/dists/index.html'
 mongo_rel_url_holder = 'http://repo.mongodb.org/apt/debian/dists/{0}/mongodb-org/index.html'
-mongo_version_lower_limit = 3.6
+mongo_version_lower_limit = 4.2
 mongo_version_upper_limit = 5.0
 
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
