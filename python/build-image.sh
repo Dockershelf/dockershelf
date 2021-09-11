@@ -79,14 +79,14 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
         echo "deb ${UBUNTUMIRROR} bionic main"
         echo "deb ${UBUNTUSECMIRROR} bionic-security main universe"
     } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
-elif [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
+    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
     {
-        echo "deb ${UBUNTUMIRROR} focal main"
-        echo "deb ${UBUNTUSECMIRROR} focal-security main universe"
+        echo "deb ${UBUNTUMIRROR} groovy main"
+        echo "deb ${UBUNTUSECMIRROR} groovy-security main universe"
     } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
     cmdretry apt-get update
-    cmdretry apt-get install --allow-downgrades libc6/focal libc6-dev/focal libc-dev-bin/focal
+    cmdretry apt-get install --allow-downgrades libc6/groovy libc6-dev/groovy libc-dev-bin/groovy
 fi
 
 cmdretry apt-get update
@@ -101,7 +101,7 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
-if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.8" ]; then
+if [ "${PYTHON_VER_NUM}" == "3.8" ]; then
     DPKG_DEPENDS="$( echo ${DPKG_DEPENDS} | sed 's/libc6-dev//g' | \
     sed 's/libc6//g' | sed 's/libc-dev-bin//g' )"
 fi
@@ -114,6 +114,7 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 # We will install the packages listed in ${PYTHON_PKGS}
 
 msginfo "Installing Python ..."
+cmdretry aptitude install ${PYTHON_PKGS}
 cmdretry apt-get install -d ${PYTHON_PKGS}
 cmdretry apt-get install ${PYTHON_PKGS}
 
@@ -126,20 +127,17 @@ if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.7" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t buster
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t buster
 elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t focal
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t focal
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t groovy
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t groovy
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
 elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
+    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
+    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
+elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t experimental
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t experimental
 fi
 
 # Pip: Installation

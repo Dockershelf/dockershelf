@@ -45,7 +45,7 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
 mongo_debian_releases_url = 'http://repo.mongodb.org/apt/debian/dists/index.html'
 mongo_rel_url_holder = 'http://repo.mongodb.org/apt/debian/dists/{0}/mongodb-org/index.html'
-mongo_version_lower_limit = 3.6
+mongo_version_lower_limit = 4.2
 mongo_version_upper_limit = 5.0
 
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
@@ -72,10 +72,9 @@ python_versions_src_origin = {
     '2.7': 'sid',
     '3.5': 'stretch',
     '3.6': 'sid',
-    '3.7': 'buster',
     '3.8': 'sid',
-    '3.9': 'sid',
-    '3.10': 'experimental',
+    '3.9': 'bookworm',
+    '3.10': 'sid',
 }
 
 ruby_versions_src_origin = {

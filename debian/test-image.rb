@@ -105,14 +105,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should contain apt list files after an apt-get update" do
-        case ENV['DOCKER_IMAGE_EXTRA_TAGS'].split()[0].split(":")[1]
-        when "wheezy"
-            expect(file("/var/lib/apt/lists/archive.debian.org_debian_dists_%s_Release" % ENV["DOCKER_IMAGE_TAG"])).to exist
-        when "oldstable", "oldoldstable"
-            expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_Release" % ENV["DOCKER_IMAGE_TAG"])).to exist
-        else
-            expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_InRelease" % ENV["DOCKER_IMAGE_TAG"])).to exist
-        end
+        expect(file("/var/lib/apt/lists/deb.debian.org_debian_dists_%s_InRelease" % ENV["DOCKER_IMAGE_TAG"])).to exist
     end
 
     it "should be able to install a package" do
