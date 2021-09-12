@@ -51,6 +51,7 @@ mongo_version_upper_limit = 5.0
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
 node_version_lower_limit = 10
 node_version_upper_limit = 16
+node_versions_disabled = ['11', '13']
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
 odoo_version_lower_limit = 11.0
@@ -200,6 +201,7 @@ def get_node_versions():
     node_versions = [u(v) for v in node_versions
                      if (float(v) >= node_version_lower_limit and
                          float(v) <= node_version_upper_limit)]
+    node_versions = list(set(node_versions) - set(node_versions_disabled))
     return sorted(set(node_versions), key=lambda x: Version(x))
 
 
