@@ -17,7 +17,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="buster" \
-    DEBIAN_SUITE="stable"
+    DEBIAN_SUITE="oldstable"
 
 ADD base /
 

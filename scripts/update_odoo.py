@@ -40,7 +40,7 @@ def update_odoo(basedir):
     odoo_build_hook = os.path.join(odoo_hooks_dir, 'build')
     odoo_push_hook = os.path.join(odoo_hooks_dir, 'push')
 
-    node_version = '12'
+    node_version = '14'
     base_image_holder = 'dockershelf/python:{0}'
     docker_tag_holder = 'dockershelf/odoo:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/odoo'
@@ -78,7 +78,7 @@ def update_odoo(basedir):
         logger.info('Processing Odoo {0}'.format(odoo_version))
 
         if float(odoo_version) >= 11.0:
-            python_version = '3.8'
+            python_version = '3.10'
         else:
             python_version = '2.7'
 

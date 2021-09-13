@@ -50,26 +50,6 @@ cmdretry apt-get upgrade
 cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
-# Node: python-minimal fix
-# ------------------------------------------------------------------------------
-# There's a bug in nodesources's packaging, this fixes it
-# ref: https://github.com/nodesource/distributions/issues/1100
-
-msginfo "Applying python-minimal fix ..."
-{
-    echo "deb ${MIRROR} buster main"
-} | tee /etc/apt/sources.list.d/python-minimal.list > /dev/null
-
-cmdretry apt-get update
-
-cmdretry apt-get install -d libgcc-s1
-cmdretry apt-get install libgcc-s1
-
-cmdretry apt-get install -d python-minimal -t buster
-cmdretry apt-get install python-minimal -t buster
-
-rm /etc/apt/sources.list.d/python-minimal.list
-
 # Node: Configure sources
 # ------------------------------------------------------------------------------
 # We will use Nodesource's official repository to install the different versions

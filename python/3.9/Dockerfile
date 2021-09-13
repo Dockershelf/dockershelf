@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PYTHON_VER_NUM="3.9" PYTHON_DEBIAN_SUITE="sid" \
+ENV PYTHON_VER_NUM="3.9" PYTHON_DEBIAN_SUITE="bookworm" \
     PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python3.9/dist-packages"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/python/
