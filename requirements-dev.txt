@@ -3,7 +3,7 @@ pip==20.3
 flake8==3.9.2
 pydocstyle==5.1.1
 virtualenv==20.10.0
-coverage==5.5
+coverage==6.1.2
 gitchangelog==3.0.4
 bumpversion==0.6.0
 mako==1.1.5
