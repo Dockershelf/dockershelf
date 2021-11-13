@@ -103,7 +103,7 @@ DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
 if [ "${PYTHON_VER_NUM}" == "3.8" ]; then
     DPKG_DEPENDS="$( echo ${DPKG_DEPENDS} | sed 's/libc6-dev//g' | \
-    sed 's/libc6//g' | sed 's/libc-dev-bin//g' )"
+    sed 's/libc6//g' | sed 's/libc-dev-bin//g' | sed 's/libffi8ubuntu1//g'  )"
 fi
 
 cmdretry apt-get install -d ${DPKG_DEPENDS}
