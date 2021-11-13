@@ -6,7 +6,7 @@ virtualenv==20.8.0
 coverage==5.5
 gitchangelog==3.0.4
 bumpversion==0.6.0
-pystache==0.5.4
+mako==1.1.5
 wheel==0.37.0
 tox==3.24.4
-coveralls==3.2.0
+coveralls==3.3.1

@@ -153,8 +153,8 @@ unreleased_version_label = "%%version%% (unreleased)"
 ##
 #output_engine = rest_py
 #output_engine = mustache("restructuredtext")
-output_engine = mustache("markdown")
-#output_engine = makotemplate("restructuredtext")
+#output_engine = mustache("markdown")
+output_engine = makotemplate("markdown")
 
 
 ## ``include_merge`` is a boolean
