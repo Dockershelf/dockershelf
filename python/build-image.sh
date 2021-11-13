@@ -42,7 +42,7 @@ PYTHON_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
     lib${PYTHON_VER_NUM_MINOR_STR}-dev ${PYTHON_VER_NUM_MINOR_STR}-dev"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg git"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -136,8 +136,8 @@ elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
 elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils
+    git clone https://github.com/pypa/distutils
+    cp -r distutils/* /usr/lib/python3.10/distutils/
 fi
 
 # Pip: Installation
