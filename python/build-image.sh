@@ -157,6 +157,10 @@ else
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 fi
 
+if [ ! -f "/usr/bin/pip" ]; then
+    ln -s /usr/bin/pip${PYTHON_VER_NUM} /usr/bin/pip
+fi
+
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
 # We need to clear the filesystem of unwanted packages to shrink image size.
