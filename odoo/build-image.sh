@@ -23,10 +23,11 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 DEBMIRROR="http://deb.debian.org/debian"
 MIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
-WKHTMLTOX_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/"\
-"releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb"
+WKHTMLTOX_URL="https://github.com/wkhtmltopdf/packaging/"\
+"releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"

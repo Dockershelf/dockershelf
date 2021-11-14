@@ -4,6 +4,7 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
+    day: thursday
     time: "01:00"
   ignore:
   - dependency-name: setuptools
@@ -20,5 +21,6 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
+    day: thursday
     time: "01:00"
   open-pull-requests-limit: 99

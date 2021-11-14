@@ -1,4 +1,4 @@
-FROM dockershelf/python:3.10
+FROM dockershelf/python:3.9
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,7 +6,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="odoo14.0" \
-      org.label-schema.description="An Odoo 14.0 image based on Debian sid, Python 3.10 and Node 14." \
+      org.label-schema.description="An Odoo 14.0 image based on Debian sid, Python 3.9 and Node 14." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \

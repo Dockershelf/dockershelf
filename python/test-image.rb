@@ -42,6 +42,8 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to install a python package" do
+        puts command("pip install virtualenv").stdout.strip
+        puts command("pip install virtualenv").stderr.strip
         expect(command("pip install virtualenv").exit_status).to eq(0)
         case python_version()
         when "3.10"

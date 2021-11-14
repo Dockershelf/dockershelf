@@ -5,7 +5,7 @@
 ##
 ## Description
 ##
-##   ACTION is one of '[REF]', '[FIX]', '[ADD]'
+##   ACTION is one of '[REF]', '[FIX]', '[ADD]', '[DEL]'
 ##
 ##       Is WHAT the change is about.
 ##
@@ -41,6 +41,17 @@
 ignore_regexps = [
     r'^(.{3,3}\s*:)?\s*[Uu]pdating [Cc]hangelog and [Vv]ersion.?\s*$',
     r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
+    r'@minor', r'!minor',
+    r'@cosmetic', r'!cosmetic',
+    r'@refactor', r'!refactor',
+    r'@wip', r'!wip',
+    r'^[Cc][Ii]\s*:',  ## ignore Ci-related commits
+    r'^.*:\s*[Cc][Ii]\s*:',  ## ignore Ci-related commits
+    r'^.*[Cc]ircle[Cc][Ii]\s*',  ## ignore Ci-related commits
+    r'^.*:github:.*$',
+    r'^.*:changelog:.*$',
+    r'^Git-svn-id',
+    r'^$',  ## ignore commits with empty messages
 ]
 
 
@@ -57,9 +68,10 @@ ignore_regexps = [
 ## whenever you are tweaking this variable.
 ##
 section_regexps = [
-    ('New', [r'^\[ADD\]\s*([^\n]*)$']),
-    ('Changes', [r'^\[REF\]\s*([^\n]*)$']),
-    ('Fix', [r'^\[FIX\]\s*([^\n]*)$']),
+    ('Added', [r'^\[ADD\]\s*([^\n]*)$']),
+    ('Changed', [r'^\[REF\]\s*([^\n]*)$']),
+    ('Fixed', [r'^\[FIX\]\s*([^\n]*)$']),
+    ('Removed', [r'^\[DEL\]\s*([^\n]*)$']),
     ('Other', None),
 ]
 
@@ -120,7 +132,7 @@ tag_filter_regexp = r'^[0-9]+\.[0-9]+(\.[0-9]+)?$'
 ##
 ## This label will be used as the changelog Title of the last set of changes
 ## between last valid tag and HEAD if any.
-unreleased_version_label = "%%version%% (unreleased)"
+unreleased_version_label = "(unreleased)"
 
 
 ## ``output_engine`` is a callable
@@ -153,8 +165,8 @@ unreleased_version_label = "%%version%% (unreleased)"
 ##
 #output_engine = rest_py
 #output_engine = mustache("restructuredtext")
-output_engine = mustache("markdown")
-#output_engine = makotemplate("restructuredtext")
+#output_engine = mustache("markdown")
+output_engine = makotemplate(".gitchangelog.tpl")
 
 
 ## ``include_merge`` is a boolean

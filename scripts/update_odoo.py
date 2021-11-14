@@ -78,7 +78,7 @@ def update_odoo(basedir):
         logger.info('Processing Odoo {0}'.format(odoo_version))
 
         if float(odoo_version) >= 11.0:
-            python_version = '3.10'
+            python_version = '3.9'
         else:
             python_version = '2.7'
 

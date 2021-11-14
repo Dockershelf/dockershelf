@@ -32,8 +32,6 @@ RUBY_VER_NUM_MAJOR_STR="ruby${RUBY_VER_NUM_MAJOR}"
 
 MIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
-ARMIRROR="http://archive.debian.org/debian"
-ARSECMIRROR="http://archive.debian.org/debian-security"
 
 # This is the list of ruby packages from debian that make up a minimal
 # ruby installation. We will use them later.
@@ -72,11 +70,6 @@ if [ "${RUBY_DEBIAN_SUITE}" == "jessie-security" ]; then
         echo "deb ${MIRROR} jessie main"
         echo "deb ${SECMIRROR} jessie/updates main"
     } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
-elif [ "${RUBY_DEBIAN_SUITE}" == "buster-security" ]; then
-    {
-        echo "deb ${MIRROR} buster main"
-        echo "deb ${SECMIRROR} buster/updates main"
-    } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
 elif [ "${RUBY_DEBIAN_SUITE}" != "sid" ]; then
     {
         echo "deb ${MIRROR} ${RUBY_DEBIAN_SUITE} main"
@@ -95,29 +88,16 @@ DPKG_RUN_DEPENDS="$( aptitude search -F%p \
     sed "$( printf 's/\s%s\s/ /g;' ${RUBY_PKGS} )" )"
 DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
 
-if [ "${RUBY_DEBIAN_SUITE}" == "buster-security" ]; then
-    cmdretry apt-get install -d libncurses6 libncursesw6 libtinfo6
-    cmdretry apt-get install libncurses6 libncursesw6 libtinfo6
-    cmdretry apt-get -t buster --allow-downgrades install libgmp10/buster
-    cmdretry apt-get install -d ${DPKG_DEPENDS} -t buster
-    cmdretry apt-get install ${DPKG_DEPENDS} -t buster
-else
-    cmdretry apt-get install -d ${DPKG_DEPENDS}
-    cmdretry apt-get install ${DPKG_DEPENDS}
-fi
+cmdretry apt-get install -d ${DPKG_DEPENDS}
+cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Ruby: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${RUBY_PKGS}
 
 msginfo "Installing Ruby ..."
-if [ "${RUBY_DEBIAN_SUITE}" == "buster-security" ]; then
-    cmdretry apt-get install -d ${RUBY_PKGS} -t buster
-    cmdretry apt-get install ${RUBY_PKGS} -t buster
-else
-    cmdretry apt-get install -d ${RUBY_PKGS}
-    cmdretry apt-get install ${RUBY_PKGS}
-fi
+cmdretry apt-get install -d ${RUBY_PKGS}
+cmdretry apt-get install ${RUBY_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

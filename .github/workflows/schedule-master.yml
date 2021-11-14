@@ -2,7 +2,7 @@ name: Schedule (master branch)
 
 on:
   schedule:
-    - cron: '00 3 * * 1'
+    - cron: '00 3 * * 4'
 
 jobs:
   build:
@@ -36,7 +36,6 @@ jobs:
             docker-image-extra-tags: "dockershelf/python:latest"
           - docker-image-name: "dockershelf/ruby:2.1"
           - docker-image-name: "dockershelf/ruby:2.3"
-          - docker-image-name: "dockershelf/ruby:2.5"
           - docker-image-name: "dockershelf/ruby:2.7"
           - docker-image-name: "dockershelf/ruby:3.0"
             docker-image-extra-tags: "dockershelf/ruby:latest"
@@ -45,6 +44,7 @@ jobs:
           - docker-image-name: "dockershelf/node:14"
           - docker-image-name: "dockershelf/node:15"
           - docker-image-name: "dockershelf/node:16"
+          - docker-image-name: "dockershelf/node:17"
             docker-image-extra-tags: "dockershelf/node:latest"
           - docker-image-name: "dockershelf/mongo:4.2"
           - docker-image-name: "dockershelf/mongo:4.4"
