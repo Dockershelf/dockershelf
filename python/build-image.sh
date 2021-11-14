@@ -137,7 +137,7 @@ elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
 elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
     git clone https://github.com/pypa/distutils
-    cp -r distutils/* /usr/lib/python3.10/distutils/
+    cp -r distutils/distutils/* /usr/lib/python3.10/distutils/
 fi
 
 # Pip: Installation
