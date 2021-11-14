@@ -55,7 +55,7 @@ node_versions_disabled = ['11', '13']
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
 odoo_version_lower_limit = 11.0
-odoo_version_upper_limit = 15.0
+odoo_version_upper_limit = 14.0
 
 postgres_release_url = 'http://apt.postgresql.org/pub/repos/apt/dists/sid-pgdg/Release'
 postgres_version_lower_limit = 9.6

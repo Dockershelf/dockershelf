@@ -61,7 +61,6 @@ jobs:
           - docker-image-name: "dockershelf/odoo:12.0"
           - docker-image-name: "dockershelf/odoo:13.0"
           - docker-image-name: "dockershelf/odoo:14.0"
-          - docker-image-name: "dockershelf/odoo:15.0"
             docker-image-extra-tags: "dockershelf/odoo:latest"
           - docker-image-name: "dockershelf/php:7.0"
           - docker-image-name: "dockershelf/php:7.2"
