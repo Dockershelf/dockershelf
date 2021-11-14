@@ -50,12 +50,12 @@ mongo_version_upper_limit = 5.0
 
 node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
 node_version_lower_limit = 10
-node_version_upper_limit = 16
+node_version_upper_limit = 17
 node_versions_disabled = ['11', '13']
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
 odoo_version_lower_limit = 11.0
-odoo_version_upper_limit = 14.0
+odoo_version_upper_limit = 15.0
 
 postgres_release_url = 'http://apt.postgresql.org/pub/repos/apt/dists/sid-pgdg/Release'
 postgres_version_lower_limit = 9.6
@@ -81,7 +81,6 @@ python_versions_src_origin = {
 ruby_versions_src_origin = {
     '2.1': 'jessie-security',
     '2.3': 'stretch',
-    '2.5': 'buster-security',
     '2.7': 'sid',
     '3.0': 'experimental',
 }

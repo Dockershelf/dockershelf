@@ -5,8 +5,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="ruby2.5" \
-      org.label-schema.description="A Ruby 2.5 image based on Debian sid." \
+      org.label-schema.name="node17" \
+      org.label-schema.description="A Node 17 image based on Debian sid." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,9 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV RUBY_VER_NUM="2.5" RUBY_DEBIAN_SUITE="buster-security"
+ENV NODE_VER_NUM="17"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
-RUN bash /usr/share/dockershelf/ruby/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/node/
+RUN bash /usr/share/dockershelf/node/build-image.sh
 
-CMD ["ruby"]
+CMD ["/bin/bash"]
