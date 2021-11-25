@@ -98,6 +98,7 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 msginfo "Installing Ruby ..."
 cmdretry apt-get install -d ${RUBY_PKGS}
 cmdretry apt-get install ${RUBY_PKGS}
+cmdretry apt-mark manual ${RUBY_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

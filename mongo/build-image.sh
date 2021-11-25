@@ -119,6 +119,7 @@ done
 
 cmdretry aptitude install -d ${MONGO_PKGS_VER}
 cmdretry aptitude install ${MONGO_PKGS_VER}
+cmdretry apt-mark manual ${MONGO_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

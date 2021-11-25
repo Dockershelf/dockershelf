@@ -103,6 +103,7 @@ done
 
 cmdretry aptitude install -d ${POSTGRES_PKGS_VER}
 cmdretry aptitude install ${POSTGRES_PKGS_VER}
+cmdretry apt-mark manual ${POSTGRES_PKGS}
 
 # Postgres: Configure
 # ------------------------------------------------------------------------------

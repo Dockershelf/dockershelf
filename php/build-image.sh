@@ -141,6 +141,7 @@ else
     cmdretry apt-get install -d ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
     cmdretry apt-get install ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
 fi
+cmdretry apt-mark manual ${PHP_PKGS}
 
 # PHP: Configure
 # ------------------------------------------------------------------------------

@@ -109,6 +109,7 @@ done
 
 cmdretry aptitude install -d ${ODOO_PKGS_VER}
 cmdretry aptitude install ${ODOO_PKGS_VER}
+cmdretry apt-mark manual ${ODOO_PKGS}
 
 # Odoo: Configure
 # ------------------------------------------------------------------------------

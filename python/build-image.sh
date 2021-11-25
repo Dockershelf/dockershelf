@@ -114,9 +114,9 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 # We will install the packages listed in ${PYTHON_PKGS}
 
 msginfo "Installing Python ..."
-cmdretry aptitude install ${PYTHON_PKGS}
 cmdretry apt-get install -d ${PYTHON_PKGS}
 cmdretry apt-get install ${PYTHON_PKGS}
+cmdretry apt-mark manual ${PYTHON_PKGS}
 
 if [ ! -f "/usr/bin/python" ]; then
     ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
@@ -125,16 +125,19 @@ fi
 if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
+    cmdretry apt-mark manual ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
 elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t groovy
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t groovy
+    cmdretry apt-mark manual ${PYTHON_VER_NUM_MAJOR_STR}-distutils
     rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
     cmdretry apt-get update
 elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
     cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
+    cmdretry apt-mark manual ${PYTHON_VER_NUM_MAJOR_STR}-distutils
 elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
     git clone https://github.com/pypa/distutils
     cp -r distutils/distutils/* /usr/lib/python3.10/distutils/

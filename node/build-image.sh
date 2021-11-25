@@ -91,6 +91,7 @@ done
 
 cmdretry aptitude install -d ${NODE_PKGS_VER}
 cmdretry aptitude install ${NODE_PKGS_VER}
+cmdretry apt-mark manual ${NODE_PKGS}
 
 if [ ! -f "/usr/bin/nodejs" ]; then
     ln -s /usr/bin/node /usr/bin/nodejs
