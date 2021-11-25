@@ -141,7 +141,6 @@ else
     cmdretry apt-get install -d ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
     cmdretry apt-get install ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
 fi
-cmdretry apt-mark manual ${PHP_PKGS}
 
 # PHP: Configure
 # ------------------------------------------------------------------------------
@@ -232,7 +231,7 @@ msginfo "Removing unnecessary packages ..."
 # This is clever uh? I figured it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                             --no-show-section --guess-all --libdevel \
-                            -p standard ) )
+                            -p standard --add-keep "${PHP_PKGS}" ) )
 cmdretry apt-get autoremove
 
 # This too

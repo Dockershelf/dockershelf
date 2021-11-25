@@ -119,7 +119,6 @@ done
 
 cmdretry aptitude install -d ${MONGO_PKGS_VER}
 cmdretry aptitude install ${MONGO_PKGS_VER}
-cmdretry apt-mark manual ${MONGO_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
@@ -129,7 +128,7 @@ msginfo "Removing unnecessary packages ..."
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                             --no-show-section --guess-all --libdevel \
-                            -p standard ) )
+                            -p standard --add-keep "${MONGO_PKGS}" ) )
 cmdretry apt-get autoremove
 
 # This too

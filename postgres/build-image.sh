@@ -103,7 +103,6 @@ done
 
 cmdretry aptitude install -d ${POSTGRES_PKGS_VER}
 cmdretry aptitude install ${POSTGRES_PKGS_VER}
-cmdretry apt-mark manual ${POSTGRES_PKGS}
 
 # Postgres: Configure
 # ------------------------------------------------------------------------------
@@ -123,7 +122,7 @@ msginfo "Removing unnecessary packages ..."
 # This is clever uh? Figure it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                             --no-show-section --guess-all --libdevel \
-                            -p standard ) )
+                            -p standard --add-keep "${POSTGRES_PKGS}" ) )
 cmdretry apt-get autoremove
 
 # This too

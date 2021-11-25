@@ -98,7 +98,6 @@ cmdretry apt-get install ${DPKG_DEPENDS}
 msginfo "Installing Ruby ..."
 cmdretry apt-get install -d ${RUBY_PKGS}
 cmdretry apt-get install ${RUBY_PKGS}
-cmdretry apt-mark manual ${RUBY_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
@@ -108,7 +107,7 @@ msginfo "Removing unnecessary packages ..."
 # This is clever uh? I figured it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                             --no-show-section --guess-all --libdevel \
-                            -p standard ) )
+                            -p standard --add-keep "${RUBY_PKGS}" ) )
 cmdretry apt-get autoremove
 
 # This too

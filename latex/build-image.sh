@@ -92,7 +92,6 @@ cmdretry aptitude install ${DPKG_DEPENDS} python3-pygments
 msginfo "Installing Latex ..."
 cmdretry apt-get install -d ${LATEX_PKGS}
 cmdretry apt-get install ${LATEX_PKGS}
-cmdretry apt-mark manual ${LATEX_PKGS}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
