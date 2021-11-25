@@ -102,7 +102,7 @@ msginfo "Removing unnecessary packages ..."
 # This is clever uh? I figured it out myself, ha!
 cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
                             --no-show-section --guess-all --libdevel \
-                            -p standard ) )
+                            -p standard --add-keep "${LATEX_PKGS}" ) )
 cmdretry apt-get autoremove
 
 # This too
