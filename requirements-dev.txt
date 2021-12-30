@@ -8,5 +8,5 @@ gitchangelog==3.0.4
 bumpversion==0.6.0
 mako==1.1.6
 wheel==0.37.1
-tox==3.24.4
+tox==3.24.5
 coveralls==3.3.1
