@@ -1,12 +1,12 @@
-FROM %%BASE_IMAGE%%
+FROM dockershelf/debian:sid
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="odoo%%ODOO_VERSION%%" \
-      org.label-schema.description="An Odoo %%ODOO_VERSION%% image based on Debian %%DEBIAN_RELEASE%%, Python %%PYTHON_VERSION%% and Node %%NODE_VERSION%%." \
+      org.label-schema.name="php8.1" \
+      org.label-schema.description="A PHP 8.1 image based on Debian sid." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,16 +15,16 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV ODOO_VER_NUM="%%ODOO_VERSION%%"
+ENV PHP_VER_NUM="8.1" PHP_DEBIAN_SUITE="sid"
 
-COPY odoo.conf /etc/odoo/
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
-RUN bash /usr/share/dockershelf/odoo/build-image.sh
+COPY docker-entrypoint.sh apache2-foreground /usr/local/bin/
+COPY build-image.sh library.sh /usr/share/dockershelf/php/
+RUN bash /usr/share/dockershelf/php/build-image.sh
 
-VOLUME /var/lib/odoo /mnt/extra-addons
+VOLUME /var/www/html
+WORKDIR /var/www/html
 
-EXPOSE 8069 8071
+EXPOSE 80
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["odoo"]
+CMD ["apache2-foreground"]

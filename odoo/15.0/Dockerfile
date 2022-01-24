@@ -1,12 +1,12 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/python:3.9
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="python3.8" \
-      org.label-schema.description="A Python 3.8 image based on Debian sid." \
+      org.label-schema.name="odoo15.0" \
+      org.label-schema.description="An Odoo 15.0 image based on Debian sid, Python 3.9 and Node 14." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,10 +15,16 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PYTHON_VER_NUM="3.8" PYTHON_DEBIAN_SUITE="sid" \
-    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python3.8/dist-packages:/usr/lib/python3.8/site-packages"
+ENV ODOO_VER_NUM="15.0"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/python/
-RUN bash /usr/share/dockershelf/python/build-image.sh
+COPY odoo.conf /etc/odoo/
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
+RUN bash /usr/share/dockershelf/odoo/build-image.sh
 
-CMD ["python"]
+VOLUME /var/lib/odoo /mnt/extra-addons
+
+EXPOSE 8069 8071
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["odoo"]

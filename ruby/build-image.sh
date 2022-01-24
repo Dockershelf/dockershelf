@@ -30,7 +30,7 @@ RUBY_VER_NUM_STR="ruby${RUBY_VER_NUM}"
 RUBY_VER_NUM_MINOR_STR="ruby${RUBY_VER_NUM_MINOR}"
 RUBY_VER_NUM_MAJOR_STR="ruby${RUBY_VER_NUM_MAJOR}"
 
-MIRROR="http://deb.debian.org/debian"
+DEBMIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
 
 # This is the list of ruby packages from debian that make up a minimal
@@ -38,7 +38,7 @@ SECMIRROR="http://deb.debian.org/debian-security"
 RUBY_PKGS="${RUBY_VER_NUM_STR} ${RUBY_VER_NUM_STR}-dev"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -51,11 +51,7 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-
-cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-
-cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Ruby: Configure sources
@@ -63,58 +59,42 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of Ruby.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${RUBY_DEBIAN_SUITE}" == "jessie-security" ]; then
-    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
-    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBF8D6FD518E17E1
+if [ "${RUBY_DEBIAN_SUITE}" == "stretch" ]; then
     {
-        echo "deb ${MIRROR} jessie main"
-        echo "deb ${SECMIRROR} jessie/updates main"
+        echo "deb ${DEBMIRROR} stretch main"
+        echo "deb ${SECMIRROR} stretch/updates main"
+    } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
+elif [ "${RUBY_DEBIAN_SUITE}" == "buster" ]; then
+    {
+        echo "deb ${DEBMIRROR} buster main"
+        echo "deb ${SECMIRROR} buster/updates main"
     } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
 elif [ "${RUBY_DEBIAN_SUITE}" != "sid" ]; then
     {
-        echo "deb ${MIRROR} ${RUBY_DEBIAN_SUITE} main"
+        echo "deb ${DEBMIRROR} ${RUBY_DEBIAN_SUITE} main"
     } | tee /etc/apt/sources.list.d/ruby.list > /dev/null
 fi
 
 cmdretry apt-get update
-
-# Apt: Install runtime dependencies
-# ------------------------------------------------------------------------------
-# Now we use some shell/apt plumbing to get runtime dependencies.
-
-msginfo "Installing ruby runtime dependencies ..."
-DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${RUBY_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${RUBY_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
-
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Ruby: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${RUBY_PKGS}
 
 msginfo "Installing Ruby ..."
-cmdretry apt-get install -d ${RUBY_PKGS}
-cmdretry apt-get install ${RUBY_PKGS}
+if [ "${RUBY_DEBIAN_SUITE}" == "stretch" ]; then
+    cmdretry apt-get install libgmp-dev libtinfo5 libncurses5
+elif [ "${RUBY_DEBIAN_SUITE}" == "buster" ]; then
+    cmdretry apt-get install libgmp-dev libtinfo6 libncurses6
+fi
+cmdretry apt-get install ${RUBY_PKGS} -t ${RUBY_DEBIAN_SUITE}
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? I figured it out myself, ha!
-cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                            --no-show-section --guess-all --libdevel \
-                            -p standard ) )
-cmdretry apt-get autoremove
-
-# This too
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get autoremove
-
-cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

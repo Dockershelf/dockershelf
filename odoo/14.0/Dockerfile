@@ -15,15 +15,11 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV ODOO_VER_NUM="14.0" NODE_VER_NUM="14"
+ENV ODOO_VER_NUM="14.0"
 
 COPY odoo.conf /etc/odoo/
 COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image-node.sh /usr/share/dockershelf/node/build-image.sh
-COPY library.sh /usr/share/dockershelf/node/
 COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
-
-RUN bash /usr/share/dockershelf/node/build-image.sh
 RUN bash /usr/share/dockershelf/odoo/build-image.sh
 
 VOLUME /var/lib/odoo /mnt/extra-addons

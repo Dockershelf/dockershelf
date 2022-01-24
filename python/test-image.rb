@@ -42,25 +42,13 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to install a python package" do
-        puts command("pip install virtualenv").stdout.strip
-        puts command("pip install virtualenv").stderr.strip
         expect(command("pip install virtualenv").exit_status).to eq(0)
-        case python_version()
-        when "3.10"
-            expect(file('/usr/bin/virtualenv')).to be_executable
-        else
-            expect(file('/usr/local/bin/virtualenv')).to be_executable
-        end
+        expect(file('/usr/local/bin/virtualenv')).to be_executable
     end
 
     it "should be able to uninstall a python package" do
         expect(command("pip uninstall -y virtualenv").exit_status).to eq(0)
-        case python_version()
-        when "3.10"
-            expect(file('/usr/bin/virtualenv')).not_to exist
-        else
-            expect(file('/usr/local/bin/virtualenv')).not_to exist
-        end
+        expect(file('/usr/local/bin/virtualenv')).not_to exist
     end
 
     it "should have setuptools installed by pip" do

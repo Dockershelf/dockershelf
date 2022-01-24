@@ -32,3 +32,20 @@ down:
 destroy:
 	@docker-compose -p dockershelf -f docker-compose.yml down \
 		--rmi all --remove-orphans -v
+
+virtualenv:
+	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
+		-ExecutionPolicy Bypass \
+		-Command "python -m venv .\winvenv"
+	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
+		-ExecutionPolicy Bypass \
+		-Command ".\winvenv\Scripts\pip.exe install -U wheel"
+	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
+		-ExecutionPolicy Bypass \
+		-Command ".\winvenv\Scripts\pip.exe install -U setuptools"
+	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
+		-ExecutionPolicy Bypass \
+		-Command ".\winvenv\Scripts\pip.exe install -r requirements.txt"
+	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
+		-ExecutionPolicy Bypass \
+		-Command ".\winvenv\Scripts\pip.exe install -r requirements-dev.txt"

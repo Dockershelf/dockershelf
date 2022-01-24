@@ -25,10 +25,7 @@ import sys
 import fnmatch
 from contextlib import closing
 
-try:
-    from urllib2 import urlopen, Request
-except ImportError:
-    from urllib.request import urlopen, Request
+from urllib.request import urlopen, Request
 
 import lxml.html
 from packaging.version import Version
@@ -43,19 +40,22 @@ if not sys.version_info < (3,):
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-mongo_debian_releases_url = 'http://repo.mongodb.org/apt/debian/dists/index.html'
-mongo_rel_url_holder = 'http://repo.mongodb.org/apt/debian/dists/{0}/mongodb-org/index.html'
+mongo_debian_releases_url = \
+    'http://repo.mongodb.org/apt/debian/dists/index.html'
+mongo_rel_url_holder = \
+    'http://repo.mongodb.org/apt/debian/dists/{0}/mongodb-org/index.html'
 mongo_version_lower_limit = 4.2
 mongo_version_upper_limit = 5.0
 
-node_versions_list_file = 'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
+node_versions_list_file = \
+    'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
 node_version_lower_limit = 10
 node_version_upper_limit = 17
 node_versions_disabled = ['11', '13']
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
 odoo_version_lower_limit = 11.0
-odoo_version_upper_limit = 14.0
+odoo_version_upper_limit = 15.0
 
 postgres_release_url = 'http://apt.postgresql.org/pub/repos/apt/dists/sid-pgdg/Release'
 postgres_version_lower_limit = 9.6
@@ -63,24 +63,24 @@ postgres_version_upper_limit = 14
 
 php_versions_src_origin = {
     '7.0': 'stretch',
-    '7.2': 'bionic',
-    '7.3': 'buster-security',
-    '7.4': 'sid',
-    '8.0': 'experimental',
+    '7.3': 'buster',
+    '7.4': 'bullseye',
+    '8.1': 'sid',
 }
 
 python_versions_src_origin = {
     '2.7': 'sid',
-    '3.5': 'stretch',
+    '3.5': 'sid',
     '3.6': 'sid',
-    '3.8': 'sid',
-    '3.9': 'bookworm',
+    '3.7': 'sid',
+    '3.9': 'sid',
     '3.10': 'sid',
+    '3.11': 'sid',
 }
 
 ruby_versions_src_origin = {
-    '2.1': 'jessie-security',
     '2.3': 'stretch',
+    '2.5': 'buster',
     '2.7': 'sid',
     '3.0': 'experimental',
 }
