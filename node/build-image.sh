@@ -24,11 +24,11 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-MIRROR="http://deb.debian.org/debian"
+DEBMIRROR="http://deb.debian.org/debian"
 NODEMIRROR="https://deb.nodesource.com/node_${NODE_VER_NUM}.x"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
 NODE_PKGS="nodejs"
 NODE_PKGS_VER=""
 
@@ -43,11 +43,7 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-
-cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-
-cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Node: Configure sources
@@ -57,26 +53,18 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
+cmdretry dirmngr --debug-level guru
+
+cmdretry gpg --lock-never --no-default-keyring \
+    --keyring /usr/share/keyrings/node.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys 1655A0AB68576280
+
 {
-    echo "deb ${NODEMIRROR} sid main"
+    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} sid main"
 } | tee /etc/apt/sources.list.d/node.list > /dev/null
 
-curl -fsSL "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
 cmdretry apt-get update
-
-# Apt: Install runtime dependencies
-# ------------------------------------------------------------------------------
-# Now we use some shell/apt plumbing to get runtime dependencies.
-
-msginfo "Installing node runtime dependencies ..."
-DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${NODE_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${NODE_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs | sed 's/libgcc1//g' | sed 's/python-minimal//g' )"
-
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
 
 # Node: Installation
 # ------------------------------------------------------------------------------
@@ -89,7 +77,6 @@ for PKG in ${NODE_PKGS}; do
     NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 
-cmdretry aptitude install -d ${NODE_PKGS_VER}
 cmdretry aptitude install ${NODE_PKGS_VER}
 
 if [ ! -f "/usr/bin/nodejs" ]; then
@@ -102,17 +89,7 @@ fi
 # because some files might be confused with already installed python packages.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? Figure it out myself, ha!
-cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                            --no-show-section --guess-all --libdevel \
-                            -p standard ) )
-cmdretry apt-get autoremove
-
-# This too
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get autoremove
-
-cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

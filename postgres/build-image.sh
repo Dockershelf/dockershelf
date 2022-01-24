@@ -23,11 +23,12 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-MIRROR="http://apt.postgresql.org/pub/repos/apt"
+
+PGMIRROR="http://apt.postgresql.org/pub/repos/apt"
 DEBMIRROR="http://deb.debian.org/debian"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
 POSTGRES_PKGS="postgresql-${POSTGRES_VER_NUM} \
     postgresql-client-${POSTGRES_VER_NUM} postgresql-common \
     postgresql-client-common"
@@ -44,11 +45,7 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-
-cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-
-cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Postgres: Configure sources
@@ -57,12 +54,18 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # of Postgres.
 
 msginfo "Configuring /etc/apt/sources.list ..."
+
+cmdretry dirmngr --debug-level guru
+
+cmdretry gpg --lock-never --no-default-keyring \
+    --keyring /usr/share/keyrings/postgres.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+
 {
-    echo "deb ${MIRROR} sid-pgdg main ${POSTGRES_VER_NUM}"
+    echo "deb [signed-by=/usr/share/keyrings/postgres.gpg] ${PGMIRROR} sid-pgdg main ${POSTGRES_VER_NUM}"
 } | tee /etc/apt/sources.list.d/postgres.list > /dev/null
 
-cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
 cmdretry apt-get update
 
 # Postgres: Configure
@@ -77,19 +80,6 @@ chown -R postgres:postgres /var/lib/postgresql/data /var/run/postgresql
 chmod 2777 /var/run/postgresql
 chmod 777 /var/lib/postgresql/data
 
-# Apt: Install runtime dependencies
-# ------------------------------------------------------------------------------
-# Now we use some shell/apt plumbing to get runtime dependencies.
-
-msginfo "Installing postgres runtime dependencies ..."
-DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${POSTGRES_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${POSTGRES_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
-
-cmdretry aptitude install -d ${DPKG_DEPENDS} libnss-wrapper sudo
-cmdretry aptitude install ${DPKG_DEPENDS} libnss-wrapper sudo
-
 # Postgres: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${POSTGRES_PKGS}
@@ -101,8 +91,7 @@ for PKG in ${POSTGRES_PKGS}; do
     POSTGRES_PKGS_VER="${POSTGRES_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 
-cmdretry aptitude install -d ${POSTGRES_PKGS_VER}
-cmdretry aptitude install ${POSTGRES_PKGS_VER}
+cmdretry aptitude install ${POSTGRES_PKGS_VER} libnss-wrapper sudo
 
 # Postgres: Configure
 # ------------------------------------------------------------------------------
@@ -119,17 +108,7 @@ sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" \
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? Figure it out myself, ha!
-cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                            --no-show-section --guess-all --libdevel \
-                            -p standard ) )
-cmdretry apt-get autoremove
-
-# This too
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get autoremove
-
-cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

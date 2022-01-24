@@ -60,6 +60,7 @@ target/
 
 # virtualenv
 virtualenv/
+winvenv/
 
 # App dirs
 data/

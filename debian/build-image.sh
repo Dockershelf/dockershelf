@@ -26,7 +26,7 @@ ARCH="amd64"
 VARIANT="minbase"
 DEBIAN_RELEASE="${1}"
 DEBIAN_SUITE="${2}"
-MIRROR="http://deb.debian.org/debian"
+DEBMIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TARGET="${BASEDIR}/base"
@@ -86,19 +86,19 @@ EOF
 if [ "${DEBIAN_RELEASE}" == "sid" ]; then
 cat > "${TARGET}/etc/apt/sources.list" << EOF
 # Dockershelf configuration for apt sources
-deb ${MIRROR} ${DEBIAN_RELEASE} main
+deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 EOF
 elif [ "${DEBIAN_RELEASE}" == "experimental" ]; then
 cat > "${TARGET}/etc/apt/sources.list" << EOF
 # Dockershelf configuration for apt sources
-deb ${MIRROR} sid main
-deb ${MIRROR} ${DEBIAN_RELEASE} main
+deb ${DEBMIRROR} sid main
+deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 EOF
 elif [ "${DEBIAN_SUITE}" == "testing" ] || [ "${DEBIAN_SUITE}" == "stable" ]; then
 cat > "${TARGET}/etc/apt/sources.list" << EOF
 # Dockershelf configuration for apt sources
-deb ${MIRROR} ${DEBIAN_RELEASE} main
-deb ${MIRROR} ${DEBIAN_RELEASE}-updates main
+deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
+deb ${DEBMIRROR} ${DEBIAN_RELEASE}-updates main
 deb ${SECMIRROR} ${DEBIAN_SUITE}-security/updates main
 EOF
 fi
@@ -241,9 +241,7 @@ export LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
 
 msginfo "Installing dependencies and upgrading packages ..."
 cmdretry chroot "${TARGET}" apt-get update
-cmdretry chroot "${TARGET}" apt-get -d upgrade
 cmdretry chroot "${TARGET}" apt-get upgrade
-cmdretry chroot "${TARGET}" apt-get install -d ${DPKG_DEPENDS}
 cmdretry chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
 
 msginfo "Configuring locales ..."

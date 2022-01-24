@@ -5,8 +5,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="php8.0" \
-      org.label-schema.description="A PHP 8.0 image based on Debian sid." \
+      org.label-schema.name="ruby2.5" \
+      org.label-schema.description="A Ruby 2.5 image based on Debian sid." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,16 +15,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PHP_VER_NUM="8.0" PHP_DEBIAN_SUITE="experimental"
+ENV RUBY_VER_NUM="2.5" RUBY_DEBIAN_SUITE="buster"
 
-COPY docker-entrypoint.sh apache2-foreground /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/php/
-RUN bash /usr/share/dockershelf/php/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
+RUN bash /usr/share/dockershelf/ruby/build-image.sh
 
-VOLUME /var/www/html
-WORKDIR /var/www/html
-
-EXPOSE 80
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["apache2-foreground"]
+CMD ["ruby"]

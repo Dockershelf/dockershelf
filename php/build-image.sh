@@ -28,25 +28,17 @@ PHP_VER_NUM_MAJOR="$( echo ${PHP_VER_NUM} | awk -F'.' '{print $1}' )"
 PHP_VER_NUM_STR="php${PHP_VER_NUM}"
 PHP_VER_NUM_MAJOR_STR="php${PHP_VER_NUM_MAJOR}"
 
-MIRROR="http://deb.debian.org/debian"
+DEBMIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
-UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 
 # This is the list of php packages from debian that make up a minimal
 # php installation. We will use them later.
-if [ "${PHP_VER_NUM}" == "7.2" ]; then
-    PHP_PKGS="${PHP_VER_NUM_STR} \
-        ${PHP_VER_NUM_STR}-cli \
-        apache2"
-else
-    PHP_PKGS="${PHP_VER_NUM_STR} \
-        ${PHP_VER_NUM_STR}-cli \
-        ${PHP_VER_NUM_STR}-mbstring \
-        apache2"
-fi
+PHP_PKGS="${PHP_VER_NUM_STR} \
+    ${PHP_VER_NUM_STR}-cli \
+    ${PHP_VER_NUM_STR}-mbstring"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -59,11 +51,7 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-
-cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-
-cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # PHP: Configure sources
@@ -71,24 +59,18 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of PHP.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
+if [ "${PHP_DEBIAN_SUITE}" == "buster" ]; then
     {
-        echo "deb ${MIRROR} buster main"
+        echo "deb ${DEBMIRROR} buster main"
         echo "deb ${SECMIRROR} buster/updates main"
     } | tee /etc/apt/sources.list.d/php.list > /dev/null
-elif [ "${PHP_DEBIAN_SUITE}" == "experimental" ]; then
+elif [ "${PHP_DEBIAN_SUITE}" == "bullseye" ]; then
     {
-        echo "deb ${MIRROR} sid main"
-        echo "deb ${MIRROR} experimental main"
+        echo "deb ${DEBMIRROR} bullseye main"
     } | tee /etc/apt/sources.list.d/php.list > /dev/null
-elif [ "${PHP_DEBIAN_SUITE}" == "bionic" ]; then
-    {
-        echo "deb ${UBUNTUMIRROR} bionic main"
-    } | tee /etc/apt/sources.list.d/php.list > /dev/null
-    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 elif [ "${PHP_DEBIAN_SUITE}" != "sid" ]; then
     {
-        echo "deb ${MIRROR} ${PHP_DEBIAN_SUITE} main"
+        echo "deb ${DEBMIRROR} ${PHP_DEBIAN_SUITE} main"
     } | tee /etc/apt/sources.list.d/php.list > /dev/null
 fi
 
@@ -101,46 +83,18 @@ mkdir -p /var/www/html
 chown www-data:www-data /var/www/html
 chmod 777 /var/www/html
 
-# Apt: Install runtime dependencies
-# ------------------------------------------------------------------------------
-# Now we use some shell/apt plumbing to get runtime dependencies.
-
-msginfo "Installing php runtime dependencies ..."
-DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${PHP_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${PHP_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
-
-if [ "${PHP_DEBIAN_SUITE}" == "stretch" ]; then
-    cmdretry apt-get install -d libncurses5 libncursesw5 libtinfo5
-    cmdretry apt-get install libncurses5 libncursesw5 libtinfo5
-    cmdretry apt-get install -d ${DPKG_DEPENDS} -t stretch
-    cmdretry apt-get install ${DPKG_DEPENDS} -t stretch
-elif [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
-    cmdretry apt-get install -d libncurses6 libncursesw6 libtinfo6
-    cmdretry apt-get install libncurses6 libncursesw6 libtinfo6
-    cmdretry apt-get install -d ${DPKG_DEPENDS} -t buster
-    cmdretry apt-get install ${DPKG_DEPENDS} -t buster
-else
-    cmdretry apt-get install -d ${DPKG_DEPENDS} -t ${PHP_DEBIAN_SUITE}
-    cmdretry apt-get install ${DPKG_DEPENDS} -t ${PHP_DEBIAN_SUITE}
-fi
-
 # PHP: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PHP_PKGS}
 
 msginfo "Installing PHP ..."
 if [ "${PHP_DEBIAN_SUITE}" == "stretch" ]; then
-    cmdretry apt-get install -d ${PHP_PKGS} -t stretch
-    cmdretry apt-get install ${PHP_PKGS} -t stretch
-elif [ "${PHP_DEBIAN_SUITE}" == "buster-security" ]; then
-    cmdretry apt-get install -d ${PHP_PKGS} -t buster
-    cmdretry apt-get install ${PHP_PKGS} -t buster
-else
-    cmdretry apt-get install -d ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
-    cmdretry apt-get install ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
+    cmdretry apt-get install libncurses5 libncursesw5 libtinfo5
+elif [ "${PHP_DEBIAN_SUITE}" == "buster" ]; then
+    cmdretry apt-get install libncurses6 libncursesw6 libtinfo6
 fi
+cmdretry apt-get install ${PHP_PKGS} -t ${PHP_DEBIAN_SUITE}
+cmdretry apt-get install apache2
 
 # PHP: Configure
 # ------------------------------------------------------------------------------
@@ -228,17 +182,7 @@ curl -fsSL "https://raw.githubusercontent.com/composer/getcomposer.org/master/we
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? I figured it out myself, ha!
-cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                            --no-show-section --guess-all --libdevel \
-                            -p standard ) )
-cmdretry apt-get autoremove
-
-# This too
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get autoremove
-
-cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

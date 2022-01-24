@@ -25,12 +25,13 @@ set -exuo pipefail
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DEBMIRROR="http://deb.debian.org/debian"
-MIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
+SECMIRROR="http://deb.debian.org/debian-security"
+ODOOMIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
 WKHTMLTOX_URL="https://github.com/wkhtmltopdf/packaging/"\
 "releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg"
+DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
 ODOO_PKGS="odoo"
 ODOO_PKGS_VER=""
 
@@ -45,11 +46,7 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-
-cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-
-cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Odoo: Configure sources
@@ -58,30 +55,31 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # Odoo.
 
 msginfo "Configuring /etc/apt/sources.list ..."
+
+cmdretry dirmngr --debug-level guru
+
+cmdretry gpg --lock-never --no-default-keyring \
+    --keyring /usr/share/keyrings/odoo.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys DEF2A2198183CBB5
+
 {
-    echo "deb ${MIRROR} ./"
+    echo "deb [signed-by=/usr/share/keyrings/odoo.gpg] ${ODOOMIRROR} ./"
 } | tee /etc/apt/sources.list.d/odoo.list > /dev/null
 
-cmdretry apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv DEF2A2198183CBB5
+{
+    echo "deb ${DEBMIRROR} bullseye main"
+} | tee /etc/apt/sources.list.d/bullseye.list > /dev/null
+
 cmdretry apt-get update
 
 # Apt: Install runtime dependencies
 # ------------------------------------------------------------------------------
 # Now we use some shell/apt plumbing to get runtime dependencies.
 
-msginfo "Installing odoo runtime dependencies ..."
-DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${ODOO_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${ODOO_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | \
-    uniq | xargs | sed 's/libgcc1//g' )"
-
-cmdretry apt-get install -d libgcc-s1 sudo node-less xfonts-75dpi xfonts-base
-cmdretry apt-get install libgcc-s1 sudo node-less xfonts-75dpi xfonts-base
-
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
+# Installing wkhtmltox dependencies
+cmdretry apt-get install fontconfig libfreetype6 libjpeg62-turbo libpng16-16 \
+    libx11-6 libxcb1 libxext6 libxrender1 xfonts-75dpi xfonts-base
 
 # Installing wkhtmltox
 curl -o wkhtmltox.deb -sLO "${WKHTMLTOX_URL}" && \
@@ -107,8 +105,9 @@ for PKG in ${ODOO_PKGS}; do
     ODOO_PKGS_VER="${ODOO_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 
-cmdretry aptitude install -d ${ODOO_PKGS_VER}
-cmdretry aptitude install ${ODOO_PKGS_VER}
+cmdretry apt-get install python3-vatnumber -t bullseye
+cmdretry apt-get install nodejs
+cmdretry aptitude install ${ODOO_PKGS_VER} libgcc-s1 sudo node-less xfonts-75dpi xfonts-base
 
 # Odoo: Configure
 # ------------------------------------------------------------------------------
@@ -125,17 +124,7 @@ ln -s /usr/lib/python${PYTHON_VER_NUM}/dist-packages/odoo/addons /mnt/addons
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? Figure it out myself, ha!
-cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                            --no-show-section --guess-all --libdevel \
-                            -p standard ) )
-cmdretry apt-get autoremove
-
-# This too
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get autoremove
-
-cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

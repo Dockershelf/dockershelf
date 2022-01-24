@@ -29,9 +29,11 @@ PYTHON_VER_NUM_MAJOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
 PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
 PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
-MIRROR="http://deb.debian.org/debian"
+DEBMIRROR="http://deb.debian.org/debian"
+SECMIRROR="http://deb.debian.org/debian-security"
 UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
 UBUNTUSECMIRROR="http://security.ubuntu.com/ubuntu"
+DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
@@ -42,7 +44,7 @@ PYTHON_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
     lib${PYTHON_VER_NUM_MINOR_STR}-dev ${PYTHON_VER_NUM_MINOR_STR}-dev"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude deborphan debian-keyring dpkg-dev gnupg git"
+DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -55,11 +57,7 @@ source "${BASEDIR}/library.sh"
 
 msginfo "Installing tools and upgrading image ..."
 cmdretry apt-get update
-
-cmdretry apt-get -d upgrade
 cmdretry apt-get upgrade
-
-cmdretry apt-get install -d ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Python: Configure sources
@@ -67,77 +65,48 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 # We will use Debian's repository to install the different versions of Python.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-if [ "${PYTHON_DEBIAN_SUITE}" != "sid" ]; then
+
+cmdretry dirmngr --debug-level guru
+
+cmdretry gpg --lock-never --no-default-keyring \
+    --keyring /usr/share/keyrings/python.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys BA6932366A755776
+
+if [ "${PYTHON_VER_NUM}" == "3.9" ]; then
     {
-        echo "deb ${MIRROR} ${PYTHON_DEBIAN_SUITE} main"
+        echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} bionic main"
+    } | tee /etc/apt/sources.list.d/python.list > /dev/null
+else
+    {
+        echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} focal main"
     } | tee /etc/apt/sources.list.d/python.list > /dev/null
 fi
 
-if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.6" ]; then
     {
-        echo "deb ${UBUNTUMIRROR} bionic main"
-        echo "deb ${UBUNTUSECMIRROR} bionic-security main universe"
-    } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
-elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    cmdretry apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
-    {
-        echo "deb ${UBUNTUMIRROR} groovy main"
-        echo "deb ${UBUNTUSECMIRROR} groovy-security main universe"
-    } | tee /etc/apt/sources.list.d/ubuntu.list > /dev/null
-    cmdretry apt-get update
-    cmdretry apt-get install --allow-downgrades libc6/groovy libc6-dev/groovy libc-dev-bin/groovy
+        echo "deb ${DEBMIRROR} buster main"
+        echo "deb ${SECMIRROR} buster/updates main"
+    } | tee /etc/apt/sources.list.d/buster.list > /dev/null
 fi
 
 cmdretry apt-get update
 
-# Apt: Install runtime dependencies
-# ------------------------------------------------------------------------------
-# Now we use some shell/apt plumbing to get runtime dependencies.
-
-msginfo "Installing python runtime dependencies ..."
-DPKG_RUN_DEPENDS="$( aptitude search -F%p \
-    $( printf '~RDepends:~n^%s$ ' ${PYTHON_PKGS} ) | xargs printf ' %s ' | \
-    sed "$( printf 's/\s%s\s/ /g;' ${PYTHON_PKGS} )" )"
-DPKG_DEPENDS="$( printf '%s\n' ${DPKG_RUN_DEPENDS} | uniq | xargs )"
-
-if [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    DPKG_DEPENDS="$( echo ${DPKG_DEPENDS} | sed 's/libc6-dev//g' | \
-    sed 's/libc6//g' | sed 's/libc-dev-bin//g' | sed 's/libffi8ubuntu1//g'  )"
-fi
-
-cmdretry apt-get install -d ${DPKG_DEPENDS}
-cmdretry apt-get install ${DPKG_DEPENDS}
-
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PYTHON_PKGS}
-
+ 
 msginfo "Installing Python ..."
-cmdretry aptitude install ${PYTHON_PKGS}
-cmdretry apt-get install -d ${PYTHON_PKGS}
+if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    cmdretry apt-get install libmpdec2
+fi
 cmdretry apt-get install ${PYTHON_PKGS}
+if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.10" ] || [ "${PYTHON_VER_NUM}" == "3.11" ]; then
+    cmdretry apt-get install ${PYTHON_VER_NUM_MINOR_STR}-distutils
+fi
 
 if [ ! -f "/usr/bin/python" ]; then
     ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
-fi
-
-if [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bionic
-    rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
-    cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.8" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t groovy
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t groovy
-    rm -rfv "/etc/apt/sources.list.d/ubuntu.list"
-    cmdretry apt-get update
-elif [ "${PYTHON_VER_NUM}" == "3.9" ]; then
-    cmdretry apt-get install -d ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
-    cmdretry apt-get install ${PYTHON_VER_NUM_MAJOR_STR}-distutils -t bookworm
-elif [ "${PYTHON_VER_NUM}" == "3.10" ]; then
-    git clone https://github.com/pypa/distutils
-    cp -r distutils/distutils/* /usr/lib/python3.10/distutils/
 fi
 
 # Pip: Installation
@@ -166,17 +135,7 @@ fi
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-# This is clever uh? I figured it out myself, ha!
-cmdretry apt-get purge $( apt-mark showauto $( deborphan -a -n \
-                            --no-show-section --guess-all --libdevel \
-                            -p standard ) )
-cmdretry apt-get autoremove
-
-# This too
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get autoremove
-
-cmdretry apt-get purge ${DPKG_TOOLS_DEPENDS}
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt
