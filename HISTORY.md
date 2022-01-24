@@ -1,6 +1,20 @@
 # Changelog
 
 
+## 2.7.0 (2022-01-24)
+
+### Changed
+
+* Removing support for Python 3.8, adding support for 3.7 & 3.11. [REF] Removing support for Ruby 2.1, adding support for 2.5. [REF] Removing support for PHP 7.2 & 8.0, adding support for 8.1. [REF] Adding support for Odoo 15.0. [REF] Replacing debian python packaging for deadsnakes PPA. [Luis Alejandro Martínez Faneyth]
+
+
+### Other
+
+* Bump mako from 1.1.5 to 1.1.6. [dependabot[bot]]
+
+* Bump packaging from 21.2 to 21.3. [dependabot[bot]]
+
+
 ## 2.6.2 (2021-11-14)
 
 ### Changed
