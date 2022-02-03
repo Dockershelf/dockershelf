@@ -121,6 +121,9 @@ if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
 elif [ "${PYTHON_VER_NUM}" == "3.5" ]; then
     curl -fsSL "https://bootstrap.pypa.io/pip/3.5/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+elif [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/pip/3.6/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 else
     curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
