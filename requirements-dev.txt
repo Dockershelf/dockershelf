@@ -5,7 +5,7 @@ virtualenv==20.13.3
 coverage==6.3.2
 gitchangelog==3.0.4
 bumpversion==0.6.0
-mako==1.1.6
+mako==1.2.0
 wheel==0.37.1
 tox==3.24.5
 coveralls==3.3.1
