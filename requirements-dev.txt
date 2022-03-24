@@ -1,7 +1,7 @@
 setuptools==50.3.2
 flake8==4.0.1
 pydocstyle==5.1.1
-virtualenv==20.13.3
+virtualenv==20.13.4
 coverage==6.3.2
 gitchangelog==3.0.4
 bumpversion==0.6.0
