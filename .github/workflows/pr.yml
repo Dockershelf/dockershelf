@@ -45,12 +45,12 @@ jobs:
     needs: build
     steps:
       - name: Approve
-        uses: hmarr/auto-approve-action@v2.1.0
+        uses: hmarr/auto-approve-action@v2.2.1
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
       - name: Approve
-        uses: hmarr/auto-approve-action@v2.1.0
+        uses: hmarr/auto-approve-action@v2.2.1
         if: github.actor == 'LuisAlejandro'
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
