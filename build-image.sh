@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2020, Dockershelf Developers.
+#   Copyright (C) 2016-2022, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -66,18 +66,6 @@ fi
 # Copy the building script
 if [ -f "${DOCKER_IMAGE_TYPE_DIR}/build-image.sh" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/build-image.sh" "${DOCKER_IMAGE_DIR}"
-fi
-
-# Create a base filesystem if we are building a debian image
-if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-    cd "${DOCKER_IMAGE_DIR}" && \
-        sudo docker run \
-            -v "${DOCKER_IMAGE_DIR}:/tmp/dockershelf" \
-            -w "/tmp/dockershelf" \
-            debian:stable \
-            bash -c "apt-get update && \
-                apt-get install -y debootstrap && \
-                bash build-image.sh ${DOCKER_IMAGE_TAG} ${DEBIAN_SUITE}"
 fi
 
 # Copy entrypoint and operation samples if we are building Mongo
