@@ -24,7 +24,6 @@ import re
 import sys
 
 from scripts.logger import logger
-from scripts.update_debian import update_debian
 from scripts.update_latex import update_latex
 from scripts.update_python import update_python
 from scripts.update_ruby import update_ruby
@@ -57,7 +56,6 @@ if __name__ == '__main__':
     logger.loglevel('INFO')
     logger.info('Updating shelves')
 
-    debian_matrix_list, debian_readme_table = update_debian(basedir)
     latex_matrix_list, latex_readme_table = update_latex(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
     ruby_matrix_list, ruby_readme_table = update_ruby(basedir)
@@ -68,7 +66,6 @@ if __name__ == '__main__':
     php_matrix_list, php_readme_table = update_php(basedir)
 
     logger.info('Writing github actions matrix')
-    matrix.extend(debian_matrix_list)
     matrix.extend(latex_matrix_list)
     matrix.extend(python_matrix_list)
     matrix.extend(ruby_matrix_list)
@@ -102,8 +99,6 @@ if __name__ == '__main__':
         readme_template_content = rt.read()
 
     readme_content = readme_template_content
-    readme_content = re.sub('%%DEBIAN_TABLE%%', debian_readme_table,
-                            readme_content)
     readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
                             readme_content)
     readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,

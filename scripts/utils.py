@@ -82,7 +82,7 @@ ruby_versions_src_origin = {
     '2.3': 'stretch',
     '2.5': 'buster',
     '2.7': 'sid',
-    '3.0': 'experimental',
+    '3.0': 'sid',
 }
 
 
