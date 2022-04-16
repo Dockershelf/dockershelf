@@ -33,19 +33,12 @@ destroy:
 	@docker-compose -p dockershelf -f docker-compose.yml down \
 		--rmi all --remove-orphans -v
 
-virtualenv:
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
-		-ExecutionPolicy Bypass \
-		-Command "python -m venv .\winvenv"
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
-		-ExecutionPolicy Bypass \
-		-Command ".\winvenv\Scripts\pip.exe install -U wheel"
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
-		-ExecutionPolicy Bypass \
-		-Command ".\winvenv\Scripts\pip.exe install -U setuptools"
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
-		-ExecutionPolicy Bypass \
-		-Command ".\winvenv\Scripts\pip.exe install -r requirements.txt"
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe \
-		-ExecutionPolicy Bypass \
-		-Command ".\winvenv\Scripts\pip.exe install -r requirements-dev.txt"
+virtualenv: start
+	@docker-compose -p dockershelf -f docker-compose.yml exec \
+		--user dockershelf dockershelf python -m venv --clear --copies ./winvenv
+	@docker-compose -p dockershelf -f docker-compose.yml exec \
+		--user dockershelf dockershelf ./winvenv/bin/pip install -U wheel setuptools
+	@docker-compose -p dockershelf -f docker-compose.yml exec \
+		--user dockershelf dockershelf ./winvenv/bin/pip install -r requirements.txt
+	@docker-compose -p dockershelf -f docker-compose.yml exec \
+		--user dockershelf dockershelf ./winvenv/bin/pip install -r requirements-dev.txt
