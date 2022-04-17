@@ -1,6 +1,59 @@
 # Changelog
 
 
+## 2.7.1 (2022-04-17)
+
+### Changed
+
+* Improving documentation. [Luis Alejandro Martínez Faneyth]
+
+* Fixing python unit tests. [Luis Alejandro Martínez Faneyth]
+
+* Adjusting scripts and documentation. [Luis Alejandro Martínez Faneyth]
+
+* Removing Debian image generation from this repository. [Luis Alejandro Martínez Faneyth]
+
+
+### Fixed
+
+* Fixing build error with pip bootstrap script. [Luis Alejandro]
+
+
+### Other
+
+* Bump virtualenv from 20.14.0 to 20.14.1. [dependabot[bot]]
+
+* Bump tox from 3.24.5 to 3.25.0. [dependabot[bot]]
+
+* Bump hmarr/auto-approve-action from 2.1.0 to 2.2.1. [dependabot[bot]]
+
+* Bump virtualenv from 20.13.4 to 20.14.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.13.3 to 20.13.4. [dependabot[bot]]
+
+* Bump mako from 1.1.6 to 1.2.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.13.2 to 20.13.3. [dependabot[bot]]
+
+* Bump actions/checkout from 2 to 3. [dependabot[bot]]
+
+* Bump virtualenv from 20.13.1 to 20.13.2. [dependabot[bot]]
+
+* Bump actions/setup-python from 2 to 3. [dependabot[bot]]
+
+* Bump coverage from 6.3.1 to 6.3.2. [dependabot[bot]]
+
+* Bump lxml from 4.7.1 to 4.8.0. [dependabot[bot]]
+
+* Bump actions/github-script from 5 to 6. [dependabot[bot]]
+
+* Bump virtualenv from 20.13.0 to 20.13.1. [dependabot[bot]]
+
+* Bump coverage from 6.3 to 6.3.1. [dependabot[bot]]
+
+* Bump coverage from 6.2 to 6.3. [dependabot[bot]]
+
+
 ## 2.7.0 (2022-01-24)
 
 ### Changed
