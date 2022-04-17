@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2020, Dockershelf Developers.
+#   Copyright (C) 2016-2022, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -82,7 +82,7 @@ ruby_versions_src_origin = {
     '2.3': 'stretch',
     '2.5': 'buster',
     '2.7': 'sid',
-    '3.0': 'experimental',
+    '3.0': 'sid',
 }
 
 

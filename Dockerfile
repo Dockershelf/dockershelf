@@ -2,9 +2,7 @@ FROM dockershelf/python:3.9
 LABEL maintainer "Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
 RUN apt-get update && \
-    apt-get install sudo
-
-RUN echo "Set disable_coredump false" >> /etc/sudo.conf
+    apt-get install sudo python3.9-venv
 
 ADD requirements.txt requirements-dev.txt /root/
 RUN pip3 install -r /root/requirements.txt -r /root/requirements-dev.txt

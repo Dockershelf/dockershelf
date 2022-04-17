@@ -25,9 +25,9 @@ jobs:
             toxenv: "py39"
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
       - name: Measuring coverage
@@ -45,12 +45,12 @@ jobs:
     needs: build
     steps:
       - name: Approve
-        uses: hmarr/auto-approve-action@v2.1.0
+        uses: hmarr/auto-approve-action@v2.2.1
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
       - name: Approve
-        uses: hmarr/auto-approve-action@v2.1.0
+        uses: hmarr/auto-approve-action@v2.2.1
         if: github.actor == 'LuisAlejandro'
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -61,7 +61,7 @@ jobs:
     needs: approve
     steps:
       - name: Merge
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
@@ -72,7 +72,7 @@ jobs:
               pull_number: context.payload.pull_request.number
             })
       - name: Merge
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: github.actor == 'LuisAlejandro'
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"

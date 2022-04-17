@@ -11,21 +11,39 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         set :docker_container, @container.id
     end
 
+    def python_bin
+        case ENV['DOCKER_IMAGE_TAG']
+        when "2.7"
+            "python"
+        else
+            "python3"
+        end
+    end
+
+    def pip_bin
+        case ENV['DOCKER_IMAGE_TAG']
+        when "2.7"
+            "pip"
+        else
+            "pip3"
+        end
+    end
+
     def python_version
-        command("python -c \"import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))\"").stdout.strip
+        command("#{python_bin()} -c \"import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))\"").stdout.strip
     end
 
     def python_version_long
-        releaselevel = command("python -c \"import sys; print(sys.version_info.releaselevel)\"").stdout.strip
+        releaselevel = command("#{python_bin()} -c \"import sys; print(sys.version_info.releaselevel)\"").stdout.strip
         case releaselevel
         when "alpha"
-            command("python -c \"import sys; print('%s.%s.%sa%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
+            command("#{python_bin()} -c \"import sys; print('%s.%s.%sa%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
         when "beta"
-            command("python -c \"import sys; print('%s.%s.%sb%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
+            command("#{python_bin()} -c \"import sys; print('%s.%s.%sb%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
         when "candidate"
-            command("python -c \"import sys; print('%s.%s.%src%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
+            command("#{python_bin()} -c \"import sys; print('%s.%s.%src%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
         when "final"
-            command("python -c \"import sys; print('%s.%s.%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))\"").stdout.strip
+            command("#{python_bin()} -c \"import sys; print('%s.%s.%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))\"").stdout.strip
         end
     end
 
@@ -37,17 +55,17 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     it "should have a python interpreter" do
         expect(file("/usr/bin/python#{python_version()}")).to be_executable
-        expect(file("/usr/bin/python")).to be_symlink
-        expect(file("/usr/bin/python")).to be_linked_to("/usr/bin/python#{python_version()}")
+        expect(file("/usr/bin/#{python_bin()}")).to be_symlink
+        expect(file("/usr/bin/#{python_bin()}")).to be_linked_to("/usr/bin/python#{python_version()}")
     end
 
     it "should be able to install a python package" do
-        expect(command("pip install virtualenv").exit_status).to eq(0)
+        expect(command("#{pip_bin()} install virtualenv").exit_status).to eq(0)
         expect(file('/usr/local/bin/virtualenv')).to be_executable
     end
 
     it "should be able to uninstall a python package" do
-        expect(command("pip uninstall -y virtualenv").exit_status).to eq(0)
+        expect(command("#{pip_bin()} uninstall -y virtualenv").exit_status).to eq(0)
         expect(file('/usr/local/bin/virtualenv')).not_to exist
     end
 
@@ -65,7 +83,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(command("git clone --branch v#{python_version_long()} --depth 1 https://github.com/python/cpython /tmp/cpython").exit_status).to eq(0)
         expect(command("rsync -avz /tmp/cpython/Lib/test/ /usr/lib/python#{python_version()}/test/").exit_status).to eq(0)
         for test_suite in basic_tests
-            expect(command("python -m test.regrtest #{test_suite}").exit_status).to eq(0)
+            expect(command("#{python_bin()} -m test.regrtest #{test_suite}").exit_status).to eq(0)
         end
     end
 

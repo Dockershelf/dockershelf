@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #   This file is part of Dockershelf.
-#   Copyright (C) 2016-2020, Dockershelf Developers.
+#   Copyright (C) 2016-2022, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.md for a complete list of Copyright holders.
 #
@@ -105,8 +105,14 @@ if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${
     cmdretry apt-get install ${PYTHON_VER_NUM_MINOR_STR}-distutils
 fi
 
-if [ ! -f "/usr/bin/python" ]; then
-    ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
+if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
+    if [ ! -f "/usr/bin/python" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
+        ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
+    fi
+else
+    if [ ! -f "/usr/bin/python3" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
+        ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
+    fi
 fi
 
 # Pip: Installation
@@ -121,13 +127,22 @@ if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
 elif [ "${PYTHON_VER_NUM}" == "3.5" ]; then
     curl -fsSL "https://bootstrap.pypa.io/pip/3.5/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+elif [ "${PYTHON_VER_NUM}" == "3.6" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/pip/3.6/get-pip.py" | \
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 else
     curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
         ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 fi
 
-if [ ! -f "/usr/bin/pip" ]; then
-    ln -s /usr/bin/pip${PYTHON_VER_NUM} /usr/bin/pip
+if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
+    if [ ! -f "/usr/bin/pip" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
+        ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip
+    fi
+else
+    if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
+        ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3
+    fi
 fi
 
 # Apt: Remove unnecessary packages

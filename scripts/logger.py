@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #   This file is part of Pip Sala Bim.
-#   Copyright (C) 2016, Pip Sala Bim Developers.
+#   Copyright (C) 2016-2022, Dockershelf Developers.
 #
 #   Please refer to AUTHORS.rst for a complete list of Copyright holders.
 #

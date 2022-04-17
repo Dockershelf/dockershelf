@@ -10,20 +10,9 @@ jobs:
     name: Build
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - docker-image-name: "dockershelf/debian:buster"
-            docker-image-extra-tags: "dockershelf/debian:oldstable"
-            debian-suite: "oldstable"
-          - docker-image-name: "dockershelf/debian:bullseye"
-            docker-image-extra-tags: "dockershelf/debian:stable"
-            debian-suite: "stable"
-          - docker-image-name: "dockershelf/debian:bookworm"
-            docker-image-extra-tags: "dockershelf/debian:testing"
-            debian-suite: "testing"
-          - docker-image-name: "dockershelf/debian:sid"
-            docker-image-extra-tags: "dockershelf/debian:unstable dockershelf/debian:latest"
-            debian-suite: "unstable"
           - docker-image-name: "dockershelf/latex:basic"
             docker-image-extra-tags: "dockershelf/latex:latest"
           - docker-image-name: "dockershelf/latex:full"
@@ -73,7 +62,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: master
       - name: Installing dependencies
