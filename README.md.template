@@ -8,7 +8,11 @@ Current version: 2.7.0
 
 *Dockershelf* is a repository that serves as a collector for docker recipes that are universal, efficient and slim. We keep adding "shelves", which are holders for the different versions of a popular language or application.
 
-All shelves are currently based off Debian Sid, the development version of Debian. Images are updated, tested and published *daily* via a Travis cron job.
+Images are updated, tested and published *weekly* via a [Github Actions workflow](https://github.com/Dockershelf/dockershelf-stable/actions).
+
+## Dockershelf unstable
+
+This is Dockershelf unstable. It contains dockerfiles based on Debian Sid, which usually contains the latest versions of commonly used applications and libraries. If you need a more stable distribution for production environments, you might want to have a look at [Dockershelf stable](https://github.com/Dockershelf/dockershelf-stable).
 
 ## How to download
 

@@ -35,7 +35,7 @@ destroy:
 
 virtualenv: start
 	@docker-compose -p dockershelf -f docker-compose.yml exec \
-		--user dockershelf dockershelf python -m venv --clear --copies ./winvenv
+		--user dockershelf dockershelf python3 -m venv --clear --copies ./winvenv
 	@docker-compose -p dockershelf -f docker-compose.yml exec \
 		--user dockershelf dockershelf ./winvenv/bin/pip install -U wheel setuptools
 	@docker-compose -p dockershelf -f docker-compose.yml exec \
