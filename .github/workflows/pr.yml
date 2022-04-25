@@ -14,7 +14,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
-    if: github.repository == 'LuisAlejandro/dockershelf'
+    if: github.repository == 'Dockershelf/dockershelf'
     strategy:
       matrix:
         include:
@@ -50,7 +50,7 @@ jobs:
   approve:
     name: Approve pull request
     runs-on: ubuntu-20.04
-    if: github.repository == 'LuisAlejandro/dockershelf'
+    if: github.repository == 'Dockershelf/dockershelf'
     needs: build
     steps:
       - name: Approve
@@ -67,7 +67,7 @@ jobs:
   merge:
     name: Merge pull request
     runs-on: ubuntu-20.04
-    if: github.repository == 'LuisAlejandro/dockershelf'
+    if: github.repository == 'Dockershelf/dockershelf'
     needs: approve
     steps:
       - name: Merge

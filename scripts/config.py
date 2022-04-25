@@ -18,9 +18,9 @@
 
 from .utils import get_debian_versions, get_mongo_versions, \
     get_mongo_versions_src_origin, get_node_versions, get_odoo_versions, \
-    get_postgres_versions, get_python_versions_src_origin, get_python_versions, \
-    get_ruby_versions_src_origin, get_ruby_versions, get_php_versions_src_origin, \
-    get_php_versions
+    get_postgres_versions, get_python_versions_src_origin, \
+    get_python_versions, get_ruby_versions_src_origin, \
+    get_ruby_versions, get_php_versions_src_origin, get_php_versions
 
 latex_versions = ['basic', 'full']
 debian_versions = get_debian_versions()
