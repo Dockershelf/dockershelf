@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 #
-#   This file is part of Dockershelf.
-#   Copyright (C) 2016-2022, Dockershelf Developers.
-#
-#   Please refer to AUTHORS.md for a complete list of Copyright holders.
-#
-#   Dockershelf is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   Dockershelf is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program. If not, see http://www.gnu.org/licenses.
+# Please refer to AUTHORS.md for a complete list of Copyright holders.
+# Copyright (C) 2016-2022, Dockershelf Developers.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Exit early if there are errors and be verbose.
 set -exuo pipefail
@@ -29,10 +27,6 @@ PYTHON_VER_NUM_MAJOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
 PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
 PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
-DEBMIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
-UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
-UBUNTUSECMIRROR="http://security.ubuntu.com/ubuntu"
 DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal
@@ -44,7 +38,7 @@ PYTHON_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
     lib${PYTHON_VER_NUM_MINOR_STR}-dev ${PYTHON_VER_NUM_MINOR_STR}-dev"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
+DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -151,6 +145,7 @@ fi
 
 msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

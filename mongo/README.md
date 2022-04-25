@@ -31,7 +31,7 @@ We'll explain the overall process here:
 7. Install Mongo.
 8. Shrink image by deleting unnecessary files and/or packages.
 
-## Made with :heart: and :hamburger:
+## Made with 💖 and 🍔
 
 ![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 

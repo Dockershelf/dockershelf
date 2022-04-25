@@ -30,7 +30,7 @@ We'll explain the overall process here:
 5. Uninstall developer tools and orphan packages.
 6. Shrink image by deleting unnecessary files.
 
-## Made with :heart: and :hamburger:
+## Made with 💖 and 🍔
 
 ![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 

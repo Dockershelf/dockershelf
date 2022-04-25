@@ -35,6 +35,7 @@ RUN bash /usr/share/dockershelf/postgres/build-image.sh
 VOLUME /var/lib/postgresql/data
 
 EXPOSE 5432
+STOPSIGNAL SIGINT
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["postgres"]

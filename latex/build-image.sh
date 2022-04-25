@@ -22,10 +22,8 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-DEBMIRROR="http://deb.debian.org/debian"
-
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
+DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 
 # Latex packages
 if [ "${LATEX_VER_NUM}" == "basic" ]; then
@@ -62,6 +60,7 @@ cmdretry apt-get install ${LATEX_PKGS} python3-pygments
 
 msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

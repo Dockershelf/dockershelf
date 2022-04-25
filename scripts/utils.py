@@ -41,12 +41,12 @@ mongo_version_upper_limit = 5.0
 
 node_versions_list_file = \
     'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
-node_version_lower_limit = 8
+node_version_lower_limit = 10
 node_version_upper_limit = 18
-node_versions_disabled = ['9', '11', '13', '15', '17']
+node_versions_disabled = ['11', '13', '15', '17']
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-odoo_version_lower_limit = 11.0
+odoo_version_lower_limit = 13.0
 odoo_version_upper_limit = 15.0
 
 postgres_release_url = 'http://apt.postgresql.org/pub/repos/apt/dists/sid-pgdg/Release'

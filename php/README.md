@@ -31,7 +31,7 @@ We'll explain the overall process here:
 6. Install `pip`.
 7. Shrink image by deleting unnecessary files.
 
-## Made with :heart: and :hamburger:
+## Made with 💖 and 🍔
 
 ![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 

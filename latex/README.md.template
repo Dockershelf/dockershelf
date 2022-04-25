@@ -16,7 +16,7 @@
 
 The Latex images are very simple, they're just debian images with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor` debian packages installed. Check out the [Dockerfile](https://github.com/Dockershelf/dockershelf/blob/master/latex/sid/Dockerfile) for details.
 
-## Made with :heart: and :hamburger:
+## Made with 💖 and 🍔
 
 ![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 

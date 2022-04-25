@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 #
-#   This file is part of Dockershelf.
-#   Copyright (C) 2016-2022, Dockershelf Developers.
-#
-#   Please refer to AUTHORS.md for a complete list of Copyright holders.
-#
-#   Dockershelf is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   Dockershelf is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program. If not, see http://www.gnu.org/licenses.
+# Please refer to AUTHORS.md for a complete list of Copyright holders.
+# Copyright (C) 2016-2022, Dockershelf Developers.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Exit early if there are errors and be verbose.
 set -exuo pipefail
@@ -25,10 +23,9 @@ set -exuo pipefail
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 MONGOMIRROR="http://repo.mongodb.org/apt/debian"
-DEBMIRROR="http://deb.debian.org/debian"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
+DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 MONGO_PKGS="mongodb-org mongodb-org-server mongodb-org-shell \
     mongodb-org-mongos mongodb-org-tools"
 MONGO_PKGS_VER=""
@@ -74,11 +71,20 @@ elif [ "${MONGO_VER_NUM}" == "5.0" ]; then
 fi
 
 {
-    echo "deb ${DEBMIRROR} ${MONGO_DEBIAN_SUITE} main"
     echo "deb [signed-by=/usr/share/keyrings/mongo.gpg] ${MONGOMIRROR} ${MONGO_DEBIAN_SUITE}/mongodb-org/${MONGO_VER_NUM} main"
 } | tee /etc/apt/sources.list.d/mongo.list > /dev/null
 
 cmdretry apt-get update
+
+# Apt: Install runtime dependencies
+# ------------------------------------------------------------------------------
+# Now we use some shell/apt plumbing to get runtime dependencies.
+
+# Installing dependencies
+cmdretry apt-get install \
+    jq numactl lsb-base procps gosu
+
+wget -O /js-yaml.js "https://github.com/nodeca/js-yaml/raw/3.13.1/dist/js-yaml.js"
 
 # Mongo: Configure
 # ------------------------------------------------------------------------------
@@ -86,8 +92,11 @@ cmdretry apt-get update
 
 groupadd -r mongodb
 useradd -r -g mongodb mongodb
+
 mkdir -p /data/db /data/configdb /docker-entrypoint-initdb.d /var/log/mongodb
 chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb
+
+ln -s /bin/true /usr/local/bin/systemctl
 
 # Mongo: Installation
 # ------------------------------------------------------------------------------
@@ -100,7 +109,11 @@ for PKG in ${MONGO_PKGS}; do
     MONGO_PKGS_VER="${MONGO_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 
-cmdretry aptitude install ${MONGO_PKGS_VER} libgcc-s1 sudo systemctl jq numactl lsb-base
+cmdretry aptitude install ${MONGO_PKGS_VER}
+
+rm -f /usr/local/bin/systemctl
+rm -rf /var/lib/mongodb
+mv /etc/mongod.conf /etc/mongod.conf.orig
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
@@ -108,6 +121,7 @@ cmdretry aptitude install ${MONGO_PKGS_VER} libgcc-s1 sudo systemctl jq numactl 
 
 msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt

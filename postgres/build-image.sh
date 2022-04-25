@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 #
-#   This file is part of Dockershelf.
-#   Copyright (C) 2016-2022, Dockershelf Developers.
-#
-#   Please refer to AUTHORS.md for a complete list of Copyright holders.
-#
-#   Dockershelf is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   Dockershelf is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program. If not, see http://www.gnu.org/licenses.
+# Please refer to AUTHORS.md for a complete list of Copyright holders.
+# Copyright (C) 2016-2022, Dockershelf Developers.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Exit early if there are errors and be verbose.
 set -exuo pipefail
@@ -25,10 +23,9 @@ set -exuo pipefail
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 PGMIRROR="http://apt.postgresql.org/pub/repos/apt"
-DEBMIRROR="http://deb.debian.org/debian"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
+DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 POSTGRES_PKGS="postgresql-${POSTGRES_VER_NUM} \
     postgresql-client-${POSTGRES_VER_NUM} postgresql-common \
     postgresql-client-common"
@@ -68,14 +65,36 @@ cmdretry gpg --lock-never --no-default-keyring \
 
 cmdretry apt-get update
 
+# Apt: Install runtime dependencies
+# ------------------------------------------------------------------------------
+# Now we use some shell/apt plumbing to get runtime dependencies.
+
+cat > "${TARGET}/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
+#!/usr/bin/env bash
+# Dockershelf post hook for dpkg
+find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf
+find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rf
+EOF
+
+# Installing dependencies
+cmdretry apt-get install \
+    gosu \
+    libnss-wrapper \
+    xz-utils \
+    zstd \
+    locales
+
+localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+update-locale LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8"
+
 # Postgres: Configure
 # ------------------------------------------------------------------------------
 # We need to configure proper volumes and users.
 
 groupadd -r postgres --gid=999
-useradd -r -g postgres --uid=999 postgres
-mkdir /docker-entrypoint-initdb.d
-mkdir -p /var/lib/postgresql/data /var/run/postgresql
+useradd -r -g postgres --uid=999 --home-dir=/var/lib/postgresql --shell=/bin/bash postgres
+
+mkdir -p /var/lib/postgresql/data /var/run/postgresql /docker-entrypoint-initdb.d
 chown -R postgres:postgres /var/lib/postgresql/data /var/run/postgresql
 chmod 2777 /var/run/postgresql
 chmod 777 /var/lib/postgresql/data
@@ -109,6 +128,7 @@ sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" \
 
 msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
 # Bash: Changing prompt
@@ -138,6 +158,6 @@ EOF
 msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
-rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
+rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/man/"* \
         "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
         "/var/lib/apt/lists/"*

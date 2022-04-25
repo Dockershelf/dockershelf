@@ -35,6 +35,7 @@ VOLUME /var/www/html
 WORKDIR /var/www/html
 
 EXPOSE 80
+STOPSIGNAL SIGWINCH
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
