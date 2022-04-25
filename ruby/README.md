@@ -1,4 +1,4 @@
-![](https://github.com/Dockershelf/dockershelf/blob/develop/images/banner.svg)
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/banner.svg)
 
 ---
 
@@ -13,7 +13,7 @@
 |[`dockershelf/ruby:2.7`](https://hub.docker.com/r/dockershelf/ruby)|`2.7`|[![](https://img.shields.io/badge/-ruby%2F2.7%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/ruby/2.7/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/ruby?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/ruby)|[![](https://img.shields.io/docker/image-size/dockershelf/ruby/2.7.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/ruby)|
 |[`dockershelf/ruby:3.0`](https://hub.docker.com/r/dockershelf/ruby)|`3.0`|[![](https://img.shields.io/badge/-ruby%2F3.0%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/ruby/3.0/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/ruby?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/ruby)|[![](https://img.shields.io/docker/image-size/dockershelf/ruby/3.0.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/ruby)|
 
-![](https://github.com/Dockershelf/dockershelf/blob/develop/images/table.svg)
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
 ## Building process
 
@@ -32,6 +32,6 @@ We'll explain the overall process here:
 
 ## Made with :heart: and :hamburger:
 
-![Banner](https://github.com/Dockershelf/dockershelf/blob/develop/images/author-banner.svg)
+![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 
 > Web [luisalejandro.org](http://luisalejandro.org/) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)

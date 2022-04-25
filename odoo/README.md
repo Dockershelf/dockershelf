@@ -1,4 +1,4 @@
-![](https://github.com/Dockershelf/dockershelf/blob/develop/images/banner.svg)
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/banner.svg)
 
 ---
 
@@ -14,7 +14,7 @@
 |[`dockershelf/odoo:14.0`](https://hub.docker.com/r/dockershelf/odoo)|`14.0`|[![](https://img.shields.io/badge/-odoo%2F14.0%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/odoo/14.0/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/odoo?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/odoo)|[![](https://img.shields.io/docker/image-size/dockershelf/odoo/14.0.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/odoo)|
 |[`dockershelf/odoo:15.0`](https://hub.docker.com/r/dockershelf/odoo)|`15.0`|[![](https://img.shields.io/badge/-odoo%2F15.0%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/odoo/15.0/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/odoo?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/odoo)|[![](https://img.shields.io/docker/image-size/dockershelf/odoo/15.0.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/odoo)|
 
-![](https://github.com/Dockershelf/dockershelf/blob/develop/images/table.svg)
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
 ## Building process
 
@@ -33,6 +33,6 @@ We'll explain the overall process here:
 
 ## Made with :heart: and :hamburger:
 
-![Banner](https://github.com/Dockershelf/dockershelf/blob/develop/images/author-banner.svg)
+![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 
 > Web [luisalejandro.org](http://luisalejandro.org/) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)

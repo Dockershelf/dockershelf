@@ -2,27 +2,22 @@ name: Code Quality
 
 on:
   schedule:
-    - cron: '00 3 * * 4'
+    - cron: '00 6 * * 4'
 
 jobs:
   build:
-    name: Build
+    name: Generating code quality report
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        include:
-          - python-version: "3.9"
-            toxenv: "py39"
+    if: github.repository == 'LuisAlejandro/dockershelf'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          ref: develop
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
           languages: python
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
+          config-file: ./.github/codeql-config.yml
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1

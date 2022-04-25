@@ -29,7 +29,7 @@ leave uncommitted changes.
 
 8. Bump your version:
 
-        bumpversion --no-commit --new-version <release number> patch
+        bumpversion --no-commit <major, minor or patch>
 
 9. Update your changelog:
 
@@ -47,10 +47,6 @@ leave uncommitted changes.
 
         git flow release finish -s -p <release number>
 
-13. Push your tags:
-
-        git push --tags
-
 14. Draft a new release in GitHub (based on the new version tag) and include
 a description. Also pick a codename because it makes you cool.
 15. Close the milestone in GitHub.
@@ -66,7 +62,7 @@ a description. Also pick a codename because it makes you cool.
 3. Code your hotfix.
 4. Bump your version:
 
-        bumpversion --no-commit --new-version <new version> patch
+        bumpversion --no-commit <major, minor or patch>
 
 5. Update your changelog:
 
@@ -83,10 +79,6 @@ a description. Also pick a codename because it makes you cool.
 8. Finish your hotfix:
 
         git flow hotfix finish -s -p <new version>
-
-9. Push your tags:
-
-        git push --tags
 
 10. Draft a new release in GitHub (based on the new version tag) and include
 a description. Don't change the codename if it is a hotfix.

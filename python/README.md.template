@@ -1,4 +1,4 @@
-![](https://github.com/Dockershelf/dockershelf/blob/develop/images/banner.svg)
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/banner.svg)
 
 ---
 
@@ -10,7 +10,7 @@
 |-------|---------|------------|--------|------|
 %%PYTHON_TABLE%%
 
-![](https://github.com/Dockershelf/dockershelf/blob/develop/images/table.svg)
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
 ## Building process
 
@@ -30,6 +30,6 @@ We'll explain the overall process here:
 
 ## Made with :heart: and :hamburger:
 
-![Banner](https://github.com/Dockershelf/dockershelf/blob/develop/images/author-banner.svg)
+![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 
 > Web [luisalejandro.org](http://luisalejandro.org/) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)

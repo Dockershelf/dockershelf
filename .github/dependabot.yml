@@ -6,16 +6,6 @@ updates:
     interval: weekly
     day: thursday
     time: "01:00"
-  ignore:
-  - dependency-name: setuptools
-    versions:
-    - "> 50.3.2"
-  - dependency-name: pip
-    versions:
-    - "> 20.3"
-  - dependency-name: pydocstyle
-    versions:
-    - "> 5.1.1"
   open-pull-requests-limit: 99
 - package-ecosystem: github-actions
   directory: "/"
@@ -24,3 +14,14 @@ updates:
     day: thursday
     time: "01:00"
   open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: thursday
+    time: "01:00"
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: dockershelf/python
+    versions:
+    - "> 3.10"
