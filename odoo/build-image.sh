@@ -91,6 +91,7 @@ cmdretry apt-get install \
     libssl-dev \
     node-less \
     npm \
+    libpq-dev \
     postgresql-client \
     python3-num2words \
     python3-pdfminer \
