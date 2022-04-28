@@ -1,6 +1,22 @@
 # Changelog
 
 
+## 2.8.0 (2022-04-28)
+
+### Changed
+
+* Removing support for Mongo, Postgres, Python 3.6 and PHP. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for Node 18. [DEL] Removing support for Postgres 9.6, Node 15 and Node 17. [Luis Alejandro Martínez Faneyth]
+
+* Improving documentation. [Luis Alejandro Martínez Faneyth]
+
+
+### Fixed
+
+* Fixing typo. [Luis Alejandro Martínez Faneyth]
+
+
 ## 2.7.1 (2022-04-17)
 
 ### Changed
