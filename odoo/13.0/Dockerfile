@@ -1,4 +1,4 @@
-FROM dockershelf/python:3.9
+FROM dockershelf/python:3.10
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,7 +6,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="odoo13.0" \
-      org.label-schema.description="An Odoo 13.0 image based on Debian sid, Python 3.9 and Node 14." \
+      org.label-schema.description="An Odoo 13.0 image based on Debian sid." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.title="odoo13.0" \
-      org.opencontainers.image.description="An Odoo 13.0 image based on Debian sid, Python 3.9 and Node 14." \
+      org.opencontainers.image.description="An Odoo 13.0 image based on Debian sid." \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -25,15 +25,16 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
 ENV ODOO_VER_NUM="13.0"
+ENV ODOO_RC=/etc/odoo/odoo.conf
 
 COPY odoo.conf /etc/odoo/
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint.sh wait-for-psql.py /usr/local/bin/
 COPY build-image.sh library.sh /usr/share/dockershelf/odoo/
 RUN bash /usr/share/dockershelf/odoo/build-image.sh
 
 VOLUME /var/lib/odoo /mnt/extra-addons
 
-EXPOSE 8069 8071
+EXPOSE 8069 8071 8072
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["odoo"]

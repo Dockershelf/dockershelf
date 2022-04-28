@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
+#
+# Please refer to AUTHORS.md for a complete list of Copyright holders.
+# Copyright (C) 2016-2022, Dockershelf Developers.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 set -Eeuo pipefail
 
-if [ "${1:0:1}" = '-' ]; then
-    set -- odoo "${@}"
-fi
-
-originalArgOne="${1}"
-
-# allow the container to be started with `--user`
-# all mongo* commands should be dropped to the correct user
-if [[ "$originalArgOne" == odoo* ]] && [ "$(id -u)" = '0' ]; then
-    if [ "$originalArgOne" = 'odoo' ]; then
-        chown -R odoo /var/lib/odoo /mnt/extra-addons
-    fi
-
-    # make sure we can write to stdout and stderr as "odoo"
-    # (for our "initdb" code later; see "--logpath" below)
-    chown --dereference odoo "/proc/$$/fd/1" "/proc/$$/fd/2" || :
-    # ignore errors thanks to https://github.com/docker-library/mongo/issues/149
-
-    sudo -H -u odoo bash -c "\"${BASH_SOURCE}\" \"${@}\""
+if [ -v PASSWORD_FILE ]; then
+    PASSWORD="$(< $PASSWORD_FILE)"
 fi
 
 # set the postgres database host, port, user and password according to the environment
@@ -29,39 +28,38 @@ fi
 : ${PORT:=${DB_PORT_5432_TCP_PORT:=5432}}
 : ${USER:=${DB_ENV_POSTGRES_USER:=${POSTGRES_USER:='odoo'}}}
 : ${PASSWORD:=${DB_ENV_POSTGRES_PASSWORD:=${POSTGRES_PASSWORD:='odoo'}}}
-: ${ODOO_RC:='/etc/odoo/odoo.conf'}
 
 DB_ARGS=()
-
 function check_config() {
-    param="${1}"
-    value="${2}"
-    if ! grep -q -E "^\s*\b${param}\b\s*=" "${ODOO_RC}" ; then
-        DB_ARGS+=("--${param}")
-        DB_ARGS+=("${value}")
-   fi;
+    param="$1"
+    value="$2"
+    if grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then       
+        value=$(grep -E "^\s*\b${param}\b\s*=" "$ODOO_RC" |cut -d " " -f3|sed 's/["\n\r]//g')
+    fi;
+    DB_ARGS+=("--${param}")
+    DB_ARGS+=("${value}")
 }
-
-check_config "db_host" "${HOST}"
-check_config "db_port" "${PORT}"
-check_config "db_user" "${USER}"
-check_config "db_password" "${PASSWORD}"
-check_config "config" "${ODOO_RC}"
+check_config "db_host" "$HOST"
+check_config "db_port" "$PORT"
+check_config "db_user" "$USER"
+check_config "db_password" "$PASSWORD"
 
 case "$1" in
     -- | odoo)
         shift
         if [[ "$1" == "scaffold" ]] ; then
-            exec odoo "${@}"
+            exec odoo "$@"
         else
-            exec odoo "${@}" "${DB_ARGS[@]}"
+            wait-for-psql.py ${DB_ARGS[@]} --timeout=30
+            exec odoo "$@" "${DB_ARGS[@]}"
         fi
         ;;
     -*)
-        exec odoo "${@}" "${DB_ARGS[@]}"
+        wait-for-psql.py ${DB_ARGS[@]} --timeout=30
+        exec odoo "$@" "${DB_ARGS[@]}"
         ;;
     *)
-        exec "${@}"
+        exec "$@"
 esac
 
 exit 1

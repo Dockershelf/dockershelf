@@ -32,38 +32,19 @@ from .logger import logger
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-mongo_debian_releases_url = \
-    'http://repo.mongodb.org/apt/debian/dists/index.html'
-mongo_rel_url_holder = \
-    'http://repo.mongodb.org/apt/debian/dists/{0}/mongodb-org/index.html'
-mongo_version_lower_limit = 4.2
-mongo_version_upper_limit = 5.0
-
 node_versions_list_file = \
     'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
-node_version_lower_limit = 8
+node_version_lower_limit = 10
 node_version_upper_limit = 18
-node_versions_disabled = ['9', '11', '13', '15', '17']
+node_versions_disabled = ['11', '13', '15', '17']
 
 odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-odoo_version_lower_limit = 11.0
+odoo_version_lower_limit = 13.0
 odoo_version_upper_limit = 15.0
-
-postgres_release_url = 'http://apt.postgresql.org/pub/repos/apt/dists/sid-pgdg/Release'
-postgres_version_lower_limit = 10
-postgres_version_upper_limit = 14
-
-php_versions_src_origin = {
-    '7.0': 'stretch',
-    '7.3': 'buster',
-    '7.4': 'bullseye',
-    '8.1': 'sid',
-}
 
 python_versions_src_origin = {
     '2.7': 'sid',
     '3.5': 'sid',
-    '3.6': 'sid',
     '3.7': 'sid',
     '3.9': 'sid',
     '3.10': 'sid',
@@ -142,45 +123,6 @@ def get_debian_versions():
     return debian_versions
 
 
-def get_mongo_versions_src_origin(debian_versions):
-    logger.info('Getting Mongo versions')
-
-    mongo_debian_releases_html = lxml.html.parse(
-        mongo_debian_releases_url).getroot()
-    mongo_debian_releases = mongo_debian_releases_html.cssselect('a')
-    mongo_debian_releases = [e.get('href') for e in mongo_debian_releases]
-    mongo_debian_releases = [e for e in mongo_debian_releases if e != '..']
-    debian_codenames = list(map(lambda x: x[0], debian_versions))
-    mongo_debian_releases = list(filter(lambda x: x in debian_codenames,
-                                        mongo_debian_releases))
-    mongo_debian_releases = sorted(mongo_debian_releases, reverse=True,
-                                   key=lambda x: debian_codenames.index(x))
-
-    mongo_versions = []
-    for debian_version in mongo_debian_releases:
-        mongo_rel_url = mongo_rel_url_holder.format(debian_version)
-        mongo_rel_html = lxml.html.parse(mongo_rel_url).getroot()
-        mongo_rel = mongo_rel_html.cssselect('a')
-        mongo_rel = [e.get('href') for e in mongo_rel]
-        mongo_rel = [e for e in mongo_rel if e != '..']
-        mongo_rel = list(filter(lambda x: not is_string_a_string(x),
-                                mongo_rel))
-        mongo_rel = [{e: debian_version} for e in mongo_rel
-                     if not any(e in v for v in mongo_versions)]
-        mongo_versions.extend(mongo_rel)
-
-    return dict((key, d[key]) for d in mongo_versions for key in d)
-
-
-def get_mongo_versions(mongo_versions_src_origin):
-    mongo_versions = mongo_versions_src_origin.keys()
-    mongo_versions = filter(lambda x: int(x[-1]) % 2 == 0, mongo_versions)
-    mongo_versions = [u(v) for v in mongo_versions
-                      if (float(v) >= mongo_version_lower_limit and
-                          float(v) <= mongo_version_upper_limit)]
-    return sorted(set(mongo_versions), key=lambda x: Version(x))
-
-
 def get_node_versions():
     logger.info('Getting Node versions')
 
@@ -208,35 +150,6 @@ def get_odoo_versions():
                      if (float(v) >= odoo_version_lower_limit and
                          float(v) <= odoo_version_upper_limit)]
     return sorted(set(odoo_versions), key=lambda x: Version(x))
-
-
-def get_postgres_versions():
-    logger.info('Getting Postgres versions')
-
-    r = Request(postgres_release_url)
-
-    with closing(urlopen(r)) as d:
-        postgres_release_content = d.read()
-
-    postgres_versions = re.findall('Components: (.*)',
-                                   u(postgres_release_content))[0]
-    postgres_versions = list(filter(lambda x: not is_string_a_string(x),
-                                    postgres_versions.split()))
-    postgres_versions = [u(v) for v in postgres_versions
-                         if (float(v) >= postgres_version_lower_limit and
-                             float(v) <= postgres_version_upper_limit)]
-    return sorted(postgres_versions, key=lambda x: Version(x))
-
-
-def get_php_versions_src_origin():
-    return php_versions_src_origin
-
-
-def get_php_versions(php_versions_src_origin):
-    logger.info('Getting PHP versions')
-    php_versions = php_versions_src_origin.keys()
-    php_versions = [u(v) for v in php_versions]
-    return sorted(php_versions, key=lambda x: Version(x))
 
 
 def get_python_versions_src_origin():

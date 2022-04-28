@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 #
-#   This file is part of Dockershelf.
-#   Copyright (C) 2016-2022, Dockershelf Developers.
-#
-#   Please refer to AUTHORS.md for a complete list of Copyright holders.
-#
-#   Dockershelf is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   Dockershelf is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program. If not, see http://www.gnu.org/licenses.
+# Please refer to AUTHORS.md for a complete list of Copyright holders.
+# Copyright (C) 2016-2022, Dockershelf Developers.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Exit early if there are errors and be verbose.
 set -exuo pipefail
@@ -25,13 +23,11 @@ set -exuo pipefail
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DEBMIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
 ODOOMIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
-WKHTMLTOX_URL="https://github.com/wkhtmltopdf/packaging/"\
-"releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb"
+WKHTMLTOX_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb"
 
 # Some tools are needed.
-DPKG_TOOLS_DEPENDS="aptitude debian-keyring dpkg-dev gnupg dirmngr"
+DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 ODOO_PKGS="odoo"
 ODOO_PKGS_VER=""
 
@@ -77,22 +73,64 @@ cmdretry apt-get update
 # ------------------------------------------------------------------------------
 # Now we use some shell/apt plumbing to get runtime dependencies.
 
-# Installing wkhtmltox dependencies
-cmdretry apt-get install fontconfig libfreetype6 libjpeg62-turbo libpng16-16 \
-    libx11-6 libxcb1 libxext6 libxrender1 xfonts-75dpi xfonts-base
+# Installing dependencies
+cmdretry apt-get install \
+    fontconfig \
+    libfreetype6 \
+    libjpeg62-turbo \
+    libpng16-16 \
+    libx11-6 \
+    libxcb1 \
+    libxext6 \
+    libxrender1 \
+    xfonts-75dpi \
+    xfonts-base \
+    ca-certificates \
+    curl \
+    fonts-noto-cjk \
+    libssl-dev \
+    node-less \
+    npm \
+    libpq-dev \
+<<<<<<< HEAD
+    build-essential \
+=======
+>>>>>>> b792e86e0f83afbdb8643c293139f7a497d1949d
+    postgresql-client \
+    python3-dev \
+    python3-num2words \
+    python3-pdfminer \
+    python3-pip \
+    python3-phonenumbers \
+    python3-pyldap \
+    python3-qrcode \
+    python3-renderpm \
+    python3-setuptools \
+    python3-slugify \
+    python3-vobject \
+    python3-watchdog \
+    python3-xlrd \
+    python3-xlwt \
+    xz-utils
+
+cmdretry apt-get install python3-vatnumber -t bullseye
 
 # Installing wkhtmltox
 curl -o wkhtmltox.deb -sLO "${WKHTMLTOX_URL}" && \
     dpkg -i wkhtmltox.deb && rm wkhtmltox.deb
 
+npm install -g rtlcss
+pip install psycopg2
+
 # Odoo: Configure
 # ------------------------------------------------------------------------------
 # We need to configure proper volumes and users.
 
-mkdir -p /mnt/extra-addons /var/log/odoo /var/lib/odoo
 groupadd -r odoo
 useradd -r -g odoo odoo
-chown -R odoo:odoo /mnt/extra-addons /var/log/odoo /var/lib/odoo
+
+mkdir -p /mnt/extra-addons /var/log/odoo /var/lib/odoo
+chown -R odoo:odoo /mnt/extra-addons /var/log/odoo /var/lib/odoo /etc/odoo/odoo.conf
 
 # Odoo: Installation
 # ------------------------------------------------------------------------------
@@ -105,9 +143,7 @@ for PKG in ${ODOO_PKGS}; do
     ODOO_PKGS_VER="${ODOO_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 
-cmdretry apt-get install python3-vatnumber -t bullseye
-cmdretry apt-get install nodejs
-cmdretry aptitude install ${ODOO_PKGS_VER} libgcc-s1 sudo node-less xfonts-75dpi xfonts-base
+cmdretry aptitude install ${ODOO_PKGS_VER}
 
 # Odoo: Configure
 # ------------------------------------------------------------------------------
@@ -125,7 +161,11 @@ ln -s /usr/lib/python${PYTHON_VER_NUM}/dist-packages/odoo/addons /mnt/addons
 
 msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
+
+rm -rf /etc/apt/sources.list.d/bullseye.list
+cmdretry apt-get update
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

@@ -38,6 +38,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Installing dependencies
         run: |
+          sudo apt-get install libxml2-dev libxslt-dev
           pip install -r requirements.txt -r requirements-dev.txt
       - name: Functional test
         env:

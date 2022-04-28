@@ -18,17 +18,14 @@
 
 import os
 import re
-import sys
 
 from scripts.logger import logger
+from scripts.update_debian import update_debian
 from scripts.update_latex import update_latex
 from scripts.update_python import update_python
 from scripts.update_ruby import update_ruby
 from scripts.update_node import update_node
-from scripts.update_mongo import update_mongo
-from scripts.update_postgres import update_postgres
 from scripts.update_odoo import update_odoo
-from scripts.update_php import update_php
 
 
 if __name__ == '__main__':
@@ -52,24 +49,20 @@ if __name__ == '__main__':
     logger.loglevel('INFO')
     logger.info('Updating shelves')
 
+    debian_matrix_list, debian_readme_table = update_debian(basedir)
     latex_matrix_list, latex_readme_table = update_latex(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
     ruby_matrix_list, ruby_readme_table = update_ruby(basedir)
     node_matrix_list, node_readme_table = update_node(basedir)
-    mongo_matrix_list, mongo_readme_table = update_mongo(basedir)
-    postgres_matrix_list, postgres_readme_table = update_postgres(basedir)
     odoo_matrix_list, odoo_readme_table = update_odoo(basedir)
-    php_matrix_list, php_readme_table = update_php(basedir)
 
     logger.info('Writing github actions matrix')
+    matrix.extend(debian_matrix_list)
     matrix.extend(latex_matrix_list)
     matrix.extend(python_matrix_list)
     matrix.extend(ruby_matrix_list)
     matrix.extend(node_matrix_list)
-    matrix.extend(mongo_matrix_list)
-    matrix.extend(postgres_matrix_list)
     matrix.extend(odoo_matrix_list)
-    matrix.extend(php_matrix_list)
     gha_matrix = '\n'.join(matrix)
 
     with open(gha_develop_template, 'r') as gdt:
@@ -98,6 +91,8 @@ if __name__ == '__main__':
         readme_template_content = rt.read()
 
     readme_content = readme_template_content
+    readme_content = re.sub('%%DEBIAN_TABLE%%', debian_readme_table,
+                            readme_content)
     readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
                             readme_content)
     readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,
@@ -106,13 +101,7 @@ if __name__ == '__main__':
                             readme_content)
     readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
                             readme_content)
-    readme_content = re.sub('%%MONGO_TABLE%%', mongo_readme_table,
-                            readme_content)
-    readme_content = re.sub('%%POSTGRES_TABLE%%', postgres_readme_table,
-                            readme_content)
     readme_content = re.sub('%%ODOO_TABLE%%', odoo_readme_table,
-                            readme_content)
-    readme_content = re.sub('%%PHP_TABLE%%', php_readme_table,
                             readme_content)
 
     with open(readme, 'w') as t:
