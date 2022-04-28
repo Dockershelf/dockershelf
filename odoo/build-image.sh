@@ -92,10 +92,7 @@ cmdretry apt-get install \
     node-less \
     npm \
     libpq-dev \
-<<<<<<< HEAD
     build-essential \
-=======
->>>>>>> b792e86e0f83afbdb8643c293139f7a497d1949d
     postgresql-client \
     python3-dev \
     python3-num2words \
