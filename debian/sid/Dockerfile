@@ -1,12 +1,12 @@
-FROM %%BASE_IMAGE%%
+FROM scratch
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="mongo%%MONGO_VERSION%%" \
-      org.label-schema.description="A Mongo %%MONGO_VERSION%% image based on Debian %%DEBIAN_RELEASE%%." \
+      org.label-schema.name="debian-sid" \
+      org.label-schema.description="A Debian sid minimal image built from scratch." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +14,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="mongo%%MONGO_VERSION%%" \
-      org.opencontainers.image.description="An Mongo %%MONGO_VERSION%% image based on Debian %%DEBIAN_RELEASE%%" \
+      org.opencontainers.image.title="debian-sid" \
+      org.opencontainers.image.description="A Debian sid minimal image built from scratch." \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,16 +24,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV MONGO_VER_NUM="%%MONGO_VERSION%%" MONGO_DEBIAN_SUITE="%%MONGO_DEBIAN_SUITE%%"
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="sid" \
+    DEBIAN_SUITE="unstable"
 
-COPY aggregate.js articles.js /root/
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/mongo/
-RUN bash /usr/share/dockershelf/mongo/build-image.sh
+ADD base /
 
-VOLUME /data/db /data/configdb
-
-EXPOSE 27017
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["mongod"]
+CMD ["/bin/bash"]

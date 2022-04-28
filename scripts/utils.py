@@ -63,7 +63,6 @@ php_versions_src_origin = {
 python_versions_src_origin = {
     '2.7': 'sid',
     '3.5': 'sid',
-    '3.6': 'sid',
     '3.7': 'sid',
     '3.9': 'sid',
     '3.10': 'sid',

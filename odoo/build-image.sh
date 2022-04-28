@@ -114,6 +114,7 @@ curl -o wkhtmltox.deb -sLO "${WKHTMLTOX_URL}" && \
     dpkg -i wkhtmltox.deb && rm wkhtmltox.deb
 
 npm install -g rtlcss
+pip install psycopg2
 
 # Odoo: Configure
 # ------------------------------------------------------------------------------

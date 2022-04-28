@@ -1,12 +1,12 @@
-FROM dockershelf/debian:sid
+FROM scratch
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="postgres13" \
-      org.label-schema.description="A Postgres 13 image based on Debian sid." \
+      org.label-schema.name="debian-bookworm" \
+      org.label-schema.description="A Debian bookworm minimal image built from scratch." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +14,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="postgres13" \
-      org.opencontainers.image.description="An Postgres 13 image based on Debian sid" \
+      org.opencontainers.image.title="debian-bookworm" \
+      org.opencontainers.image.description="A Debian bookworm minimal image built from scratch." \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,18 +24,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV POSTGRES_VER_NUM="13" \
-	PATH="${PATH}:/usr/lib/postgresql/13/bin" \
-	PGDATA="/var/lib/postgresql/data"
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="bookworm" \
+    DEBIAN_SUITE="testing"
 
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY build-image.sh library.sh /usr/share/dockershelf/postgres/
-RUN bash /usr/share/dockershelf/postgres/build-image.sh
+ADD base /
 
-VOLUME /var/lib/postgresql/data
-
-EXPOSE 5432
-STOPSIGNAL SIGINT
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["postgres"]
+CMD ["/bin/bash"]

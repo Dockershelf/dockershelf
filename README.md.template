@@ -42,6 +42,16 @@ bash build-image.sh [docker image name]
 
 ## Shelves
 
+### Debian
+
+These images are similar to the official ones, but with some improved configurations. Check out [debian/README.md](https://github.com/Dockershelf/dockershelf/blob/master/debian/README.md) for more details.
+
+|Image  |Release  |Dockerfile  |Pulls   |Size  |
+|-------|---------|------------|--------|------|
+%%DEBIAN_TABLE%%
+
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
+
 ### Python
 
 These are python images with native debian packages that are extracted from different debian releases. Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
@@ -72,26 +82,6 @@ These are Node images built using the [nodesource installation script](https://n
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
-### Mongo
-
-These are Mongo images built using the [official installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/). Check out [mongo/README.md](https://github.com/Dockershelf/dockershelf/blob/master/mongo/README.md) for more details.
-
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
-%%MONGO_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### Postgres
-
-These are PostgreSQL images built using the [official installation guide](https://www.postgresql.org/download/linux/debian/). Check out [postgres/README.md](https://github.com/Dockershelf/dockershelf/blob/master/postgres/README.md) for more details.
-
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
-%%POSTGRES_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
 ### Latex
 
 This is a Latex image built with the following packages installed: `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor`. It should be enough to use the `pdflatex` binary for basic Latex to PDF conversion. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
@@ -109,15 +99,6 @@ These images are similar to the official ones, but with some improved configurat
 |Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%ODOO_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### PHP
-
-
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
-%%PHP_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
