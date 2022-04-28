@@ -27,6 +27,7 @@ PYTHON_VER_NUM_MAJOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
 PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
 PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
+DEBMIRROR="http://deb.debian.org/debian"
 DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal
@@ -147,6 +148,9 @@ msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
+
+rm -rf /etc/apt/sources.list.d/buster.list
+cmdretry apt-get update
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

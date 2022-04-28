@@ -82,7 +82,7 @@ cmdretry apt-get update
 
 # Installing dependencies
 cmdretry apt-get install \
-    jq numactl lsb-base procps gosu
+    jq numactl lsb-base procps gosu wget
 
 wget -O /js-yaml.js "https://github.com/nodeca/js-yaml/raw/3.13.1/dist/js-yaml.js"
 

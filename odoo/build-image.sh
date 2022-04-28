@@ -22,6 +22,7 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+DEBMIRROR="http://deb.debian.org/debian"
 ODOOMIRROR="http://nightly.odoo.com/${ODOO_VER_NUM}/nightly/deb/"
 WKHTMLTOX_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb"
 
@@ -62,6 +63,10 @@ cmdretry gpg --lock-never --no-default-keyring \
     echo "deb [signed-by=/usr/share/keyrings/odoo.gpg] ${ODOOMIRROR} ./"
 } | tee /etc/apt/sources.list.d/odoo.list > /dev/null
 
+{
+    echo "deb ${DEBMIRROR} bullseye main"
+} | tee /etc/apt/sources.list.d/bullseye.list > /dev/null
+
 cmdretry apt-get update
 
 # Apt: Install runtime dependencies
@@ -101,6 +106,8 @@ cmdretry apt-get install \
     python3-xlrd \
     python3-xlwt \
     xz-utils
+
+cmdretry apt-get install python3-vatnumber -t bullseye
 
 # Installing wkhtmltox
 curl -o wkhtmltox.deb -sLO "${WKHTMLTOX_URL}" && \
@@ -149,6 +156,9 @@ msginfo "Removing unnecessary packages ..."
 cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
+
+rm -rf /etc/apt/sources.list.d/bullseye.list
+cmdretry apt-get update
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

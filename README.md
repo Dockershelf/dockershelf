@@ -151,3 +151,25 @@ These images are similar to the official ones, but with some improved configurat
 ![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 
 > Web [luisalejandro.org](http://luisalejandro.org/) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
+
+
+
+
+
+
+
+
+https://github.com/docker-library/official-images/tree/master/library
+https://github.com/docker-library/postgres
+https://github.com/docker-library/mongo
+https://github.com/docker-library/php
+https://github.com/docker-library/ruby
+https://github.com/odoo/docker/blob/master/15.0/entrypoint.sh
+
+
+https://github.com/debuerreotype/debuerreotype
+https://github.com/tianon/docker-brew-ubuntu-core/tree/dist-amd64
+https://github.com/gentoo/gentoo-docker-images/blob/master/stage3.Dockerfile
+https://github.com/fedora-cloud/docker-brew-fedora/blob/36/x86_64/Dockerfile
+https://github.com/alpinelinux/docker-alpine
+https://github.com/CentOS/sig-cloud-instance-build

@@ -69,7 +69,7 @@ cmdretry apt-get update
 # ------------------------------------------------------------------------------
 # Now we use some shell/apt plumbing to get runtime dependencies.
 
-cat > "${TARGET}/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
+cat > "/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
 #!/usr/bin/env bash
 # Dockershelf post hook for dpkg
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf

@@ -184,6 +184,9 @@ cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
+rm -rf /etc/apt/sources.list.d/php.list
+cmdretry apt-get update
+
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------
 # To distinguish images.
