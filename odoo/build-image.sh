@@ -93,6 +93,7 @@ cmdretry apt-get install \
     npm \
     libpq-dev \
     postgresql-client \
+    python3-dev \
     python3-num2words \
     python3-pdfminer \
     python3-pip \
