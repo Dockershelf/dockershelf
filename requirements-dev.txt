@@ -4,7 +4,7 @@ coveralls==3.3.1
 flake8==4.0.1
 gitchangelog==3.0.4
 mako==1.2.0
-pip==22.1.1
+pip==22.1.2
 pydocstyle==6.1.1
 setuptools==62.3.2
 tox==3.25.0
