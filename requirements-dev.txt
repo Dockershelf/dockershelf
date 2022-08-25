@@ -1,5 +1,5 @@
 bumpversion==0.6.0
-coverage==6.4.1
+coverage==6.4.4
 coveralls==3.3.1
 flake8==4.0.1
 gitchangelog==3.0.4
