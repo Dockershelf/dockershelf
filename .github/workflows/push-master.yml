@@ -61,6 +61,7 @@ jobs:
           fetch-depth: 0
       - name: Installing dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install debootstrap
           sudo gem install docker-api serverspec
       - name: Building docker image

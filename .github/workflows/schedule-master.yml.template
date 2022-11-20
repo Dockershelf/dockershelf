@@ -7,8 +7,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-20.04
-    if: github.repository == 'Dockershelf/dockershelf'
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -23,6 +22,7 @@ jobs:
           fetch-depth: 0
       - name: Installing dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install debootstrap
           sudo gem install docker-api serverspec
       - name: Building docker image
