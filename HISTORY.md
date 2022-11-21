@@ -1,6 +1,80 @@
 # Changelog
 
 
+## 3.0.0 (2022-11-21)
+
+### Changed
+
+* Fixing readme badge. [Luis Alejandro Martínez Faneyth]
+
+* Fixing credentials. [Luis Alejandro Martínez Faneyth]
+
+* Removing support for python 2.7. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for unstable/stable images. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for unstable/stable images. [Luis Alejandro Martínez Faneyth]
+
+* Removing support for Odoo and Ruby images. [Luis Alejandro Martínez Faneyth]
+
+
+### Other
+
+* Bump coverage from 6.4.1 to 6.5.0. [dependabot[bot]]
+
+* Bump setuptools from 62.6.0 to 65.6.0. [dependabot[bot]]
+
+* Bump wheel from 0.37.1 to 0.38.4. [dependabot[bot]]
+
+* Bump tox from 3.25.1 to 3.27.1. [dependabot[bot]]
+
+* Bump mako from 1.2.0 to 1.2.4. [dependabot[bot]]
+
+* Bump virtualenv from 20.15.1 to 20.16.7. [dependabot[bot]]
+
+* Bump cssselect from 1.1.0 to 1.2.0. [dependabot[bot]]
+
+* Bump pip from 22.1.2 to 22.3.1. [dependabot[bot]]
+
+* Bump flake8 from 4.0.1 to 5.0.4. [dependabot[bot]]
+
+* Bump hmarr/auto-approve-action from 2.2.1 to 3.1.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.15.1 to 20.16.3. [dependabot[bot]]
+
+* Bump lxml from 4.9.0 to 4.9.1. [dependabot[bot]]
+
+* Bump tox from 3.25.0 to 3.25.1. [dependabot[bot]]
+
+* Bump virtualenv from 20.14.1 to 20.15.1. [dependabot[bot]]
+
+* Bump setuptools from 62.4.0 to 62.6.0. [dependabot[bot]]
+
+* Bump setuptools from 62.3.3 to 62.4.0. [dependabot[bot]]
+
+* Bump coverage from 6.4 to 6.4.1. [dependabot[bot]]
+
+* Bump setuptools from 62.3.2 to 62.3.3. [dependabot[bot]]
+
+* Bump actions/setup-python from 3 to 4. [dependabot[bot]]
+
+* Bump pip from 22.1.1 to 22.1.2. [dependabot[bot]]
+
+* Bump lxml from 4.8.0 to 4.9.0. [dependabot[bot]]
+
+* Bump coverage from 6.3.3 to 6.4. [dependabot[bot]]
+
+* Bump pip from 22.1 to 22.1.1. [dependabot[bot]]
+
+* Bump coverage from 6.3.2 to 6.3.3. [dependabot[bot]]
+
+* Bump setuptools from 62.2.0 to 62.3.2. [dependabot[bot]]
+
+* Bump pip from 22.0.4 to 22.1. [dependabot[bot]]
+
+* Bump setuptools from 62.1.0 to 62.2.0. [dependabot[bot]]
+
+
 ## 2.8.0 (2022-04-28)
 
 ### Changed
