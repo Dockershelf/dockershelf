@@ -7,8 +7,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-20.04
-    if: github.repository == 'Dockershelf/dockershelf'
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -36,21 +35,12 @@ jobs:
           - docker-image-name: "dockershelf/python:3.10"
           - docker-image-name: "dockershelf/python:3.11"
             docker-image-extra-tags: "dockershelf/python:latest"
-          - docker-image-name: "dockershelf/ruby:2.3"
-          - docker-image-name: "dockershelf/ruby:2.5"
-          - docker-image-name: "dockershelf/ruby:2.7"
-          - docker-image-name: "dockershelf/ruby:3.0"
-            docker-image-extra-tags: "dockershelf/ruby:latest"
           - docker-image-name: "dockershelf/node:10"
           - docker-image-name: "dockershelf/node:12"
           - docker-image-name: "dockershelf/node:14"
           - docker-image-name: "dockershelf/node:16"
           - docker-image-name: "dockershelf/node:18"
             docker-image-extra-tags: "dockershelf/node:latest"
-          - docker-image-name: "dockershelf/odoo:13.0"
-          - docker-image-name: "dockershelf/odoo:14.0"
-          - docker-image-name: "dockershelf/odoo:15.0"
-            docker-image-extra-tags: "dockershelf/odoo:latest"
 
     steps:
       - name: Checkout repo

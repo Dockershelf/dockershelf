@@ -70,7 +70,7 @@ def update_latex(basedir):
         shutil.rmtree(deldir)
 
     for latex_version in latex_versions:
-        logger.info('Processing Mongo {0}'.format(latex_version))
+        logger.info('Processing Latex {0}'.format(latex_version))
         latex_version_dir = os.path.join(latexdir, latex_version)
         latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
 

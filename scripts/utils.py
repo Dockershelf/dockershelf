@@ -37,14 +37,14 @@ node_version_lower_limit = 10
 node_version_upper_limit = 18
 node_versions_disabled = ['11', '13', '15', '17']
 
-python_versions_src_origin = {
-    '2.7': 'sid',
-    '3.5': 'sid',
-    '3.7': 'sid',
-    '3.9': 'sid',
-    '3.10': 'sid',
-    '3.11': 'sid',
-}
+python_suites = [
+    '2.7',
+    '3.5',
+    '3.7',
+    '3.9',
+    '3.10',
+    '3.11',
+]
 
 
 def u(u_string):
@@ -126,19 +126,7 @@ def get_node_versions():
     return sorted(set(node_versions), key=lambda x: Version(x))
 
 
-def get_python_versions_src_origin():
-    return python_versions_src_origin
-
-
-def get_python_versions(python_versions_src_origin):
+def get_python_versions():
     logger.info('Getting Python versions')
-    python_versions = python_versions_src_origin.keys()
-    python_versions = [u(v) for v in python_versions]
+    python_versions = [u(v) for v in python_suites]
     return sorted(python_versions, key=lambda x: Version(x))
-
-
-def get_ruby_versions(ruby_versions_src_origin):
-    logger.info('Getting Ruby versions')
-    ruby_versions = ruby_versions_src_origin.keys()
-    ruby_versions = [u(v) for v in ruby_versions]
-    return sorted(ruby_versions, key=lambda x: Version(x))
