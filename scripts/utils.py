@@ -38,7 +38,6 @@ node_version_upper_limit = 18
 node_versions_disabled = ['13', '15', '17']
 
 python_suites = [
-    '2.7',
     '3.5',
     '3.7',
     '3.9',

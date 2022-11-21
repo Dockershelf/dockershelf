@@ -45,7 +45,7 @@ jobs:
           PYTHON_VERSION: ${{ matrix.python-version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 update_shelf.py
+          python3 update.py
 
   approve:
     name: Approve pull request
@@ -54,14 +54,8 @@ jobs:
     steps:
       - name: Approve
         uses: hmarr/auto-approve-action@v2.2.1
-        if: github.actor == 'dependabot[bot]'
         with:
-          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-      - name: Approve
-        uses: hmarr/auto-approve-action@v2.2.1
-        if: github.actor == 'LuisAlejandro'
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ github.actor == 'LuisAlejandro' && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
 
   merge:
     name: Merge pull request
@@ -70,20 +64,8 @@ jobs:
     steps:
       - name: Merge
         uses: actions/github-script@v6
-        if: github.actor == 'dependabot[bot]'
         with:
-          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-          script: |
-            await github.rest.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            })
-      - name: Merge
-        uses: actions/github-script@v6
-        if: github.actor == 'LuisAlejandro'
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ github.actor == 'LuisAlejandro' && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
           script: |
             await github.rest.pulls.merge({
               owner: context.repo.owner,

@@ -27,8 +27,6 @@ jobs:
             debian-suite: "unstable"
           - docker-image-name: "dockershelf/latex:basic"
           - docker-image-name: "dockershelf/latex:full"
-          - docker-image-name: "dockershelf/python:2.7-bullseye"
-          - docker-image-name: "dockershelf/python:2.7-sid"
           - docker-image-name: "dockershelf/python:3.5-bullseye"
           - docker-image-name: "dockershelf/python:3.5-sid"
           - docker-image-name: "dockershelf/python:3.7-bullseye"
