@@ -10,15 +10,19 @@ Current version: 3.0.0
 
 Images are updated, tested and published *weekly* via a [Github Actions workflow](https://github.com/Dockershelf/dockershelf/actions).
 
-## How to download
+## About stable/unstable images
+
+Excepting debian and latex images, all images have an stable/unstable version. Stable images are based on debian stable, which are ideal for production applications; Unstable images are based on debian sid, which are designed for development stages.
+
+## How to use
 
 Pull one of the available images and start hacking!
 
 ```bash
-docker pull [docker image name]
-docker run -it [docker image name] bash
+docker pull <image>
+docker run -it <image> bash
 ```
-<sup>[docker image name] is the desired image to download, for example <code>dockershelf/python:2.7</code>.</sup>
+<sup>&lt;image&gt; is the desired image to download, for example <code>dockershelf/python:2.7</code>.</sup>
 
 ## How to build locally
 
@@ -31,10 +35,10 @@ git clone https://github.com/Dockershelf/dockershelf
 Run the build script in the root folder of your local copy. Remember to have docker installed and make sure your user has proper privileges to execute `docker build`.
 
 ```bash
-bash build-image.sh [docker image name]
+bash build-image.sh <image>
 ```
 
-<sup>[docker image name] is the desired image to build, for example <code>dockershelf/debian:sid</code>.</sup>
+<sup>&lt;image&gt; is the desired image to build, for example <code>dockershelf/debian:sid</code>.</sup>
 
 ## Shelves
 

@@ -25,12 +25,12 @@
 
 The Python images are built using a bash script [`python/build-image.sh`](https://github.com/Dockershelf/dockershelf/blob/master/python/build-image.sh), you can check it out for details.
 
-Each python release is downloaded and installed from the debian official repositories. Some releases are not compiled against Debian Sid libraries, so some potentially old libraries could be installed in the process.
+Each python release is downloaded and installed from the [deadsnakes ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa).
 
 We'll explain the overall process here:
 
-1. Built `FROM dockershelf/debian:sid`.
-2. Labelled according to [label-schema.org](http://label-schema.org).
+1. Built `FROM dockershelf/debian:<release>`.
+2. Labelled according to [label-schema.org](http://label-schema.org) and [opencontainers specification](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
 3. Install developer tools to handle the package installation.
 4. Install Python.
 5. Uninstall developer tools and orphan packages.

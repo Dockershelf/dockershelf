@@ -15,7 +15,9 @@
 
 ## Building process
 
-The Latex images are very simple, they're just debian images with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `latex-xcolor` debian packages installed. Check out the [Dockerfile](https://github.com/Dockershelf/dockershelf/blob/master/latex/sid/Dockerfile) for details.
+The Latex basic image is a debian unstable image with `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra` and `texlive-latex-recommended` packages installed. Check out the [Dockerfile](https://github.com/Dockershelf/dockershelf/blob/master/latex/basic/Dockerfile) for details.
+
+The Latex full image is a debian unstable image with `texlive-full` package installed. Check out the [Dockerfile](https://github.com/Dockershelf/dockershelf/blob/master/latex/full/Dockerfile) for details.
 
 ## Made with 💖 and 🍔
 

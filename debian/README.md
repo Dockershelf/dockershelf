@@ -23,7 +23,7 @@ The base filesystem is created with [`debian/build-image.sh`](https://github.com
 However, we explain the overall process here:
 
 1. Built `FROM scratch`.
-2. Labelled according to [label-schema.org](http://label-schema.org).
+2. Labelled according to [label-schema.org](http://label-schema.org) and [opencontainers specification](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
 3. The base filesystem is built with `debootstrap` using the following command.
 
         debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg --no-check-certificate <release> <dir> <mirror>
@@ -112,12 +112,12 @@ However, we explain the overall process here:
 
     * `/etc/bash.bashrc`: Configure bash-completion and colorful prompt.
 
-5. Install `iproute`, `inetutils-ping`, `locales`, `curl`, `ca-certificates` and `bash-completion` packages.
+5. Install `iproute2`, `inetutils-ping`, `locales`, `curl`, `ca-certificates` and `bash-completion` packages.
 6. Configure locales.
 7. Delete unnecessary files to shrink image.
 
-## Made with :heart: and :hamburger:
+## Made with 💖 and 🍔
 
-![Banner](https://github.com/Dockershelf/dockershelf/blob/develop/images/author-banner.svg)
+![Banner](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/author-banner.svg)
 
 > Web [luisalejandro.org](http://luisalejandro.org/) · GitHub [@LuisAlejandro](https://github.com/LuisAlejandro) · Twitter [@LuisAlejandro](https://twitter.com/LuisAlejandro)
