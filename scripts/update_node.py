@@ -57,7 +57,12 @@ def update_node(basedir):
                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/node')
     matrix_str = (
-        '          - docker-image-name: "dockershelf/node:{0}"')
+        '          - docker-image-name: "dockershelf/node:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/node:{1}"')
+    matrix_str_main = (
+        '          - docker-image-name: "dockershelf/node:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/node:{1} '
+        'dockershelf/node:{2}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|`{2}`'
                                     '|[![]({3})]({4})'
@@ -75,6 +80,8 @@ def update_node(basedir):
             logger.info('Processing Node {0} ({1})'.format(
                 nodever, debian_version))
             node_version = '{0}-{1}'.format(nodever, debian_version)
+            node_version_stable = '{0}-{1}'.format(nodever, 'stable')
+            node_version_unstable = '{0}-{1}'.format(nodever, 'unstable')
             node_version_dir = os.path.join(nodedir, node_version)
             node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
 
@@ -87,7 +94,12 @@ def update_node(basedir):
             size_badge = size_badge_holder.format(node_version)
             size_url = size_url_holder.format(node_version)
 
-            matrix.append(matrix_str.format(node_version))
+            if debian_version == 'sid':
+                matrix.append(matrix_str_main.format(
+                    node_version, node_version_unstable, nodever))
+            else:
+                matrix.append(matrix_str.format(node_version,
+                              node_version_stable))
 
             node_readme_tablelist.append(
                 node_readme_tablelist_holder.format(

@@ -48,12 +48,6 @@ if [ "$( id -u )" != "0" ]; then
     exit 1
 fi
 
-if [ "${DEBIAN_SUITE}" == "oldstable" ] || [ "${DEBIAN_SUITE}" == "oldoldstable" ]; then
-    MERGED_USR="--no-merged-usr"
-else
-    MERGED_USR="--merged-usr"
-fi
-
 # Clean previous builds
 if [ -d "${TARGET}" ]; then
     rm -rf "${TARGET}"
@@ -61,12 +55,12 @@ fi
 
 msginfo "Downloading packages for base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --download-only --no-check-gpg --no-check-certificate ${MERGED_USR} \
+    --download-only --no-check-gpg --no-check-certificate --merged-usr \
         "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Building base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
-    --no-check-gpg --no-check-certificate ${MERGED_USR} \
+    --no-check-gpg --no-check-certificate --merged-usr \
         "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Configuring base filesystem ..."

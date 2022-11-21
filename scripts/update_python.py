@@ -57,7 +57,12 @@ def update_python(basedir):
                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/python')
     matrix_str = (
-        '          - docker-image-name: "dockershelf/python:{0}"')
+        '          - docker-image-name: "dockershelf/python:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/python:{1}"')
+    matrix_str_main = (
+        '          - docker-image-name: "dockershelf/python:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/python:{1} '
+        'dockershelf/python:{2}"')
     python_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
@@ -75,6 +80,8 @@ def update_python(basedir):
             logger.info('Processing Python {0} ({1})'.format(
                 pyver, debian_version))
             python_version = '{0}-{1}'.format(pyver, debian_version)
+            python_version_stable = '{0}-{1}'.format(pyver, 'stable')
+            python_version_unstable = '{0}-{1}'.format(pyver, 'unstable')
             python_version_dir = os.path.join(pythondir, python_version)
             python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
 
@@ -87,7 +94,12 @@ def update_python(basedir):
             size_badge = size_badge_holder.format(python_version)
             size_url = size_url_holder.format(python_version)
 
-            matrix.append(matrix_str.format(python_version))
+            if debian_version == 'sid':
+                matrix.append(matrix_str_main.format(
+                    python_version, python_version_unstable, pyver))
+            else:
+                matrix.append(matrix_str.format(python_version,
+                              python_version_stable))
 
             python_readme_tablelist.append(
                 python_readme_tablelist_holder.format(
