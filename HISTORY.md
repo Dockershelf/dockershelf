@@ -1,7 +1,14 @@
 # Changelog
 
 
-## 3.0.0 (2022-11-21)
+## 3.0.1 (2022-11-21)
+
+### Changed
+
+* Improving documentation. Adding stable/unstable tags. [Luis Alejandro Martínez Faneyth]
+
+
+## 3.0 (2022-11-21)
 
 ### Changed
 
