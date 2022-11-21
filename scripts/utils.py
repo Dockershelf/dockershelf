@@ -23,7 +23,6 @@ from contextlib import closing
 
 from urllib.request import urlopen, Request
 
-import lxml.html
 from packaging.version import Version
 
 from .logger import logger
@@ -32,31 +31,19 @@ from .logger import logger
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-node_versions_list_file = \
-    'https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh'
-node_version_lower_limit = 10
+node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
+                           'distributions/master/deb/src/build.sh')
+node_version_lower_limit = 12
 node_version_upper_limit = 18
-node_versions_disabled = ['11', '13', '15', '17']
+node_versions_disabled = ['13', '15', '17']
 
-odoo_versions_list_file = 'http://nightly.odoo.com/index.html'
-odoo_version_lower_limit = 13.0
-odoo_version_upper_limit = 15.0
-
-python_versions_src_origin = {
-    '2.7': 'sid',
-    '3.5': 'sid',
-    '3.7': 'sid',
-    '3.9': 'sid',
-    '3.10': 'sid',
-    '3.11': 'sid',
-}
-
-ruby_versions_src_origin = {
-    '2.3': 'stretch',
-    '2.5': 'buster',
-    '2.7': 'sid',
-    '3.0': 'sid',
-}
+python_suites = [
+    '3.5',
+    '3.7',
+    '3.9',
+    '3.10',
+    '3.11',
+]
 
 
 def u(u_string):
@@ -138,37 +125,7 @@ def get_node_versions():
     return sorted(set(node_versions), key=lambda x: Version(x))
 
 
-def get_odoo_versions():
-    logger.info('Getting Odoo versions')
-
-    odoo_ver_html = lxml.html.parse(odoo_versions_list_file).getroot()
-    odoo_versions = odoo_ver_html.cssselect('a.label')
-    odoo_versions = [e.text_content() for e in odoo_versions]
-    odoo_versions = list(filter(lambda x: not is_string_a_string(x),
-                                odoo_versions))
-    odoo_versions = [u(v) for v in odoo_versions
-                     if (float(v) >= odoo_version_lower_limit and
-                         float(v) <= odoo_version_upper_limit)]
-    return sorted(set(odoo_versions), key=lambda x: Version(x))
-
-
-def get_python_versions_src_origin():
-    return python_versions_src_origin
-
-
-def get_python_versions(python_versions_src_origin):
+def get_python_versions():
     logger.info('Getting Python versions')
-    python_versions = python_versions_src_origin.keys()
-    python_versions = [u(v) for v in python_versions]
+    python_versions = [u(v) for v in python_suites]
     return sorted(python_versions, key=lambda x: Version(x))
-
-
-def get_ruby_versions_src_origin():
-    return ruby_versions_src_origin
-
-
-def get_ruby_versions(ruby_versions_src_origin):
-    logger.info('Getting Ruby versions')
-    ruby_versions = ruby_versions_src_origin.keys()
-    ruby_versions = [u(v) for v in ruby_versions]
-    return sorted(ruby_versions, key=lambda x: Version(x))

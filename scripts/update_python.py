@@ -20,7 +20,7 @@ import os
 import re
 import shutil
 
-from .config import python_versions, python_versions_src_origin
+from .config import python_versions, debian_versions
 from .utils import find_dirs
 from .logger import logger
 
@@ -37,28 +37,25 @@ def update_python(basedir):
     python_build_hook = os.path.join(python_hooks_dir, 'build')
     python_push_hook = os.path.join(python_hooks_dir, 'push')
 
-    base_image = 'dockershelf/debian:sid'
+    debian_versions_eq = {v: k for k, v in debian_versions}
+
+    base_image = 'dockershelf/debian:{0}'
     docker_tag_holder = 'dockershelf/python:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-python%2F{0}%2FDockerfile-blue.svg'
+                               '-python%2F{0}--{1}%2FDockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/python/{0}/Dockerfile')
-    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/python'
-                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
+                          'python?colorA=22313f&colorB=4a637b'
+                          '&cacheSeconds=900')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/python')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/python/{0}.svg'
                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/python')
-    matrix_latest_str = (
-        '          - docker-image-name: "dockershelf/python:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/python:latest"')
-    matrix_py3_str = (
-        '          - docker-image-name: "dockershelf/python:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/python:3"')
     matrix_str = (
         '          - docker-image-name: "dockershelf/python:{0}"')
     python_readme_tablelist_holder = ('|[`{0}`]({1})'
@@ -67,62 +64,59 @@ def update_python(basedir):
                                       '|[![]({5})]({6})'
                                       '|[![]({7})]({8})'
                                       '|')
-    python_latest_version = python_versions[-1]
 
     logger.info('Erasing current Python folders')
     for deldir in find_dirs(pythondir):
         shutil.rmtree(deldir)
 
-    for python_version in python_versions:
-        logger.info('Processing Python {0}'.format(python_version))
-        python_version_dir = os.path.join(pythondir, python_version)
-        python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
+    for pyver in python_versions:
+        for debian_version in [debian_versions_eq['stable'],
+                               debian_versions_eq['unstable']]:
+            logger.info('Processing Python {0} ({1})'.format(
+                pyver, debian_version))
+            python_version = '{0}-{1}'.format(pyver, debian_version)
+            python_version_dir = os.path.join(pythondir, python_version)
+            python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
 
-        docker_tag = docker_tag_holder.format(python_version)
-        dockerfile_badge = dockerfile_badge_holder.format(python_version)
-        dockerfile_url = dockerfile_url_holder.format(python_version)
-        pulls_badge = pulls_badge_holder.format(python_version)
-        pulls_url = pulls_url_holder.format(python_version)
-        size_badge = size_badge_holder.format(python_version)
-        size_url = size_url_holder.format(python_version)
+            docker_tag = docker_tag_holder.format(python_version)
+            dockerfile_badge = dockerfile_badge_holder.format(
+                pyver, debian_version)
+            dockerfile_url = dockerfile_url_holder.format(python_version)
+            pulls_badge = pulls_badge_holder.format(python_version)
+            pulls_url = pulls_url_holder.format(python_version)
+            size_badge = size_badge_holder.format(python_version)
+            size_url = size_url_holder.format(python_version)
 
-        if python_version == '3.9':
-            matrix.append(
-                matrix_py3_str.format(python_version))
-        elif python_version == python_latest_version:
-            matrix.append(
-                matrix_latest_str.format(python_version))
-        else:
-            matrix.append(
-                matrix_str.format(python_version))
+            matrix.append(matrix_str.format(python_version))
 
-        python_readme_tablelist.append(
-            python_readme_tablelist_holder.format(
-                docker_tag, docker_url, python_version, dockerfile_badge,
-                dockerfile_url, pulls_badge, pulls_url,
-                size_badge, size_url))
+            python_readme_tablelist.append(
+                python_readme_tablelist_holder.format(
+                    docker_tag, docker_url, python_version, dockerfile_badge,
+                    dockerfile_url, pulls_badge, pulls_url,
+                    size_badge, size_url))
 
-        os.makedirs(python_version_dir)
+            os.makedirs(python_version_dir)
 
-        with open(python_dockerfile_template, 'r') as pdt:
-            python_dockerfile_template_content = pdt.read()
+            with open(python_dockerfile_template, 'r') as pdt:
+                python_dockerfile_template_content = pdt.read()
 
-        python_dockerfile_content = python_dockerfile_template_content
-        python_dockerfile_content = re.sub('%%BASE_IMAGE%%',
-                                           base_image,
-                                           python_dockerfile_content)
-        python_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                           'sid',
-                                           python_dockerfile_content)
-        python_dockerfile_content = re.sub('%%PYTHON_VERSION%%',
-                                           python_version,
-                                           python_dockerfile_content)
-        python_dockerfile_content = re.sub('%%PYTHON_DEBIAN_SUITE%%',
-                                           python_versions_src_origin[python_version],
-                                           python_dockerfile_content)
+            python_dockerfile_content = python_dockerfile_template_content
+            python_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                               base_image.format(
+                                                   debian_version),
+                                               python_dockerfile_content)
+            python_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                               debian_version,
+                                               python_dockerfile_content)
+            python_dockerfile_content = re.sub('%%PYTHON_VERSION%%',
+                                               pyver,
+                                               python_dockerfile_content)
+            python_dockerfile_content = re.sub('%%PYTHON_DEBIAN_SUITE%%',
+                                               debian_version,
+                                               python_dockerfile_content)
 
-        with open(python_dockerfile, 'w') as pd:
-            pd.write(python_dockerfile_content)
+            with open(python_dockerfile, 'w') as pd:
+                pd.write(python_dockerfile_content)
 
     os.makedirs(python_hooks_dir)
 

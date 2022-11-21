@@ -4,15 +4,11 @@
 
 [![](https://img.shields.io/github/release/Dockershelf/dockershelf.svg)](https://github.com/Dockershelf/dockershelf/releases) [![](https://img.shields.io/github/workflow/status/Dockershelf/dockershelf/Schedule%20(master%20branch))](https://github.com/Dockershelf/dockershelf/actions/workflows/schedule-master.yml) [![](https://img.shields.io/discord/809504357359157288)](https://discord.gg/4Wc7xphH5e) [![](https://cla-assistant.io/readme/badge/Dockershelf/dockershelf)](https://cla-assistant.io/Dockershelf/dockershelf)
 
-Current version: 2.8.0
+Current version: 3.0.0
 
 *Dockershelf* is a repository that serves as a collector for docker recipes that are universal, efficient and slim. We keep adding "shelves", which are holders for the different versions of a popular language or application.
 
-Images are updated, tested and published *weekly* via a [Github Actions workflow](https://github.com/Dockershelf/dockershelf-stable/actions).
-
-## Dockershelf unstable
-
-This is Dockershelf unstable. It contains dockerfiles based on Debian Sid, which usually contains the latest versions of commonly used applications and libraries. If you need a more stable distribution for production environments, you might want to have a look at [Dockershelf stable](https://github.com/Dockershelf/dockershelf-stable).
+Images are updated, tested and published *weekly* via a [Github Actions workflow](https://github.com/Dockershelf/dockershelf/actions).
 
 ## How to download
 
@@ -62,16 +58,6 @@ These are python images with native debian packages that are extracted from diff
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
-### Ruby
-
-These are ruby images with native debian packages that are extracted from different debian releases. Check out [ruby/README.md](https://github.com/Dockershelf/dockershelf/blob/master/ruby/README.md) for more details.
-
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
-%%RUBY_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
 ### Node
 
 These are Node images built using the [nodesource installation script](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
@@ -89,16 +75,6 @@ This is a Latex image built with the following packages installed: `texlive-font
 |Image  |Release  |Dockerfile  |Pulls   |Size  |
 |-------|---------|------------|--------|------|
 %%LATEX_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### Odoo
-
-These images are similar to the official ones, but with some improved configurations. Check out [odoo/README.md](https://github.com/Dockershelf/dockershelf/blob/master/odoo/README.md) for more details.
-
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
-%%ODOO_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 

@@ -64,7 +64,12 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should have these locales configured" do
-        expect(command("locale -a").stdout.split("\n")).to include("C", "C.UTF-8", "en_US.utf8", "POSIX")
+        case ENV['DOCKER_IMAGE_TAG']
+        when "bookworm", "sid"
+            expect(command("locale -a").stdout.split("\n")).to include("C", "C.utf8", "en_US.utf8", "POSIX")
+        else
+            expect(command("locale -a").stdout.split("\n")).to include("C", "C.UTF-8", "en_US.utf8", "POSIX")
+        end
         expect(command("locale").stdout.split("\n")).to include("LANG=en_US.UTF-8")
     end
 
@@ -74,12 +79,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(package("curl")).to be_installed
         expect(package("ca-certificates")).to be_installed
         expect(package("bash-completion")).to be_installed
-        case ENV['DOCKER_IMAGE_TAG']
-        when "wheezy"
-            expect(package("iproute")).to be_installed
-        else
-            expect(package("iproute2")).to be_installed
-        end
+        expect(package("iproute2")).to be_installed
     end
 
     it "shouldn't have invalid packages installed" do

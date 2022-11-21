@@ -46,27 +46,24 @@ def update_debian(basedir):
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/debian/{0}/Dockerfile')
-    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/debian'
-                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
+                          'debian?colorA=22313f&colorB=4a637b'
+                          '&cacheSeconds=900')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/debian')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/debian/{0}.svg'
                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/debian')
-    matrix_latest_str = (
-        '          - docker-image-name: "dockershelf/debian:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/debian:{1} '
-        'dockershelf/debian:latest"\n            debian-suite: "{1}"')
     matrix_str = (
         '          - docker-image-name: "dockershelf/debian:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/debian:{1}"\n            debian-suite: "{1}"')
+        '\n            docker-image-extra-tags: "dockershelf/debian:{1}"'
+        '\n            debian-suite: "{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|`{2}`'
                                       '|[![]({3})]({4})'
                                       '|[![]({5})]({6})'
                                       '|[![]({7})]({8})'
                                       '|')
-    debian_latest_version = debian_versions[-1][0]
 
     logger.info('Erasing current Debian folders')
     for deldir in find_dirs(debiandir):
@@ -85,12 +82,8 @@ def update_debian(basedir):
         size_badge = size_badge_holder.format(debian_version)
         size_url = size_url_holder.format(debian_version)
 
-        if debian_version == debian_latest_version:
-            matrix.append(matrix_latest_str.format(
-                debian_version, debian_suite))
-        else:
-            matrix.append(matrix_str.format(
-                debian_version, debian_suite))
+        matrix.append(matrix_str.format(
+            debian_version, debian_suite))
 
         debian_readme_tablelist.append(
             debian_readme_tablelist_holder.format(

@@ -17,15 +17,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .utils import get_debian_versions, get_node_versions, \
-    get_odoo_versions, get_python_versions_src_origin, \
-    get_python_versions, get_ruby_versions_src_origin, \
-    get_ruby_versions
+    get_python_versions
 
 latex_versions = ['basic', 'full']
 debian_versions = get_debian_versions()
 node_versions = get_node_versions()
-odoo_versions = get_odoo_versions()
-python_versions_src_origin = get_python_versions_src_origin()
-python_versions = get_python_versions(python_versions_src_origin)
-ruby_versions_src_origin = get_ruby_versions_src_origin()
-ruby_versions = get_ruby_versions(ruby_versions_src_origin)
+python_versions = get_python_versions()

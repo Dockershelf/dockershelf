@@ -83,13 +83,6 @@ if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex" "${DOCKER_IMAGE_DIR}"
 fi
 
-# Copy Node build script and Odoo config if we are building Odoo
-if [ "${DOCKER_IMAGE_TYPE}" == "odoo" ]; then
-    cp "${DOCKER_IMAGE_TYPE_DIR}/odoo.conf" "${DOCKER_IMAGE_DIR}"
-    cp "${DOCKER_IMAGE_TYPE_DIR}/docker-entrypoint.sh" "${DOCKER_IMAGE_DIR}"
-    cp "${DOCKER_IMAGE_TYPE_DIR}/wait-for-psql.py" "${DOCKER_IMAGE_DIR}"
-fi
-
 # Build the docker image
 cd "${DOCKER_IMAGE_DIR}" && \
     sudo docker build --build-arg BUILD_DATE="${BUILD_DATE}" \

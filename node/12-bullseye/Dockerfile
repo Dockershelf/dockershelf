@@ -1,12 +1,12 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/debian:bullseye
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="python2.7" \
-      org.label-schema.description="A Python 2.7 image based on Debian sid." \
+      org.label-schema.name="node12" \
+      org.label-schema.description="A Node 12 image based on Debian bullseye." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +14,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="python2.7" \
-      org.opencontainers.image.description="A Python 2.7 image based on Debian sid" \
+      org.opencontainers.image.title="node12" \
+      org.opencontainers.image.description="An Node 12 image based on Debian bullseye" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,10 +24,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV PYTHON_VER_NUM="2.7" PYTHON_DEBIAN_SUITE="sid" \
-    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages"
+ENV NODE_VER_NUM="12"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/python/
-RUN bash /usr/share/dockershelf/python/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/node/
+RUN bash /usr/share/dockershelf/node/build-image.sh
 
-CMD ["python"]
+CMD ["/bin/bash"]

@@ -13,8 +13,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-20.04
-    if: github.repository == 'Dockershelf/dockershelf'
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
@@ -24,7 +23,7 @@ jobs:
             toxenv: "py39"
           - python-version: "3.10"
             toxenv: "py310"
-          - python-version: "3.11.0-alpha.5"
+          - python-version: "3.11"
             toxenv: "py311"
     steps:
       - name: Checkout repo
@@ -33,7 +32,7 @@ jobs:
           ref: develop
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Installing dependencies
@@ -46,47 +45,27 @@ jobs:
           PYTHON_VERSION: ${{ matrix.python-version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 update_shelf.py
+          python3 update.py
 
   approve:
     name: Approve pull request
-    runs-on: ubuntu-20.04
-    if: github.repository == 'Dockershelf/dockershelf'
+    runs-on: ubuntu-22.04
     needs: build
     steps:
       - name: Approve
-        uses: hmarr/auto-approve-action@v2.2.1
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        uses: hmarr/auto-approve-action@v3.1.0
         with:
-          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-      - name: Approve
-        uses: hmarr/auto-approve-action@v2.2.1
-        if: github.actor == 'LuisAlejandro'
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ github.actor == 'LuisAlejandro' && secrets.GITHUB_TOKEN || secrets.PERSONAL_ACCESS_TOKEN }}"
 
   merge:
     name: Merge pull request
-    runs-on: ubuntu-20.04
-    if: github.repository == 'Dockershelf/dockershelf'
+    runs-on: ubuntu-22.04
     needs: approve
     steps:
       - name: Merge
         uses: actions/github-script@v6
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
-          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-          script: |
-            await github.rest.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            })
-      - name: Merge
-        uses: actions/github-script@v6
-        if: github.actor == 'LuisAlejandro'
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ github.actor == 'LuisAlejandro' && secrets.GITHUB_TOKEN || secrets.PERSONAL_ACCESS_TOKEN }}"
           script: |
             await github.rest.pulls.merge({
               owner: context.repo.owner,
