@@ -43,7 +43,7 @@ def update_python(basedir):
     docker_tag_holder = 'dockershelf/python:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-python%2F{0}%2FDockerfile-blue.svg'
+                               '-python%2F{0}--{1}%2FDockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
@@ -79,7 +79,8 @@ def update_python(basedir):
             python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
 
             docker_tag = docker_tag_holder.format(python_version)
-            dockerfile_badge = dockerfile_badge_holder.format(python_version)
+            dockerfile_badge = dockerfile_badge_holder.format(
+                pyver, debian_version)
             dockerfile_url = dockerfile_url_holder.format(python_version)
             pulls_badge = pulls_badge_holder.format(python_version)
             pulls_url = pulls_url_holder.format(python_version)
