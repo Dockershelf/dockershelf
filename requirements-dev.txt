@@ -9,5 +9,5 @@ pydocstyle==6.1.1
 setuptools==62.6.0
 tox==3.25.1
 virtualenv==20.16.7
-wheel==0.37.1
+wheel==0.38.4
 autopep8==1.6.0
