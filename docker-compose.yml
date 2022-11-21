@@ -1,6 +1,6 @@
 version: "3"
 services:
-  dockershelf:
+  app:
     image: dockershelf/dockershelf:latest
     build:
       context: .

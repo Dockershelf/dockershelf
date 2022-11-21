@@ -7,8 +7,7 @@ on:
 jobs:
   build:
     name: Generating code quality report
-    runs-on: ubuntu-20.04
-    if: github.repository == 'Dockershelf/dockershelf'
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

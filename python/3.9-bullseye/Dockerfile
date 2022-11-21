@@ -1,12 +1,12 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/debian:bullseye
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="ruby2.3" \
-      org.label-schema.description="A Ruby 2.3 image based on Debian sid." \
+      org.label-schema.name="python3.9" \
+      org.label-schema.description="A Python 3.9 image based on Debian bullseye." \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +14,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="ruby2.3" \
-      org.opencontainers.image.description="A Ruby 2.3 image based on Debian sid" \
+      org.opencontainers.image.title="python3.9" \
+      org.opencontainers.image.description="A Python 3.9 image based on Debian bullseye" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,9 +24,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV RUBY_VER_NUM="2.3" RUBY_DEBIAN_SUITE="stretch"
+ENV PYTHON_VER_NUM="3.9" PYTHON_DEBIAN_SUITE="bullseye" \
+    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python3.9/dist-packages:/usr/lib/python3.9/site-packages"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/ruby/
-RUN bash /usr/share/dockershelf/ruby/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/python/
+RUN bash /usr/share/dockershelf/python/build-image.sh
 
-CMD ["ruby"]
+CMD ["python"]
