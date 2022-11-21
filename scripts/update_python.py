@@ -48,8 +48,9 @@ def update_python(basedir):
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/python/{0}/Dockerfile')
-    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/python'
-                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
+                          'python?colorA=22313f&colorB=4a637b'
+                          '&cacheSeconds=900')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/python')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/python/{0}.svg'
@@ -69,8 +70,10 @@ def update_python(basedir):
         shutil.rmtree(deldir)
 
     for pyver in python_versions:
-        for debian_version in [debian_versions_eq['stable'], debian_versions_eq['unstable']]:
-            logger.info('Processing Python {0} ({1})'.format(pyver, debian_version))
+        for debian_version in [debian_versions_eq['stable'],
+                               debian_versions_eq['unstable']]:
+            logger.info('Processing Python {0} ({1})'.format(
+                pyver, debian_version))
             python_version = '{0}-{1}'.format(pyver, debian_version)
             python_version_dir = os.path.join(pythondir, python_version)
             python_dockerfile = os.path.join(python_version_dir, 'Dockerfile')
@@ -98,7 +101,8 @@ def update_python(basedir):
 
             python_dockerfile_content = python_dockerfile_template_content
             python_dockerfile_content = re.sub('%%BASE_IMAGE%%',
-                                               base_image.format(python_version),
+                                               base_image.format(
+                                                   debian_version),
                                                python_dockerfile_content)
             python_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
                                                debian_version,

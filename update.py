@@ -47,16 +47,16 @@ if __name__ == '__main__':
     logger.loglevel('INFO')
     logger.info('Updating shelves')
 
-    # debian_matrix_list, debian_readme_table = update_debian(basedir)
-    # latex_matrix_list, latex_readme_table = update_latex(basedir)
+    debian_matrix_list, debian_readme_table = update_debian(basedir)
+    latex_matrix_list, latex_readme_table = update_latex(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
-    # node_matrix_list, node_readme_table = update_node(basedir)
+    node_matrix_list, node_readme_table = update_node(basedir)
 
     logger.info('Writing github actions matrix')
-    # matrix.extend(debian_matrix_list)
-    # matrix.extend(latex_matrix_list)
+    matrix.extend(debian_matrix_list)
+    matrix.extend(latex_matrix_list)
     matrix.extend(python_matrix_list)
-    # matrix.extend(node_matrix_list)
+    matrix.extend(node_matrix_list)
     gha_matrix = '\n'.join(matrix)
 
     with open(gha_develop_template, 'r') as gdt:
@@ -85,14 +85,14 @@ if __name__ == '__main__':
         readme_template_content = rt.read()
 
     readme_content = readme_template_content
-    # readme_content = re.sub('%%DEBIAN_TABLE%%', debian_readme_table,
-    #                         readme_content)
-    # readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
-    #                         readme_content)
+    readme_content = re.sub('%%DEBIAN_TABLE%%', debian_readme_table,
+                            readme_content)
+    readme_content = re.sub('%%LATEX_TABLE%%', latex_readme_table,
+                            readme_content)
     readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,
                             readme_content)
-    # readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
-    #                         readme_content)
+    readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
+                            readme_content)
 
     with open(readme, 'w') as t:
         t.write(readme_content)

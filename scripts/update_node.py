@@ -20,7 +20,7 @@ import os
 import re
 import shutil
 
-from .config import node_versions
+from .config import node_versions, debian_versions
 from .utils import find_dirs
 from .logger import logger
 
@@ -37,7 +37,9 @@ def update_node(basedir):
     node_build_hook = os.path.join(node_hooks_dir, 'build')
     node_push_hook = os.path.join(node_hooks_dir, 'push')
 
-    base_image = 'dockershelf/debian:sid'
+    debian_versions_eq = {v: k for k, v in debian_versions}
+
+    base_image = 'dockershelf/debian:{0}'
     docker_tag_holder = 'dockershelf/node:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/node'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
@@ -46,16 +48,14 @@ def update_node(basedir):
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/node/{0}/Dockerfile')
-    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/node'
-                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
+                          'node?colorA=22313f&colorB=4a637b'
+                          '&cacheSeconds=900')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/node')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/node/{0}.svg'
                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/node')
-    matrix_latest_str = (
-        '          - docker-image-name: "dockershelf/node:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/node:latest"')
     matrix_str = (
         '          - docker-image-name: "dockershelf/node:{0}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
@@ -64,56 +64,54 @@ def update_node(basedir):
                                     '|[![]({5})]({6})'
                                     '|[![]({7})]({8})'
                                     '|')
-    node_latest_version = node_versions[-1]
 
     logger.info('Erasing current Node folders')
     for deldir in find_dirs(nodedir):
         shutil.rmtree(deldir)
 
-    for node_version in node_versions:
-        logger.info('Processing Node {0}'.format(node_version))
-        node_version_dir = os.path.join(nodedir, node_version)
-        node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
+    for nodever in node_versions:
+        for debian_version in [debian_versions_eq['stable'],
+                               debian_versions_eq['unstable']]:
+            logger.info('Processing Node {0} ({1})'.format(
+                nodever, debian_version))
+            node_version = '{0}-{1}'.format(nodever, debian_version)
+            node_version_dir = os.path.join(nodedir, node_version)
+            node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
 
-        docker_tag = docker_tag_holder.format(node_version)
-        dockerfile_badge = dockerfile_badge_holder.format(node_version)
-        dockerfile_url = dockerfile_url_holder.format(node_version)
-        pulls_badge = pulls_badge_holder.format(node_version)
-        pulls_url = pulls_url_holder.format(node_version)
-        size_badge = size_badge_holder.format(node_version)
-        size_url = size_url_holder.format(node_version)
+            docker_tag = docker_tag_holder.format(node_version)
+            dockerfile_badge = dockerfile_badge_holder.format(node_version)
+            dockerfile_url = dockerfile_url_holder.format(node_version)
+            pulls_badge = pulls_badge_holder.format(node_version)
+            pulls_url = pulls_url_holder.format(node_version)
+            size_badge = size_badge_holder.format(node_version)
+            size_url = size_url_holder.format(node_version)
 
-        if node_version == node_latest_version:
-            matrix.append(
-                matrix_latest_str.format(node_version))
-        else:
-            matrix.append(
-                matrix_str.format(node_version))
+            matrix.append(matrix_str.format(node_version))
 
-        node_readme_tablelist.append(
-            node_readme_tablelist_holder.format(
-                docker_tag, docker_url, node_version, dockerfile_badge,
-                dockerfile_url, pulls_badge, pulls_url,
-                size_badge, size_url))
+            node_readme_tablelist.append(
+                node_readme_tablelist_holder.format(
+                    docker_tag, docker_url, node_version, dockerfile_badge,
+                    dockerfile_url, pulls_badge, pulls_url,
+                    size_badge, size_url))
 
-        os.makedirs(node_version_dir)
+            os.makedirs(node_version_dir)
 
-        with open(node_dockerfile_template, 'r') as pdt:
-            node_dockerfile_template_content = pdt.read()
+            with open(node_dockerfile_template, 'r') as pdt:
+                node_dockerfile_template_content = pdt.read()
 
-        node_dockerfile_content = node_dockerfile_template_content
-        node_dockerfile_content = re.sub('%%BASE_IMAGE%%',
-                                         base_image,
-                                         node_dockerfile_content)
-        node_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                         'sid',
-                                         node_dockerfile_content)
-        node_dockerfile_content = re.sub('%%NODE_VERSION%%',
-                                         node_version,
-                                         node_dockerfile_content)
+            node_dockerfile_content = node_dockerfile_template_content
+            node_dockerfile_content = re.sub('%%BASE_IMAGE%%',
+                                             base_image.format(debian_version),
+                                             node_dockerfile_content)
+            node_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
+                                             debian_version,
+                                             node_dockerfile_content)
+            node_dockerfile_content = re.sub('%%NODE_VERSION%%',
+                                             nodever,
+                                             node_dockerfile_content)
 
-        with open(node_dockerfile, 'w') as pd:
-            pd.write(node_dockerfile_content)
+            with open(node_dockerfile, 'w') as pd:
+                pd.write(node_dockerfile_content)
 
     os.makedirs(node_hooks_dir)
 

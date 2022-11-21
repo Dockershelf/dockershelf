@@ -46,16 +46,14 @@ def update_latex(basedir):
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/latex/{0}/Dockerfile')
-    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/latex'
-                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
+                          'latex?colorA=22313f&colorB=4a637b'
+                          '&cacheSeconds=900')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/latex/{0}.svg'
                          '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
-    matrix_latest_str = (
-        '          - docker-image-name: "dockershelf/latex:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/latex:latest"')
     matrix_str = (
         '          - docker-image-name: "dockershelf/latex:{0}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
@@ -82,12 +80,8 @@ def update_latex(basedir):
         size_badge = size_badge_holder.format(latex_version)
         size_url = size_url_holder.format(latex_version)
 
-        if latex_version == 'basic':
-            matrix.append(
-                matrix_latest_str.format(latex_version))
-        else:
-            matrix.append(
-                matrix_str.format(latex_version))
+        matrix.append(
+            matrix_str.format(latex_version))
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
