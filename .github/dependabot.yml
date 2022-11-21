@@ -12,13 +12,3 @@ updates:
     interval: weekly
     day: thursday
     time: "01:00"
-- package-ecosystem: docker
-  directory: "/"
-  schedule:
-    interval: weekly
-    day: thursday
-    time: "01:00"
-  ignore:
-  - dependency-name: dockershelf/python
-    versions:
-    - "> 3.10"
