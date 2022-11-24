@@ -1,7 +1,7 @@
 bumpversion==0.6.0
 coverage==6.5.0
 coveralls==3.3.1
-flake8==5.0.4
+flake8==6.0.0
 gitchangelog==3.0.4
 mako==1.2.4
 pip==22.3.1
