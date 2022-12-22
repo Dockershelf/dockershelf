@@ -10,4 +10,4 @@ setuptools==65.6.3
 tox==4.0.10
 virtualenv==20.17.1
 wheel==0.38.4
-autopep8==2.0.0
+autopep8==2.0.1
