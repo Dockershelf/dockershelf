@@ -77,15 +77,17 @@ cmdretry gpg --lock-never --no-default-keyring \
     echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} focal main"
 } | tee /etc/apt/sources.list.d/python.list > /dev/null
 
+{
+    echo "deb ${DEBMIRROR} bullseye main"
+} | tee /etc/apt/sources.list.d/bullseye.list > /dev/null
+
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PYTHON_PKGS}
  
 msginfo "Installing Python ..."
-# if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-#     cmdretry apt-get install libmpdec2
-# fi
 cmdretry apt-get update
+cmdretry apt-get install libssl1.1 libffi7
 cmdretry apt-get install ${PYTHON_PKGS}
 
 if [ ! -f "/usr/bin/python3" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
@@ -98,16 +100,8 @@ fi
 
 msginfo "Installing pip ..."
 
-if [ "${PYTHON_VER_NUM}" == "3.5" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/pip/3.5/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-elif [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/pip/3.6/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-else
-    curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-fi
+curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
+    ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 
 if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
     ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3
@@ -122,8 +116,8 @@ cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
-# rm -rf /etc/apt/sources.list.d/buster.list
-# cmdretry apt-get update
+rm -rf /etc/apt/sources.list.d/bullseye.list
+cmdretry apt-get update
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

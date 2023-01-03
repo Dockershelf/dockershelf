@@ -39,7 +39,6 @@ node_versions_disabled = ['13', '15', '17']
 
 python_suites = [
     '3.7',
-    '3.9',
     '3.10',
     '3.11',
     '3.12',
