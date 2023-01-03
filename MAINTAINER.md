@@ -15,7 +15,7 @@ existing bugs to your new milestone.
 
         git flow feature start <feature name>
 
-4. Code, code and code. More coding. Fuck it up several times. Push to feature
+4. Code, code and code. More coding. Mess it up several times. Push to feature
 branch. Watch Travis go red. Write unit tests. Watch Travis go red again. Don't
 leave uncommitted changes.
 5. Finish your feature:

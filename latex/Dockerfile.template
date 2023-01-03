@@ -6,7 +6,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="latex-%%LATEX_VERSION%%" \
-      org.label-schema.description="A Latex (%%LATEX_VERSION%%) image based on Debian %%DEBIAN_RELEASE%%." \
+      org.label-schema.description="A Latex (%%LATEX_VERSION%%) image based on Debian %%DEBIAN_RELEASE%%" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
