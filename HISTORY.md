@@ -1,6 +1,54 @@
 # Changelog
 
 
+## 3.1.0 (2023-01-06)
+
+### Changed
+
+* Improving documentation. [Luis Alejandro Martínez Faneyth]
+
+
+### Other
+
+* `[REF]` Removing support for python 3.9. [Luis Alejandro Martínez Faneyth]
+
+* Bump tox from 4.0.16 to 4.1.3. [dependabot[bot]]
+
+* Bump pydocstyle from 6.1.1 to 6.2.0. [dependabot[bot]]
+
+* `[REF]` Removing support for python 3.5 and adding support to python 3.12. [Luis Alejandro Martínez Faneyth]
+
+* `[REF]` Downgrading coverage because coveralls doesnt support version 7 yet. [Luis Alejandro Martínez Faneyth]
+
+* Bump lxml from 4.9.1 to 4.9.2. [dependabot[bot]]
+
+* Bump coverage from 6.5.0 to 7.0.0. [dependabot[bot]]
+
+* Bump tox from 4.0.10 to 4.0.16. [dependabot[bot]]
+
+* Bump autopep8 from 2.0.0 to 2.0.1. [dependabot[bot]]
+
+* Bump tox from 4.0.1 to 4.0.10. [dependabot[bot]]
+
+* Bump tox from 3.27.1 to 4.0.1. [dependabot[bot]]
+
+* Bump virtualenv from 20.17.0 to 20.17.1. [dependabot[bot]]
+
+* Bump packaging from 21.3 to 22.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.16.7 to 20.17.0. [dependabot[bot]]
+
+* Bump setuptools from 65.6.2 to 65.6.3. [dependabot[bot]]
+
+* Bump autopep8 from 1.6.0 to 2.0.0. [dependabot[bot]]
+
+* Bump flake8 from 5.0.4 to 6.0.0. [dependabot[bot]]
+
+* Bump setuptools from 65.6.0 to 65.6.2. [dependabot[bot]]
+
+* `[REF]` Downgrading coverage because coveralls doesnt support version 7 yet. [Luis Alejandro Martínez Faneyth]
+
+
 ## 3.0.1 (2022-11-21)
 
 ### Changed
