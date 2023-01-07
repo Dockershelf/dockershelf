@@ -6,7 +6,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="python3.7" \
-      org.label-schema.description="A Python 3.7 image based on Debian sid." \
+      org.label-schema.description="A Python 3.7 image based on Debian sid" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \

@@ -84,12 +84,25 @@ if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
 fi
 
 # Build the docker image
-cd "${DOCKER_IMAGE_DIR}" && \
-    sudo docker build --build-arg BUILD_DATE="${BUILD_DATE}" \
-        --build-arg VCS_REF="${VCS_REF}" --build-arg VERSION="${VERSION}" \
-        -t ${DOCKER_IMAGE_NAME} .
+if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
+    cd "${DOCKER_IMAGE_DIR}" && \
+        sudo docker build --build-arg BUILD_DATE="${BUILD_DATE}" \
+            --build-arg VCS_REF="${VCS_REF}" --build-arg VERSION="${VERSION}" \
+            -t ${DOCKER_IMAGE_NAME} .
+else
+    cd "${DOCKER_IMAGE_DIR}" && \
+        docker build --build-arg BUILD_DATE="${BUILD_DATE}" \
+            --build-arg VCS_REF="${VCS_REF}" --build-arg VERSION="${VERSION}" \
+            -t ${DOCKER_IMAGE_NAME} .
+fi
 
 # Remove unnecessary files
-sudo rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
-    "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
-    "${DOCKER_IMAGE_DIR}/base"
+if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
+    sudo rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+        "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
+        "${DOCKER_IMAGE_DIR}/base"
+else
+    rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+        "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
+        "${DOCKER_IMAGE_DIR}/base"
+fi

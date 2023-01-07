@@ -33,11 +33,15 @@ DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
-PYTHON_PKGS="lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
-    ${PYTHON_VER_NUM_MINOR_STR}-minimal \
+PYTHON_PKGS=" \
+    lib${PYTHON_VER_NUM_MINOR_STR}-minimal \
     lib${PYTHON_VER_NUM_MINOR_STR}-stdlib \
-    lib${PYTHON_VER_NUM_MINOR_STR} ${PYTHON_VER_NUM_MINOR_STR} \
-    lib${PYTHON_VER_NUM_MINOR_STR}-dev ${PYTHON_VER_NUM_MINOR_STR}-dev"
+    lib${PYTHON_VER_NUM_MINOR_STR}-dev \
+    lib${PYTHON_VER_NUM_MINOR_STR} \
+    ${PYTHON_VER_NUM_MINOR_STR}-minimal \
+    ${PYTHON_VER_NUM_MINOR_STR}-dev \
+    ${PYTHON_VER_NUM_MINOR_STR}-distutils \
+    ${PYTHON_VER_NUM_MINOR_STR}"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
@@ -69,46 +73,25 @@ cmdretry gpg --lock-never --no-default-keyring \
     --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv-keys BA6932366A755776
 
-if [ "${PYTHON_VER_NUM}" == "3.9" ]; then
-    {
-        echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} bionic main"
-    } | tee /etc/apt/sources.list.d/python.list > /dev/null
-else
-    {
-        echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} focal main"
-    } | tee /etc/apt/sources.list.d/python.list > /dev/null
-fi
+{
+    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} focal main"
+} | tee /etc/apt/sources.list.d/python.list > /dev/null
 
-if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-    {
-        echo "deb ${DEBMIRROR} buster main"
-        echo "deb ${SECMIRROR} buster/updates main"
-    } | tee /etc/apt/sources.list.d/buster.list > /dev/null
-fi
-
-cmdretry apt-get update
+{
+    echo "deb ${DEBMIRROR} bullseye main"
+} | tee /etc/apt/sources.list.d/bullseye.list > /dev/null
 
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PYTHON_PKGS}
  
 msginfo "Installing Python ..."
-if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-    cmdretry apt-get install libmpdec2
-fi
+cmdretry apt-get update
+cmdretry apt-get install libssl1.1 libffi7
 cmdretry apt-get install ${PYTHON_PKGS}
-if [ "${PYTHON_VER_NUM}" == "3.7" ] || [ "${PYTHON_VER_NUM}" == "3.9" ] || [ "${PYTHON_VER_NUM}" == "3.10" ] || [ "${PYTHON_VER_NUM}" == "3.11" ]; then
-    cmdretry apt-get install ${PYTHON_VER_NUM_MINOR_STR}-distutils
-fi
 
-if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
-    if [ ! -f "/usr/bin/python" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
-        ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python
-    fi
-else
-    if [ ! -f "/usr/bin/python3" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
-        ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
-    fi
+if [ ! -f "/usr/bin/python3" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
+    ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
 fi
 
 # Pip: Installation
@@ -117,28 +100,11 @@ fi
 
 msginfo "Installing pip ..."
 
-if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/pip/2.7/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-elif [ "${PYTHON_VER_NUM}" == "3.5" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/pip/3.5/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-elif [ "${PYTHON_VER_NUM}" == "3.6" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/pip/3.6/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-else
-    curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-fi
+curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
+    ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 
-if [ "${PYTHON_VER_NUM}" == "2.7" ]; then
-    if [ ! -f "/usr/bin/pip" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
-        ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip
-    fi
-else
-    if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
-        ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3
-    fi
+if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
+    ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3
 fi
 
 # Apt: Remove unnecessary packages
@@ -150,7 +116,7 @@ cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
-rm -rf /etc/apt/sources.list.d/buster.list
+rm -rf /etc/apt/sources.list.d/bullseye.list
 cmdretry apt-get update
 
 # Bash: Changing prompt
