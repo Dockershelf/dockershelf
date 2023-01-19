@@ -5,7 +5,7 @@ flake8==6.0.0
 gitchangelog==3.0.4
 mako==1.2.4
 pip==22.3.1
-pydocstyle==6.2.3
+pydocstyle==6.3.0
 setuptools==65.7.0
 tox==4.3.5
 virtualenv==20.17.1
