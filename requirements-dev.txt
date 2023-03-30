@@ -6,7 +6,7 @@ gitchangelog==3.0.4
 mako==1.2.4
 pip==23.0.1
 pydocstyle==6.3.0
-setuptools==67.6.0
+setuptools==67.6.1
 tox==4.4.7
 virtualenv==20.21.0
 wheel==0.40.0
