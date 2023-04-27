@@ -7,7 +7,7 @@ mako==1.2.4
 pip==23.1
 pydocstyle==6.3.0
 setuptools==67.6.1
-tox==4.4.12
+tox==4.5.1
 virtualenv==20.22.0
 wheel==0.40.0
 autopep8==2.0.2
