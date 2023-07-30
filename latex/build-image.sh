@@ -30,7 +30,16 @@ if [ "${LATEX_VER_NUM}" == "basic" ]; then
     LATEX_PKGS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
         texlive-latex-recommended"
 else
-    LATEX_PKGS="texlive-full"
+    LATEX_PKGS="asymptote biber chktex cm-super context dvidvi dvipng \
+        feynmf fragmaster info lacheck latex-cjk-all latexdiff \
+        latexmk lcdf-typetools lmodern prerex psutils purifyeps \
+        t1utils tex-gyre texinfo texlive-base texlive-bibtex-extra \
+        texlive-binaries texlive-extra-utils texlive-formats-extra \
+        texlive-games texlive-humanities texlive-lang-english \
+        texlive-latex-base texlive-latex-extra texlive-latex-recommended \
+        texlive-luatex texlive-metapost texlive-music texlive-pictures \
+        texlive-plain-generic texlive-pstricks texlive-publishers \
+        texlive-science texlive-xetex tipa vprerex"
 fi
 
 # Load helper functions

@@ -3,8 +3,11 @@ require "serverspec"
 
 describe "%s %s container (%s)" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"], ENV["DOCKER_IMAGE_ARCH"]] do
     before(:all) do
+        Docker.options[:read_timeout] = 1200
+        Docker.options[:write_timeout] = 1200
+
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true)
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
         @container.start
 
         set :backend, :docker
@@ -70,10 +73,10 @@ describe "%s %s container (%s)" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_T
 
     it "should have these locales configured" do
         case ENV['DOCKER_IMAGE_TAG']
-        when "trixie", "sid"
-            expect(command("locale -a").stdout.split("\n")).to include("C", "C.utf8", "en_US.utf8", "POSIX")
-        else
+        when "bookworm"
             expect(command("locale -a").stdout.split("\n")).to include("C", "C.UTF-8", "en_US.utf8", "POSIX")
+        else
+            expect(command("locale -a").stdout.split("\n")).to include("C", "C.utf8", "en_US.utf8", "POSIX")
         end
         expect(command("locale").stdout.split("\n")).to include("LANG=en_US.UTF-8")
     end
