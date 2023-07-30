@@ -1,4 +1,4 @@
-FROM dockershelf/debian:bullseye
+FROM dockershelf/debian:bookworm
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,7 +6,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.name="node12" \
-      org.label-schema.description="A Node 12 image based on Debian bullseye" \
+      org.label-schema.description="A Node 12 image based on Debian bookworm" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -15,7 +15,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.title="node12" \
-      org.opencontainers.image.description="An Node 12 image based on Debian bullseye" \
+      org.opencontainers.image.description="An Node 12 image based on Debian bookworm" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \

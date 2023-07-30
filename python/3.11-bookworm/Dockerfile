@@ -1,12 +1,12 @@
-FROM dockershelf/debian:bullseye
+FROM dockershelf/debian:bookworm
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="node14" \
-      org.label-schema.description="A Node 14 image based on Debian bullseye" \
+      org.label-schema.name="python3.11" \
+      org.label-schema.description="A Python 3.11 image based on Debian bookworm" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +14,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="node14" \
-      org.opencontainers.image.description="An Node 14 image based on Debian bullseye" \
+      org.opencontainers.image.title="python3.11" \
+      org.opencontainers.image.description="A Python 3.11 image based on Debian bookworm" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,9 +24,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV NODE_VER_NUM="14"
+ENV PYTHON_VER_NUM="3.11" PYTHON_DEBIAN_SUITE="bookworm" \
+    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python3.11/dist-packages:/usr/lib/python3.11/site-packages"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/node/
-RUN bash /usr/share/dockershelf/node/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/python/
+RUN bash /usr/share/dockershelf/python/build-image.sh
 
-CMD ["/bin/bash"]
+CMD ["python"]

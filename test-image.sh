@@ -20,12 +20,16 @@
 set -euxo pipefail
 
 # Some initial configuration
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOCKER_IMAGE_NAME="${1}"
-DOCKER_IMAGE_EXTRA_TAGS="${2}"
-
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Load helper functions
 source "${BASEDIR}/library.sh"
+
+DOCKER_IMAGE_NAME="${1}"
+BRANCH="${2}"
+
+if [ "${BRANCH}" == "develop" ]; then
+    DOCKER_IMAGE_NAME_SUFFIX="-dev"
+fi
 
 # Exit if we didn't get an image to test
 if [ -z "${DOCKER_IMAGE_NAME}" ]; then
@@ -33,14 +37,30 @@ if [ -z "${DOCKER_IMAGE_NAME}" ]; then
     exit 1
 fi
 
-# Some initial configuration
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_NAME##*:}"
 DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
 DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TARGET%%:*}"
+DOCKER_TEST_IMAGE_NAME="${DOCKER_IMAGE_NAME}-test${DOCKER_IMAGE_NAME_SUFFIX}"
 
-# Execute rspec for our test suite
+rspec --help
+# Execute rspec for our test suite (amd64)
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
-DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" \
-DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
-DOCKER_IMAGE_EXTRA_TAGS="${DOCKER_IMAGE_EXTRA_TAGS}" \
-    rspec -c -f d "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
+    DOCKER_IMAGE_NAME="${DOCKER_TEST_IMAGE_NAME}-amd64" \
+    DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
+    DOCKER_IMAGE_ARCH="amd64" \
+    rspec \
+    --color \
+    --backtrace \
+    --format documentation \
+    "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
+
+# Execute rspec for our test suite (arm64)
+DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
+    DOCKER_IMAGE_NAME="${DOCKER_TEST_IMAGE_NAME}-arm64" \
+    DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
+    DOCKER_IMAGE_ARCH="arm64" \
+    rspec \
+    --color \
+    --backtrace \
+    --format documentation \
+    "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"

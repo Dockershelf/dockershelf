@@ -1,7 +1,7 @@
 require "docker-api"
 require "serverspec"
 
-describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]] do
+describe "%s %s container (%s)" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"], ENV["DOCKER_IMAGE_ARCH"]] do
     before(:all) do
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
         @container = Docker::Container.create('Image' => @image.id, 'Tty' => true)
@@ -23,8 +23,13 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(file('/etc/os-release').content).to match(Regexp.new("PRETTY_NAME=.*" % ENV["DOCKER_IMAGE_TAG"]))
     end
 
-    it "OS architecture should be x86_64" do
-        expect(os[:arch]).to eq("x86_64")
+    it "OS architecture should be %s" % ENV["DOCKER_IMAGE_ARCH"] do
+        case ENV['DOCKER_IMAGE_ARCH']
+        when "amd64"
+            expect(os[:arch]).to eq("x86_64")
+        when "arm64"
+            expect(os[:arch]).to eq("aarch64")
+        end
     end
 
     it "should have a proper root user" do
@@ -65,7 +70,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     it "should have these locales configured" do
         case ENV['DOCKER_IMAGE_TAG']
-        when "bookworm", "sid"
+        when "trixie", "sid"
             expect(command("locale -a").stdout.split("\n")).to include("C", "C.utf8", "en_US.utf8", "POSIX")
         else
             expect(command("locale -a").stdout.split("\n")).to include("C", "C.UTF-8", "en_US.utf8", "POSIX")

@@ -1,12 +1,27 @@
-FROM dockershelf/debian:bullseye
+# debootstrap stage
+# ----------------------------------
+FROM debian:stable AS builder
+
+RUN apt-get update && \
+    apt-get install -y debootstrap
+
+ADD . /tmp/debootstrap
+
+WORKDIR /tmp/debootstrap
+
+RUN bash build-image.sh "trixie" "testing"
+
+# final stage
+# ----------------------------------
+FROM scratch
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="node16" \
-      org.label-schema.description="A Node 16 image based on Debian bullseye" \
+      org.label-schema.name="debian-trixie" \
+      org.label-schema.description="A Debian trixie minimal image built from scratch" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +29,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="node16" \
-      org.opencontainers.image.description="An Node 16 image based on Debian bullseye" \
+      org.opencontainers.image.title="debian-trixie" \
+      org.opencontainers.image.description="A Debian trixie minimal image built from scratch" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,9 +39,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
 
-ENV NODE_VER_NUM="16"
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="trixie" \
+    DEBIAN_SUITE="testing"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/node/
-RUN bash /usr/share/dockershelf/node/build-image.sh
+COPY --from=builder /tmp/debootstrap/base /
 
 CMD ["/bin/bash"]
