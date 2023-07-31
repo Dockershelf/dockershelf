@@ -29,6 +29,8 @@ BRANCH="${2}"
 
 if [ "${BRANCH}" == "develop" ]; then
     DOCKER_IMAGE_NAME_SUFFIX="-dev"
+else
+    DOCKER_IMAGE_NAME_SUFFIX=""
 fi
 
 # Exit if we didn't get an image to test
