@@ -20,10 +20,10 @@
 set -exuo pipefail
 
 # Some initial configuration
-ARCH="amd64"
-VARIANT="minbase"
 DEBIAN_RELEASE="${1}"
 DEBIAN_SUITE="${2}"
+
+VARIANT="minbase"
 DEBMIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -54,12 +54,12 @@ if [ -d "${TARGET}" ]; then
 fi
 
 msginfo "Downloading packages for base filesystem ..."
-debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+debootstrap --verbose --variant "${VARIANT}" \
     --download-only --no-check-gpg --no-check-certificate --merged-usr \
         "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Building base filesystem ..."
-debootstrap --verbose --variant "${VARIANT}" --arch "${ARCH}" \
+debootstrap --verbose --variant "${VARIANT}" \
     --no-check-gpg --no-check-certificate --merged-usr \
         "${DEBIAN_RELEASE}" "${TARGET}"
 

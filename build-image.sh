@@ -19,33 +19,52 @@
 # Exit early if there are errors and be verbose
 set -exuo pipefail
 
+# Some initial configuration
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Load helper functions
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${BASEDIR}/library.sh"
 
+# eg. dockershelf/debian:sid
+DOCKER_IMAGE_NAME="${1}"
+# eg. unstable
+DEBIAN_SUITE="${2}"
+DH_USERNAME="${3}"
+DH_PASSWORD="${4}"
+BRANCH="${5}"
+
+if [ "${BRANCH}" == "develop" ]; then
+    DOCKER_IMAGE_NAME_SUFFIX="-dev"
+fi
+
 # Exit if we didn't get an image to build
-if [ -z "${1}" ]; then
+if [ -z "${DOCKER_IMAGE_NAME}" ]; then
     msgerror "No Docker image name was given. Aborting."
     exit 1
 fi
 
-# Some initial configuration
-DOCKER_IMAGE_NAME="${1}"
-DEBIAN_SUITE="${2}"
+# eg. sid
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_NAME##*:}"
+# eg. debian:stable
 DOCKER_IMAGE_TARGET="${DOCKER_IMAGE_NAME##dockershelf/}"
+# eg. /home/user/dockershelf/debian/sid
 DOCKER_IMAGE_DIR="${BASEDIR}/${DOCKER_IMAGE_TARGET/://}"
+# eg. debian
 DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TARGET%%:*}"
+# eg. /home/user/dockershelf/debian
 DOCKER_IMAGE_TYPE_DIR="${BASEDIR}/${DOCKER_IMAGE_TYPE}"
-BUILD_DATE="$( date -u +"%Y-%m-%dT%H:%M:%SZ" )"
+# eg. dockershelf/debian:sid-test
+DOCKER_TEST_IMAGE_NAME="${DOCKER_IMAGE_NAME}-test${DOCKER_IMAGE_NAME_SUFFIX}"
+
+# Current date
+BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
 # Current commit
-VCS_REF="$( git rev-parse --short HEAD )"
+VCS_REF="$(git rev-parse --short HEAD)"
 
 # Let's get the tag that matches the current commit
 # Or get me the commit, which means we are building an unstable image
 if git describe --tags ${VCS_REF} >/dev/null 2>&1; then
-    VERSION="$( git describe --tags ${VCS_REF} )"
+    VERSION="$(git describe --tags ${VCS_REF})"
 else
     VERSION="${VCS_REF}"
 fi
@@ -66,43 +85,36 @@ if [ -f "${DOCKER_IMAGE_TYPE_DIR}/build-image.sh" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/build-image.sh" "${DOCKER_IMAGE_DIR}"
 fi
 
-# Create a base filesystem if we are building a debian image
-if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-    cd "${DOCKER_IMAGE_DIR}" && \
-        sudo docker run \
-            -v "${DOCKER_IMAGE_DIR}:/tmp/dockershelf" \
-            -w "/tmp/dockershelf" \
-            debian:stable \
-            bash -c "apt-get update && \
-                apt-get install -y debootstrap && \
-                bash build-image.sh ${DOCKER_IMAGE_TAG} ${DEBIAN_SUITE}"
-fi
-
 # Copy latex sample if we are building Latex
 if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
     cp "${DOCKER_IMAGE_TYPE_DIR}/sample.tex" "${DOCKER_IMAGE_DIR}"
 fi
 
-# Build the docker image
-if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-    cd "${DOCKER_IMAGE_DIR}" && \
-        sudo docker build --build-arg BUILD_DATE="${BUILD_DATE}" \
-            --build-arg VCS_REF="${VCS_REF}" --build-arg VERSION="${VERSION}" \
-            -t ${DOCKER_IMAGE_NAME} .
-else
-    cd "${DOCKER_IMAGE_DIR}" && \
-        docker build --build-arg BUILD_DATE="${BUILD_DATE}" \
-            --build-arg VCS_REF="${VCS_REF}" --build-arg VERSION="${VERSION}" \
-            -t ${DOCKER_IMAGE_NAME} .
+if [ "${DOCKER_IMAGE_TYPE}" != "debian" ] && [ "${BRANCH}" == "develop" ]; then
+    sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_DIR}/Dockerfile"
 fi
 
+# workaround to exporting the multi-arch image from buildkit to docker
+# we push the image to dockerhub with a -test suffix and then we
+# pull it into docker and rename it
+docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
+
+# Build the docker image
+cd "${DOCKER_IMAGE_DIR}" &&
+    docker buildx build --push \
+        --platform linux/arm64,linux/amd64 \
+        --build-arg BUILD_DATE="${BUILD_DATE}" \
+        --build-arg VCS_REF="${VCS_REF}" \
+        --build-arg VERSION="${VERSION}" \
+        -t ${DOCKER_TEST_IMAGE_NAME} .
+
+docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
+docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
+
+docker pull --platform linux/amd64 ${DOCKER_TEST_IMAGE_NAME}
+docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-amd64
+
 # Remove unnecessary files
-if [ "${DOCKER_IMAGE_TYPE}" == "debian" ]; then
-    sudo rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
-        "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
-        "${DOCKER_IMAGE_DIR}/base"
-else
-    rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
-        "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
-        "${DOCKER_IMAGE_DIR}/base"
-fi
+rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \
+    "${DOCKER_IMAGE_DIR}"/*.tex "${DOCKER_IMAGE_DIR}"/*.conf \
+    "${DOCKER_IMAGE_DIR}/base"

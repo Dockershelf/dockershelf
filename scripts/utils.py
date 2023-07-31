@@ -31,8 +31,7 @@ from .logger import logger
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/'
-                           'distributions/master/deb/src/build.sh')
+node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh')
 node_version_lower_limit = 12
 node_version_upper_limit = 18
 node_versions_disabled = ['13', '15', '17']
@@ -41,7 +40,6 @@ python_suites = [
     '3.7',
     '3.10',
     '3.11',
-    '3.12',
 ]
 
 

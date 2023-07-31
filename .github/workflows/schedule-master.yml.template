@@ -20,23 +20,27 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2 
       - name: Installing dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install debootstrap
           sudo gem install docker-api serverspec
       - name: Building docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DEBIAN_SUITE: ${{ matrix.debian-suite }}
+          DH_USERNAME: ${{ secrets.DH_USERNAME }}
+          DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
-          bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}"
+          bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "master"
       - name: Testing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
         run: |
-          bash test-image.sh "${DOCKER_IMAGE_NAME}" "${DOCKER_IMAGE_EXTRA_TAGS}"
+          bash test-image.sh "${DOCKER_IMAGE_NAME}" "master"
       - name: Pushing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
@@ -44,10 +48,4 @@ jobs:
           DH_USERNAME: ${{ secrets.DH_USERNAME }}
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
-          bash push-image.sh ${DOCKER_IMAGE_NAME} ${DH_USERNAME} ${DH_PASSWORD}
-          if [ -n "${DOCKER_IMAGE_EXTRA_TAGS}" ]; then
-            for EXTRA_TAG in ${DOCKER_IMAGE_EXTRA_TAGS}; do
-              docker tag ${DOCKER_IMAGE_NAME} ${EXTRA_TAG}
-              bash push-image.sh ${EXTRA_TAG} ${DH_USERNAME} ${DH_PASSWORD}
-            done
-          fi
+          bash push-image.sh "${DOCKER_IMAGE_NAME}" "${DH_USERNAME}" "${DH_PASSWORD}" "${DOCKER_IMAGE_EXTRA_TAGS}" "master"

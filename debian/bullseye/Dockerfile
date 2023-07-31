@@ -1,3 +1,18 @@
+# debootstrap stage
+# ----------------------------------
+FROM debian:stable AS builder
+
+RUN apt-get update && \
+    apt-get install -y debootstrap
+
+ADD . /tmp/debootstrap
+
+WORKDIR /tmp/debootstrap
+
+RUN bash build-image.sh "bullseye" "oldstable"
+
+# final stage
+# ----------------------------------
 FROM scratch
 
 ARG BUILD_DATE
@@ -26,8 +41,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="bullseye" \
-    DEBIAN_SUITE="stable"
+    DEBIAN_SUITE="oldstable"
 
-ADD base /
+COPY --from=builder /tmp/debootstrap/base /
 
 CMD ["/bin/bash"]
