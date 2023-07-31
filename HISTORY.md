@@ -1,7 +1,122 @@
 # Changelog
 
 
-## 3.1.0 (2023-01-06)
+## 3.2.0 (2023-07-31)
+
+### Other
+
+* `[REF]` Fixing tests. [Luis Alejandro Martínez Faneyth]
+
+* `[REF]` Fixing tests. [Luis Alejandro Martínez Faneyth]
+
+* `[REF]` Adding support for Debian Trixie. Adding support for arm64 architecture. [Luis Alejandro Martínez Faneyth]
+
+* Bump pip from 23.2 to 23.2.1. [dependabot[bot]]
+
+* Bump virtualenv from 20.24.0 to 20.24.2. [dependabot[bot]]
+
+* Bump wheel from 0.40.0 to 0.41.0. [dependabot[bot]]
+
+* Bump pip from 23.1.2 to 23.2. [dependabot[bot]]
+
+* Bump virtualenv from 20.23.1 to 20.24.0. [dependabot[bot]]
+
+* Bump tox from 4.6.3 to 4.6.4. [dependabot[bot]]
+
+* Bump lxml from 4.9.2 to 4.9.3. [dependabot[bot]]
+
+* Bump tox from 4.6.0 to 4.6.3. [dependabot[bot]]
+
+* Bump setuptools from 67.8.0 to 68.0.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.23.0 to 20.23.1. [dependabot[bot]]
+
+* Bump tox from 4.5.2 to 4.6.0. [dependabot[bot]]
+
+* Bump tox from 4.5.1 to 4.5.2. [dependabot[bot]]
+
+* Bump setuptools from 67.7.2 to 67.8.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.22.0 to 20.23.0. [dependabot[bot]]
+
+* Bump setuptools from 67.6.1 to 67.7.2. [dependabot[bot]]
+
+* Bump pip from 23.1 to 23.1.2. [dependabot[bot]]
+
+* Bump tox from 4.4.12 to 4.5.1. [dependabot[bot]]
+
+* Bump tox from 4.4.11 to 4.4.12. [dependabot[bot]]
+
+* Bump pip from 23.0.1 to 23.1. [dependabot[bot]]
+
+* Bump virtualenv from 20.21.0 to 20.22.0. [dependabot[bot]]
+
+* Bump packaging from 23.0 to 23.1. [dependabot[bot]]
+
+* Bump tox from 4.4.8 to 4.4.11. [dependabot[bot]]
+
+* Bump tox from 4.4.7 to 4.4.8. [dependabot[bot]]
+
+* Bump setuptools from 67.6.0 to 67.6.1. [dependabot[bot]]
+
+* Bump virtualenv from 20.20.0 to 20.21.0. [dependabot[bot]]
+
+* Bump tox from 4.4.6 to 4.4.7. [dependabot[bot]]
+
+* Bump wheel from 0.38.4 to 0.40.0. [dependabot[bot]]
+
+* Bump hmarr/auto-approve-action from 3.1.0 to 3.2.1. [dependabot[bot]]
+
+* Bump setuptools from 67.4.0 to 67.6.0. [dependabot[bot]]
+
+* Bump autopep8 from 2.0.1 to 2.0.2. [dependabot[bot]]
+
+* Bump virtualenv from 20.19.0 to 20.20.0. [dependabot[bot]]
+
+* Bump setuptools from 67.3.2 to 67.4.0. [dependabot[bot]]
+
+* Bump pip from 23.0 to 23.0.1. [dependabot[bot]]
+
+* Bump tox from 4.4.5 to 4.4.6. [dependabot[bot]]
+
+* Bump setuptools from 67.2.0 to 67.3.2. [dependabot[bot]]
+
+* Bump tox from 4.4.4 to 4.4.5. [dependabot[bot]]
+
+* Bump setuptools from 67.1.0 to 67.2.0. [dependabot[bot]]
+
+* Bump virtualenv from 20.17.1 to 20.19.0. [dependabot[bot]]
+
+* Bump setuptools from 66.1.1 to 67.1.0. [dependabot[bot]]
+
+* Bump pip from 22.3.1 to 23.0. [dependabot[bot]]
+
+* Bump tox from 4.4.2 to 4.4.4. [dependabot[bot]]
+
+* Bump setuptools from 66.0.0 to 66.1.1. [dependabot[bot]]
+
+* Bump tox from 4.3.5 to 4.4.2. [dependabot[bot]]
+
+* Bump setuptools from 65.7.0 to 66.0.0. [dependabot[bot]]
+
+* Bump pydocstyle from 6.2.3 to 6.3.0. [dependabot[bot]]
+
+* Bump tox from 4.2.7 to 4.3.5. [dependabot[bot]]
+
+* Bump setuptools from 65.6.3 to 65.7.0. [dependabot[bot]]
+
+* Bump tox from 4.2.3 to 4.2.7. [dependabot[bot]]
+
+* Bump packaging from 22.0 to 23.0. [dependabot[bot]]
+
+* Bump pydocstyle from 6.2.2 to 6.2.3. [dependabot[bot]]
+
+* Bump tox from 4.1.3 to 4.2.3. [dependabot[bot]]
+
+* Bump pydocstyle from 6.2.0 to 6.2.2. [dependabot[bot]]
+
+
+## 3.1.0 (2023-01-07)
 
 ### Changed
 
