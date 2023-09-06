@@ -51,7 +51,7 @@ DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
     DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
     DOCKER_IMAGE_TYPE_VERSION="${DOCKER_IMAGE_TYPE_VERSION}" \
     DOCKER_IMAGE_ARCH="amd64" \
-    rspec \
+    bundle exec rspec \
     --color \
     --backtrace \
     --format documentation \
@@ -63,7 +63,7 @@ DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
     DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
     DOCKER_IMAGE_TYPE_VERSION="${DOCKER_IMAGE_TYPE_VERSION}" \
     DOCKER_IMAGE_ARCH="arm64" \
-    rspec \
+    bundle exec rspec \
     --color \
     --backtrace \
     --format documentation \
