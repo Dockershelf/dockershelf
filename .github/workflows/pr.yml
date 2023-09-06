@@ -60,7 +60,7 @@ jobs:
       - name: Approve
         uses: hmarr/auto-approve-action@v3.2.1
         with:
-          github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
+          github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.PERSONAL_ACCESS_TOKEN }}"
 
   merge:
     name: Merge pull request
@@ -71,7 +71,7 @@ jobs:
       - name: Merge
         uses: actions/github-script@v6
         with:
-          github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
+          github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.PERSONAL_ACCESS_TOKEN }}"
           script: |
             await github.rest.pulls.merge({
               owner: context.repo.owner,
