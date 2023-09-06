@@ -1,5 +1,5 @@
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +31,11 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     def node_version
-        command("node -e 'console.log(process.version);'").stdout.strip
+        command("node -e 'console.log(process.version.replace(\"v\", \"\").split(\".\")[0]);'").stdout.strip
+    end
+
+    def node_version_container_var
+        command("echo $NODE_VER_NUM").stdout.strip
     end
 
     it "should exist" do
@@ -41,6 +45,11 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     it "should have a node interpreter" do
         expect(file("/usr/bin/node")).to exist
         expect(file("/usr/bin/nodejs")).to exist
+    end
+
+    it "should have the correct node version" do
+        expect(node_version()).to eq(ENV["DOCKER_IMAGE_TYPE_VERSION"])
+        expect(node_version()).to eq(node_version_container_var())
     end
 
     it "should be able to install a npm package" do

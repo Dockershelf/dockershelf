@@ -2,7 +2,7 @@ name: Schedule (master branch)
 
 on:
   schedule:
-    - cron: '00 6 * * 4'
+    - cron: 00 6 * * 4
 
 jobs:
   build:
@@ -38,6 +38,10 @@ jobs:
             docker-image-extra-tags: "dockershelf/python:3.11-stable"
           - docker-image-name: "dockershelf/python:3.11-sid"
             docker-image-extra-tags: "dockershelf/python:3.11-unstable dockershelf/python:3.11"
+          - docker-image-name: "dockershelf/python:3.12-bookworm"
+            docker-image-extra-tags: "dockershelf/python:3.12-stable"
+          - docker-image-name: "dockershelf/python:3.12-sid"
+            docker-image-extra-tags: "dockershelf/python:3.12-unstable dockershelf/python:3.12"
           - docker-image-name: "dockershelf/node:12-bookworm"
             docker-image-extra-tags: "dockershelf/node:12-stable"
           - docker-image-name: "dockershelf/node:12-sid"
@@ -54,6 +58,10 @@ jobs:
             docker-image-extra-tags: "dockershelf/node:18-stable"
           - docker-image-name: "dockershelf/node:18-sid"
             docker-image-extra-tags: "dockershelf/node:18-unstable dockershelf/node:18"
+          - docker-image-name: "dockershelf/node:20-bookworm"
+            docker-image-extra-tags: "dockershelf/node:20-stable"
+          - docker-image-name: "dockershelf/node:20-sid"
+            docker-image-extra-tags: "dockershelf/node:20-unstable dockershelf/node:20"
 
     steps:
       - name: Checkout repo
@@ -61,13 +69,17 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2 
+        uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2 
+        uses: docker/setup-buildx-action@v2
+
       - name: Installing dependencies
         run: |
           sudo gem install docker-api serverspec
+
       - name: Building docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
@@ -76,12 +88,14 @@ jobs:
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
           bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "master"
+
       - name: Testing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
         run: |
           bash test-image.sh "${DOCKER_IMAGE_NAME}" "master"
+
       - name: Pushing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
