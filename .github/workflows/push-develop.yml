@@ -73,12 +73,12 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
 
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
       - name: Installing dependencies
-        run: |
-          sudo gem install docker-api serverspec
+        run: bundle install
 
       - name: Building docker image
         env:
