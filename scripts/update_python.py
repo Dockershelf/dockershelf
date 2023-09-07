@@ -41,17 +41,17 @@ def update_python(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-Dockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
+                               '?colorA=22313f&colorB=4a637b'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/python/{0}/Dockerfile')
     pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
                           'python?colorA=22313f&colorB=4a637b'
-                          '&cacheSeconds=900')
+                          '')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/python')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/python/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+                         '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/python')
     matrix_str = (
         '          - docker-image-name: "dockershelf/python:{0}"'

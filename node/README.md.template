@@ -16,15 +16,16 @@
 
 The Node images are built using a bash script [`node/build-image.sh`](https://github.com/Dockershelf/dockershelf/blob/master/node/build-image.sh), you can check it out for details.
 
-Each node release is installed using the [nodesource scripts](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions).
+Each node release is installed using the [nodesource repository](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions).
 
 We'll explain the overall process here:
 
 1. Built `FROM dockershelf/debian:<release>`.
 2. Labelled according to [label-schema.org](http://label-schema.org) and [opencontainers specification](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
-3. Install developer tools and build depends to handle the nodesource script install.
-4. Install Node.
-5. Shrink image by deleting unnecessary files.
+3. Install developer tools and build depends to handle the nodesource package install.
+4. Install repository gpg keys.
+5. Install Node.
+6. Shrink image by deleting unnecessary files.
 
 ## Made with 💖 and 🍔
 

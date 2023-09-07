@@ -39,17 +39,17 @@ def update_debian(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/debian'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-Dockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
+                               '?colorA=22313f&colorB=4a637b'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/debian/{0}/Dockerfile')
     pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
                           'debian?colorA=22313f&colorB=4a637b'
-                          '&cacheSeconds=900')
+                          '')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/debian')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/debian/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+                         '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/debian')
     matrix_str = (
         '          - docker-image-name: "dockershelf/debian:{0}"'
@@ -65,21 +65,21 @@ def update_debian(basedir):
     for deldir in find_dirs(debiandir):
         shutil.rmtree(deldir)
 
-    for debian_version, debian_suite in debian_versions:
-        logger.info('Processing Debian {0}'.format(debian_version))
-        debian_version_dir = os.path.join(debiandir, debian_version)
+    for debian_version_long, debian_suite in debian_versions:
+        logger.info('Processing Debian {0}'.format(debian_version_long))
+        debian_version_dir = os.path.join(debiandir, debian_version_long)
         debian_dockerfile = os.path.join(debian_version_dir, 'Dockerfile')
 
-        docker_tag = docker_tag_holder.format(debian_version)
-        dockerfile_badge = dockerfile_badge_holder.format(debian_version)
-        dockerfile_url = dockerfile_url_holder.format(debian_version)
-        pulls_badge = pulls_badge_holder.format(debian_version)
-        pulls_url = pulls_url_holder.format(debian_version)
-        size_badge = size_badge_holder.format(debian_version)
-        size_url = size_url_holder.format(debian_version)
+        docker_tag = docker_tag_holder.format(debian_version_long)
+        dockerfile_badge = dockerfile_badge_holder.format(debian_version_long)
+        dockerfile_url = dockerfile_url_holder.format(debian_version_long)
+        pulls_badge = pulls_badge_holder.format(debian_version_long)
+        pulls_url = pulls_url_holder.format(debian_version_long)
+        size_badge = size_badge_holder.format(debian_version_long)
+        size_url = size_url_holder.format(debian_version_long)
 
         matrix.append(matrix_str.format(
-            debian_version, debian_suite))
+            debian_version_long, debian_suite))
 
         debian_readme_tablelist.append(
             debian_readme_tablelist_holder.format(
@@ -97,7 +97,7 @@ def update_debian(basedir):
                                            base_image,
                                            debian_dockerfile_content)
         debian_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                           debian_version,
+                                           debian_version_long,
                                            debian_dockerfile_content)
         debian_dockerfile_content = re.sub('%%DEBIAN_SUITE%%',
                                            debian_suite,

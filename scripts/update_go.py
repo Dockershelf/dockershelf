@@ -41,17 +41,17 @@ def update_go(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/go'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-Dockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
+                               '?colorA=22313f&colorB=4a637b'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/go/{0}/Dockerfile')
     pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
                           'go?colorA=22313f&colorB=4a637b'
-                          '&cacheSeconds=900')
+                          '')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/go')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/go/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+                         '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/go')
     matrix_str = (
         '          - docker-image-name: "dockershelf/go:{0}"'
@@ -70,20 +70,21 @@ def update_go(basedir):
     for deldir in find_dirs(godir):
         shutil.rmtree(deldir)
 
-    for gover in go_versions:
+    for go_version_long in go_versions:
+        go_version_short = '.'.join(go_version_long.split('.')[:2])
         for debian_version in [debian_versions_eq['stable'],
                                debian_versions_eq['unstable']]:
             logger.info('Processing Go {0} ({1})'.format(
-                gover, debian_version))
-            go_version = '{0}-{1}'.format(gover, debian_version)
-            go_version_stable = '{0}-{1}'.format(gover, 'stable')
-            go_version_unstable = '{0}-{1}'.format(gover, 'unstable')
+                go_version_short, debian_version))
+            go_version = '{0}-{1}'.format(go_version_short, debian_version)
+            go_version_stable = '{0}-{1}'.format(go_version_short, 'stable')
+            go_version_unstable = '{0}-{1}'.format(go_version_short, 'unstable')
             go_version_dir = os.path.join(godir, go_version)
             go_dockerfile = os.path.join(go_version_dir, 'Dockerfile')
 
             docker_tag = docker_tag_holder.format(go_version)
             dockerfile_badge = dockerfile_badge_holder.format(
-                gover, debian_version)
+                go_version_short, debian_version)
             dockerfile_url = dockerfile_url_holder.format(go_version)
             pulls_badge = pulls_badge_holder.format(go_version)
             pulls_url = pulls_url_holder.format(go_version)
@@ -92,7 +93,7 @@ def update_go(basedir):
 
             if debian_version == 'sid':
                 matrix.append(matrix_str_main.format(
-                    go_version, go_version_unstable, gover))
+                    go_version, go_version_unstable, go_version_short))
             else:
                 matrix.append(matrix_str.format(go_version,
                               go_version_stable))
@@ -117,7 +118,7 @@ def update_go(basedir):
                                            debian_version,
                                            go_dockerfile_content)
             go_dockerfile_content = re.sub('%%GO_VERSION%%',
-                                           gover,
+                                           go_version_long,
                                            go_dockerfile_content)
             go_dockerfile_content = re.sub('%%GO_DEBIAN_SUITE%%',
                                            debian_version,

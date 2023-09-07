@@ -26,7 +26,7 @@ DEBIAN_SUITE="${2}"
 VARIANT="minbase"
 DEBMIRROR="http://deb.debian.org/debian"
 SECMIRROR="http://deb.debian.org/debian-security"
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET="${BASEDIR}/base"
 
 # Packages to install at the end
@@ -43,7 +43,7 @@ if [ -z "${DEBIAN_RELEASE}" ]; then
 fi
 
 # Exit if we are not root
-if [ "$( id -u )" != "0" ]; then
+if [ "$(id -u)" != "0" ]; then
     msgerror "This script must be run as root. Aborting."
     exit 1
 fi
@@ -56,38 +56,38 @@ fi
 msginfo "Downloading packages for base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" \
     --download-only --no-check-gpg --no-check-certificate --merged-usr \
-        "${DEBIAN_RELEASE}" "${TARGET}"
+    "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Building base filesystem ..."
 debootstrap --verbose --variant "${VARIANT}" \
     --no-check-gpg --no-check-certificate --merged-usr \
-        "${DEBIAN_RELEASE}" "${TARGET}"
+    "${DEBIAN_RELEASE}" "${TARGET}"
 
 msginfo "Configuring base filesystem ..."
-cat > "${TARGET}/etc/resolv.conf" << EOF
+cat >"${TARGET}/etc/resolv.conf" <<EOF
 # Dockershelf configuration for resolv.conf
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 
-cat > "${TARGET}/etc/locale.gen" << EOF
+cat >"${TARGET}/etc/locale.gen" <<EOF
 # Dockershelf configuration for locale
 en_US.UTF-8 UTF-8
 EOF
 
 if [ "${DEBIAN_RELEASE}" == "sid" ]; then
-cat > "${TARGET}/etc/apt/sources.list" << EOF
+    cat >"${TARGET}/etc/apt/sources.list" <<EOF
 # Dockershelf configuration for apt sources
 deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 EOF
 elif [ "${DEBIAN_RELEASE}" == "experimental" ]; then
-cat > "${TARGET}/etc/apt/sources.list" << EOF
+    cat >"${TARGET}/etc/apt/sources.list" <<EOF
 # Dockershelf configuration for apt sources
 deb ${DEBMIRROR} sid main
 deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 EOF
 elif [ "${DEBIAN_SUITE}" == "testing" ] || [ "${DEBIAN_SUITE}" == "stable" ]; then
-cat > "${TARGET}/etc/apt/sources.list" << EOF
+    cat >"${TARGET}/etc/apt/sources.list" <<EOF
 # Dockershelf configuration for apt sources
 deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 deb ${DEBMIRROR} ${DEBIAN_RELEASE}-updates main
@@ -95,7 +95,7 @@ deb ${SECMIRROR} ${DEBIAN_SUITE}-security/updates main
 EOF
 fi
 
-cat > "${TARGET}/etc/dpkg/dpkg.cfg.d/dockershelf" << EOF
+cat >"${TARGET}/etc/dpkg/dpkg.cfg.d/dockershelf" <<EOF
 # Dockershelf configuration for Dpkg
 
 # If a conffile has been deleted by the user and a new version of the
@@ -118,7 +118,7 @@ force-overwrite
 force-unsafe-io
 EOF
 
-cat > "${TARGET}/etc/apt/apt.conf.d/dockershelf" << EOF
+cat >"${TARGET}/etc/apt/apt.conf.d/dockershelf" <<EOF
 # Dockershelf configuration for Apt
 
 # Disable creation of pkgcache.bin and srcpkgcache.bin to save space.
@@ -164,7 +164,7 @@ EOF
 mkdir -p "${TARGET}/usr/share/dockershelf"
 touch "${TARGET}/usr/share/dockershelf/clean-apt.sh"
 chmod +x "${TARGET}/usr/share/dockershelf/clean-apt.sh"
-cat > "${TARGET}/usr/share/dockershelf/clean-apt.sh" << 'EOF'
+cat >"${TARGET}/usr/share/dockershelf/clean-apt.sh" <<'EOF'
 #!/usr/bin/env bash
 # Dockershelf post hook for apt
 rm -rf /var/cache/apt/*
@@ -172,7 +172,7 @@ EOF
 
 touch "${TARGET}/usr/share/dockershelf/clean-dpkg.sh"
 chmod +x "${TARGET}/usr/share/dockershelf/clean-dpkg.sh"
-cat > "${TARGET}/usr/share/dockershelf/clean-dpkg.sh" << 'EOF'
+cat >"${TARGET}/usr/share/dockershelf/clean-dpkg.sh" <<'EOF'
 #!/usr/bin/env bash
 # Dockershelf post hook for dpkg
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf
@@ -181,7 +181,7 @@ rm -rf /usr/share/doc/* /usr/share/locale/* \
        /var/cache/debconf/* /var/cache/apt/* 
 EOF
 
-cat >> "${TARGET}/etc/bash.bashrc" << 'EOF'
+cat >>"${TARGET}/etc/bash.bashrc" <<'EOF'
 
 # Enable bash auto completion
 if ! shopt -oq posix; then
@@ -204,7 +204,7 @@ COLOR_OFF="\[\033[0m\]"
 PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
-cat >> "${TARGET}/etc/skel/.bashrc" << 'EOF'
+cat >>"${TARGET}/etc/skel/.bashrc" <<'EOF'
 
 # Debian colors
 COLOR_LIGHT_RED="\[\033[38;5;167m\]"
@@ -213,7 +213,7 @@ COLOR_OFF="\[\033[0m\]"
 PS1="${COLOR_LIGHT_RED}[\u@${COLOR_DARK_RED}\h]${COLOR_OFF}:\w\$ "
 EOF
 
-cat > "${TARGET}/etc/motd" << 'EOF'
+cat >"${TARGET}/etc/motd" <<'EOF'
 
          This image was built using         
  ,-.          .               .       .     
@@ -242,7 +242,7 @@ cmdretry chroot "${TARGET}" update-locale LANG="en_US.UTF-8" \
 
 msginfo "Shrinking base filesystem ..."
 rm -rfv "${TARGET}/tmp/"* "${TARGET}/usr/share/doc/"* \
-        "${TARGET}/usr/share/locale/"* "${TARGET}/usr/share/man/"* \
-        "${TARGET}/var/cache/debconf/"* "${TARGET}/var/cache/apt/"* \
-        "${TARGET}/var/tmp/"* "${TARGET}/var/log/"* \
-        "${TARGET}/var/lib/apt/lists/"*
+    "${TARGET}/usr/share/locale/"* "${TARGET}/usr/share/man/"* \
+    "${TARGET}/var/cache/debconf/"* "${TARGET}/var/cache/apt/"* \
+    "${TARGET}/var/tmp/"* "${TARGET}/var/log/"* \
+    "${TARGET}/var/lib/apt/lists/"*

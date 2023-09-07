@@ -134,5 +134,5 @@ def get_go_versions():
         if v > go_versions_index[go_version_minor]:
             go_versions_index[go_version_minor] = v
 
-    go_versions = [f'{v.major}.{v.minor}' for v in go_versions_index.values()]    
+    go_versions = [f'{v.major}.{v.minor}.{v.micro}' for v in go_versions_index.values()]
     return sorted(set(go_versions), key=lambda x: Version(x))

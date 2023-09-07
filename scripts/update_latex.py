@@ -39,17 +39,17 @@ def update_latex(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-Dockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
+                               '?colorA=22313f&colorB=4a637b'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/latex/{0}/Dockerfile')
     pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
                           'latex?colorA=22313f&colorB=4a637b'
-                          '&cacheSeconds=900')
+                          '')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/latex/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+                         '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
     matrix_str = (
         '          - docker-image-name: "dockershelf/latex:{0}"')
@@ -63,21 +63,21 @@ def update_latex(basedir):
     for deldir in find_dirs(latexdir):
         shutil.rmtree(deldir)
 
-    for latex_version in latex_versions:
-        logger.info('Processing Latex {0}'.format(latex_version))
-        latex_version_dir = os.path.join(latexdir, latex_version)
+    for latex_version_long in latex_versions:
+        logger.info('Processing Latex {0}'.format(latex_version_long))
+        latex_version_dir = os.path.join(latexdir, latex_version_long)
         latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
 
-        docker_tag = docker_tag_holder.format(latex_version)
-        dockerfile_badge = dockerfile_badge_holder.format(latex_version)
-        dockerfile_url = dockerfile_url_holder.format(latex_version)
-        pulls_badge = pulls_badge_holder.format(latex_version)
-        pulls_url = pulls_url_holder.format(latex_version)
-        size_badge = size_badge_holder.format(latex_version)
-        size_url = size_url_holder.format(latex_version)
+        docker_tag = docker_tag_holder.format(latex_version_long)
+        dockerfile_badge = dockerfile_badge_holder.format(latex_version_long)
+        dockerfile_url = dockerfile_url_holder.format(latex_version_long)
+        pulls_badge = pulls_badge_holder.format(latex_version_long)
+        pulls_url = pulls_url_holder.format(latex_version_long)
+        size_badge = size_badge_holder.format(latex_version_long)
+        size_url = size_url_holder.format(latex_version_long)
 
         matrix.append(
-            matrix_str.format(latex_version))
+            matrix_str.format(latex_version_long))
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
@@ -98,7 +98,7 @@ def update_latex(basedir):
                                           'sid',
                                           latex_dockerfile_content)
         latex_dockerfile_content = re.sub('%%LATEX_VERSION%%',
-                                          latex_version,
+                                          latex_version_long,
                                           latex_dockerfile_content)
 
         with open(latex_dockerfile, 'w') as ld:

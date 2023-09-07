@@ -76,16 +76,13 @@ cmdretry apt-get update
 # We will use the nodesource script to install node.
 
 msginfo "Installing Node ..."
-# if [ "${NODE_VER_NUM}" == "12" ] || [ "${NODE_VER_NUM}" == "14" ]; then
-    for PKG in ${NODE_PKGS}; do
-        PKG_VER="$(apt-cache madison ${PKG} | grep Packages |
-            grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs)"
-        NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
-    done
-    cmdretry aptitude install ${NODE_PKGS_VER}
-# else
-#     cmdretry aptitude install ${NODE_PKGS}
-# fi
+for PKG in ${NODE_PKGS}; do
+    PKG_VER="$(apt-cache madison ${PKG} | grep Packages |
+        grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs)"
+    NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
+done
+
+cmdretry aptitude install ${NODE_PKGS_VER}
 
 if [ ! -f "/usr/bin/nodejs" ]; then
     ln -s /usr/bin/node /usr/bin/nodejs

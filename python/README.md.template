@@ -23,10 +23,11 @@ We'll explain the overall process here:
 1. Built `FROM dockershelf/debian:<release>`.
 2. Labelled according to [label-schema.org](http://label-schema.org) and [opencontainers specification](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
 3. Install developer tools to handle the package installation.
-4. Install Python.
-5. Uninstall developer tools and orphan packages.
-6. Install `pip`.
-7. Shrink image by deleting unnecessary files.
+4. Configure deadsnakes repository.
+5. Install Python.
+6. Uninstall developer tools and orphan packages.
+7. Install `pip`.
+8. Shrink image by deleting unnecessary files.
 
 ## Made with 💖 and 🍔
 

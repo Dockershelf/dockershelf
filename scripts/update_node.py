@@ -41,17 +41,17 @@ def update_node(basedir):
     docker_url = 'https://hub.docker.com/r/dockershelf/node'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
                                '-Dockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
+                               '?colorA=22313f&colorB=4a637b'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/node/{0}/Dockerfile')
     pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
                           'node?colorA=22313f&colorB=4a637b'
-                          '&cacheSeconds=900')
+                          '')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/node')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/node/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+                         '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/node')
     matrix_str = (
         '          - docker-image-name: "dockershelf/node:{0}"'
@@ -70,20 +70,20 @@ def update_node(basedir):
     for deldir in find_dirs(nodedir):
         shutil.rmtree(deldir)
 
-    for nodever in node_versions:
+    for node_version_long in node_versions:
         for debian_version in [debian_versions_eq['stable'],
                                debian_versions_eq['unstable']]:
             logger.info('Processing Node {0} ({1})'.format(
-                nodever, debian_version))
-            node_version = '{0}-{1}'.format(nodever, debian_version)
-            node_version_stable = '{0}-{1}'.format(nodever, 'stable')
-            node_version_unstable = '{0}-{1}'.format(nodever, 'unstable')
+                node_version_long, debian_version))
+            node_version = '{0}-{1}'.format(node_version_long, debian_version)
+            node_version_stable = '{0}-{1}'.format(node_version_long, 'stable')
+            node_version_unstable = '{0}-{1}'.format(node_version_long, 'unstable')
             node_version_dir = os.path.join(nodedir, node_version)
             node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
 
             docker_tag = docker_tag_holder.format(node_version)
             dockerfile_badge = dockerfile_badge_holder.format(
-                nodever, debian_version)
+                node_version_long, debian_version)
             dockerfile_url = dockerfile_url_holder.format(node_version)
             pulls_badge = pulls_badge_holder.format(node_version)
             pulls_url = pulls_url_holder.format(node_version)
@@ -92,7 +92,7 @@ def update_node(basedir):
 
             if debian_version == 'sid':
                 matrix.append(matrix_str_main.format(
-                    node_version, node_version_unstable, nodever))
+                    node_version, node_version_unstable, node_version_long))
             else:
                 matrix.append(matrix_str.format(node_version,
                               node_version_stable))
@@ -116,7 +116,7 @@ def update_node(basedir):
                                              debian_version,
                                              node_dockerfile_content)
             node_dockerfile_content = re.sub('%%NODE_VERSION%%',
-                                             nodever,
+                                             node_version_long,
                                              node_dockerfile_content)
 
             with open(node_dockerfile, 'w') as pd:
