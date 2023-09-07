@@ -24,6 +24,7 @@ from scripts.update_debian import update_debian
 from scripts.update_latex import update_latex
 from scripts.update_python import update_python
 from scripts.update_node import update_node
+from scripts.update_go import update_go
 
 
 if __name__ == '__main__':
@@ -51,12 +52,14 @@ if __name__ == '__main__':
     latex_matrix_list, latex_readme_table = update_latex(basedir)
     python_matrix_list, python_readme_table = update_python(basedir)
     node_matrix_list, node_readme_table = update_node(basedir)
+    go_matrix_list, go_readme_table = update_go(basedir)
 
     logger.info('Writing github actions matrix')
     matrix.extend(debian_matrix_list)
     matrix.extend(latex_matrix_list)
     matrix.extend(python_matrix_list)
     matrix.extend(node_matrix_list)
+    matrix.extend(go_matrix_list)
     gha_matrix = '\n'.join(matrix)
 
     with open(gha_develop_template, 'r') as gdt:
@@ -92,6 +95,8 @@ if __name__ == '__main__':
     readme_content = re.sub('%%PYTHON_TABLE%%', python_readme_table,
                             readme_content)
     readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
+                            readme_content)
+    readme_content = re.sub('%%GO_TABLE%%', go_readme_table,
                             readme_content)
 
     with open(readme, 'w') as t:

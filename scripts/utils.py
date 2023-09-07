@@ -18,6 +18,7 @@
 
 import os
 import re
+import json
 import fnmatch
 from contextlib import closing
 
@@ -34,6 +35,9 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 node_suites = ['12', '14', '16', '18', '20']
 
 python_suites = ['3.7', '3.10', '3.11', '3.12']
+
+go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
+go_suites = ['1.18', '1.19', '1.20', '1.21']
 
 
 def u(u_string):
@@ -110,3 +114,25 @@ def get_python_versions():
     logger.info('Getting Python versions')
     python_versions = [u(v) for v in python_suites]
     return sorted(python_versions, key=lambda x: Version(x))
+
+
+def get_go_versions():
+    logger.info('Getting Go versions')
+
+    with closing(urlopen(go_versions_list_file)) as n:
+        go_versions_list_content = json.loads(n.read())
+
+    go_versions_index = {}
+    go_versions = [Version(u(v).removeprefix("go")) for v in go_versions_list_content['GoVersion']]
+
+    for v in go_versions:
+        go_version_minor = f'{v.major}.{v.minor}'
+        if go_version_minor not in go_suites:
+            continue
+        if go_version_minor not in go_versions_index.keys():
+            go_versions_index[go_version_minor] = Version('0.0')
+        if v > go_versions_index[go_version_minor]:
+            go_versions_index[go_version_minor] = v
+
+    go_versions = [f'{v.major}.{v.minor}' for v in go_versions_index.values()]    
+    return sorted(set(go_versions), key=lambda x: Version(x))

@@ -62,6 +62,22 @@ jobs:
             docker-image-extra-tags: "dockershelf/node:20-stable"
           - docker-image-name: "dockershelf/node:20-sid"
             docker-image-extra-tags: "dockershelf/node:20-unstable dockershelf/node:20"
+          - docker-image-name: "dockershelf/go:1.18-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.18-stable"
+          - docker-image-name: "dockershelf/go:1.18-sid"
+            docker-image-extra-tags: "dockershelf/go:1.18-unstable dockershelf/go:1.18"
+          - docker-image-name: "dockershelf/go:1.19-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.19-stable"
+          - docker-image-name: "dockershelf/go:1.19-sid"
+            docker-image-extra-tags: "dockershelf/go:1.19-unstable dockershelf/go:1.19"
+          - docker-image-name: "dockershelf/go:1.20-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.20-stable"
+          - docker-image-name: "dockershelf/go:1.20-sid"
+            docker-image-extra-tags: "dockershelf/go:1.20-unstable dockershelf/go:1.20"
+          - docker-image-name: "dockershelf/go:1.21-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.21-stable"
+          - docker-image-name: "dockershelf/go:1.21-sid"
+            docker-image-extra-tags: "dockershelf/go:1.21-unstable dockershelf/go:1.21"
 
     steps:
       - name: Checkout repo
