@@ -1,11 +1,11 @@
 FROM dockershelf/python:3.10
-LABEL maintainer "Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
+LABEL maintainer "Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
 ARG UID=1000
 ARG GID=1000
 
 RUN apt-get update && \
-    apt-get install sudo python3.10-venv
+    apt-get install sudo python3.10-venv bundler
 
 ADD requirements.txt requirements-dev.txt /root/
 RUN pip3 install -r /root/requirements.txt -r /root/requirements-dev.txt

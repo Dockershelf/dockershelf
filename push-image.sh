@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ BRANCH="${5}"
 
 if [ "${BRANCH}" == "develop" ]; then
     DOCKER_IMAGE_NAME_SUFFIX="-dev"
+else
+    DOCKER_IMAGE_NAME_SUFFIX=""
 fi
 
 # Exit if we didn't get an image to push

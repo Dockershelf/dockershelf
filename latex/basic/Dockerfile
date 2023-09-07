@@ -1,4 +1,4 @@
-FROM dockershelf/debian:sid
+FROM dockershelf/debian:bookworm
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -22,7 +22,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.vendor="Luis Alejandro Martínez Faneyth" \
       org.opencontainers.image.version=${VERSION} \
       org.opencontainers.image.licenses="GPL-3.0" \
-      maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
+      maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
 ENV LATEX_VER_NUM="basic"
 

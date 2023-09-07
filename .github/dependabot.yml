@@ -6,8 +6,6 @@ updates:
     interval: weekly
     day: thursday
     time: "01:00"
-  ignore:
-    - dependency-name: coverage
 - package-ecosystem: github-actions
   directory: "/"
   schedule:

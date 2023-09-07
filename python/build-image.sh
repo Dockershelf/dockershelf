@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
 PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
 DEBMIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
 DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal

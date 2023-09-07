@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,11 +33,8 @@ def update_latex(basedir):
     latex_dockerfile_template = os.path.join(latexdir, 'Dockerfile.template')
     latex_readme_template = os.path.join(latexdir, 'README.md.template')
     latex_readme = os.path.join(latexdir, 'README.md')
-    latex_hooks_dir = os.path.join(latexdir, 'hooks')
-    latex_build_hook = os.path.join(latex_hooks_dir, 'build')
-    latex_push_hook = os.path.join(latex_hooks_dir, 'push')
 
-    base_image = 'dockershelf/debian:sid'
+    base_image = 'dockershelf/debian:bookworm'
     docker_tag_holder = 'dockershelf/latex:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
@@ -107,20 +104,6 @@ def update_latex(basedir):
 
         with open(latex_dockerfile, 'w') as ld:
             ld.write(latex_dockerfile_content)
-
-    os.makedirs(latex_hooks_dir)
-
-    logger.info('Writing dummy hooks')
-    with open(latex_build_hook, 'w') as lbh:
-        lbh.write('#!/usr/bin/env bash\n')
-        lbh.write('echo "This is a dummy build script that just allows to '
-                  'automatically fill the long description with the Readme '
-                  'from GitHub."\n')
-        lbh.write('echo "No real building is done here."')
-
-    with open(latex_push_hook, 'w') as lph:
-        lph.write('#!/usr/bin/env bash\n')
-        lph.write('echo "We arent really pushing."')
 
     logger.info('Writing Latex Readme')
     with open(latex_readme_template, 'r') as lrt:

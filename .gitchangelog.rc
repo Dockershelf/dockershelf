@@ -68,10 +68,10 @@ ignore_regexps = [
 ## whenever you are tweaking this variable.
 ##
 section_regexps = [
-    ('Added', [r'^\[ADD\]\s*([^\n]*)$']),
-    ('Changed', [r'^\[REF\]\s*([^\n]*)$']),
-    ('Fixed', [r'^\[FIX\]\s*([^\n]*)$']),
-    ('Removed', [r'^\[DEL\]\s*([^\n]*)$']),
+    ('Added', [r'^\[ADD\]\s*([^\n]*)$', r'^\`\[ADD\]\`\s*([^\n]*)$']),
+    ('Changed', [r'^\[REF\]\s*([^\n]*)$', r'^\`\[REF\]\`\s*([^\n]*)$']),
+    ('Fixed', [r'^\[FIX\]\s*([^\n]*)$', r'^\`\[FIX\]\`\s*([^\n]*)$']),
+    ('Removed', [r'^\[DEL\]\s*([^\n]*)$', r'^\`\[DEL\]\`\s*([^\n]*)$']),
     ('Other', None),
 ]
 
@@ -118,6 +118,7 @@ body_process = ReSub(r'((^|\n)\[[A-Z]\w+(-\w+)*\] .*(\n\s+.*)*)+$', r'') | strip
 ## Available constructs are those listed in ``body_process`` doc.
 subject_process = (strip |
     ReSub(r'^(\[ADD\]|\[REF\]|\[FIX\])\s*([^\n@]*)(@[a-z]+\s+)*$', r'\2') |
+    ReSub(r'^(\`\[ADD\]\`|\`\[REF\]\`|\`\[FIX\]\`)\s*([^\n@]*)(@[a-z]+\s+)*$', r'\2') |
     ucfirst | final_dot)
 
 
