@@ -38,7 +38,7 @@ def update_latex(basedir):
     docker_tag_holder = 'dockershelf/latex:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-latex%2F{0}%2FDockerfile-blue.svg'
+                               '-Dockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
@@ -54,10 +54,9 @@ def update_latex(basedir):
     matrix_str = (
         '          - docker-image-name: "dockershelf/latex:{0}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                     '|`{2}`'
-                                     '|[![]({3})]({4})'
-                                     '|[![]({5})]({6})'
-                                     '|[![]({7})]({8})'
+                                     '|[![]({2})]({3})'
+                                     '|[![]({4})]({5})'
+                                     '|[![]({6})]({7})'
                                      '|')
 
     logger.info('Erasing current Latex folders')
@@ -82,7 +81,7 @@ def update_latex(basedir):
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
-                docker_tag, docker_url, latex_version, dockerfile_badge,
+                docker_tag, docker_url, dockerfile_badge,
                 dockerfile_url, pulls_badge, pulls_url,
                 size_badge, size_url))
 

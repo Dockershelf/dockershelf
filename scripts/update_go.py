@@ -40,7 +40,7 @@ def update_go(basedir):
     docker_tag_holder = 'dockershelf/go:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/go'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-go%2F{0}--{1}%2FDockerfile-blue.svg'
+                               '-Dockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
@@ -61,11 +61,10 @@ def update_go(basedir):
         '\n            docker-image-extra-tags: "dockershelf/go:{1} '
         'dockershelf/go:{2}"')
     go_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                      '|`{2}`'
-                                      '|[![]({3})]({4})'
-                                      '|[![]({5})]({6})'
-                                      '|[![]({7})]({8})'
-                                      '|')
+                                  '|[![]({2})]({3})'
+                                  '|[![]({4})]({5})'
+                                  '|[![]({6})]({7})'
+                                  '|')
 
     logger.info('Erasing current Go folders')
     for deldir in find_dirs(godir):
@@ -100,7 +99,7 @@ def update_go(basedir):
 
             go_readme_tablelist.append(
                 go_readme_tablelist_holder.format(
-                    docker_tag, docker_url, go_version, dockerfile_badge,
+                    docker_tag, docker_url, dockerfile_badge,
                     dockerfile_url, pulls_badge, pulls_url,
                     size_badge, size_url))
 
@@ -111,18 +110,18 @@ def update_go(basedir):
 
             go_dockerfile_content = go_dockerfile_template_content
             go_dockerfile_content = re.sub('%%BASE_IMAGE%%',
-                                            base_image.format(
-                                                debian_version),
-                                            go_dockerfile_content)
+                                           base_image.format(
+                                               debian_version),
+                                           go_dockerfile_content)
             go_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                               debian_version,
-                                               go_dockerfile_content)
+                                           debian_version,
+                                           go_dockerfile_content)
             go_dockerfile_content = re.sub('%%GO_VERSION%%',
-                                               gover,
-                                               go_dockerfile_content)
+                                           gover,
+                                           go_dockerfile_content)
             go_dockerfile_content = re.sub('%%GO_DEBIAN_SUITE%%',
-                                               debian_version,
-                                               go_dockerfile_content)
+                                           debian_version,
+                                           go_dockerfile_content)
 
             with open(go_dockerfile, 'w') as pd:
                 pd.write(go_dockerfile_content)
@@ -134,8 +133,8 @@ def update_go(basedir):
 
     go_readme_content = go_readme_template_content
     go_readme_content = re.sub('%%GO_TABLE%%',
-                                   go_readme_table,
-                                   go_readme_content)
+                               go_readme_table,
+                               go_readme_content)
 
     with open(go_readme, 'w') as pr:
         pr.write(go_readme_content)

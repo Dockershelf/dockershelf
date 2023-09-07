@@ -2,7 +2,7 @@
 
 ---
 
-[![](https://img.shields.io/github/release/Dockershelf/dockershelf.svg)](https://github.com/Dockershelf/dockershelf/releases) [![](https://img.shields.io/github/workflow/status/Dockershelf/dockershelf/Schedule%20(master%20branch))](https://github.com/Dockershelf/dockershelf/actions/workflows/schedule-master.yml) [![](https://img.shields.io/discord/809504357359157288.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4Wc7xphH5e) [![](https://cla-assistant.io/readme/badge/Dockershelf/dockershelf)](https://cla-assistant.io/Dockershelf/dockershelf)
+[![](https://img.shields.io/github/release/Dockershelf/dockershelf.svg)](https://github.com/Dockershelf/dockershelf/releases) [![](https://img.shields.io/github/actions/workflow/status/Dockershelf/dockershelf/schedule-master.yml?branch=master)](https://github.com/Dockershelf/dockershelf/actions/workflows/schedule-master.yml) [![](https://img.shields.io/discord/809504357359157288.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4Wc7xphH5e) [![](https://cla-assistant.io/readme/badge/Dockershelf/dockershelf)](https://cla-assistant.io/Dockershelf/dockershelf)
 
 Current version: 3.2.0
 
@@ -12,7 +12,7 @@ Images are updated, tested and published *weekly* via a [Github Actions workflow
 
 ## About stable/unstable images
 
-Excepting debian and latex images, all images have an stable/unstable version. Stable images are based on debian stable, which are ideal for production applications; Unstable images are based on debian sid, which are designed for development stages.
+Excepting debian and latex images, all images have an stable/unstable version. Stable images are based on debian stable, which are ideal for production applications; Unstable images are based on debian sid, which are designed for development stages. Latex images are only based on debian stable.
 
 ## How to use
 
@@ -46,18 +46,18 @@ bash build-image.sh <image>
 
 These images are similar to the official ones, but with some opinionated configurations. Check out [debian/README.md](https://github.com/Dockershelf/dockershelf/blob/master/debian/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
 %%DEBIAN_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
 ### Latex
 
-These are debian unstable images that come with a set of latex (basic or full) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
+These are debian stable images that come with a set of latex (basic or full) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
 %%LATEX_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
@@ -66,8 +66,8 @@ These are debian unstable images that come with a set of latex (basic or full) p
 
 These are debian stable/unstable images with python versions installed from the [deadsnakes ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
 %%PYTHON_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
@@ -76,9 +76,17 @@ These are debian stable/unstable images with python versions installed from the 
 
 These are debian stable/unstable images with node versions built using the [nodesource installation script](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
 
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
 %%NODE_TABLE%%
+
+### Go
+
+These are debian stable/unstable images with go version downloaded directly from the [official website](https://go.dev/dl/). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%GO_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 

@@ -40,7 +40,7 @@ def update_python(basedir):
     docker_tag_holder = 'dockershelf/python:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/python'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-python%2F{0}--{1}%2FDockerfile-blue.svg'
+                               '-Dockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
@@ -61,10 +61,9 @@ def update_python(basedir):
         '\n            docker-image-extra-tags: "dockershelf/python:{1} '
         'dockershelf/python:{2}"')
     python_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                      '|`{2}`'
-                                      '|[![]({3})]({4})'
-                                      '|[![]({5})]({6})'
-                                      '|[![]({7})]({8})'
+                                      '|[![]({2})]({3})'
+                                      '|[![]({4})]({5})'
+                                      '|[![]({6})]({7})'
                                       '|')
 
     logger.info('Erasing current Python folders')
@@ -100,7 +99,7 @@ def update_python(basedir):
 
             python_readme_tablelist.append(
                 python_readme_tablelist_holder.format(
-                    docker_tag, docker_url, python_version, dockerfile_badge,
+                    docker_tag, docker_url, dockerfile_badge,
                     dockerfile_url, pulls_badge, pulls_url,
                     size_badge, size_url))
 

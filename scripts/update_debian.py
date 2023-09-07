@@ -38,7 +38,7 @@ def update_debian(basedir):
     docker_tag_holder = 'dockershelf/debian:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/debian'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-debian%2F{0}%2FDockerfile-blue.svg'
+                               '-Dockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
@@ -56,10 +56,9 @@ def update_debian(basedir):
         '\n            docker-image-extra-tags: "dockershelf/debian:{1}"'
         '\n            debian-suite: "{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                      '|`{2}`'
-                                      '|[![]({3})]({4})'
-                                      '|[![]({5})]({6})'
-                                      '|[![]({7})]({8})'
+                                      '|[![]({2})]({3})'
+                                      '|[![]({4})]({5})'
+                                      '|[![]({6})]({7})'
                                       '|')
 
     logger.info('Erasing current Debian folders')
@@ -84,7 +83,7 @@ def update_debian(basedir):
 
         debian_readme_tablelist.append(
             debian_readme_tablelist_holder.format(
-                docker_tag, docker_url, debian_version, dockerfile_badge,
+                docker_tag, docker_url, dockerfile_badge,
                 dockerfile_url, pulls_badge, pulls_url,
                 size_badge, size_url))
 

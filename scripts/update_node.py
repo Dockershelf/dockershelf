@@ -40,7 +40,7 @@ def update_node(basedir):
     docker_tag_holder = 'dockershelf/node:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/node'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-node%2F{0}--{1}%2FDockerfile-blue.svg'
+                               '-Dockerfile-blue.svg'
                                '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
@@ -61,10 +61,9 @@ def update_node(basedir):
         '\n            docker-image-extra-tags: "dockershelf/node:{1} '
         'dockershelf/node:{2}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                    '|`{2}`'
-                                    '|[![]({3})]({4})'
-                                    '|[![]({5})]({6})'
-                                    '|[![]({7})]({8})'
+                                    '|[![]({2})]({3})'
+                                    '|[![]({4})]({5})'
+                                    '|[![]({6})]({7})'
                                     '|')
 
     logger.info('Erasing current Node folders')
@@ -100,7 +99,7 @@ def update_node(basedir):
 
             node_readme_tablelist.append(
                 node_readme_tablelist_holder.format(
-                    docker_tag, docker_url, node_version, dockerfile_badge,
+                    docker_tag, docker_url, dockerfile_badge,
                     dockerfile_url, pulls_badge, pulls_url,
                     size_badge, size_url))
 

@@ -2,16 +2,16 @@
 
 ---
 
-[![](https://img.shields.io/github/release/Dockershelf/dockershelf.svg?cacheSeconds=900)](https://github.com/Dockershelf/dockershelf/releases) [![](https://img.shields.io/github/workflow/status/Dockershelf/dockershelf/Schedule%20(master%20branch)?cacheSeconds=900)](https://github.com/Dockershelf/dockershelf/actions/workflows/schedule-master.yml) [![](https://img.shields.io/docker/pulls/dockershelf/debian.svg?cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian) [![](https://img.shields.io/discord/809504357359157288?cacheSeconds=900)](https://discord.gg/4Wc7xphH5e) [![](https://cla-assistant.io/readme/badge/Dockershelf/dockershelf)](https://cla-assistant.io/Dockershelf/dockershelf)
+[![](https://img.shields.io/github/release/Dockershelf/dockershelf.svg)](https://github.com/Dockershelf/dockershelf/releases) [![](https://img.shields.io/github/actions/workflow/status/Dockershelf/dockershelf/schedule-master.yml?branch=master)](https://github.com/Dockershelf/dockershelf/actions/workflows/schedule-master.yml) [![](https://img.shields.io/docker/pulls/dockershelf/debian.svg)](https://hub.docker.com/r/dockershelf/debian) [![](https://img.shields.io/discord/809504357359157288.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4Wc7xphH5e) [![](https://cla-assistant.io/readme/badge/Dockershelf/dockershelf)](https://cla-assistant.io/Dockershelf/dockershelf)
 
 ## Debian shelf
 
-|Image  |Release  |Dockerfile  |Pulls   |Size  |
-|-------|---------|------------|--------|------|
-|[`dockershelf/debian:bullseye`](https://hub.docker.com/r/dockershelf/debian)|`bullseye`|[![](https://img.shields.io/badge/-debian%2Fbullseye%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/bullseye/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/bullseye.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
-|[`dockershelf/debian:bookworm`](https://hub.docker.com/r/dockershelf/debian)|`bookworm`|[![](https://img.shields.io/badge/-debian%2Fbookworm%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/bookworm/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/bookworm.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
-|[`dockershelf/debian:trixie`](https://hub.docker.com/r/dockershelf/debian)|`trixie`|[![](https://img.shields.io/badge/-debian%2Ftrixie%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/trixie.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
-|[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|`sid`|[![](https://img.shields.io/badge/-debian%2Fsid%2FDockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/sid.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+|[`dockershelf/debian:bullseye`](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/bullseye/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/bullseye.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
+|[`dockershelf/debian:bookworm`](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/bookworm/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/bookworm.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
+|[`dockershelf/debian:trixie`](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/trixie.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
+|[`dockershelf/debian:sid`](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/debian/sid/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/debian?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|[![](https://img.shields.io/docker/image-size/dockershelf/debian/sid.svg?colorA=22313f&colorB=4a637b&cacheSeconds=900)](https://hub.docker.com/r/dockershelf/debian)|
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
@@ -26,7 +26,7 @@ However, we explain the overall process here:
 2. Labelled according to [label-schema.org](http://label-schema.org) and [opencontainers specification](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
 3. The base filesystem is built with `debootstrap` using the following command.
 
-        debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg --no-check-certificate <release> <dir> <mirror>
+        debootstrap --verbose --variant minbase --arch amd64 --no-check-gpg --no-check-certificate --merged-usr <release> <dir>
 
 4. Then the following files are configured:
 
@@ -84,11 +84,14 @@ However, we explain the overall process here:
             # Don't download translations.
             Acquire::Languages "none";
 
-            # Prefer download of gzipped indexes.
-            Acquire::CompressionTypes::Order:: "gz";
+            # Prefer download of xzipped indexes.
+            Acquire::CompressionTypes::Order:: "xz";
 
             # Keep indexes gzipped.
             Acquire::GzipIndexes "true";
+
+            # Don't check for expired resources
+            Acquire::Check-Valid-Until "false";
 
             # Don't install Suggests or Recommends.
             Apt::Install-Suggests "false";
