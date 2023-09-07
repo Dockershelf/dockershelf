@@ -20,7 +20,7 @@
 set -exuo pipefail
 
 # Some default values.
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 NODEMIRROR="https://deb.nodesource.com/node_${NODE_VER_NUM}.x"
 
@@ -50,16 +50,24 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
+if [ "${NODE_VER_NUM}" == "12" ] || [ "${NODE_VER_NUM}" == "14" ]; then
+    NODE_DISTRO_NAME="sid"
+    NODE_REPO_KEY="1655A0AB68576280"
+else
+    NODE_DISTRO_NAME="nodistro"
+    NODE_REPO_KEY="2F59B5F99B1BE0B4"
+fi
+
 cmdretry dirmngr --debug-level guru
 
 cmdretry gpg --lock-never --no-default-keyring \
     --keyring /usr/share/keyrings/node.gpg \
     --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv-keys 1655A0AB68576280
+    --recv-keys ${NODE_REPO_KEY}
 
 {
-    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} sid main"
-} | tee /etc/apt/sources.list.d/node.list > /dev/null
+    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} ${NODE_DISTRO_NAME} main"
+} | tee /etc/apt/sources.list.d/node.list >/dev/null
 
 cmdretry apt-get update
 
@@ -68,13 +76,16 @@ cmdretry apt-get update
 # We will use the nodesource script to install node.
 
 msginfo "Installing Node ..."
-for PKG in ${NODE_PKGS}; do
-    PKG_VER="$( apt-cache madison ${PKG} | grep Packages | \
-        grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs )"
-    NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
-done
-
-cmdretry aptitude install ${NODE_PKGS_VER}
+# if [ "${NODE_VER_NUM}" == "12" ] || [ "${NODE_VER_NUM}" == "14" ]; then
+    for PKG in ${NODE_PKGS}; do
+        PKG_VER="$(apt-cache madison ${PKG} | grep Packages |
+            grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs)"
+        NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
+    done
+    cmdretry aptitude install ${NODE_PKGS_VER}
+# else
+#     cmdretry aptitude install ${NODE_PKGS}
+# fi
 
 if [ ! -f "/usr/bin/nodejs" ]; then
     ln -s /usr/bin/node /usr/bin/nodejs
@@ -86,7 +97,7 @@ fi
 # because some files might be confused with already installed python packages.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge $(aptitude search -F%p ~c ~g)
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
@@ -94,7 +105,7 @@ cmdretry apt-get autoremove
 # ------------------------------------------------------------------------------
 # To distinguish images.
 
-cat >> "/etc/bash.bashrc" << 'EOF'
+cat >>"/etc/bash.bashrc" <<'EOF'
 
 # Node colors
 COLOR_DARK_GREEN="\[\033[38;5;35m\]"
@@ -102,7 +113,7 @@ COLOR_LIGHT_GREEN="\[\033[38;5;77m\]"
 PS1="${COLOR_LIGHT_GREEN}[\u@${COLOR_DARK_GREEN}\h]${COLOR_OFF}:\w\$ "
 EOF
 
-cat >> "/etc/skel/.bashrc" << 'EOF'
+cat >>"/etc/skel/.bashrc" <<'EOF'
 
 # Node colors
 COLOR_DARK_GREEN="\[\033[38;5;35m\]"
@@ -118,5 +129,5 @@ msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
 rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
-        "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
-        "/var/lib/apt/lists/"*
+    "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
+    "/var/lib/apt/lists/"*

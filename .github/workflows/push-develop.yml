@@ -1,9 +1,7 @@
 name: Push (develop branch)
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,48 +11,56 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - docker-image-name: "dockershelf/debian:bullseye"
-            docker-image-extra-tags: "dockershelf/debian:oldstable"
-            debian-suite: "oldstable"
-          - docker-image-name: "dockershelf/debian:bookworm"
-            docker-image-extra-tags: "dockershelf/debian:stable"
-            debian-suite: "stable"
-          - docker-image-name: "dockershelf/debian:trixie"
-            docker-image-extra-tags: "dockershelf/debian:testing"
-            debian-suite: "testing"
-          - docker-image-name: "dockershelf/debian:sid"
-            docker-image-extra-tags: "dockershelf/debian:unstable"
-            debian-suite: "unstable"
+          # - docker-image-name: "dockershelf/debian:bullseye"
+          #   docker-image-extra-tags: "dockershelf/debian:oldstable"
+          #   debian-suite: "oldstable"
+          # - docker-image-name: "dockershelf/debian:bookworm"
+          #   docker-image-extra-tags: "dockershelf/debian:stable"
+          #   debian-suite: "stable"
+          # - docker-image-name: "dockershelf/debian:trixie"
+          #   docker-image-extra-tags: "dockershelf/debian:testing"
+          #   debian-suite: "testing"
+          # - docker-image-name: "dockershelf/debian:sid"
+          #   docker-image-extra-tags: "dockershelf/debian:unstable"
+          #   debian-suite: "unstable"
           - docker-image-name: "dockershelf/latex:basic"
           - docker-image-name: "dockershelf/latex:full"
-          - docker-image-name: "dockershelf/python:3.7-bookworm"
-            docker-image-extra-tags: "dockershelf/python:3.7-stable"
-          - docker-image-name: "dockershelf/python:3.7-sid"
-            docker-image-extra-tags: "dockershelf/python:3.7-unstable dockershelf/python:3.7"
-          - docker-image-name: "dockershelf/python:3.10-bookworm"
-            docker-image-extra-tags: "dockershelf/python:3.10-stable"
-          - docker-image-name: "dockershelf/python:3.10-sid"
-            docker-image-extra-tags: "dockershelf/python:3.10-unstable dockershelf/python:3.10"
-          - docker-image-name: "dockershelf/python:3.11-bookworm"
-            docker-image-extra-tags: "dockershelf/python:3.11-stable"
-          - docker-image-name: "dockershelf/python:3.11-sid"
-            docker-image-extra-tags: "dockershelf/python:3.11-unstable dockershelf/python:3.11"
-          - docker-image-name: "dockershelf/node:12-bookworm"
-            docker-image-extra-tags: "dockershelf/node:12-stable"
-          - docker-image-name: "dockershelf/node:12-sid"
-            docker-image-extra-tags: "dockershelf/node:12-unstable dockershelf/node:12"
-          - docker-image-name: "dockershelf/node:14-bookworm"
-            docker-image-extra-tags: "dockershelf/node:14-stable"
-          - docker-image-name: "dockershelf/node:14-sid"
-            docker-image-extra-tags: "dockershelf/node:14-unstable dockershelf/node:14"
-          - docker-image-name: "dockershelf/node:16-bookworm"
-            docker-image-extra-tags: "dockershelf/node:16-stable"
-          - docker-image-name: "dockershelf/node:16-sid"
-            docker-image-extra-tags: "dockershelf/node:16-unstable dockershelf/node:16"
-          - docker-image-name: "dockershelf/node:18-bookworm"
-            docker-image-extra-tags: "dockershelf/node:18-stable"
-          - docker-image-name: "dockershelf/node:18-sid"
-            docker-image-extra-tags: "dockershelf/node:18-unstable dockershelf/node:18"
+          # - docker-image-name: "dockershelf/python:3.7-bookworm"
+          #   docker-image-extra-tags: "dockershelf/python:3.7-stable"
+          # - docker-image-name: "dockershelf/python:3.7-sid"
+          #   docker-image-extra-tags: "dockershelf/python:3.7-unstable dockershelf/python:3.7"
+          # - docker-image-name: "dockershelf/python:3.10-bookworm"
+          #   docker-image-extra-tags: "dockershelf/python:3.10-stable"
+          # - docker-image-name: "dockershelf/python:3.10-sid"
+          #   docker-image-extra-tags: "dockershelf/python:3.10-unstable dockershelf/python:3.10"
+          # - docker-image-name: "dockershelf/python:3.11-bookworm"
+          #   docker-image-extra-tags: "dockershelf/python:3.11-stable"
+          # - docker-image-name: "dockershelf/python:3.11-sid"
+          #   docker-image-extra-tags: "dockershelf/python:3.11-unstable dockershelf/python:3.11"
+          # - docker-image-name: "dockershelf/python:3.12-bookworm"
+          #   docker-image-extra-tags: "dockershelf/python:3.12-stable"
+          # - docker-image-name: "dockershelf/python:3.12-sid"
+          #   docker-image-extra-tags: "dockershelf/python:3.12-unstable dockershelf/python:3.12"
+          # - docker-image-name: "dockershelf/node:12-bookworm"
+          #   docker-image-extra-tags: "dockershelf/node:12-stable"
+          # - docker-image-name: "dockershelf/node:12-sid"
+          #   docker-image-extra-tags: "dockershelf/node:12-unstable dockershelf/node:12"
+          # - docker-image-name: "dockershelf/node:14-bookworm"
+          #   docker-image-extra-tags: "dockershelf/node:14-stable"
+          # - docker-image-name: "dockershelf/node:14-sid"
+          #   docker-image-extra-tags: "dockershelf/node:14-unstable dockershelf/node:14"
+          # - docker-image-name: "dockershelf/node:16-bookworm"
+          #   docker-image-extra-tags: "dockershelf/node:16-stable"
+          # - docker-image-name: "dockershelf/node:16-sid"
+          #   docker-image-extra-tags: "dockershelf/node:16-unstable dockershelf/node:16"
+          # - docker-image-name: "dockershelf/node:18-bookworm"
+          #   docker-image-extra-tags: "dockershelf/node:18-stable"
+          # - docker-image-name: "dockershelf/node:18-sid"
+          #   docker-image-extra-tags: "dockershelf/node:18-unstable dockershelf/node:18"
+          # - docker-image-name: "dockershelf/node:20-bookworm"
+          #   docker-image-extra-tags: "dockershelf/node:20-stable"
+          # - docker-image-name: "dockershelf/node:20-sid"
+          #   docker-image-extra-tags: "dockershelf/node:20-unstable dockershelf/node:20"
 
     steps:
       - name: Checkout repo
@@ -62,13 +68,21 @@ jobs:
         with:
           ref: develop
           fetch-depth: 0
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+
       - name: Installing dependencies
-        run: |
-          sudo gem install docker-api serverspec
+        run: bundle install
+
       - name: Building docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
@@ -77,12 +91,14 @@ jobs:
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
           bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "develop"
+
       - name: Testing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
         run: |
           bash test-image.sh "${DOCKER_IMAGE_NAME}" "develop"
+          
       - name: Pushing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}

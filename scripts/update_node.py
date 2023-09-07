@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,9 +33,6 @@ def update_node(basedir):
     node_dockerfile_template = os.path.join(nodedir, 'Dockerfile.template')
     node_readme_template = os.path.join(nodedir, 'README.md.template')
     node_readme = os.path.join(nodedir, 'README.md')
-    node_hooks_dir = os.path.join(nodedir, 'hooks')
-    node_build_hook = os.path.join(node_hooks_dir, 'build')
-    node_push_hook = os.path.join(node_hooks_dir, 'push')
 
     debian_versions_eq = {v: k for k, v in debian_versions}
 
@@ -125,20 +122,6 @@ def update_node(basedir):
 
             with open(node_dockerfile, 'w') as pd:
                 pd.write(node_dockerfile_content)
-
-    os.makedirs(node_hooks_dir)
-
-    logger.info('Writing dummy hooks')
-    with open(node_build_hook, 'w') as nbh:
-        nbh.write('#!/usr/bin/env bash\n')
-        nbh.write('echo "This is a dummy build script that just allows to '
-                  'automatically fill the long description with the Readme '
-                  'from GitHub."\n')
-        nbh.write('echo "No real building is done here."')
-
-    with open(node_push_hook, 'w') as nph:
-        nph.write('#!/usr/bin/env bash\n')
-        nph.write('echo "We arent really pushing."')
 
     logger.info('Writing Node Readme')
     with open(node_readme_template, 'r') as prt:

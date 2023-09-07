@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-echo "This is a dummy build script that just allows to automatically fill the long description with the Readme from GitHub."
-echo "No real building is done here."

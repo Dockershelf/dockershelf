@@ -22,10 +22,11 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.vendor="Luis Alejandro Martínez Faneyth" \
       org.opencontainers.image.version=${VERSION} \
       org.opencontainers.image.licenses="GPL-3.0" \
-      maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
+      maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
 ENV PYTHON_VER_NUM="3.7" PYTHON_DEBIAN_SUITE="bookworm" \
-    PYTHONIOENCODING="UTF-8" PYTHONPATH="/usr/lib/python3.7/dist-packages:/usr/lib/python3.7/site-packages"
+    PYTHONIOENCODING="UTF-8" PIP_BREAK_SYSTEM_PACKAGES=1 \
+    PYTHONPATH="/usr/lib/python3.7/dist-packages:/usr/lib/python3.7/site-packages"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/python/
 RUN bash /usr/share/dockershelf/python/build-image.sh

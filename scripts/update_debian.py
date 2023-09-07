@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,9 +33,6 @@ def update_debian(basedir):
     debian_dockerfile_template = os.path.join(debiandir, 'Dockerfile.template')
     debian_readme_template = os.path.join(debiandir, 'README.md.template')
     debian_readme = os.path.join(debiandir, 'README.md')
-    debian_hooks_dir = os.path.join(debiandir, 'hooks')
-    debian_build_hook = os.path.join(debian_hooks_dir, 'build')
-    debian_push_hook = os.path.join(debian_hooks_dir, 'push')
 
     base_image = 'scratch'
     docker_tag_holder = 'dockershelf/debian:{0}'
@@ -109,20 +106,6 @@ def update_debian(basedir):
 
         with open(debian_dockerfile, 'w') as dd:
             dd.write(debian_dockerfile_content)
-
-    logger.info('Writing dummy hooks')
-    os.makedirs(debian_hooks_dir)
-
-    with open(debian_build_hook, 'w') as pbh:
-        pbh.write('#!/usr/bin/env bash\n')
-        pbh.write('echo "This is a dummy build script that just allows to '
-                  'automatically fill the long description with the Readme '
-                  'from GitHub."\n')
-        pbh.write('echo "No real building is done here."')
-
-    with open(debian_push_hook, 'w') as pph:
-        pph.write('#!/usr/bin/env bash\n')
-        pph.write('echo "We arent really pushing."')
 
     logger.info('Writing Debian Readme')
     with open(debian_readme_template, 'r') as drt:

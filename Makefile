@@ -27,10 +27,18 @@ console: start
 update-shelves: start
 	@$(exec_on_docker) python3 update.py
 
+dependencies: start
+	@$(exec_on_docker) bundle config set --local path 'vendor/bundle'
+	@$(exec_on_docker) bundle lock --add-platform x86_64-linux
+	@$(exec_on_docker) bundle lock --add-platform aarch64-linux
+	@$(exec_on_docker) bundle install
+
 virtualenv: start
-	@python3 -m venv --clear --copies ./virtualenv
-	@./virtualenv/bin/pip install -U wheel setuptools
-	@./virtualenv/bin/pip install -r requirements.txt -r requirements-dev.txt
+	@python3 -m venv --clear ./virtualenv
+	@./virtualenv/bin/python3 -m pip install --upgrade pip
+	@./virtualenv/bin/python3 -m pip install --upgrade setuptools
+	@./virtualenv/bin/python3 -m pip install --upgrade wheel
+	@./virtualenv/bin/python3 -m pip install -r requirements.txt -r requirements-dev.txt
 
 stop:
 	@docker compose -p dockershelf -f docker-compose.yml stop app
