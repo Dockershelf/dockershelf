@@ -8,6 +8,6 @@ pip==23.2.1
 pydocstyle==6.3.0
 setuptools==68.1.2
 tox==4.11.1
-virtualenv==20.24.3
+virtualenv==20.24.4
 wheel==0.41.2
 autopep8==2.0.4
