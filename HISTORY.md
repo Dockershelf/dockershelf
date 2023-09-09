@@ -1,167 +1,56 @@
 # Changelog
 
 
-## 3.2.0 (2023-07-31)
+## 3.3.0 (2023-09-09)
+
+### Changed
+
+* Adding trigger to master branch. [Luis Alejandro Martínez Faneyth]
+
+* Improving github actions workflows. Improving documentation. [Luis Alejandro Martínez Faneyth]
+
+* Finishing go build script. [Luis Alejandro Martínez Faneyth]
+
+* Improving documentation. [Luis Alejandro Martínez Faneyth]
+
+* Adding golang images. [Luis Alejandro Martínez Faneyth]
+
+* Adding support to Python 3.12 and Node 20. Improving documentation. Improving unit tests. Latex images are now based on Debian Bookworm and not Debian Sid. Removing unnecesary Docker Hub hooks. [Luis Alejandro Martínez Faneyth]
+
 
 ### Other
 
-* `[REF]` Fixing tests. [Luis Alejandro Martínez Faneyth]
 
-* `[REF]` Fixing tests. [Luis Alejandro Martínez Faneyth]
+## 3.2.0 (2023-07-31)
 
-* `[REF]` Adding support for Debian Trixie. Adding support for arm64 architecture. [Luis Alejandro Martínez Faneyth]
+### Changed
 
-* Bump pip from 23.2 to 23.2.1. [dependabot[bot]]
+* Fixing tests. [Luis Alejandro Martínez Faneyth]
 
-* Bump virtualenv from 20.24.0 to 20.24.2. [dependabot[bot]]
+* Fixing tests. [Luis Alejandro Martínez Faneyth]
 
-* Bump wheel from 0.40.0 to 0.41.0. [dependabot[bot]]
+* Adding support for Debian Trixie. Adding support for arm64 architecture. [Luis Alejandro Martínez Faneyth]
 
-* Bump pip from 23.1.2 to 23.2. [dependabot[bot]]
 
-* Bump virtualenv from 20.23.1 to 20.24.0. [dependabot[bot]]
-
-* Bump tox from 4.6.3 to 4.6.4. [dependabot[bot]]
-
-* Bump lxml from 4.9.2 to 4.9.3. [dependabot[bot]]
-
-* Bump tox from 4.6.0 to 4.6.3. [dependabot[bot]]
-
-* Bump setuptools from 67.8.0 to 68.0.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.23.0 to 20.23.1. [dependabot[bot]]
-
-* Bump tox from 4.5.2 to 4.6.0. [dependabot[bot]]
-
-* Bump tox from 4.5.1 to 4.5.2. [dependabot[bot]]
-
-* Bump setuptools from 67.7.2 to 67.8.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.22.0 to 20.23.0. [dependabot[bot]]
-
-* Bump setuptools from 67.6.1 to 67.7.2. [dependabot[bot]]
-
-* Bump pip from 23.1 to 23.1.2. [dependabot[bot]]
-
-* Bump tox from 4.4.12 to 4.5.1. [dependabot[bot]]
-
-* Bump tox from 4.4.11 to 4.4.12. [dependabot[bot]]
-
-* Bump pip from 23.0.1 to 23.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.21.0 to 20.22.0. [dependabot[bot]]
-
-* Bump packaging from 23.0 to 23.1. [dependabot[bot]]
-
-* Bump tox from 4.4.8 to 4.4.11. [dependabot[bot]]
-
-* Bump tox from 4.4.7 to 4.4.8. [dependabot[bot]]
-
-* Bump setuptools from 67.6.0 to 67.6.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.20.0 to 20.21.0. [dependabot[bot]]
-
-* Bump tox from 4.4.6 to 4.4.7. [dependabot[bot]]
-
-* Bump wheel from 0.38.4 to 0.40.0. [dependabot[bot]]
-
-* Bump hmarr/auto-approve-action from 3.1.0 to 3.2.1. [dependabot[bot]]
-
-* Bump setuptools from 67.4.0 to 67.6.0. [dependabot[bot]]
-
-* Bump autopep8 from 2.0.1 to 2.0.2. [dependabot[bot]]
-
-* Bump virtualenv from 20.19.0 to 20.20.0. [dependabot[bot]]
-
-* Bump setuptools from 67.3.2 to 67.4.0. [dependabot[bot]]
-
-* Bump pip from 23.0 to 23.0.1. [dependabot[bot]]
-
-* Bump tox from 4.4.5 to 4.4.6. [dependabot[bot]]
-
-* Bump setuptools from 67.2.0 to 67.3.2. [dependabot[bot]]
-
-* Bump tox from 4.4.4 to 4.4.5. [dependabot[bot]]
-
-* Bump setuptools from 67.1.0 to 67.2.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.17.1 to 20.19.0. [dependabot[bot]]
-
-* Bump setuptools from 66.1.1 to 67.1.0. [dependabot[bot]]
-
-* Bump pip from 22.3.1 to 23.0. [dependabot[bot]]
-
-* Bump tox from 4.4.2 to 4.4.4. [dependabot[bot]]
-
-* Bump setuptools from 66.0.0 to 66.1.1. [dependabot[bot]]
-
-* Bump tox from 4.3.5 to 4.4.2. [dependabot[bot]]
-
-* Bump setuptools from 65.7.0 to 66.0.0. [dependabot[bot]]
-
-* Bump pydocstyle from 6.2.3 to 6.3.0. [dependabot[bot]]
-
-* Bump tox from 4.2.7 to 4.3.5. [dependabot[bot]]
-
-* Bump setuptools from 65.6.3 to 65.7.0. [dependabot[bot]]
-
-* Bump tox from 4.2.3 to 4.2.7. [dependabot[bot]]
-
-* Bump packaging from 22.0 to 23.0. [dependabot[bot]]
-
-* Bump pydocstyle from 6.2.2 to 6.2.3. [dependabot[bot]]
-
-* Bump tox from 4.1.3 to 4.2.3. [dependabot[bot]]
-
-* Bump pydocstyle from 6.2.0 to 6.2.2. [dependabot[bot]]
+### Other
 
 
 ## 3.1.0 (2023-01-07)
 
 ### Changed
 
+* Removing support for python 3.9. [Luis Alejandro Martínez Faneyth]
+
+* Removing support for python 3.5 and adding support to python 3.12. [Luis Alejandro Martínez Faneyth]
+
+* Downgrading coverage because coveralls doesnt support version 7 yet. [Luis Alejandro Martínez Faneyth]
+
+* Downgrading coverage because coveralls doesnt support version 7 yet. [Luis Alejandro Martínez Faneyth]
+
 * Improving documentation. [Luis Alejandro Martínez Faneyth]
 
 
 ### Other
-
-* `[REF]` Removing support for python 3.9. [Luis Alejandro Martínez Faneyth]
-
-* Bump tox from 4.0.16 to 4.1.3. [dependabot[bot]]
-
-* Bump pydocstyle from 6.1.1 to 6.2.0. [dependabot[bot]]
-
-* `[REF]` Removing support for python 3.5 and adding support to python 3.12. [Luis Alejandro Martínez Faneyth]
-
-* `[REF]` Downgrading coverage because coveralls doesnt support version 7 yet. [Luis Alejandro Martínez Faneyth]
-
-* Bump lxml from 4.9.1 to 4.9.2. [dependabot[bot]]
-
-* Bump coverage from 6.5.0 to 7.0.0. [dependabot[bot]]
-
-* Bump tox from 4.0.10 to 4.0.16. [dependabot[bot]]
-
-* Bump autopep8 from 2.0.0 to 2.0.1. [dependabot[bot]]
-
-* Bump tox from 4.0.1 to 4.0.10. [dependabot[bot]]
-
-* Bump tox from 3.27.1 to 4.0.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.17.0 to 20.17.1. [dependabot[bot]]
-
-* Bump packaging from 21.3 to 22.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.16.7 to 20.17.0. [dependabot[bot]]
-
-* Bump setuptools from 65.6.2 to 65.6.3. [dependabot[bot]]
-
-* Bump autopep8 from 1.6.0 to 2.0.0. [dependabot[bot]]
-
-* Bump flake8 from 5.0.4 to 6.0.0. [dependabot[bot]]
-
-* Bump setuptools from 65.6.0 to 65.6.2. [dependabot[bot]]
-
-* `[REF]` Downgrading coverage because coveralls doesnt support version 7 yet. [Luis Alejandro Martínez Faneyth]
 
 
 ## 3.0.1 (2022-11-21)
@@ -189,60 +78,6 @@
 
 
 ### Other
-
-* Bump coverage from 6.4.1 to 6.5.0. [dependabot[bot]]
-
-* Bump setuptools from 62.6.0 to 65.6.0. [dependabot[bot]]
-
-* Bump wheel from 0.37.1 to 0.38.4. [dependabot[bot]]
-
-* Bump tox from 3.25.1 to 3.27.1. [dependabot[bot]]
-
-* Bump mako from 1.2.0 to 1.2.4. [dependabot[bot]]
-
-* Bump virtualenv from 20.15.1 to 20.16.7. [dependabot[bot]]
-
-* Bump cssselect from 1.1.0 to 1.2.0. [dependabot[bot]]
-
-* Bump pip from 22.1.2 to 22.3.1. [dependabot[bot]]
-
-* Bump flake8 from 4.0.1 to 5.0.4. [dependabot[bot]]
-
-* Bump hmarr/auto-approve-action from 2.2.1 to 3.1.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.15.1 to 20.16.3. [dependabot[bot]]
-
-* Bump lxml from 4.9.0 to 4.9.1. [dependabot[bot]]
-
-* Bump tox from 3.25.0 to 3.25.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.14.1 to 20.15.1. [dependabot[bot]]
-
-* Bump setuptools from 62.4.0 to 62.6.0. [dependabot[bot]]
-
-* Bump setuptools from 62.3.3 to 62.4.0. [dependabot[bot]]
-
-* Bump coverage from 6.4 to 6.4.1. [dependabot[bot]]
-
-* Bump setuptools from 62.3.2 to 62.3.3. [dependabot[bot]]
-
-* Bump actions/setup-python from 3 to 4. [dependabot[bot]]
-
-* Bump pip from 22.1.1 to 22.1.2. [dependabot[bot]]
-
-* Bump lxml from 4.8.0 to 4.9.0. [dependabot[bot]]
-
-* Bump coverage from 6.3.3 to 6.4. [dependabot[bot]]
-
-* Bump pip from 22.1 to 22.1.1. [dependabot[bot]]
-
-* Bump coverage from 6.3.2 to 6.3.3. [dependabot[bot]]
-
-* Bump setuptools from 62.2.0 to 62.3.2. [dependabot[bot]]
-
-* Bump pip from 22.0.4 to 22.1. [dependabot[bot]]
-
-* Bump setuptools from 62.1.0 to 62.2.0. [dependabot[bot]]
 
 
 ## 2.8.0 (2022-04-28)
@@ -281,38 +116,6 @@
 
 ### Other
 
-* Bump virtualenv from 20.14.0 to 20.14.1. [dependabot[bot]]
-
-* Bump tox from 3.24.5 to 3.25.0. [dependabot[bot]]
-
-* Bump hmarr/auto-approve-action from 2.1.0 to 2.2.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.13.4 to 20.14.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.13.3 to 20.13.4. [dependabot[bot]]
-
-* Bump mako from 1.1.6 to 1.2.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.13.2 to 20.13.3. [dependabot[bot]]
-
-* Bump actions/checkout from 2 to 3. [dependabot[bot]]
-
-* Bump virtualenv from 20.13.1 to 20.13.2. [dependabot[bot]]
-
-* Bump actions/setup-python from 2 to 3. [dependabot[bot]]
-
-* Bump coverage from 6.3.1 to 6.3.2. [dependabot[bot]]
-
-* Bump lxml from 4.7.1 to 4.8.0. [dependabot[bot]]
-
-* Bump actions/github-script from 5 to 6. [dependabot[bot]]
-
-* Bump virtualenv from 20.13.0 to 20.13.1. [dependabot[bot]]
-
-* Bump coverage from 6.3 to 6.3.1. [dependabot[bot]]
-
-* Bump coverage from 6.2 to 6.3. [dependabot[bot]]
-
 
 ## 2.7.0 (2022-01-24)
 
@@ -322,10 +125,6 @@
 
 
 ### Other
-
-* Bump mako from 1.1.5 to 1.1.6. [dependabot[bot]]
-
-* Bump packaging from 21.2 to 21.3. [dependabot[bot]]
 
 
 ## 2.6.2 (2021-11-14)
@@ -346,20 +145,6 @@
 
 ### Other
 
-* Bump flake8 from 3.9.2 to 4.0.1. [dependabot[bot]]
-
-* Bump coverage from 5.5 to 6.1.2. [dependabot[bot]]
-
-* Bump virtualenv from 20.8.1 to 20.10.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.8.0 to 20.8.1. [dependabot[bot]]
-
-* Bump actions/github-script from 4.1 to 5. [dependabot[bot]]
-
-* Bump virtualenv from 20.7.2 to 20.8.0. [dependabot[bot]]
-
-* Bump tox from 3.24.3 to 3.24.4. [dependabot[bot]]
-
 
 ## 2.6.1 (2021-09-13)
 
@@ -371,10 +156,6 @@
 
 
 ### Other
-
-* Bump wheel from 0.36.2 to 0.37.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.7.0 to 20.7.2. [dependabot[bot]]
 
 
 ## 2.6.0 (2021-08-04)
@@ -408,50 +189,6 @@
 
 
 ### Other
-
-* Bump virtualenv from 20.6.0 to 20.7.0. [dependabot[bot]]
-
-* Bump tox from 3.23.1 to 3.24.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.4.7 to 20.6.0. [dependabot[bot]]
-
-* Bump coveralls from 3.1.0 to 3.2.0. [dependabot[bot]]
-
-* Bump packaging from 20.9 to 21.0. [dependabot[bot]]
-
-* Bump coveralls from 3.0.1 to 3.1.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.4.6 to 20.4.7. [dependabot[bot]]
-
-* Bump virtualenv from 20.4.4 to 20.4.6. [dependabot[bot]]
-
-* Bump flake8 from 3.9.1 to 3.9.2. [dependabot[bot]]
-
-* Bump tox from 3.23.0 to 3.23.1. [dependabot[bot]]
-
-* Bump virtualenv from 20.4.3 to 20.4.4. [dependabot[bot]]
-
-* Bump actions/github-script from v3 to v4.0.2. [dependabot[bot]]
-
-* Bump flake8 from 3.9.0 to 3.9.1. [dependabot[bot]]
-
-* Bump lxml from 4.6.2 to 4.6.3. [dependabot[bot]]
-
-* Bump coveralls from 3.0.0 to 3.0.1. [dependabot[bot]]
-
-* Bump hmarr/auto-approve-action from v2.0.0 to v2.1.0. [dependabot[bot]]
-
-* Bump virtualenv from 20.4.2 to 20.4.3. [dependabot[bot]]
-
-* Bump pydocstyle from 5.1.1 to 6.0.0. [dependabot[bot]]
-
-* Bump tox from 3.21.4 to 3.23.0. [dependabot[bot]]
-
-* Bump flake8 from 3.8.4 to 3.9.0. [dependabot[bot]]
-
-* Bump coverage from 5.4 to 5.5. [dependabot[bot]]
-
-* Bump setuptools from 50.3.2 to 54.1.2. [dependabot[bot]]
 
 
 ## 2.5.5 (2021-02-14)
