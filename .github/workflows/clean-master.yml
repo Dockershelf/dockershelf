@@ -1,0 +1,121 @@
+name: Clean unused tags (master branch)
+
+on:
+  schedule:
+    - cron: 00 8 * * 4
+
+jobs:
+  tags-cleanup:
+    name: Cleanup build tags
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - docker-image-name: "dockershelf/debian:bullseye"
+            docker-image-extra-tags: "dockershelf/debian:oldstable"
+            debian-suite: "oldstable"
+          - docker-image-name: "dockershelf/debian:bookworm"
+            docker-image-extra-tags: "dockershelf/debian:stable"
+            debian-suite: "stable"
+          - docker-image-name: "dockershelf/debian:trixie"
+            docker-image-extra-tags: "dockershelf/debian:testing"
+            debian-suite: "testing"
+          - docker-image-name: "dockershelf/debian:sid"
+            docker-image-extra-tags: "dockershelf/debian:unstable dockershelf/debian:latest"
+            debian-suite: "unstable"
+          - docker-image-name: "dockershelf/latex:basic"
+            docker-image-extra-tags: "dockershelf/latex:latest"
+          - docker-image-name: "dockershelf/latex:full"
+          - docker-image-name: "dockershelf/python:3.7-bookworm"
+            docker-image-extra-tags: "dockershelf/python:3.7-stable"
+          - docker-image-name: "dockershelf/python:3.7-sid"
+            docker-image-extra-tags: "dockershelf/python:3.7-unstable dockershelf/python:3.7"
+          - docker-image-name: "dockershelf/python:3.10-bookworm"
+            docker-image-extra-tags: "dockershelf/python:3.10-stable"
+          - docker-image-name: "dockershelf/python:3.10-sid"
+            docker-image-extra-tags: "dockershelf/python:3.10-unstable dockershelf/python:3.10"
+          - docker-image-name: "dockershelf/python:3.11-bookworm"
+            docker-image-extra-tags: "dockershelf/python:3.11-stable"
+          - docker-image-name: "dockershelf/python:3.11-sid"
+            docker-image-extra-tags: "dockershelf/python:3.11-unstable dockershelf/python:3.11"
+          - docker-image-name: "dockershelf/python:3.12-bookworm"
+            docker-image-extra-tags: "dockershelf/python:3.12-stable dockershelf/python:3-stable dockershelf/python:3-bookworm dockershelf/python:latest-stable dockershelf/python:latest-bookworm"
+          - docker-image-name: "dockershelf/python:3.12-sid"
+            docker-image-extra-tags: "dockershelf/python:3.12-unstable dockershelf/python:3.12 dockershelf/python:3-unstable dockershelf/python:3-sid dockershelf/python:3 dockershelf/python:latest-unstable dockershelf/python:latest-sid dockershelf/python:latest"
+          - docker-image-name: "dockershelf/node:12-bookworm"
+            docker-image-extra-tags: "dockershelf/node:12-stable"
+          - docker-image-name: "dockershelf/node:12-sid"
+            docker-image-extra-tags: "dockershelf/node:12-unstable dockershelf/node:12"
+          - docker-image-name: "dockershelf/node:14-bookworm"
+            docker-image-extra-tags: "dockershelf/node:14-stable"
+          - docker-image-name: "dockershelf/node:14-sid"
+            docker-image-extra-tags: "dockershelf/node:14-unstable dockershelf/node:14"
+          - docker-image-name: "dockershelf/node:16-bookworm"
+            docker-image-extra-tags: "dockershelf/node:16-stable"
+          - docker-image-name: "dockershelf/node:16-sid"
+            docker-image-extra-tags: "dockershelf/node:16-unstable dockershelf/node:16"
+          - docker-image-name: "dockershelf/node:18-bookworm"
+            docker-image-extra-tags: "dockershelf/node:18-stable"
+          - docker-image-name: "dockershelf/node:18-sid"
+            docker-image-extra-tags: "dockershelf/node:18-unstable dockershelf/node:18"
+          - docker-image-name: "dockershelf/node:20-bookworm"
+            docker-image-extra-tags: "dockershelf/node:20-stable dockershelf/node:latest-stable dockershelf/node:latest-bookworm"
+          - docker-image-name: "dockershelf/node:20-sid"
+            docker-image-extra-tags: "dockershelf/node:20-unstable dockershelf/node:20 dockershelf/node:latest-unstable dockershelf/node:latest-sid dockershelf/node:latest"
+          - docker-image-name: "dockershelf/go:1.18-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.18-stable"
+          - docker-image-name: "dockershelf/go:1.18-sid"
+            docker-image-extra-tags: "dockershelf/go:1.18-unstable dockershelf/go:1.18"
+          - docker-image-name: "dockershelf/go:1.19-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.19-stable"
+          - docker-image-name: "dockershelf/go:1.19-sid"
+            docker-image-extra-tags: "dockershelf/go:1.19-unstable dockershelf/go:1.19"
+          - docker-image-name: "dockershelf/go:1.20-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.20-stable"
+          - docker-image-name: "dockershelf/go:1.20-sid"
+            docker-image-extra-tags: "dockershelf/go:1.20-unstable dockershelf/go:1.20"
+          - docker-image-name: "dockershelf/go:1.21-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.21-stable dockershelf/go:latest-stable dockershelf/go:latest-bookworm"
+          - docker-image-name: "dockershelf/go:1.21-sid"
+            docker-image-extra-tags: "dockershelf/go:1.21-unstable dockershelf/go:1.21 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
+
+    steps:
+      - name: Install Docker hub-tool
+        run: |
+          curl -sL https://github.com/docker/hub-tool/releases/download/v0.4.5/hub-tool-linux-amd64.tar.gz -o hub-tool-linux.tar.gz
+          tar --strip-components=1 -xzf ./hub-tool-linux.tar.gz
+          ./hub-tool --version
+      - name: Login hub-tool
+        env:
+          DH_USERNAME: ${{ secrets.DH_USERNAME }}
+          DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"$DH_USERNAME\", \"password\": \"$DH_PASSWORD\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          USERNAME="$(printf '%s:' "$DH_USERNAME" | base64 -w0)"
+          USER_PASS="$(printf '%s:%s' "$DH_USERNAME" "$DH_PASSWORD" | base64 -w0)"
+          mkdir -p ~/.docker/
+          printf '{"auths": {"hub-tool": {"auth": "%s"}, "hub-tool-refresh-token": {"auth": "%s"}, "hub-tool-token": { "auth": "%s", "identitytoken": "%s"}}}' \
+            "$USER_PASS" "$USERNAME" \
+            "$USERNAME" "$HUB_TOKEN" \
+            > ~/.docker/config.json
+      - name: Remove PR container image via hub-tool
+        env:
+          DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
+          DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
+        run: |
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-amd64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-arm64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-test-amd64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-test-arm64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-test || true
+
+          for EXTRA_TAG in ${DOCKER_IMAGE_EXTRA_TAGS}; do
+            ./hub-tool tag rm --verbose --force docker.io/${EXTRA_TAG}-amd64 || true
+            ./hub-tool tag rm --verbose --force docker.io/${EXTRA_TAG}-arm64 || true
+          done
+
+          ./hub-tool tag ls --verbose docker.io/${DOCKER_IMAGE_NAME}
+      - name: Logout hub-tool
+        if: always()
+        run: rm ~/.docker/config.json

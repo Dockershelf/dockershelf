@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 set -exuo pipefail
 
 # Some initial configuration
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Load helper functions
 source "${BASEDIR}/library.sh"
 
@@ -87,7 +87,6 @@ if [ -n "${DOCKER_IMAGE_EXTRA_TAGS}" ]; then
             --amend ${DOCKER_EXTRA_TAG_IMAGE_NAME}-amd64
         docker manifest inspect ${DOCKER_EXTRA_TAG_IMAGE_NAME}
         docker manifest push --purge ${DOCKER_EXTRA_TAG_IMAGE_NAME}
-
 
     done
 fi

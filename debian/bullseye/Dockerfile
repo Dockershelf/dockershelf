@@ -37,7 +37,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.vendor="Luis Alejandro Martínez Faneyth" \
       org.opencontainers.image.version=${VERSION} \
       org.opencontainers.image.licenses="GPL-3.0" \
-      maintainer="Luis Alejandro Martínez Faneyth <luis@collagelabs.org>"
+      maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="bullseye" \

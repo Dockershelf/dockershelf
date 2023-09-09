@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,15 +20,14 @@
 set -exuo pipefail
 
 # Some default values.
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-PYTHON_VER_NUM_MINOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1"."$2}')"
-PYTHON_VER_NUM_MAJOR="$( echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
+PYTHON_VER_NUM_MINOR="$(echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1"."$2}')"
+PYTHON_VER_NUM_MAJOR="$(echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
 PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
 PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
 DEBMIRROR="http://deb.debian.org/debian"
-SECMIRROR="http://deb.debian.org/debian-security"
 DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
 
 # This is the list of python packages from debian that make up a minimal
@@ -75,16 +74,16 @@ cmdretry gpg --lock-never --no-default-keyring \
 
 {
     echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} focal main"
-} | tee /etc/apt/sources.list.d/python.list > /dev/null
+} | tee /etc/apt/sources.list.d/python.list >/dev/null
 
 {
     echo "deb ${DEBMIRROR} bullseye main"
-} | tee /etc/apt/sources.list.d/bullseye.list > /dev/null
+} | tee /etc/apt/sources.list.d/bullseye.list >/dev/null
 
 # Python: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${PYTHON_PKGS}
- 
+
 msginfo "Installing Python ..."
 cmdretry apt-get update
 cmdretry apt-get install libssl1.1 libffi7
@@ -100,7 +99,7 @@ fi
 
 msginfo "Installing pip ..."
 
-curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" | \
+curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" |
     ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 
 if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
@@ -112,7 +111,7 @@ fi
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
+cmdretry apt-get purge $(aptitude search -F%p ~c ~g)
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
@@ -123,7 +122,7 @@ cmdretry apt-get update
 # ------------------------------------------------------------------------------
 # To distinguish images.
 
-cat >> "/etc/bash.bashrc" << 'EOF'
+cat >>"/etc/bash.bashrc" <<'EOF'
 
 # Python colors
 COLOR_YELLOW="\[\033[38;5;220m\]"
@@ -132,7 +131,7 @@ COLOR_OFF="\[\033[0m\]"
 PS1="${COLOR_YELLOW}[\u@${COLOR_BLUE}\h]${COLOR_OFF}:\w\$ "
 EOF
 
-cat >> "/etc/skel/.bashrc" << 'EOF'
+cat >>"/etc/skel/.bashrc" <<'EOF'
 
 # Python colors
 COLOR_YELLOW="\[\033[38;5;220m\]"
@@ -149,5 +148,5 @@ msginfo "Removing unnecessary files ..."
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rfv
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rfv
 rm -rfv "/tmp/"* "/usr/share/doc/"* "/usr/share/locale/"* "/usr/share/man/"* \
-        "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
-        "/var/lib/apt/lists/"*
+    "/var/cache/debconf/"* "/var/cache/apt/"* "/var/tmp/"* "/var/log/"* \
+    "/var/lib/apt/lists/"*

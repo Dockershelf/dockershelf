@@ -1,0 +1,55 @@
+name: Clean unused tags (master branch)
+
+on:
+  schedule:
+    - cron: 00 8 * * 4
+
+jobs:
+  tags-cleanup:
+    name: Cleanup build tags
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+%%MATRIX%%
+
+    steps:
+      - name: Install Docker hub-tool
+        run: |
+          curl -sL https://github.com/docker/hub-tool/releases/download/v0.4.5/hub-tool-linux-amd64.tar.gz -o hub-tool-linux.tar.gz
+          tar --strip-components=1 -xzf ./hub-tool-linux.tar.gz
+          ./hub-tool --version
+      - name: Login hub-tool
+        env:
+          DH_USERNAME: ${{ secrets.DH_USERNAME }}
+          DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"$DH_USERNAME\", \"password\": \"$DH_PASSWORD\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          USERNAME="$(printf '%s:' "$DH_USERNAME" | base64 -w0)"
+          USER_PASS="$(printf '%s:%s' "$DH_USERNAME" "$DH_PASSWORD" | base64 -w0)"
+          mkdir -p ~/.docker/
+          printf '{"auths": {"hub-tool": {"auth": "%s"}, "hub-tool-refresh-token": {"auth": "%s"}, "hub-tool-token": { "auth": "%s", "identitytoken": "%s"}}}' \
+            "$USER_PASS" "$USERNAME" \
+            "$USERNAME" "$HUB_TOKEN" \
+            > ~/.docker/config.json
+      - name: Remove PR container image via hub-tool
+        env:
+          DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
+          DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
+        run: |
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-amd64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-arm64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-test-amd64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-test-arm64 || true
+          ./hub-tool tag rm --verbose --force docker.io/${DOCKER_IMAGE_NAME}-test || true
+
+          for EXTRA_TAG in ${DOCKER_IMAGE_EXTRA_TAGS}; do
+            ./hub-tool tag rm --verbose --force docker.io/${EXTRA_TAG}-amd64 || true
+            ./hub-tool tag rm --verbose --force docker.io/${EXTRA_TAG}-arm64 || true
+          done
+
+          ./hub-tool tag ls --verbose docker.io/${DOCKER_IMAGE_NAME}
+      - name: Logout hub-tool
+        if: always()
+        run: rm ~/.docker/config.json

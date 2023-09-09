@@ -23,9 +23,10 @@ jobs:
             docker-image-extra-tags: "dockershelf/debian:testing"
             debian-suite: "testing"
           - docker-image-name: "dockershelf/debian:sid"
-            docker-image-extra-tags: "dockershelf/debian:unstable"
+            docker-image-extra-tags: "dockershelf/debian:unstable dockershelf/debian:latest"
             debian-suite: "unstable"
           - docker-image-name: "dockershelf/latex:basic"
+            docker-image-extra-tags: "dockershelf/latex:latest"
           - docker-image-name: "dockershelf/latex:full"
           - docker-image-name: "dockershelf/python:3.7-bookworm"
             docker-image-extra-tags: "dockershelf/python:3.7-stable"
@@ -39,6 +40,10 @@ jobs:
             docker-image-extra-tags: "dockershelf/python:3.11-stable"
           - docker-image-name: "dockershelf/python:3.11-sid"
             docker-image-extra-tags: "dockershelf/python:3.11-unstable dockershelf/python:3.11"
+          - docker-image-name: "dockershelf/python:3.12-bookworm"
+            docker-image-extra-tags: "dockershelf/python:3.12-stable dockershelf/python:3-stable dockershelf/python:3-bookworm dockershelf/python:latest-stable dockershelf/python:latest-bookworm"
+          - docker-image-name: "dockershelf/python:3.12-sid"
+            docker-image-extra-tags: "dockershelf/python:3.12-unstable dockershelf/python:3.12 dockershelf/python:3-unstable dockershelf/python:3-sid dockershelf/python:3 dockershelf/python:latest-unstable dockershelf/python:latest-sid dockershelf/python:latest"
           - docker-image-name: "dockershelf/node:12-bookworm"
             docker-image-extra-tags: "dockershelf/node:12-stable"
           - docker-image-name: "dockershelf/node:12-sid"
@@ -55,6 +60,26 @@ jobs:
             docker-image-extra-tags: "dockershelf/node:18-stable"
           - docker-image-name: "dockershelf/node:18-sid"
             docker-image-extra-tags: "dockershelf/node:18-unstable dockershelf/node:18"
+          - docker-image-name: "dockershelf/node:20-bookworm"
+            docker-image-extra-tags: "dockershelf/node:20-stable dockershelf/node:latest-stable dockershelf/node:latest-bookworm"
+          - docker-image-name: "dockershelf/node:20-sid"
+            docker-image-extra-tags: "dockershelf/node:20-unstable dockershelf/node:20 dockershelf/node:latest-unstable dockershelf/node:latest-sid dockershelf/node:latest"
+          - docker-image-name: "dockershelf/go:1.18-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.18-stable"
+          - docker-image-name: "dockershelf/go:1.18-sid"
+            docker-image-extra-tags: "dockershelf/go:1.18-unstable dockershelf/go:1.18"
+          - docker-image-name: "dockershelf/go:1.19-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.19-stable"
+          - docker-image-name: "dockershelf/go:1.19-sid"
+            docker-image-extra-tags: "dockershelf/go:1.19-unstable dockershelf/go:1.19"
+          - docker-image-name: "dockershelf/go:1.20-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.20-stable"
+          - docker-image-name: "dockershelf/go:1.20-sid"
+            docker-image-extra-tags: "dockershelf/go:1.20-unstable dockershelf/go:1.20"
+          - docker-image-name: "dockershelf/go:1.21-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.21-stable dockershelf/go:latest-stable dockershelf/go:latest-bookworm"
+          - docker-image-name: "dockershelf/go:1.21-sid"
+            docker-image-extra-tags: "dockershelf/go:1.21-unstable dockershelf/go:1.21 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
 
     steps:
       - name: Checkout repo
@@ -62,13 +87,18 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2 
+        uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2 
-      - name: Installing dependencies
-        run: |
-          sudo gem install docker-api serverspec
+        uses: docker/setup-buildx-action@v2
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1"
+          bundler-cache: true
+
       - name: Building docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
@@ -77,12 +107,14 @@ jobs:
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
           bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "master"
+
       - name: Testing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
         run: |
           bash test-image.sh "${DOCKER_IMAGE_NAME}" "master"
+
       - name: Pushing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}

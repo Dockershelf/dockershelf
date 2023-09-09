@@ -2,7 +2,7 @@
 
 ## Development Lead
 
-* Luis Alejandro Martínez Faneyth <luis@collagelabs.org>
+* Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>
 
 ## Contributors
 

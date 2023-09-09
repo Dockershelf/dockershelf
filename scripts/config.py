@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,9 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .utils import get_debian_versions, get_node_versions, \
-    get_python_versions
+    get_python_versions, get_go_versions
 
 latex_versions = ['basic', 'full']
 debian_versions = get_debian_versions()
 node_versions = get_node_versions()
 python_versions = get_python_versions()
+go_versions = get_go_versions()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,14 +28,12 @@ from .logger import logger
 def update_node(basedir):
 
     matrix = []
+    tag_matrix = []
     node_readme_tablelist = []
     nodedir = os.path.join(basedir, 'node')
     node_dockerfile_template = os.path.join(nodedir, 'Dockerfile.template')
     node_readme_template = os.path.join(nodedir, 'README.md.template')
     node_readme = os.path.join(nodedir, 'README.md')
-    node_hooks_dir = os.path.join(nodedir, 'hooks')
-    node_build_hook = os.path.join(node_hooks_dir, 'build')
-    node_push_hook = os.path.join(node_hooks_dir, 'push')
 
     debian_versions_eq = {v: k for k, v in debian_versions}
 
@@ -43,18 +41,18 @@ def update_node(basedir):
     docker_tag_holder = 'dockershelf/node:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/node'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-node%2F{0}--{1}%2FDockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b&cacheSeconds=900'
+                               '-Dockerfile-blue.svg'
+                               '?colorA=22313f&colorB=4a637b'
                                '&logo=docker')
     dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
                              'blob/master/node/{0}/Dockerfile')
     pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
                           'node?colorA=22313f&colorB=4a637b'
-                          '&cacheSeconds=900')
+                          '')
     pulls_url_holder = ('https://hub.docker.com/r/dockershelf/node')
     size_badge_holder = ('https://img.shields.io/docker/image-size/'
                          'dockershelf/node/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b&cacheSeconds=900')
+                         '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/node')
     matrix_str = (
         '          - docker-image-name: "dockershelf/node:{0}"'
@@ -63,47 +61,74 @@ def update_node(basedir):
         '          - docker-image-name: "dockershelf/node:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/node:{1} '
         'dockershelf/node:{2}"')
+    matrix_str_latest_stable = (
+        '          - docker-image-name: "dockershelf/node:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/node:{1} '
+        'dockershelf/node:{2} dockershelf/node:{3}"')
+    matrix_str_latest_unstable = (
+        '          - docker-image-name: "dockershelf/node:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/node:{1} '
+        'dockershelf/node:{2} dockershelf/node:{3} dockershelf/node:{4} '
+        'dockershelf/node:{5}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                    '|`{2}`'
-                                    '|[![]({3})]({4})'
-                                    '|[![]({5})]({6})'
-                                    '|[![]({7})]({8})'
+                                    '|[![]({2})]({3})'
+                                    '|[![]({4})]({5})'
+                                    '|[![]({6})]({7})'
                                     '|')
+
+    latest_version = node_versions[-1]
+    latest_major_version = 'latest'
 
     logger.info('Erasing current Node folders')
     for deldir in find_dirs(nodedir):
         shutil.rmtree(deldir)
 
-    for nodever in node_versions:
+    for node_version_long in node_versions:
         for debian_version in [debian_versions_eq['stable'],
                                debian_versions_eq['unstable']]:
             logger.info('Processing Node {0} ({1})'.format(
-                nodever, debian_version))
-            node_version = '{0}-{1}'.format(nodever, debian_version)
-            node_version_stable = '{0}-{1}'.format(nodever, 'stable')
-            node_version_unstable = '{0}-{1}'.format(nodever, 'unstable')
+                node_version_long, debian_version))
+            node_version = '{0}-{1}'.format(node_version_long, debian_version)
+            node_version_stable = '{0}-{1}'.format(node_version_long, 'stable')
+            node_version_unstable = '{0}-{1}'.format(node_version_long, 'unstable')
             node_version_dir = os.path.join(nodedir, node_version)
             node_dockerfile = os.path.join(node_version_dir, 'Dockerfile')
 
             docker_tag = docker_tag_holder.format(node_version)
             dockerfile_badge = dockerfile_badge_holder.format(
-                nodever, debian_version)
+                node_version_long, debian_version)
             dockerfile_url = dockerfile_url_holder.format(node_version)
             pulls_badge = pulls_badge_holder.format(node_version)
             pulls_url = pulls_url_holder.format(node_version)
             size_badge = size_badge_holder.format(node_version)
             size_url = size_url_holder.format(node_version)
 
-            if debian_version == 'sid':
-                matrix.append(matrix_str_main.format(
-                    node_version, node_version_unstable, nodever))
+            if node_version_long == latest_version:
+                if debian_version == 'sid':
+                    matrix.append(matrix_str_latest_unstable.format(
+                        node_version, node_version_unstable, node_version_long,
+                        f'{latest_major_version}-unstable', f'{latest_major_version}-sid', latest_major_version))
+                    tag_matrix.extend([
+                        node_version, node_version_unstable, node_version_long,
+                        f'{latest_major_version}-unstable', f'{latest_major_version}-sid', latest_major_version])
+                else:
+                    matrix.append(matrix_str_latest_stable.format(
+                        node_version, node_version_stable,
+                        f'{latest_major_version}-stable', f'{latest_major_version}-{debian_version}'))
+                    tag_matrix.extend([
+                        node_version, node_version_stable,
+                        f'{latest_major_version}-stable', f'{latest_major_version}-{debian_version}'])
             else:
-                matrix.append(matrix_str.format(node_version,
-                              node_version_stable))
+                if debian_version == 'sid':
+                    matrix.append(matrix_str_main.format(node_version, node_version_unstable, node_version_long))
+                    tag_matrix.extend([node_version, node_version_unstable, node_version_long])
+                else:
+                    matrix.append(matrix_str.format(node_version, node_version_stable))
+                    tag_matrix.extend([node_version, node_version_stable])
 
             node_readme_tablelist.append(
                 node_readme_tablelist_holder.format(
-                    docker_tag, docker_url, node_version, dockerfile_badge,
+                    docker_tag, docker_url, dockerfile_badge,
                     dockerfile_url, pulls_badge, pulls_url,
                     size_badge, size_url))
 
@@ -120,41 +145,27 @@ def update_node(basedir):
                                              debian_version,
                                              node_dockerfile_content)
             node_dockerfile_content = re.sub('%%NODE_VERSION%%',
-                                             nodever,
+                                             node_version_long,
                                              node_dockerfile_content)
 
             with open(node_dockerfile, 'w') as pd:
                 pd.write(node_dockerfile_content)
-
-    os.makedirs(node_hooks_dir)
-
-    logger.info('Writing dummy hooks')
-    with open(node_build_hook, 'w') as nbh:
-        nbh.write('#!/usr/bin/env bash\n')
-        nbh.write('echo "This is a dummy build script that just allows to '
-                  'automatically fill the long description with the Readme '
-                  'from GitHub."\n')
-        nbh.write('echo "No real building is done here."')
-
-    with open(node_push_hook, 'w') as nph:
-        nph.write('#!/usr/bin/env bash\n')
-        nph.write('echo "We arent really pushing."')
 
     logger.info('Writing Node Readme')
     with open(node_readme_template, 'r') as prt:
         node_readme_template_content = prt.read()
 
     node_readme_table = '\n'.join(node_readme_tablelist)
+    node_readme_table_tags = '|[dockershelf/node](#node)|{0}|'.format(', '.join([f'`{tag}`' for tag in tag_matrix]))
 
-    node_readme_content = node_readme_template_content
     node_readme_content = re.sub('%%NODE_TABLE%%',
                                  node_readme_table,
-                                 node_readme_content)
+                                 node_readme_template_content)
 
     with open(node_readme, 'w') as pr:
         pr.write(node_readme_content)
 
-    return matrix, node_readme_table
+    return matrix, node_readme_table, node_readme_table_tags
 
 
 if __name__ == '__main__':

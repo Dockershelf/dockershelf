@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Please refer to AUTHORS.md for a complete list of Copyright holders.
-# Copyright (C) 2016-2022, Dockershelf Developers.
+# Copyright (C) 2016-2023, Dockershelf Developers.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 import os
 import re
+import json
 import fnmatch
 from contextlib import closing
 
@@ -31,16 +32,12 @@ from .logger import logger
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-node_versions_list_file = ('https://raw.githubusercontent.com/nodesource/distributions/master/deb/src/build.sh')
-node_version_lower_limit = 12
-node_version_upper_limit = 18
-node_versions_disabled = ['13', '15', '17']
+node_suites = ['12', '14', '16', '18', '20']
 
-python_suites = [
-    '3.7',
-    '3.10',
-    '3.11',
-]
+python_suites = ['3.7', '3.10', '3.11', '3.12']
+
+go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
+go_suites = ['1.18', '1.19', '1.20', '1.21']
 
 
 def u(u_string):
@@ -109,16 +106,7 @@ def get_debian_versions():
 
 def get_node_versions():
     logger.info('Getting Node versions')
-
-    with closing(urlopen(node_versions_list_file)) as n:
-        node_versions_list_content = n.read()
-
-    node_versions = re.findall(r'node_(\d*)\.x:_\d*\.x:nodejs:Node\.js \d*\.x',
-                               u(node_versions_list_content))
-    node_versions = [u(v) for v in node_versions
-                     if (float(v) >= node_version_lower_limit and
-                         float(v) <= node_version_upper_limit)]
-    node_versions = list(set(node_versions) - set(node_versions_disabled))
+    node_versions = [u(v) for v in node_suites]
     return sorted(set(node_versions), key=lambda x: Version(x))
 
 
@@ -126,3 +114,25 @@ def get_python_versions():
     logger.info('Getting Python versions')
     python_versions = [u(v) for v in python_suites]
     return sorted(python_versions, key=lambda x: Version(x))
+
+
+def get_go_versions():
+    logger.info('Getting Go versions')
+
+    with closing(urlopen(go_versions_list_file)) as n:
+        go_versions_list_content = json.loads(n.read())
+
+    go_versions_index = {}
+    go_versions = [Version(u(v).removeprefix("go")) for v in go_versions_list_content['GoVersion']]
+
+    for v in go_versions:
+        go_version_minor = f'{v.major}.{v.minor}'
+        if go_version_minor not in go_suites:
+            continue
+        if go_version_minor not in go_versions_index.keys():
+            go_versions_index[go_version_minor] = Version('0.0')
+        if v > go_versions_index[go_version_minor]:
+            go_versions_index[go_version_minor] = v
+
+    go_versions = [f'{v.major}.{v.minor}.{v.micro}' for v in go_versions_index.values()]
+    return sorted(set(go_versions), key=lambda x: Version(x))
