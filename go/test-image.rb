@@ -30,29 +30,17 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         set :docker_container, @container.id
     end
 
-    def python_version
-        command("python3 -c \"import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))\"").stdout.strip
+    def go_version
+        command("go version").stdout.strip.split(" ")[2].gsub("go", "")
     end
 
-    def python_version_container_var
-        command("echo $PYTHON_VER_NUM").stdout.strip
+    def go_version_short
+        go_version().split(".")[0..1].join(".")
     end
 
-    def python_version_long
-        releaselevel = command("python3 -c \"import sys; print(sys.version_info.releaselevel)\"").stdout.strip
-        case releaselevel
-        when "alpha"
-            command("python3 -c \"import sys; print('%s.%s.%sa%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
-        when "beta"
-            command("python3 -c \"import sys; print('%s.%s.%sb%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
-        when "candidate"
-            command("python3 -c \"import sys; print('%s.%s.%src%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[4]))\"").stdout.strip
-        when "final"
-            command("python3 -c \"import sys; print('%s.%s.%s' % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))\"").stdout.strip
-        end
+    def go_version_container_var
+        command("echo $GO_VER_NUM").stdout.strip
     end
-
-    basic_tests = ['test_grammar', 'test_opcodes', 'test_dict', 'test_builtin', 'test_types', 'test_doctest2']
 
     it "should exist" do
         expect(@container).not_to be_nil
@@ -67,43 +55,15 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         end
     end
 
-    it "should have a python interpreter" do
-        expect(file("/usr/bin/python#{python_version()}")).to be_executable
-        expect(file("/usr/bin/python3")).to be_symlink
-        expect(file("/usr/bin/python3")).to be_linked_to("/usr/bin/python#{python_version()}")
+    it "should have a go interpreter" do
+        expect(file("/usr/local/go/bin/go")).to be_executable
+        expect(file("/usr/bin/go")).to be_symlink
+        expect(file("/usr/bin/go")).to be_linked_to("/usr/local/go/bin/go")
     end
 
-    it "should have the correct python version" do
-        expect(python_version()).to eq(ENV["DOCKER_IMAGE_TYPE_VERSION"])
-        expect(python_version()).to eq(python_version_container_var())
-    end
-
-    it "should be able to install a python package" do
-        expect(command("pip3 install virtualenv").exit_status).to eq(0)
-        expect(file('/usr/local/bin/virtualenv')).to be_executable
-    end
-
-    it "should be able to uninstall a python package" do
-        expect(command("pip3 uninstall -y virtualenv").exit_status).to eq(0)
-        expect(file('/usr/local/bin/virtualenv')).not_to exist
-    end
-
-    it "should have setuptools installed by pip" do
-        expect(package('setuptools')).to be_installed.by('pip')
-    end
-
-    it "shouldn't have invalid packages installed by pip" do
-        expect(package('invalid-pip')).not_to be_installed.by('pip').with_version('invalid-version')
-    end
-
-    it "should pass basic internal tests" do
-        expect(command("apt-get update", 120).exit_status).to eq(0)
-        expect(command("apt-get install git rsync").exit_status).to eq(0)
-        expect(command("git clone --branch v#{python_version_long()} --depth 1 https://github.com/python/cpython /tmp/cpython").exit_status).to eq(0)
-        expect(command("rsync -avz /tmp/cpython/Lib/test/ /usr/lib/python#{python_version()}/test/").exit_status).to eq(0)
-        for test_suite in basic_tests
-            expect(command("python3 -m test.regrtest #{test_suite}").exit_status).to eq(0)
-        end
+    it "should have the correct go version" do
+        expect(go_version_short()).to eq(ENV["DOCKER_IMAGE_TYPE_VERSION"])
+        expect(go_version()).to eq(go_version_container_var())
     end
 
     after(:all) do

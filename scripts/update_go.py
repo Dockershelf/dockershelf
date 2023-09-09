@@ -28,6 +28,7 @@ from .logger import logger
 def update_go(basedir):
 
     matrix = []
+    tag_matrix = []
     go_readme_tablelist = []
     godir = os.path.join(basedir, 'go')
     go_dockerfile_template = os.path.join(godir, 'Dockerfile.template')
@@ -60,11 +61,23 @@ def update_go(basedir):
         '          - docker-image-name: "dockershelf/go:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/go:{1} '
         'dockershelf/go:{2}"')
+    matrix_str_latest_stable = (
+        '          - docker-image-name: "dockershelf/go:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/go:{1} '
+        'dockershelf/go:{2} dockershelf/go:{3}"')
+    matrix_str_latest_unstable = (
+        '          - docker-image-name: "dockershelf/go:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/go:{1} '
+        'dockershelf/go:{2} dockershelf/go:{3} dockershelf/go:{4} '
+        'dockershelf/go:{5}"')
     go_readme_tablelist_holder = ('|[`{0}`]({1})'
                                   '|[![]({2})]({3})'
                                   '|[![]({4})]({5})'
                                   '|[![]({6})]({7})'
                                   '|')
+
+    latest_version = go_versions[-1]
+    latest_major_version = 'latest'
 
     logger.info('Erasing current Go folders')
     for deldir in find_dirs(godir):
@@ -91,12 +104,28 @@ def update_go(basedir):
             size_badge = size_badge_holder.format(go_version)
             size_url = size_url_holder.format(go_version)
 
-            if debian_version == 'sid':
-                matrix.append(matrix_str_main.format(
-                    go_version, go_version_unstable, go_version_short))
+            if go_version_long == latest_version:
+                if debian_version == 'sid':
+                    matrix.append(matrix_str_latest_unstable.format(
+                        go_version, go_version_unstable, go_version_short,
+                        f'{latest_major_version}-unstable', f'{latest_major_version}-sid', latest_major_version))
+                    tag_matrix.extend([
+                        go_version, go_version_unstable, go_version_short,
+                        f'{latest_major_version}-unstable', f'{latest_major_version}-sid', latest_major_version])
+                else:
+                    matrix.append(matrix_str_latest_stable.format(
+                        go_version, go_version_stable,
+                        f'{latest_major_version}-stable', f'{latest_major_version}-{debian_version}'))
+                    tag_matrix.extend([
+                        go_version, go_version_stable,
+                        f'{latest_major_version}-stable', f'{latest_major_version}-{debian_version}'])
             else:
-                matrix.append(matrix_str.format(go_version,
-                              go_version_stable))
+                if debian_version == 'sid':
+                    matrix.append(matrix_str_main.format(go_version, go_version_unstable, go_version_short))
+                    tag_matrix.extend([go_version, go_version_unstable, go_version_short])
+                else:
+                    matrix.append(matrix_str.format(go_version, go_version_stable))
+                    tag_matrix.extend([go_version, go_version_stable])
 
             go_readme_tablelist.append(
                 go_readme_tablelist_holder.format(
@@ -131,16 +160,16 @@ def update_go(basedir):
         go_readme_template_content = prt.read()
 
     go_readme_table = '\n'.join(go_readme_tablelist)
+    go_readme_table_tags = '|[dockershelf/go](#go)|{0}|'.format(', '.join([f'`{tag}`' for tag in tag_matrix]))
 
-    go_readme_content = go_readme_template_content
     go_readme_content = re.sub('%%GO_TABLE%%',
                                go_readme_table,
-                               go_readme_content)
+                               go_readme_template_content)
 
     with open(go_readme, 'w') as pr:
         pr.write(go_readme_content)
 
-    return matrix, go_readme_table
+    return matrix, go_readme_table, go_readme_table_tags
 
 
 if __name__ == '__main__':

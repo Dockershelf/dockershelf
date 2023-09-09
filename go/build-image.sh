@@ -25,10 +25,8 @@ ARCHITECTURE="$(dpkg --print-architecture)"
 
 GO_VER_NUM_PATCH="$(echo ${GO_VER_NUM} | awk -F'.' '{print $1"."$2"."$3}')"
 GO_VER_NUM_MINOR="$(echo ${GO_VER_NUM} | awk -F'.' '{print $1"."$2}')"
-GO_VER_NUM_MAJOR="$(echo ${GO_VER_NUM} | awk -F'.' '{print $1}')"
 GO_VER_NUM_PATCH_STR="go${GO_VER_NUM_PATCH}"
 GO_VER_NUM_MINOR_STR="go${GO_VER_NUM_MINOR}"
-GO_VER_NUM_MAJOR_STR="go${GO_VER_NUM_MAJOR}"
 
 GO_DOWNLOAD_URL="https://go.dev/dl/${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz"
 
@@ -56,10 +54,11 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 msginfo "Installing Go ..."
 curl -L "${GO_DOWNLOAD_URL}" -o ${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz
 tar -C /usr/local -xzf ${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz
+ls -lah /usr/local/go/bin/
 rm -rf ${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz
 
-if [ ! -f "/usr/bin/go" ] && [ -f "/usr/local/go/bin/${GO_VER_NUM_PATCH_STR}" ]; then
-    ln -s /usr/local/go/bin/${GO_VER_NUM_MINOR_STR} /usr/bin/go
+if [ ! -f "/usr/bin/go" ] && [ -f "/usr/local/go/bin/go" ]; then
+    ln -s /usr/local/go/bin/go /usr/bin/go
 fi
 
 # Apt: Remove unnecessary packages

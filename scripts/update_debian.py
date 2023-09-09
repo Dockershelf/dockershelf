@@ -28,6 +28,7 @@ from .logger import logger
 def update_debian(basedir):
 
     matrix = []
+    tag_matrix = []
     debian_readme_tablelist = []
     debiandir = os.path.join(basedir, 'debian')
     debian_dockerfile_template = os.path.join(debiandir, 'Dockerfile.template')
@@ -55,6 +56,10 @@ def update_debian(basedir):
         '          - docker-image-name: "dockershelf/debian:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/debian:{1}"'
         '\n            debian-suite: "{1}"')
+    matrix_str_main = (
+        '          - docker-image-name: "dockershelf/debian:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/debian:{1} dockershelf/debian:{2}"'
+        '\n            debian-suite: "{1}"')
     debian_readme_tablelist_holder = ('|[`{0}`]({1})'
                                       '|[![]({2})]({3})'
                                       '|[![]({4})]({5})'
@@ -78,8 +83,14 @@ def update_debian(basedir):
         size_badge = size_badge_holder.format(debian_version_long)
         size_url = size_url_holder.format(debian_version_long)
 
-        matrix.append(matrix_str.format(
-            debian_version_long, debian_suite))
+        if debian_version_long == 'sid':
+            matrix.append(matrix_str_main.format(
+                debian_version_long, debian_suite, 'latest'))
+            tag_matrix.extend([debian_version_long, debian_suite, 'latest'])
+        else:
+            matrix.append(matrix_str.format(
+                debian_version_long, debian_suite))
+            tag_matrix.extend([debian_version_long, debian_suite])
 
         debian_readme_tablelist.append(
             debian_readme_tablelist_holder.format(
@@ -111,16 +122,17 @@ def update_debian(basedir):
         debian_readme_template_content = drt.read()
 
     debian_readme_table = '\n'.join(debian_readme_tablelist)
+    debian_readme_table_tags = '|[dockershelf/debian](#debian)|{0}|'.format(
+        ', '.join([f'`{tag}`' for tag in tag_matrix]))
 
-    debian_readme_content = debian_readme_template_content
     debian_readme_content = re.sub('%%DEBIAN_TABLE%%',
                                    debian_readme_table,
-                                   debian_readme_content)
+                                   debian_readme_template_content)
 
     with open(debian_readme, 'w') as dr:
         dr.write(debian_readme_content)
 
-        return matrix, debian_readme_table
+    return matrix, debian_readme_table, debian_readme_table_tags
 
 
 if __name__ == '__main__':

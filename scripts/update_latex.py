@@ -28,6 +28,7 @@ from .logger import logger
 def update_latex(basedir):
 
     matrix = []
+    tag_matrix = []
     latex_readme_tablelist = []
     latexdir = os.path.join(basedir, 'latex')
     latex_dockerfile_template = os.path.join(latexdir, 'Dockerfile.template')
@@ -53,6 +54,9 @@ def update_latex(basedir):
     size_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
     matrix_str = (
         '          - docker-image-name: "dockershelf/latex:{0}"')
+    matrix_str_main = (
+        '          - docker-image-name: "dockershelf/latex:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/latex:{1}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|[![]({2})]({3})'
                                      '|[![]({4})]({5})'
@@ -76,8 +80,14 @@ def update_latex(basedir):
         size_badge = size_badge_holder.format(latex_version_long)
         size_url = size_url_holder.format(latex_version_long)
 
-        matrix.append(
-            matrix_str.format(latex_version_long))
+        if latex_version_long == 'basic':
+            matrix.append(
+                matrix_str_main.format(latex_version_long, 'latest'))
+            tag_matrix.extend([latex_version_long, 'latest'])
+        else:
+            matrix.append(
+                matrix_str.format(latex_version_long))
+            tag_matrix.extend([latex_version_long])
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
@@ -109,16 +119,16 @@ def update_latex(basedir):
         latex_readme_template_content = lrt.read()
 
     latex_readme_table = '\n'.join(latex_readme_tablelist)
+    latex_readme_table_tags = '|[dockershelf/latex](#latex)|{0}|'.format(', '.join([f'`{tag}`' for tag in tag_matrix]))
 
-    latex_readme_content = latex_readme_template_content
     latex_readme_content = re.sub('%%LATEX_TABLE%%',
                                   latex_readme_table,
-                                  latex_readme_content)
+                                  latex_readme_template_content)
 
     with open(latex_readme, 'w') as lr:
         lr.write(latex_readme_content)
 
-    return matrix, latex_readme_table
+    return matrix, latex_readme_table, latex_readme_table_tags
 
 
 if __name__ == '__main__':

@@ -28,6 +28,7 @@ from .logger import logger
 def update_node(basedir):
 
     matrix = []
+    tag_matrix = []
     node_readme_tablelist = []
     nodedir = os.path.join(basedir, 'node')
     node_dockerfile_template = os.path.join(nodedir, 'Dockerfile.template')
@@ -60,11 +61,23 @@ def update_node(basedir):
         '          - docker-image-name: "dockershelf/node:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/node:{1} '
         'dockershelf/node:{2}"')
+    matrix_str_latest_stable = (
+        '          - docker-image-name: "dockershelf/node:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/node:{1} '
+        'dockershelf/node:{2} dockershelf/node:{3}"')
+    matrix_str_latest_unstable = (
+        '          - docker-image-name: "dockershelf/node:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/node:{1} '
+        'dockershelf/node:{2} dockershelf/node:{3} dockershelf/node:{4} '
+        'dockershelf/node:{5}"')
     node_readme_tablelist_holder = ('|[`{0}`]({1})'
                                     '|[![]({2})]({3})'
                                     '|[![]({4})]({5})'
                                     '|[![]({6})]({7})'
                                     '|')
+
+    latest_version = node_versions[-1]
+    latest_major_version = 'latest'
 
     logger.info('Erasing current Node folders')
     for deldir in find_dirs(nodedir):
@@ -90,12 +103,28 @@ def update_node(basedir):
             size_badge = size_badge_holder.format(node_version)
             size_url = size_url_holder.format(node_version)
 
-            if debian_version == 'sid':
-                matrix.append(matrix_str_main.format(
-                    node_version, node_version_unstable, node_version_long))
+            if node_version_long == latest_version:
+                if debian_version == 'sid':
+                    matrix.append(matrix_str_latest_unstable.format(
+                        node_version, node_version_unstable, node_version_long,
+                        f'{latest_major_version}-unstable', f'{latest_major_version}-sid', latest_major_version))
+                    tag_matrix.extend([
+                        node_version, node_version_unstable, node_version_long,
+                        f'{latest_major_version}-unstable', f'{latest_major_version}-sid', latest_major_version])
+                else:
+                    matrix.append(matrix_str_latest_stable.format(
+                        node_version, node_version_stable,
+                        f'{latest_major_version}-stable', f'{latest_major_version}-{debian_version}'))
+                    tag_matrix.extend([
+                        node_version, node_version_stable,
+                        f'{latest_major_version}-stable', f'{latest_major_version}-{debian_version}'])
             else:
-                matrix.append(matrix_str.format(node_version,
-                              node_version_stable))
+                if debian_version == 'sid':
+                    matrix.append(matrix_str_main.format(node_version, node_version_unstable, node_version_long))
+                    tag_matrix.extend([node_version, node_version_unstable, node_version_long])
+                else:
+                    matrix.append(matrix_str.format(node_version, node_version_stable))
+                    tag_matrix.extend([node_version, node_version_stable])
 
             node_readme_tablelist.append(
                 node_readme_tablelist_holder.format(
@@ -127,16 +156,16 @@ def update_node(basedir):
         node_readme_template_content = prt.read()
 
     node_readme_table = '\n'.join(node_readme_tablelist)
+    node_readme_table_tags = '|[dockershelf/node](#node)|{0}|'.format(', '.join([f'`{tag}`' for tag in tag_matrix]))
 
-    node_readme_content = node_readme_template_content
     node_readme_content = re.sub('%%NODE_TABLE%%',
                                  node_readme_table,
-                                 node_readme_content)
+                                 node_readme_template_content)
 
     with open(node_readme, 'w') as pr:
         pr.write(node_readme_content)
 
-    return matrix, node_readme_table
+    return matrix, node_readme_table, node_readme_table_tags
 
 
 if __name__ == '__main__':

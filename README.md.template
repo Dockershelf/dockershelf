@@ -6,39 +6,57 @@
 
 Current version: 3.2.0
 
-*Dockershelf* is a repository that serves as a collector for docker recipes that are universal, efficient and slim. We keep adding "shelves", which are holders for the different versions of a popular language or application.
+*Dockershelf* is a repository that serves as a collector for docker recipes that are universal, efficient and slim. We keep adding "shelves", which are holders for the different versions of a popular language or application. Images are updated, tested and published *weekly* via a [Github Actions workflow](https://github.com/Dockershelf/dockershelf/actions). All images are available on [Docker Hub](https://hub.docker.com/u/dockershelf).
 
-Images are updated, tested and published *weekly* via a [Github Actions workflow](https://github.com/Dockershelf/dockershelf/actions).
+Excepting debian and latex images, all images have an stable/unstable version. Stable images are based on debian stable, which are ideal for production applications because packages are not updated to minor or major versions but still recieve security updates. Unstable images are based on debian sid, which are designed for development stages because packages are constantly beaing updated to its latest version. Latex images are only based on debian stable.
 
-## About stable/unstable images
+Images are built for `amd64` and `arm64` architectures, which cover most of the devices in the market. If you need an image for a different architecture, please [open an issue](https://github.com/Dockershelf/dockershelf/issues/new).
 
-Excepting debian and latex images, all images have an stable/unstable version. Stable images are based on debian stable, which are ideal for production applications; Unstable images are based on debian sid, which are designed for development stages. Latex images are only based on debian stable.
+The list of available images is shown below.
+
+|Image type  |Tags  |
+|------------|------|
+%%DEBIAN_TABLE_TAGS%%
+%%PYTHON_TABLE_TAGS%%
+%%NODE_TABLE_TAGS%%
+%%GO_TABLE_TAGS%%
+%%LATEX_TABLE_TAGS%%
 
 ## How to use
 
-Pull one of the available images and start hacking!
+You can pull one of the images from Docker Hub and run it in your machine.
 
-```bash
+```
 docker pull <image>
 docker run -it <image> bash
 ```
-<sup>&lt;image&gt; is the desired image to download, for example <code>dockershelf/python:2.7</code>.</sup>
+
+<sup><code>&lt;image&gt;</code> is the desired image to download, for example <code>dockershelf/python:3.11</code>.</sup>
+
+or you can use it as a base image in your Dockerfile.
+
+```dockerfile
+FROM dockershelf/debian:bookworm
+RUN apt-get update \
+    && apt-get install -y mysql-client
+ENTRYPOINT ["mysql"]
+```
 
 ## How to build locally
 
 Clone this repository to your machine.
 
-```bash
+```
 git clone https://github.com/Dockershelf/dockershelf
 ```
 
 Run the build script in the root folder of your local copy. Remember to have docker installed and make sure your user has proper privileges to execute `docker build`.
 
-```bash
+```
 bash build-image.sh <image>
 ```
 
-<sup>&lt;image&gt; is the desired image to build, for example <code>dockershelf/debian:sid</code>.</sup>
+<sup><code>&lt;image&gt;</code> is the desired image to build, for example <code>dockershelf/node:16-bookworm</code>.</sup>
 
 ## Shelves
 
@@ -49,16 +67,6 @@ These images are similar to the official ones, but with some opinionated configu
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
 %%DEBIAN_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### Latex
-
-These are debian stable images that come with a set of latex (basic or full) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
-
-|Image  |Dockerfile  |Pulls   |Size  |
-|-------|------------|--------|------|
-%%LATEX_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
@@ -87,6 +95,16 @@ These are debian stable/unstable images with go version downloaded directly from
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
 %%GO_TABLE%%
+
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
+
+### Latex
+
+These are debian stable images that come with a set of latex (basic or full) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%LATEX_TABLE%%
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 

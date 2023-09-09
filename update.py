@@ -33,13 +33,19 @@ if __name__ == '__main__':
     basedir = os.path.dirname(os.path.realpath(__file__))
     workflowsdir = os.path.join(basedir, '.github', 'workflows')
     gha_develop_template = os.path.join(
-        workflowsdir, 'push-develop.yml.template')
+        workflowsdir, 'trigger-develop.yml.template')
+    gha_develop_clean_template = os.path.join(
+        workflowsdir, 'clean-develop.yml.template')
     gha_master_template = os.path.join(
         workflowsdir, 'push-master.yml.template')
+    gha_master_clean_template = os.path.join(
+        workflowsdir, 'clean-master.yml.template')
     gha_schedule_template = os.path.join(
         workflowsdir, 'schedule-master.yml.template')
-    gha_develop = os.path.join(workflowsdir, 'push-develop.yml')
+    gha_develop = os.path.join(workflowsdir, 'trigger-develop.yml')
+    gha_develop_clean = os.path.join(workflowsdir, 'clean-develop.yml')
     gha_master = os.path.join(workflowsdir, 'push-master.yml')
+    gha_master_clean = os.path.join(workflowsdir, 'clean-master.yml')
     gha_schedule = os.path.join(workflowsdir, 'schedule-master.yml')
     readme_template = os.path.join(basedir, 'README.md.template')
     readme = os.path.join(basedir, 'README.md')
@@ -48,11 +54,11 @@ if __name__ == '__main__':
     logger.loglevel('INFO')
     logger.info('Updating shelves')
 
-    debian_matrix_list, debian_readme_table = update_debian(basedir)
-    latex_matrix_list, latex_readme_table = update_latex(basedir)
-    python_matrix_list, python_readme_table = update_python(basedir)
-    node_matrix_list, node_readme_table = update_node(basedir)
-    go_matrix_list, go_readme_table = update_go(basedir)
+    debian_matrix_list, debian_readme_table, debian_readme_table_tags = update_debian(basedir)
+    latex_matrix_list, latex_readme_table, latex_readme_table_tags = update_latex(basedir)
+    python_matrix_list, python_readme_table, python_readme_table_tags = update_python(basedir)
+    node_matrix_list, node_readme_table, node_readme_table_tags = update_node(basedir)
+    go_matrix_list, go_readme_table, go_readme_table_tags = update_go(basedir)
 
     logger.info('Writing github actions matrix')
     matrix.extend(debian_matrix_list)
@@ -64,22 +70,34 @@ if __name__ == '__main__':
 
     with open(gha_develop_template, 'r') as gdt:
         gha_develop_template_content = gdt.read()
+    with open(gha_develop_clean_template, 'r') as gdct:
+        gha_develop_clean_template_content = gdct.read()
     with open(gha_master_template, 'r') as gmt:
         gha_master_template_content = gmt.read()
+    with open(gha_master_clean_template, 'r') as gmct:
+        gha_master_clean_template_content = gmct.read()
     with open(gha_schedule_template, 'r') as gst:
         gha_schedule_template_content = gst.read()
 
     gha_develop_template_content = re.sub(
         '%%MATRIX%%', gha_matrix, gha_develop_template_content)
+    gha_develop_clean_template_content = re.sub(
+        '%%MATRIX%%', gha_matrix, gha_develop_clean_template_content)
     gha_master_template_content = re.sub(
         '%%MATRIX%%', gha_matrix, gha_master_template_content)
+    gha_master_clean_template_content = re.sub(
+        '%%MATRIX%%', gha_matrix, gha_master_clean_template_content)
     gha_schedule_template_content = re.sub(
         '%%MATRIX%%', gha_matrix, gha_schedule_template_content)
 
     with open(gha_develop, 'w') as t:
         t.write(gha_develop_template_content)
+    with open(gha_develop_clean, 'w') as t:
+        t.write(gha_develop_clean_template_content)
     with open(gha_master, 'w') as t:
         t.write(gha_master_template_content)
+    with open(gha_master_clean, 'w') as t:
+        t.write(gha_master_clean_template_content)
     with open(gha_schedule, 'w') as t:
         t.write(gha_schedule_template_content)
 
@@ -97,6 +115,16 @@ if __name__ == '__main__':
     readme_content = re.sub('%%NODE_TABLE%%', node_readme_table,
                             readme_content)
     readme_content = re.sub('%%GO_TABLE%%', go_readme_table,
+                            readme_content)
+    readme_content = re.sub('%%DEBIAN_TABLE_TAGS%%', debian_readme_table_tags,
+                            readme_content)
+    readme_content = re.sub('%%LATEX_TABLE_TAGS%%', latex_readme_table_tags,
+                            readme_content)
+    readme_content = re.sub('%%PYTHON_TABLE_TAGS%%', python_readme_table_tags,
+                            readme_content)
+    readme_content = re.sub('%%NODE_TABLE_TAGS%%', node_readme_table_tags,
+                            readme_content)
+    readme_content = re.sub('%%GO_TABLE_TAGS%%', go_readme_table_tags,
                             readme_content)
 
     with open(readme, 'w') as t:
