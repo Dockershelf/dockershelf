@@ -10,7 +10,7 @@ Current version: 3.2.0
 
 Excepting debian and latex images, all images have an stable/unstable version. Stable images are based on debian stable, which are ideal for production applications because packages are not updated to minor or major versions but still recieve security updates. Unstable images are based on debian sid, which are designed for development stages because packages are constantly beaing updated to its latest version. Latex images are only based on debian stable.
 
-Images are built for amd64 and arm64 architectures, which cover most of the devices in the market. If you need an image for a different architecture, please [open an issue](https://github.com/Dockershelf/dockershelf/issues/new).
+Images are built for `amd64` and `arm64` architectures, which cover most of the devices in the market. If you need an image for a different architecture, please [open an issue](https://github.com/Dockershelf/dockershelf/issues/new).
 
 The list of available images is shown below.
 
