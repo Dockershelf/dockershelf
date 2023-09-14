@@ -7,9 +7,9 @@ ARG GID=1000
 RUN apt-get update && \
     apt-get install sudo python3.10-venv bundler
 
-ADD requirements.txt requirements-dev.txt /root/
-RUN pip3 install -r /root/requirements.txt -r /root/requirements-dev.txt
-RUN rm -rf /root/requirements.txt /root/requirements-dev.txt
+ADD requirements.txt /root/
+RUN pip3 install -r /root/requirements.txt
+RUN rm -rf /root/requirements.txt
 
 RUN EXISTUSER=$(getent passwd | awk -F':' '$3 == '$UID' {print $1}') && \
     [ -n "${EXISTUSER}" ] && deluser ${EXISTUSER} || true
