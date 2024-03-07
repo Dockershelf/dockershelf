@@ -57,7 +57,7 @@ jobs:
     if: github.actor == github.repository_owner || github.actor == 'dependabot[bot]'
     steps:
       - name: Approve
-        uses: hmarr/auto-approve-action@v3.2.1
+        uses: hmarr/auto-approve-action@v4.0.0
         with:
           github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.PERSONAL_ACCESS_TOKEN }}"
 
