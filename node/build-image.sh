@@ -70,6 +70,8 @@ cmdretry gpg --lock-never --no-default-keyring \
 } | tee /etc/apt/sources.list.d/node.list >/dev/null
 
 cmdretry apt-get update
+cat /etc/apt/sources.list
+cat /etc/apt/sources.list.d/node.list
 
 # Node: Installation
 # ------------------------------------------------------------------------------
@@ -83,7 +85,7 @@ for PKG in ${NODE_PKGS}; do
 done
 
 if [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ]; then
-    cmdretry aptitude install python3
+    cmdretry apt-get install python3
 fi
 
 cmdretry aptitude install ${NODE_PKGS_VER}
