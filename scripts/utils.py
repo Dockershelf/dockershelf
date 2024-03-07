@@ -37,7 +37,7 @@ node_suites = ['12', '14', '16', '18', '20']
 python_suites = ['3.7', '3.10', '3.11', '3.12']
 
 go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
-go_suites = ['1.18', '1.19', '1.20', '1.21']
+go_suites = ['1.19', '1.20', '1.21', '1.22']
 
 
 def u(u_string):
@@ -123,16 +123,20 @@ def get_go_versions():
         go_versions_list_content = json.loads(n.read())
 
     go_versions_index = {}
-    go_versions = [Version(u(v).removeprefix("go")) for v in go_versions_list_content['GoVersion']]
+    go_versions = [u(v).removeprefix("go") for v in go_versions_list_content['GoVersion']]
 
     for v in go_versions:
-        go_version_minor = f'{v.major}.{v.minor}'
+        try:
+            parsedv = Version(v)
+        except:
+            parsedv = Version('0.0')
+        go_version_minor = f'{parsedv.major}.{parsedv.minor}'
         if go_version_minor not in go_suites:
             continue
         if go_version_minor not in go_versions_index.keys():
             go_versions_index[go_version_minor] = Version('0.0')
-        if v > go_versions_index[go_version_minor]:
-            go_versions_index[go_version_minor] = v
+        if parsedv > go_versions_index[go_version_minor]:
+            go_versions_index[go_version_minor] = parsedv
 
     go_versions = [f'{v.major}.{v.minor}.{v.micro}' for v in go_versions_index.values()]
     return sorted(set(go_versions), key=lambda x: Version(x))

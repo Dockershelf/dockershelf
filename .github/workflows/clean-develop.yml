@@ -62,10 +62,6 @@ jobs:
             docker-image-extra-tags: "dockershelf/node:20-stable dockershelf/node:latest-stable dockershelf/node:latest-bookworm"
           - docker-image-name: "dockershelf/node:20-sid"
             docker-image-extra-tags: "dockershelf/node:20-unstable dockershelf/node:20 dockershelf/node:latest-unstable dockershelf/node:latest-sid dockershelf/node:latest"
-          - docker-image-name: "dockershelf/go:1.18-bookworm"
-            docker-image-extra-tags: "dockershelf/go:1.18-stable"
-          - docker-image-name: "dockershelf/go:1.18-sid"
-            docker-image-extra-tags: "dockershelf/go:1.18-unstable dockershelf/go:1.18"
           - docker-image-name: "dockershelf/go:1.19-bookworm"
             docker-image-extra-tags: "dockershelf/go:1.19-stable"
           - docker-image-name: "dockershelf/go:1.19-sid"
@@ -75,9 +71,13 @@ jobs:
           - docker-image-name: "dockershelf/go:1.20-sid"
             docker-image-extra-tags: "dockershelf/go:1.20-unstable dockershelf/go:1.20"
           - docker-image-name: "dockershelf/go:1.21-bookworm"
-            docker-image-extra-tags: "dockershelf/go:1.21-stable dockershelf/go:latest-stable dockershelf/go:latest-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.21-stable"
           - docker-image-name: "dockershelf/go:1.21-sid"
-            docker-image-extra-tags: "dockershelf/go:1.21-unstable dockershelf/go:1.21 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
+            docker-image-extra-tags: "dockershelf/go:1.21-unstable dockershelf/go:1.21"
+          - docker-image-name: "dockershelf/go:1.22-bookworm"
+            docker-image-extra-tags: "dockershelf/go:1.22-stable dockershelf/go:latest-stable dockershelf/go:latest-bookworm"
+          - docker-image-name: "dockershelf/go:1.22-sid"
+            docker-image-extra-tags: "dockershelf/go:1.22-unstable dockershelf/go:1.22 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
 
     steps:
       - name: Install Docker hub-tool

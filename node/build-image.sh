@@ -50,12 +50,12 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
-if [ "${NODE_VER_NUM}" == "12" ] || [ "${NODE_VER_NUM}" == "14" ]; then
-    NODE_DISTRO_NAME="sid"
-    NODE_REPO_KEY="1655A0AB68576280"
-else
+if [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ]; then
     NODE_DISTRO_NAME="nodistro"
     NODE_REPO_KEY="2F59B5F99B1BE0B4"
+else
+    NODE_DISTRO_NAME="sid"
+    NODE_REPO_KEY="1655A0AB68576280"
 fi
 
 cmdretry dirmngr --debug-level guru
@@ -81,6 +81,10 @@ for PKG in ${NODE_PKGS}; do
         grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs)"
     NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
 done
+
+if [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ]; then
+    cmdretry aptitude install python3
+fi
 
 cmdretry aptitude install ${NODE_PKGS_VER}
 
