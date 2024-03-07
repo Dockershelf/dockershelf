@@ -70,8 +70,6 @@ cmdretry gpg --lock-never --no-default-keyring \
 } | tee /etc/apt/sources.list.d/node.list >/dev/null
 
 cmdretry apt-get update
-cat /etc/apt/sources.list
-cat /etc/apt/sources.list.d/node.list
 
 # Node: Installation
 # ------------------------------------------------------------------------------
@@ -83,10 +81,6 @@ for PKG in ${NODE_PKGS}; do
         grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs)"
     NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
 done
-
-if [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ]; then
-    cmdretry apt-get install python3
-fi
 
 cmdretry aptitude install ${NODE_PKGS_VER}
 
