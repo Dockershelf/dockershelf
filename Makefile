@@ -38,7 +38,7 @@ virtualenv: start
 	@./virtualenv/bin/python3 -m pip install --upgrade pip
 	@./virtualenv/bin/python3 -m pip install --upgrade setuptools
 	@./virtualenv/bin/python3 -m pip install --upgrade wheel
-	@./virtualenv/bin/python3 -m pip install -r requirements.txt -r requirements-dev.txt
+	@./virtualenv/bin/python3 -m pip install -r requirements.txt
 
 stop:
 	@docker compose -p dockershelf -f docker-compose.yml stop app

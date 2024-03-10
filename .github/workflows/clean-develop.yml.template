@@ -2,6 +2,8 @@ name: Clean unused tags (develop branch)
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: 00 8 * * 3
 
 jobs:
   tags-cleanup:
