@@ -1,6 +1,25 @@
 # Changelog
 
 
+## 3.3.1 (2024-03-10)
+
+### Changed
+
+* Automatic approval and merging of prs. [Luis Alejandro Martínez Faneyth]
+
+* Removing python 3.10 and go 1.18, adding go 1.22 and fixing node and python builds. [Luis Alejandro Martínez Faneyth]
+
+* Fixing PR pipeline. [Luis Alejandro Martínez Faneyth]
+
+
+### Fixed
+
+* Fixing documentation badge. [Luis Alejandro Martínez Faneyth]
+
+
+### Other
+
+
 ## 3.3.0 (2023-09-09)
 
 ### Changed
@@ -16,6 +35,8 @@
 * Adding golang images. [Luis Alejandro Martínez Faneyth]
 
 * Adding support to Python 3.12 and Node 20. Improving documentation. Improving unit tests. Latex images are now based on Debian Bookworm and not Debian Sid. Removing unnecesary Docker Hub hooks. [Luis Alejandro Martínez Faneyth]
+
+* Fixing master branch error. [Luis Alejandro Martínez Faneyth]
 
 
 ### Other
