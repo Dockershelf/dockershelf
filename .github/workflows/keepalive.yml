@@ -1,0 +1,45 @@
+name: Keep scheduled workflows alive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 1 * *
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Disable workflows
+        uses: actions/github-script@v6
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          script: |
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            for (const workflow of workflows.data.workflows) {
+              await github.rest.actions.disableWorkflow({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflow.id,
+              });
+            }
+      - name: Enable workflows
+        uses: actions/github-script@v6
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          script: |
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            for (const workflow of workflows.data.workflows) {
+                await github.rest.actions.enableWorkflow({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: workflow.id,
+                });
+            }

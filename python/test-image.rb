@@ -52,7 +52,14 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         end
     end
 
-    basic_tests = ['test_grammar', 'test_opcodes', 'test_dict', 'test_builtin', 'test_types', 'test_doctest2']
+    def get_tests_list
+        case python_version()
+        when "3.11", "3.12"
+            ['test_builtin', 'test_dict', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
+        else 
+            ['test_builtin', 'test_dict', 'test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
+        end
+    end
 
     it "should exist" do
         expect(@container).not_to be_nil
@@ -101,7 +108,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(command("apt-get install git rsync").exit_status).to eq(0)
         expect(command("git clone --branch v#{python_version_long()} --depth 1 https://github.com/python/cpython /tmp/cpython").exit_status).to eq(0)
         expect(command("rsync -avz /tmp/cpython/Lib/test/ /usr/lib/python#{python_version()}/test/").exit_status).to eq(0)
-        for test_suite in basic_tests
+        for test_suite in get_tests_list()
             expect(command("python3 -m test.regrtest #{test_suite}").exit_status).to eq(0)
         end
     end

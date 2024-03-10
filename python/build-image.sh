@@ -73,7 +73,7 @@ cmdretry gpg --lock-never --no-default-keyring \
     --recv-keys BA6932366A755776
 
 {
-    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} focal main"
+    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} jammy main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
 {
@@ -87,7 +87,16 @@ cmdretry gpg --lock-never --no-default-keyring \
 msginfo "Installing Python ..."
 cmdretry apt-get update
 cmdretry apt-get install libssl1.1 libffi7
-cmdretry apt-get install ${PYTHON_PKGS}
+
+if [ "${PYTHON_VER_NUM}" == "3.10" ]; then
+    cmdretry apt-get install ${PYTHON_PKGS}
+else
+    cmdretry apt-get install -t jammy ${PYTHON_PKGS}
+fi
+
+if [ "${PYTHON_VER_NUM}" == "3.11" ] || [ "${PYTHON_VER_NUM}" == "3.12" ] || [ "${PYTHON_VER_NUM}" == "3.13" ]; then
+    rm -rf /usr/bin/python3
+fi
 
 if [ ! -f "/usr/bin/python3" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
     ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
