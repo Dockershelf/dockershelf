@@ -76,9 +76,9 @@ cmdretry gpg --lock-never --no-default-keyring \
     echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} jammy main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
-# {
-#     echo "deb ${DEBMIRROR} bullseye main"
-# } | tee /etc/apt/sources.list.d/bullseye.list >/dev/null
+{
+    echo "deb ${DEBMIRROR} bullseye main"
+} | tee /etc/apt/sources.list.d/bullseye.list >/dev/null
 
 # Python: Installation
 # ------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ cmdretry apt-get purge $(aptitude search -F%p ~c ~g)
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
-# rm -rf /etc/apt/sources.list.d/bullseye.list
+rm -rf /etc/apt/sources.list.d/bullseye.list
 cmdretry apt-get update
 
 # Bash: Changing prompt
