@@ -50,7 +50,7 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
-if [ "${NODE_VER_NUM}" == "16" ] || [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ]; then
+if [ "${NODE_VER_NUM}" == "16" ] || [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ] || [ "${NODE_VER_NUM}" == "22" ]; then
     NODE_DISTRO_NAME="nodistro"
     NODE_REPO_KEY="2F59B5F99B1BE0B4"
 else

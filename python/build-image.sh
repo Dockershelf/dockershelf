@@ -73,7 +73,7 @@ cmdretry gpg --lock-never --no-default-keyring \
     --recv-keys BA6932366A755776
 
 {
-    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} jammy main"
+    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} noble main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
 {
@@ -91,7 +91,7 @@ cmdretry apt-get install libssl1.1 libffi7
 if [ "${PYTHON_VER_NUM}" == "3.10" ]; then
     cmdretry apt-get install ${PYTHON_PKGS}
 else
-    cmdretry apt-get install -t jammy ${PYTHON_PKGS}
+    cmdretry apt-get install -t noble ${PYTHON_PKGS}
 fi
 
 if [ "${PYTHON_VER_NUM}" == "3.11" ] || [ "${PYTHON_VER_NUM}" == "3.12" ] || [ "${PYTHON_VER_NUM}" == "3.13" ]; then
@@ -108,8 +108,13 @@ fi
 
 msginfo "Installing pip ..."
 
-curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" |
-    ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+if [ "${PYTHON_VER_NUM}" == "3.7" ]; then
+    curl -fsSL "https://bootstrap.pypa.io/pip/3.7/get-pip.py" |
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+else
+    curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" |
+        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+fi
 
 if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
     ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3

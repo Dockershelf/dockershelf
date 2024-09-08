@@ -32,12 +32,12 @@ from .logger import logger
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-node_suites = ['12', '14', '16', '18', '20']
+node_suites = ['14', '16', '18', '20', '22']
 
-python_suites = ['3.7', '3.11', '3.12']
+python_suites = ['3.7', '3.11', '3.13']
 
 go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
-go_suites = ['1.19', '1.20', '1.21', '1.22']
+go_suites = ['1.19', '1.20', '1.21', '1.22', '1.23']
 
 
 def u(u_string):
