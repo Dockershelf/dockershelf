@@ -78,7 +78,7 @@ cmdretry gpg --lock-never --no-default-keyring \
 cmdretry gpg --lock-never --no-default-keyring \
     --keyring /usr/share/keyrings/ubuntu.gpg \
     --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv-keys BA6932366A755776
+    --recv-keys 871920D1991BC93C
 
 {
     echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} jammy main"
