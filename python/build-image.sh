@@ -86,7 +86,7 @@ cmdretry gpg --lock-never --no-default-keyring \
 
 msginfo "Installing Python ..."
 cmdretry apt-get update
-cmdretry apt-get install libssl1.1 libffi7
+# cmdretry apt-get install libssl1.1 libffi7
 
 if [ "${PYTHON_VER_NUM}" == "3.10" ]; then
     cmdretry apt-get install ${PYTHON_PKGS}
