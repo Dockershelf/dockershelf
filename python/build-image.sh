@@ -73,12 +73,12 @@ cmdretry gpg --lock-never --no-default-keyring \
     --recv-keys BA6932366A755776
 
 {
-    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} noble main"
+    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} jammy main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
-{
-    echo "deb ${DEBMIRROR} bullseye main"
-} | tee /etc/apt/sources.list.d/bullseye.list >/dev/null
+# {
+#     echo "deb ${DEBMIRROR} bullseye main"
+# } | tee /etc/apt/sources.list.d/bullseye.list >/dev/null
 
 # Python: Installation
 # ------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ cmdretry apt-get install libssl1.1 libffi7
 if [ "${PYTHON_VER_NUM}" == "3.10" ]; then
     cmdretry apt-get install ${PYTHON_PKGS}
 else
-    cmdretry apt-get install -t noble ${PYTHON_PKGS}
+    cmdretry apt-get install -t jammy ${PYTHON_PKGS}
 fi
 
 if [ "${PYTHON_VER_NUM}" == "3.11" ] || [ "${PYTHON_VER_NUM}" == "3.12" ] || [ "${PYTHON_VER_NUM}" == "3.13" ]; then
@@ -129,7 +129,7 @@ cmdretry apt-get purge $(aptitude search -F%p ~c ~g)
 cmdretry apt-get purge aptitude
 cmdretry apt-get autoremove
 
-rm -rf /etc/apt/sources.list.d/bullseye.list
+# rm -rf /etc/apt/sources.list.d/bullseye.list
 cmdretry apt-get update
 
 # Bash: Changing prompt
