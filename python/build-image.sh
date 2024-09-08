@@ -29,6 +29,9 @@ PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
 DEBMIRROR="http://deb.debian.org/debian"
 DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
+UBUNTUMIRROR="http://archive.ubuntu.com/ubuntu"
+# deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse
+
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
@@ -72,9 +75,18 @@ cmdretry gpg --lock-never --no-default-keyring \
     --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv-keys BA6932366A755776
 
+cmdretry gpg --lock-never --no-default-keyring \
+    --keyring /usr/share/keyrings/ubuntu.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys BA6932366A755776
+
 {
     echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} jammy main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
+
+{
+    echo "deb [signed-by=/usr/share/keyrings/ubuntu.gpg] ${UBUNTUMIRROR} jammy main restricted universe multiverse"
+} | tee /etc/apt/sources.list.d/ubuntu.list >/dev/null
 
 {
     echo "deb ${DEBMIRROR} bullseye main"

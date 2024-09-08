@@ -34,7 +34,7 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
 node_suites = ['14', '16', '18', '20', '22']
 
-python_suites = ['3.7', '3.11', '3.13']
+python_suites = ['3.7', '3.11', '3.12']
 # python_suites = ['2.7', '3.7', '3.8', '3.11', '3.10', '3.12', '3.13']
 
 go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
