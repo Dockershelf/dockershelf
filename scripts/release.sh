@@ -53,7 +53,7 @@ if ! git config --get gitflow.branch.master >/dev/null 2>&1; then
 fi
 
 # Get current version for release name
-CURRENT_VERSION=$(grep "current_version" .bumpversion.cfg | cut -d' ' -f3)
+CURRENT_VERSION=$(grep "current_version" setup.cfg | cut -d' ' -f3)
 
 # Check if $CURRENT_VERSION is not a version
 if ! echo "$CURRENT_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then

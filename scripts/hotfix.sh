@@ -34,7 +34,7 @@ if ! git config --get gitflow.branch.master >/dev/null 2>&1; then
 fi
 
 # Get current version for hotfix name
-CURRENT_VERSION=$(grep "current_version" .bumpversion.cfg | cut -d' ' -f3)
+CURRENT_VERSION=$(grep "current_version" setup.cfg | cut -d' ' -f3)
 print_step "Current version: $CURRENT_VERSION"
 
 # Calculate new version using bumpversion in dry-run mode
