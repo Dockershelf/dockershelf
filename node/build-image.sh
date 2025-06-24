@@ -39,9 +39,9 @@ source "${BASEDIR}/library.sh"
 # actual dependencies
 
 msginfo "Installing tools and upgrading image ..."
-cmdretry apt-get update
-cmdretry apt-get upgrade
-cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
+apt-get update
+apt-get upgrade
+apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Node: Configure sources
 # ------------------------------------------------------------------------------
@@ -50,26 +50,29 @@ cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
-if [ "${NODE_VER_NUM}" == "16" ] || [ "${NODE_VER_NUM}" == "18" ] || [ "${NODE_VER_NUM}" == "20" ]; then
-    NODE_DISTRO_NAME="nodistro"
-    NODE_REPO_KEY="2F59B5F99B1BE0B4"
+dirmngr --debug-level guru
+
+if [ "${DEBIAN_RELEASE}" == "sid" ]; then
+    gpg --no-default-keyring \
+        --keyring ./node.gpg \
+        --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv-keys 2F59B5F99B1BE0B4
+    gpg --no-default-keyring \
+        --keyring ./node.gpg \
+        --armor --export "2F59B5F99B1BE0B4" \
+        > /usr/share/keyrings/node.gpg
 else
-    NODE_DISTRO_NAME="sid"
-    NODE_REPO_KEY="1655A0AB68576280"
+    gpg --no-default-keyring \
+        --keyring /usr/share/keyrings/node.gpg \
+        --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv-keys 2F59B5F99B1BE0B4
 fi
 
-cmdretry dirmngr --debug-level guru
-
-cmdretry gpg --lock-never --no-default-keyring \
-    --keyring /usr/share/keyrings/node.gpg \
-    --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv-keys ${NODE_REPO_KEY}
-
 {
-    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} ${NODE_DISTRO_NAME} main"
+    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} nodistro main"
 } | tee /etc/apt/sources.list.d/node.list >/dev/null
 
-cmdretry apt-get update
+apt-get update
 
 # Node: Installation
 # ------------------------------------------------------------------------------
@@ -82,11 +85,7 @@ for PKG in ${NODE_PKGS}; do
     NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 
-if [ "${DEBIAN_RELEASE}" == "sid" ]; then
-    cmdretry aptitude install libdb5.3t64 libreadline8t64
-fi
-
-cmdretry aptitude install ${NODE_PKGS_VER}
+aptitude install ${NODE_PKGS_VER}
 
 if [ ! -f "/usr/bin/nodejs" ]; then
     ln -s /usr/bin/node /usr/bin/nodejs
@@ -98,9 +97,9 @@ fi
 # because some files might be confused with already installed python packages.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge $(aptitude search -F%p ~c ~g)
-cmdretry apt-get purge aptitude
-cmdretry apt-get autoremove
+apt-get purge $(aptitude search -F%p ~c ~g)
+apt-get purge aptitude
+apt-get autoremove
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

@@ -54,7 +54,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     def get_tests_list
         case python_version()
-        when "3.11", "3.12"
+        when "3.11", "3.12", "3.13"
             ['test_builtin', 'test_dict', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
         else 
             ['test_builtin', 'test_dict', 'test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']

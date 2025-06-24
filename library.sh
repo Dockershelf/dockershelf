@@ -61,3 +61,14 @@ cmdretry() {
 
     return ${RESULT}
 }
+
+# Function to handle sed compatibility between macOS and Linux
+sed_inplace() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS (BSD sed)
+        sed -i '' "$@"
+    else
+        # Linux (GNU sed)
+        sed -i "$@"
+    fi
+}

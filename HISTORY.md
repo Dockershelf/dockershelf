@@ -1,6 +1,23 @@
 # Changelog
 
 
+## 3.4.0 (2025-06-24)
+
+### Changed
+
+* Fixing details. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for Python 3.13, Node 24 and Go 1.24 [DEL] Removing support for Node 12, Node 14 and Go 1.19. [REF] Adding maintainer scripts. [Luis Alejandro Martínez Faneyth]
+
+
+### Fixed
+
+* Fixing release script. [Luis Alejandro Martínez Faneyth]
+
+
+### Other
+
+
 ## 3.3.1 (2024-03-10)
 
 ### Changed
