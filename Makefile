@@ -8,6 +8,8 @@ exec_on_docker = docker compose \
 	-p dockershelf -f docker-compose.yml exec \
 	--user dockershelf app
 
+# Release configuration
+VERSION_TYPE ?= patch
 
 image:
 	@docker compose -p dockershelf -f docker-compose.yml build \
@@ -68,3 +70,20 @@ cataplum:
 	@docker compose -p dockershelf -f docker-compose.yml down \
 		--rmi all --remove-orphans --volumes
 	@docker system prune -a -f --volumes
+
+# Release management
+release:
+	@./scripts/release.sh $(VERSION_TYPE)
+
+release-patch:
+	@./scripts/release.sh patch
+
+release-minor:
+	@./scripts/release.sh minor
+
+release-major:
+	@./scripts/release.sh major
+
+# Hotfix management
+hotfix:
+	@./scripts/hotfix.sh

@@ -76,3 +76,7 @@ node/*/*.sh
 
 # VSCode
 .vscode/
+
+# Environment files and build logs
+.env
+build-logs/

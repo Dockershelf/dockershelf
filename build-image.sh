@@ -93,7 +93,19 @@ if [ "${DOCKER_IMAGE_TYPE}" == "latex" ]; then
 fi
 
 if [ "${DOCKER_IMAGE_TYPE}" != "debian" ] && [ "${BRANCH}" == "develop" ]; then
-    sed -i -r 's|FROM\s*(.*?)|FROM \1-dev|g' "${DOCKER_IMAGE_DIR}/Dockerfile"
+    sed_inplace 's|FROM \(.*\)|FROM \1-dev|g' "${DOCKER_IMAGE_DIR}/Dockerfile"
+fi
+
+# Detect if we're building locally or in CI
+# Check for common CI environment variables
+if [[ -n "${CI:-}" || -n "${GITHUB_ACTIONS:-}" || -n "${GITLAB_CI:-}" || -n "${TRAVIS:-}" || -n "${CIRCLECI:-}" ]]; then
+    IS_CI=true
+    PLATFORMS="linux/arm64,linux/amd64"
+else
+    IS_CI=false
+    # Build only ARM64 locally (assuming local development is on ARM64 Mac)
+    # You can change this to linux/amd64 if developing on x86_64
+    PLATFORMS="linux/arm64"
 fi
 
 # workaround to exporting the multi-arch image from buildkit to docker
@@ -104,17 +116,29 @@ docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
 # Build the docker image
 cd "${DOCKER_IMAGE_DIR}" &&
     docker buildx build --push \
-        --platform linux/arm64,linux/amd64 \
+        --platform ${PLATFORMS} \
         --build-arg BUILD_DATE="${BUILD_DATE}" \
         --build-arg VCS_REF="${VCS_REF}" \
         --build-arg VERSION="${VERSION}" \
         -t ${DOCKER_TEST_IMAGE_NAME} .
 
-docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
-docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
+if [ "$IS_CI" = true ]; then
+    # In CI, pull and tag both architectures
+    docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
+    docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
 
-docker pull --platform linux/amd64 ${DOCKER_TEST_IMAGE_NAME}
-docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-amd64
+    docker pull --platform linux/amd64 ${DOCKER_TEST_IMAGE_NAME}
+    docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-amd64
+else
+    # Locally, only pull and tag ARM64
+    docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
+    docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
+fi
+
+# Undo the -dev suffix modification to restore original Dockerfile
+if [ "${DOCKER_IMAGE_TYPE}" != "debian" ] && [ "${BRANCH}" == "develop" ]; then
+    sed_inplace 's|FROM \(.*\)-dev|FROM \1|g' "${DOCKER_IMAGE_DIR}/Dockerfile"
+fi
 
 # Remove unnecessary files
 rm -rfv "${DOCKER_IMAGE_DIR}"/*.sh "${DOCKER_IMAGE_DIR}"/*.js \

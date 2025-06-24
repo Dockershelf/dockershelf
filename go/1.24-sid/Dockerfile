@@ -1,12 +1,12 @@
-FROM dockershelf/debian:bookworm
+FROM dockershelf/debian:sid
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="node12" \
-      org.label-schema.description="A Node 12 image based on Debian bookworm" \
+      org.label-schema.name="go1.24.4" \
+      org.label-schema.description="A Go 1.24.4 image based on Debian sid" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -14,8 +14,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="node12" \
-      org.opencontainers.image.description="An Node 12 image based on Debian bookworm" \
+      org.opencontainers.image.title="go1.24.4" \
+      org.opencontainers.image.description="A Go 1.24.4 image based on Debian sid" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -24,9 +24,10 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
-ENV NODE_VER_NUM="12"
+ENV GO_VER_NUM="1.24.4" GO_DEBIAN_SUITE="sid" \
+    PATH="${PATH}:/usr/local/go/bin"
 
-COPY build-image.sh library.sh /usr/share/dockershelf/node/
-RUN bash /usr/share/dockershelf/node/build-image.sh
+COPY build-image.sh library.sh /usr/share/dockershelf/go/
+RUN bash /usr/share/dockershelf/go/build-image.sh
 
-CMD ["/bin/bash"]
+CMD ["go"]

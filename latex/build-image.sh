@@ -52,25 +52,25 @@ source "${BASEDIR}/library.sh"
 # actual dependencies
 
 msginfo "Installing tools and upgrading image ..."
-cmdretry apt-get update
-cmdretry apt-get upgrade
-cmdretry apt-get install ${DPKG_TOOLS_DEPENDS}
+apt-get update
+apt-get upgrade
+apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Latex: Installation
 # ------------------------------------------------------------------------------
 # We will install the packages listed in ${LATEX_PKGS}
 
 msginfo "Installing Latex ..."
-cmdretry apt-get install ${LATEX_PKGS} python3-pygments
+apt-get install ${LATEX_PKGS} python3-pygments
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------
 # We need to clear the filesystem of unwanted packages to shrink image size.
 
 msginfo "Removing unnecessary packages ..."
-cmdretry apt-get purge $( aptitude search -F%p ~c ~g )
-cmdretry apt-get purge aptitude
-cmdretry apt-get autoremove
+apt-get purge $( aptitude search -F%p ~c ~g )
+apt-get purge aptitude
+apt-get autoremove
 
 # Bash: Changing prompt
 # ------------------------------------------------------------------------------

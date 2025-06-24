@@ -232,12 +232,12 @@ export LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     DEBIAN_FRONTEND="noninteractive"
 
 msginfo "Installing dependencies and upgrading packages ..."
-cmdretry chroot "${TARGET}" apt-get update
-cmdretry chroot "${TARGET}" apt-get upgrade
-cmdretry chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
+chroot "${TARGET}" apt-get update
+chroot "${TARGET}" apt-get upgrade
+chroot "${TARGET}" apt-get install ${DPKG_DEPENDS}
 
 msginfo "Configuring locales ..."
-cmdretry chroot "${TARGET}" update-locale LANG="en_US.UTF-8" \
+chroot "${TARGET}" update-locale LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8"
 
 msginfo "Shrinking base filesystem ..."
