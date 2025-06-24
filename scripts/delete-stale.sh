@@ -322,7 +322,7 @@ Environment Variables:
     DOCKER_HUB_COOKIE    Session cookie from logged-in browser (required)
     REPO                 Space-separated list of repositories (required)
     MAX_UNTAGGED_LIMIT   Maximum number of untagged manifests to list (default: 100)
-    MAX_PAGINATION_REQUESTS Maximum number of pagination requests to make (default: 10)
+    MAX_PAGINATION_REQUESTS Maximum number of pagination requests to make (default: 150)
 
 Examples:
     REPO="dockershelf/python" $0 list-untagged

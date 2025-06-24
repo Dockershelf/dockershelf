@@ -20,7 +20,7 @@ The list of available images is shown below.
 |[dockershelf/python](#python)|`3.7-bookworm`, `3.7-stable`, `3.7-sid`, `3.7-unstable`, `3.7`, `3.10-bookworm`, `3.10-stable`, `3.10-sid`, `3.10-unstable`, `3.10`, `3.11-bookworm`, `3.11-stable`, `3.11-sid`, `3.11-unstable`, `3.11`, `3.12-bookworm`, `3.12-stable`, `3.12-sid`, `3.12-unstable`, `3.12`, `3.13-bookworm`, `3.13-stable`, `3-stable`, `3-bookworm`, `latest-stable`, `latest-bookworm`, `3.13-sid`, `3.13-unstable`, `3.13`, `3-unstable`, `3-sid`, `3`, `latest-unstable`, `latest-sid`, `latest`|
 |[dockershelf/node](#node)|`16-bookworm`, `16-stable`, `16-sid`, `16-unstable`, `16`, `18-bookworm`, `18-stable`, `18-sid`, `18-unstable`, `18`, `20-bookworm`, `20-stable`, `20-sid`, `20-unstable`, `20`, `22-bookworm`, `22-stable`, `22-sid`, `22-unstable`, `22`, `24-bookworm`, `24-stable`, `latest-stable`, `latest-bookworm`, `24-sid`, `24-unstable`, `24`, `latest-unstable`, `latest-sid`, `latest`|
 |[dockershelf/go](#go)|`1.20-bookworm`, `1.20-stable`, `1.20-sid`, `1.20-unstable`, `1.20`, `1.21-bookworm`, `1.21-stable`, `1.21-sid`, `1.21-unstable`, `1.21`, `1.22-bookworm`, `1.22-stable`, `1.22-sid`, `1.22-unstable`, `1.22`, `1.23-bookworm`, `1.23-stable`, `1.23-sid`, `1.23-unstable`, `1.23`, `1.24-bookworm`, `1.24-stable`, `latest-stable`, `latest-bookworm`, `1.24-sid`, `1.24-unstable`, `1.24`, `latest-unstable`, `latest-sid`, `latest`|
-|[dockershelf/latex](#latex)|`basic`, `latest`, `full`|
+|[dockershelf/latex](#latex)|`basic`, `basic-stable`, `latest-stable`, `latest`, `full`, `full-stable`|
 
 ## How to use
 

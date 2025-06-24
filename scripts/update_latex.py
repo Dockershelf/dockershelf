@@ -53,10 +53,12 @@ def update_latex(basedir):
                          '?colorA=22313f&colorB=4a637b')
     size_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
     matrix_str = (
-        '          - docker-image-name: "dockershelf/latex:{0}"')
-    matrix_str_main = (
         '          - docker-image-name: "dockershelf/latex:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/latex:{1}"')
+    matrix_str_main = (
+        '          - docker-image-name: "dockershelf/latex:{0}"'
+        '\n            docker-image-extra-tags: "dockershelf/latex:{1} '
+        'dockershelf/latex:{2} dockershelf/latex:{3}"')
     latex_readme_tablelist_holder = ('|[`{0}`]({1})'
                                      '|[![]({2})]({3})'
                                      '|[![]({4})]({5})'
@@ -82,12 +84,12 @@ def update_latex(basedir):
 
         if latex_version_long == 'basic':
             matrix.append(
-                matrix_str_main.format(latex_version_long, 'latest'))
-            tag_matrix.extend([latex_version_long, 'latest'])
+                matrix_str_main.format(latex_version_long, 'basic-stable', 'latest-stable', 'latest'))
+            tag_matrix.extend([latex_version_long, 'basic-stable', 'latest-stable', 'latest'])
         else:
             matrix.append(
-                matrix_str.format(latex_version_long))
-            tag_matrix.extend([latex_version_long])
+                matrix_str.format(latex_version_long, "full-stable"))
+            tag_matrix.extend([latex_version_long, "full-stable"])
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
