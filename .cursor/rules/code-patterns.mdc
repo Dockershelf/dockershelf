@@ -1,0 +1,98 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Code Patterns & Conventions
+
+## Shell Script Patterns
+
+### Standard Header
+All shell scripts start with this pattern (see [library.sh](mdc:library.sh)):
+```bash
+#!/usr/bin/env bash
+# Copyright notice and GPL license
+set -exuo pipefail  # Exit on error, undefined vars, pipe failures
+```
+
+### Common Functions
+The [library.sh](mdc:library.sh) provides shared utilities:
+- `msginfo()` - Yellow info messages
+- `msgsuccess()` - Green success messages  
+- `msgerror()` - Red error messages to stderr
+- `cmdretry()` - Retry commands up to 3 times
+- `sed_inplace()` - Cross-platform sed with in-place editing
+
+### Build Script Structure
+Language-specific build scripts follow this pattern:
+1. Load [library.sh](mdc:library.sh) functions
+2. Parse image parameters and versions
+3. Create directory structure
+4. Copy required files (library.sh, build scripts)
+5. Build with multi-architecture support
+6. Handle CI vs local build differences
+7. Clean up temporary files
+
+## Python Script Patterns
+
+### Update Script Structure
+All update scripts (e.g., [scripts/update_python.py](mdc:scripts/update_python.py)) follow:
+1. Import from [config.py](mdc:scripts/config.py) and [utils.py](mdc:scripts/utils.py)
+2. Define template strings and holders
+3. Process version matrix combinations
+4. Generate Dockerfiles from templates
+5. Create README documentation tables
+6. Return build matrix for CI
+
+### Template Substitution
+Uses regex substitution for Dockerfile generation:
+```python
+content = re.sub('%%VARIABLE%%', value, content)
+```
+
+## Dockerfile Patterns
+
+### Base Structure
+All Dockerfiles follow similar patterns (see [debian/Dockerfile.template](mdc:debian/Dockerfile.template)):
+1. **Multi-stage build** when needed (builder + final)
+2. **Standard labels** (org.label-schema.* and org.opencontainers.image.*)
+3. **Environment variables** for language versions and configuration
+4. **COPY build artifacts** and helper scripts
+5. **CMD** with appropriate default command
+
+### Label Standards
+Uses both legacy and modern label schemas:
+- `org.label-schema.*` (legacy)
+- `org.opencontainers.image.*` (modern OCI standard)
+
+### Environment Variables
+Each image sets version-specific environment variables:
+- Language version info (e.g., `PYTHON_VER_NUM`)
+- Debian suite information
+- UTF-8 locale settings
+- Tool-specific configurations
+
+## Version Management
+
+### Configuration System
+[scripts/config.py](mdc:scripts/config.py) defines supported versions:
+- Calls utility functions to fetch current versions
+- Maintains language-specific version arrays
+- Debian release mapping
+
+### Directory Naming
+Consistent pattern: `<version>-<debian-release>`
+- Examples: `3.11-bookworm`, `20-sid`, `1.24-stable`
+
+### Tag Strategy
+Multiple tags per image for flexibility:
+- Full version: `dockershelf/python:3.11-bookworm`
+- Convenience aliases: `dockershelf/python:3.11-stable`
+- Latest versions: `dockershelf/python:latest-stable`
+
+## Build Matrix Generation
+
+Each update script generates CI build matrices with:
+- **docker-image-name**: Primary tag
+- **docker-image-extra-tags**: Space-separated additional tags
+- Special handling for latest versions (more aliases)

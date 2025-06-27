@@ -2,6 +2,8 @@
 
 set -e
 
+APP_NAME=${1:-Hotfix}
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -86,33 +88,20 @@ if command -v gh >/dev/null 2>&1; then
     if gh auth status >/dev/null 2>&1; then
         # Generate release notes from changelog
         RELEASE_NOTES=""
+
+        # Read descriptive text from markdown file
+        DESCRIPTION_TEXT=""
+        if [ -f "RELEASE_DESCRIPTION.md" ]; then
+            DESCRIPTION_TEXT=$(cat RELEASE_DESCRIPTION.md)
+        fi
+
         if [ -f "HISTORY.md" ]; then
             # Extract the latest version's changelog entry
             RELEASE_CONTENT=$(awk "/^$NEW_VERSION \(/ { flag=1; next } /^[0-9]+\.[0-9]+\.[0-9]+ \(/ && flag { flag=0 } flag" HISTORY.md | head -n -1)
-            RELEASE_NOTES="## Hotfix $NEW_VERSION
+            RELEASE_NOTES="$DESCRIPTION_TEXT
+
+## Hotfix $NEW_VERSION
 $RELEASE_CONTENT
-
-This is a hotfix release addressing critical issues.
-
-Read [HISTORY](HISTORY.md) for more info.
-
-**Full Changelog**: https://github.com/$(gh repo view --json owner,name -q '.owner.login + "/" + .name')/compare/$CURRENT_VERSION...$NEW_VERSION"
-        fi
-
-        # Fallback to simple release notes if changelog parsing fails
-        if [ -z "$RELEASE_NOTES" ]; then
-            # Get commit messages between current and new version
-            COMMIT_MESSAGES=""
-            if git tag | grep -q "^$CURRENT_VERSION$"; then
-                # Get commits from the current version tag to HEAD
-                COMMIT_MESSAGES=$(git log --pretty=format:"- %s" $CURRENT_VERSION..HEAD)
-            else
-                # Fallback: get recent commits if no tag exists for current version
-                COMMIT_MESSAGES=$(git log --pretty=format:"- %s" -10)
-            fi
-
-            RELEASE_NOTES="## Hotfix $NEW_VERSION
-$COMMIT_MESSAGES
 
 This is a hotfix release addressing critical issues.
 
@@ -124,7 +113,7 @@ Read [HISTORY](HISTORY.md) for more info.
         # Create the release
         print_step "Creating GitHub release $NEW_VERSION"
         if gh release create "$NEW_VERSION" \
-            --title "Hotfix $NEW_VERSION" \
+            --title "$APP_NAME $NEW_VERSION (Hotfix)" \
             --notes "$RELEASE_NOTES" \
             --latest; then
             print_step "GitHub release created successfully!"

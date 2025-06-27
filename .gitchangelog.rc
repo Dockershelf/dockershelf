@@ -68,11 +68,11 @@ ignore_regexps = [
 ## whenever you are tweaking this variable.
 ##
 section_regexps = [
-    ('Added', [r'^\[ADD\]\s*([^\n]*)$', r'^\`\[ADD\]\`\s*([^\n]*)$']),
-    ('Changed', [r'^\[REF\]\s*([^\n]*)$', r'^\`\[REF\]\`\s*([^\n]*)$']),
-    ('Fixed', [r'^\[FIX\]\s*([^\n]*)$', r'^\`\[FIX\]\`\s*([^\n]*)$']),
-    ('Removed', [r'^\[DEL\]\s*([^\n]*)$', r'^\`\[DEL\]\`\s*([^\n]*)$']),
-    ('Other', None),
+    ('Added', [r'\[ADD\]\s*([^[\]]*?)(?:\s*\[[A-Z]+\]|$)', r'\`\[ADD\]\`\s*([^[\]]*?)(?:\s*\`\[[A-Z]+\]\`|$)']),
+    ('Changed', [r'\[REF\]\s*([^[\]]*?)(?:\s*\[[A-Z]+\]|$)', r'\`\[REF\]\`\s*([^[\]]*?)(?:\s*\`\[[A-Z]+\]\`|$)']),
+    ('Fixed', [r'\[FIX\]\s*([^[\]]*?)(?:\s*\[[A-Z]+\]|$)', r'\`\[FIX\]\`\s*([^[\]]*?)(?:\s*\`\[[A-Z]+\]\`|$)']),
+    ('Removed', [r'\[DEL\]\s*([^[\]]*?)(?:\s*\[[A-Z]+\]|$)', r'\`\[DEL\]\`\s*([^[\]]*?)(?:\s*\`\[[A-Z]+\]\`|$)']),
+    ('Other', [r'^([^[\]\s][^[\]]*?)(?:\s*\[[A-Z]+\].*|$)']),
 ]
 
 
@@ -117,8 +117,7 @@ body_process = ReSub(r'((^|\n)\[[A-Z]\w+(-\w+)*\] .*(\n\s+.*)*)+$', r'') | strip
 ##
 ## Available constructs are those listed in ``body_process`` doc.
 subject_process = (strip |
-    ReSub(r'^(\[ADD\]|\[REF\]|\[FIX\])\s*([^\n@]*)(@[a-z]+\s+)*$', r'\2') |
-    ReSub(r'^(\`\[ADD\]\`|\`\[REF\]\`|\`\[FIX\]\`)\s*([^\n@]*)(@[a-z]+\s+)*$', r'\2') |
+    ReSub(r'(@[a-z]+\s+)*$', r'') |
     ucfirst | final_dot)
 
 

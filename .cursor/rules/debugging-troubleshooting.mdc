@@ -1,0 +1,113 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Debugging & Troubleshooting
+
+## Common Build Issues
+
+### Docker Build Failures
+
+#### Multi-Architecture Issues
+- **Local Development**: Builds only ARM64 by default (see [build-image.sh](mdc:build-image.sh))
+- **CI Environment**: Builds both AMD64 and ARM64
+- **Platform Detection**: Uses environment variables (`CI`, `GITHUB_ACTIONS`, etc.)
+
+#### Base Image Problems
+- **Development Branch**: Automatically adds `-dev` suffix to base images
+- **Template Restoration**: Dockerfiles are modified temporarily during build, then restored
+- **Check**: Verify [library.sh](mdc:library.sh) `sed_inplace()` function for cross-platform compatibility
+
+### Template Generation Issues
+
+#### Missing Substitutions
+When Dockerfiles have `%%VARIABLE%%` left unsubstituted:
+1. Check variable definition in update script
+2. Verify template file has correct placeholder format
+3. Ensure regex pattern matches exactly
+
+#### Version Detection Failures
+Update scripts may fail to fetch versions:
+- Check internet connectivity for external API calls
+- Verify parsing logic in [scripts/utils.py](mdc:scripts/utils.py)
+- Review version format changes from upstream sources
+
+## Debugging Tools
+
+### Development Environment
+Use the containerized development environment:
+```bash
+make console  # Interactive shell in development container
+```
+
+### Build Debugging
+Enable verbose output:
+```bash
+# Already set in scripts via: set -exuo pipefail
+bash -x build-image.sh <image>  # Extra verbose debugging
+```
+
+### Version Debugging
+Test update scripts individually:
+```python
+# In development container
+python3 -c "from scripts.update_python import update_python; update_python('.')"
+```
+
+## Log Analysis
+
+### Build Script Output
+- **Info Messages**: Yellow, prefixed with script name
+- **Success Messages**: Green, for completion
+- **Error Messages**: Red, sent to stderr
+- **Command Output**: Raw docker/build command output
+
+### CI/CD Logs
+Check GitHub Actions workflows:
+- Multi-architecture build logs
+- Test execution results
+- Registry push confirmations
+
+## File System Issues
+
+### Permission Problems
+Development container runs as specific user:
+- Check UID/GID mapping in [docker-compose.yml](mdc:docker-compose.yml)
+- Verify file ownership after generation
+
+### Path Resolution
+Scripts use absolute paths:
+```bash
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+```
+
+### Temporary File Cleanup
+Build process copies files temporarily:
+- [library.sh](mdc:library.sh) copied to build context
+- Language-specific build scripts copied
+- LaTeX samples copied when needed
+- All cleaned up at end of build
+
+## Common Error Patterns
+
+### "Image not available"
+```
+"<image-name>" image is not available. Aborting.
+```
+**Solution**: Check directory structure matches expected pattern in [build-image.sh](mdc:build-image.sh)
+
+### Docker Login Failures
+Authentication issues with Docker Hub:
+- Verify `DH_USERNAME` and `DH_PASSWORD` environment variables
+- Check Docker Hub token permissions
+
+### Template File Missing
+Update scripts expect template files:
+- `<language>/Dockerfile.template`
+- `<language>/README.md.template`
+
+### Cross-Platform sed Issues
+macOS vs Linux sed compatibility:
+- Use `sed_inplace()` function from [library.sh](mdc:library.sh)
+- Never use `sed -i` directly

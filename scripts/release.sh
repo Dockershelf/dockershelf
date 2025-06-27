@@ -4,6 +4,7 @@ set -e
 
 # Default version type is patch
 VERSION_TYPE=${1:-patch}
+APP_NAME=${2:-Release}
 
 # Non-interactive mode flag
 NON_INTERACTIVE=${NON_INTERACTIVE:-false}
@@ -143,31 +144,20 @@ if command -v gh >/dev/null 2>&1; then
     if gh auth status >/dev/null 2>&1; then
         # Generate release notes from changelog
         RELEASE_NOTES=""
+
+        # Read descriptive text from markdown file
+        DESCRIPTION_TEXT=""
+        if [ -f "RELEASE_DESCRIPTION.md" ]; then
+            DESCRIPTION_TEXT=$(cat RELEASE_DESCRIPTION.md)
+        fi
+
         if [ -f "HISTORY.md" ]; then
             # Extract the latest version's changelog entry
             RELEASE_CONTENT=$(awk "/^## $NEW_VERSION \(/ { flag=1; next } flag && /^## [0-9]+\.[0-9]+\.[0-9]+ \(/ { exit } flag" HISTORY.md)
-            RELEASE_NOTES="## What's new in $NEW_VERSION
+            RELEASE_NOTES="$DESCRIPTION_TEXT
+
+## What's new in $NEW_VERSION
 $RELEASE_CONTENT
-
-Read [HISTORY](HISTORY.md) for more info.
-
-**Full Changelog**: https://github.com/$(gh repo view --json owner,name -q '.owner.login + "/" + .name')/compare/$CURRENT_VERSION...$NEW_VERSION"
-        fi
-
-        # Fallback to simple release notes if changelog parsing fails
-        if [ -z "$RELEASE_NOTES" ]; then
-            # Get commit messages between current and new version
-            COMMIT_MESSAGES=""
-            if git tag | grep -q "^$CURRENT_VERSION$"; then
-                # Get commits from the current version tag to HEAD
-                COMMIT_MESSAGES=$(git log --pretty=format:"- %s" $CURRENT_VERSION..HEAD)
-            else
-                # Fallback: get recent commits if no tag exists for current version
-                COMMIT_MESSAGES=$(git log --pretty=format:"- %s" -10)
-            fi
-
-            RELEASE_NOTES="## What's new in $NEW_VERSION
-$COMMIT_MESSAGES
 
 Read [HISTORY](HISTORY.md) for more info.
 
@@ -177,7 +167,7 @@ Read [HISTORY](HISTORY.md) for more info.
         # Create the release
         print_step "Creating GitHub release $NEW_VERSION"
         if gh release create "$NEW_VERSION" \
-            --title "Release $NEW_VERSION" \
+            --title "$APP_NAME $NEW_VERSION" \
             --notes "$RELEASE_NOTES" \
             --latest; then
             print_step "GitHub release created successfully!"
