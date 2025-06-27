@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Dockershelf Project Overview
+
+**Dockershelf** is a multi-architecture Docker image collection providing optimized, minimal base images for popular programming languages and environments.
+
+## Project Structure
+
+The main entry points are:
+- [README.md](mdc:README.md) - Main project documentation with image listings
+- [Makefile](mdc:Makefile) - Build targets and development commands
+- [library.sh](mdc:library.sh) - Common shell functions used across all build scripts
+
+## Supported Image Types
+
+Each image type has its own directory containing:
+1. **Dockerfile.template** - Template for generating actual Dockerfiles
+2. **build-image.sh** - Language-specific build script
+3. **test-image.rb** - Ruby-based testing script
+4. **README.md** - Language-specific documentation
+5. **Version directories** - Each containing generated Dockerfiles
+
+### Available Images
+- **[debian/](mdc:debian)** - Base Debian images (bullseye, bookworm, trixie, sid)
+- **[python/](mdc:python)** - Python runtime images (3.7-3.13)
+- **[node/](mdc:node)** - Node.js runtime images (16, 18, 20, 22, 24)
+- **[go/](mdc:go)** - Go language images (1.20-1.24)
+- **[latex/](mdc:latex)** - LaTeX document processing (basic, full)
+
+## Core Build System
+
+- [build-image.sh](mdc:build-image.sh) - Main build script for individual images
+- [build-all-images.sh](mdc:build-all-images.sh) - Batch build script
+- [push-image.sh](mdc:push-image.sh) - Image publishing script
+- [test-image.sh](mdc:test-image.sh) - Image testing wrapper
+
+## Automation Scripts
+
+The [scripts/](mdc:scripts) directory contains:
+- [update.py](mdc:update.py) - Main update orchestrator
+- [update_*.py](mdc:scripts) - Language-specific version update scripts
+- [config.py](mdc:scripts/config.py) - Version configuration management
+- **Release management**: [release.sh](mdc:scripts/release.sh), [hotfix.sh](mdc:scripts/hotfix.sh)
+
+## Image Variants
+
+Images come in two flavors:
+- **Stable**: Based on Debian stable (bookworm) - for production
+- **Unstable**: Based on Debian sid - for development
+
+All images support **amd64** and **arm64** architectures.

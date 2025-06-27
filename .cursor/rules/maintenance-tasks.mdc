@@ -1,0 +1,164 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Maintenance & Administrative Tasks
+
+## Version Updates
+
+### Adding New Language Versions
+
+1. **Update Configuration**
+   - Modify [scripts/config.py](mdc:scripts/config.py) or version detection in [scripts/utils.py](mdc:scripts/utils.py)
+   - Add new version to appropriate language array
+
+2. **Run Update Script**
+   ```bash
+   make update-shelves  # Updates all languages
+   # OR for specific language:
+   python3 scripts/update_python.py
+   ```
+
+3. **Verify Generated Files**
+   - Check new version directories are created
+   - Verify Dockerfiles have correct substitutions
+   - Review updated README.md tables
+
+### Removing Deprecated Versions
+
+1. **Update Version Configuration**
+   - Remove from [scripts/config.py](mdc:scripts/config.py) version arrays
+   - Consider EOL status and security implications
+
+2. **Clean Up Directories**
+   - Update scripts automatically remove old directories
+   - Verify no orphaned files remain
+
+## Release Management
+
+### Preparing Releases
+
+1. **Version Update Verification**
+   ```bash
+   make update-shelves  # Ensure all versions are current
+   ```
+
+2. **Build Testing**
+   ```bash
+   # Test critical images
+   bash build-image.sh dockershelf/python:latest-stable
+   bash test-image.sh dockershelf/python:latest-stable
+   ```
+
+3. **Release Creation**
+   ```bash
+   make release-patch   # Or release-minor/release-major
+   ```
+
+### Emergency Hotfixes
+
+For critical security updates:
+```bash
+make hotfix  # Automated hotfix workflow
+```
+
+## Documentation Updates
+
+### Auto-Generated Content
+Several files are auto-generated (DO NOT edit manually):
+- Language-specific README.md files
+- Individual Dockerfiles in version directories
+- Build matrix configurations
+
+### Manual Documentation
+Update these files when needed:
+- [README.md](mdc:README.md) - Main project documentation
+- [AUTHORS.md](mdc:AUTHORS.md) - Contributor information
+- [HISTORY.md](mdc:HISTORY.md) - Changelog
+- Language README.md.template files
+
+### README Table Updates
+Tables are generated automatically but check:
+- Badge URLs are functional
+- Docker Hub links are correct
+- Size and pull statistics are accurate
+
+## Repository Maintenance
+
+### Cleaning Development Environment
+```bash
+make stop     # Stop containers
+make down     # Remove containers
+make destroy  # Remove everything (WARNING: destructive)
+make cataplum # Nuclear option - removes ALL Docker resources
+```
+
+### Dependency Updates
+
+#### Ruby Dependencies
+```bash
+make dependencies  # Updates Gemfile.lock
+```
+
+#### Python Dependencies
+```bash
+# Update requirements.txt manually
+make virtualenv  # Recreate Python environment
+```
+
+### File Permissions
+Ensure proper permissions after operations:
+- Build scripts should be executable
+- Generated files should be readable
+- Directory structure should be consistent
+
+## CI/CD Maintenance
+
+### GitHub Actions Workflow
+Monitor and update:
+- **Schedule**: Weekly automated builds (schedule-master.yml)
+- **Platform Support**: AMD64 and ARM64 builds
+- **Registry Publishing**: Docker Hub integration
+
+### Build Performance
+- **Multi-stage builds**: Optimize layer caching
+- **Build context**: Minimize files copied to Docker daemon
+- **Parallel builds**: Leverage GitHub Actions matrix builds
+
+## Security Considerations
+
+### Base Image Updates
+- Debian images updated weekly via automation
+- Security patches applied through base image updates
+- Monitor Debian security advisories
+
+### Dependency Management
+- Language-specific security updates
+- Monitor upstream version releases
+- Automated vulnerability scanning through registry
+
+### Access Control
+- Docker Hub publishing credentials
+- GitHub Actions secrets management
+- Repository access permissions
+
+## Monitoring & Metrics
+
+### Image Usage Statistics
+Track via Docker Hub:
+- Pull counts per image
+- Popular versions and variants
+- Geographic distribution
+
+### Build Success Rates
+Monitor CI/CD pipelines:
+- Build failure patterns
+- Test execution results
+- Performance regression detection
+
+### Community Feedback
+Monitor and respond to:
+- GitHub Issues and Pull Requests
+- Docker Hub comments and feedback
+- Community Discord discussions

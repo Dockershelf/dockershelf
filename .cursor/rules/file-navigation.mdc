@@ -1,0 +1,147 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# File Navigation Guide
+
+## Quick Navigation Reference
+
+### 🚀 Getting Started Files
+- [README.md](mdc:README.md) - Start here for project overview
+- [Makefile](mdc:Makefile) - Available commands and targets
+- [docker-compose.yml](mdc:docker-compose.yml) - Development environment setup
+
+### 🔧 Core Build System
+- [build-image.sh](mdc:build-image.sh) - Single image build script
+- [build-all-images.sh](mdc:build-all-images.sh) - Batch build script  
+- [library.sh](mdc:library.sh) - **CRITICAL**: Common functions used everywhere
+- [test-image.sh](mdc:test-image.sh) - Image testing wrapper
+
+### 📦 Language Directories
+Each language follows the same structure:
+
+#### Python Images
+- [python/Dockerfile.template](mdc:python/Dockerfile.template) - Template for all Python versions
+- [python/build-image.sh](mdc:python/build-image.sh) - Python-specific build logic
+- [python/test-image.rb](mdc:python/test-image.rb) - Python testing specifications
+- [python/README.md](mdc:python/README.md) - **Auto-generated** documentation
+
+#### Node.js Images  
+- [node/Dockerfile.template](mdc:node/Dockerfile.template) - Template for all Node versions
+- [node/build-image.sh](mdc:node/build-image.sh) - Node-specific build logic
+- [node/test-image.rb](mdc:node/test-image.rb) - Node testing specifications
+
+#### Go Images
+- [go/Dockerfile.template](mdc:go/Dockerfile.template) - Template for all Go versions
+- [go/build-image.sh](mdc:go/build-image.sh) - Go-specific build logic
+- [go/test-image.rb](mdc:go/test-image.rb) - Go testing specifications
+
+#### Debian Base Images
+- [debian/Dockerfile.template](mdc:debian/Dockerfile.template) - Base Debian template
+- [debian/build-image.sh](mdc:debian/build-image.sh) - Debian-specific build logic
+- [debian/test-image.rb](mdc:debian/test-image.rb) - Debian testing specifications
+
+#### LaTeX Images
+- [latex/Dockerfile.template](mdc:latex/Dockerfile.template) - LaTeX template
+- [latex/build-image.sh](mdc:latex/build-image.sh) - LaTeX-specific build logic
+- [latex/sample.tex](mdc:latex/sample.tex) - Sample LaTeX document for testing
+
+### 🤖 Automation Scripts
+- [update.py](mdc:update.py) - **Main orchestrator** for version updates
+- [scripts/config.py](mdc:scripts/config.py) - **Version configuration** 
+- [scripts/utils.py](mdc:scripts/utils.py) - Utility functions for version fetching
+- [scripts/logger.py](mdc:scripts/logger.py) - Logging configuration
+
+#### Language-Specific Updates
+- [scripts/update_python.py](mdc:scripts/update_python.py) - Python version management
+- [scripts/update_node.py](mdc:scripts/update_node.py) - Node.js version management  
+- [scripts/update_go.py](mdc:scripts/update_go.py) - Go version management
+- [scripts/update_debian.py](mdc:scripts/update_debian.py) - Debian release management
+- [scripts/update_latex.py](mdc:scripts/update_latex.py) - LaTeX package management
+
+### 🚀 Release Management
+- [scripts/release.sh](mdc:scripts/release.sh) - **Release automation**
+- [scripts/hotfix.sh](mdc:scripts/hotfix.sh) - Emergency hotfix workflow
+- [RELEASE_DESCRIPTION.md](mdc:RELEASE_DESCRIPTION.md) - Release notes template
+
+### 📋 Project Documentation
+- [AUTHORS.md](mdc:AUTHORS.md) - Contributor information
+- [HISTORY.md](mdc:HISTORY.md) - Project changelog
+- [MAINTAINER.md](mdc:MAINTAINER.md) - Maintenance guidelines
+- [CLA.md](mdc:CLA.md) - Contributor License Agreement
+
+## File Naming Patterns
+
+### Generated Directories
+Version-specific directories follow this pattern:
+```
+<language>/<version>-<debian-release>/
+└── Dockerfile  # Generated from template
+```
+
+Examples:
+- `python/3.11-bookworm/Dockerfile`
+- `node/20-sid/Dockerfile`
+- `go/1.24-stable/Dockerfile`
+
+### Template Files
+Templates always end with `.template`:
+- `Dockerfile.template` - Docker image template
+- `README.md.template` - Documentation template
+
+### Build Scripts
+Each language directory contains:
+- `build-image.sh` - Language-specific build logic
+- `test-image.rb` - Ruby-based test specifications
+
+## Common File Relationships
+
+### Template → Generated Files
+1. **Input**: `<language>/Dockerfile.template`
+2. **Script**: `scripts/update_<language>.py`
+3. **Output**: `<language>/<version>-<release>/Dockerfile`
+
+### Configuration Chain
+1. [scripts/config.py](mdc:scripts/config.py) - Defines supported versions
+2. [scripts/utils.py](mdc:scripts/utils.py) - Fetches current versions from APIs
+3. [scripts/update_*.py](mdc:scripts/) - Generates files from templates
+4. [update.py](mdc:update.py) - Orchestrates all updates
+
+### Build Chain
+1. [build-image.sh](mdc:build-image.sh) - Main build script
+2. [library.sh](mdc:library.sh) - Common functions
+3. `<language>/build-image.sh` - Language-specific logic
+4. `<language>/<version>/Dockerfile` - Final image definition
+
+## Critical Files (Never Edit Manually)
+
+❌ **Auto-Generated - Do Not Edit:**
+- Individual `Dockerfile` files in version directories
+- Language-specific `README.md` files
+- Build matrix configurations
+
+✅ **Safe to Edit:**
+- Template files (`*.template`)
+- Main [README.md](mdc:README.md)
+- Configuration files in [scripts/](mdc:scripts/)
+- Build scripts (`build-image.sh`, `library.sh`)
+
+## Development Shortcuts
+
+### Quick Development Setup
+```bash
+make image && make start && make console
+```
+
+### Testing a Single Language
+```bash
+# Test Python updates
+python3 scripts/update_python.py
+```
+
+### Full Update Cycle
+```bash
+make update-shelves  # Update all versions
+make dependencies    # Update Ruby gems
+```

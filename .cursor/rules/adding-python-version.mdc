@@ -1,0 +1,264 @@
+---
+description: 
+globs: python/*
+alwaysApply: false
+---
+# Adding a New Python Version
+
+## Overview
+
+This guide covers the complete process of adding a new Python version to the dockershelf project, including configuration, build logic, testing, and deployment considerations.
+
+## Prerequisites
+
+- Development environment running: `make image && make start && make console`
+- Understanding of Python version support from deadsnakes PPA
+- Knowledge of Debian/Ubuntu compatibility requirements
+
+## Step-by-Step Process
+
+### 1. Update Version Configuration
+
+#### 1.1 Add to Python Suites List
+Update [scripts/utils.py](mdc:scripts/utils.py) line 31:
+
+```python
+python_suites = ['3.7', '3.10', '3.11', '3.12', '3.13', '3.14']  # Add new version
+```
+
+**Important**: Only add versions that are:
+- Available in the deadsnakes PPA
+- Officially supported by Python.org
+- Compatible with current Ubuntu releases
+
+#### 1.2 Verify Version Detection
+Test the version detection:
+```bash
+python3 -c "from scripts.utils import get_python_versions; print(get_python_versions())"
+```
+
+### 2. Update Build Logic (If Needed)
+
+#### 2.1 Analyze Version Requirements
+Check if the new Python version requires special handling in [python/build-image.sh](mdc:python/build-image.sh):
+
+**Ubuntu Release Mapping** (lines 78-84):
+- Python 3.7, 3.10, 3.11: Use `focal` (older Ubuntu for compatibility)
+- Python 3.12, 3.13: Use `jammy` 
+- **New versions**: Determine appropriate Ubuntu release based on deadsnakes availability
+
+**Dependency Requirements** (lines 96-113):
+- Older versions (3.7, 3.10, 3.11): Need `libssl1.1` and `libffi7` from Debian Bullseye
+- Newer versions: May need different dependencies
+- Check deadsnakes PPA documentation for requirements
+
+#### 2.2 Update Build Script Logic
+If the new version requires special handling, update [python/build-image.sh](mdc:python/build-image.sh):
+
+```bash
+# Ubuntu release selection (around line 78)
+if [ "${PYTHON_VER_NUM_MINOR}" == "3.7" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.11" ]; then
+    UBUNTU_RELEASE="focal"
+elif [ "${PYTHON_VER_NUM_MINOR}" == "3.12" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.13" ]; then
+    UBUNTU_RELEASE="jammy"
+elif [ "${PYTHON_VER_NUM_MINOR}" == "3.14" ]; then  # Add new version
+    UBUNTU_RELEASE="noble"  # Or appropriate release
+fi
+
+# Dependency handling (around line 96)
+if [ "${PYTHON_VER_NUM_MINOR}" == "3.7" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.11" ]; then
+    # Special handling for older versions
+elif [ "${PYTHON_VER_NUM_MINOR}" == "3.14" ]; then  # Add if needed
+    # Special handling for new version
+fi
+```
+
+#### 2.3 Update Pip Installation Logic
+Check pip installation section (lines 210-220):
+- Python 3.7 uses legacy pip installer
+- Newer versions use current pip installer
+- Verify new version compatibility
+
+### 3. Update Testing Configuration
+
+#### 3.1 Review Test Requirements
+Update [python/test-image.rb](mdc:python/test-image.rb) if needed:
+
+```ruby
+def get_tests_list
+    case python_version()
+    when "3.11", "3.12", "3.13", "3.14"  # Add new version
+        ['test_builtin', 'test_dict', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
+    else 
+        ['test_builtin', 'test_dict', 'test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
+    end
+end
+```
+
+**Note**: Test module names may change between Python versions. Verify against actual Python source.
+
+### 4. Generate New Dockerfiles
+
+#### 4.1 Run Update Script
+Generate new Dockerfiles and documentation:
+```bash
+# In development container
+python3 scripts/update_python.py
+
+# Or update all languages
+make update-shelves
+```
+
+#### 4.2 Verify Generated Files
+Check that new directories are created:
+- `python/3.14-bookworm/Dockerfile`
+- `python/3.14-sid/Dockerfile`
+- Updated `python/README.md`
+
+#### 4.3 Review Generated Dockerfiles
+Verify template substitutions are correct:
+```bash
+# Check specific substitutions
+grep -n "%%.*%%" python/3.14-*/Dockerfile  # Should return no results
+```
+
+### 5. Build and Test
+
+#### 5.1 Build New Images
+Build both variants:
+```bash
+# Stable variant
+bash build-image.sh dockershelf/python:3.14-bookworm stable
+
+# Unstable variant
+bash build-image.sh dockershelf/python:3.14-sid unstable
+```
+
+#### 5.2 Test New Images
+Run comprehensive tests:
+```bash
+# Test stable variant
+bash test-image.sh dockershelf/python:3.14-bookworm
+
+# Test unstable variant
+bash test-image.sh dockershelf/python:3.14-sid
+```
+
+#### 5.3 Manual Verification
+Interactive testing:
+```bash
+# Start container
+docker run -it dockershelf/python:3.14-bookworm bash
+
+# Inside container - verify basics
+python3 --version
+pip3 --version
+python3 -c "import sys; print(sys.version_info)"
+pip3 install requests  # Test package installation
+```
+
+### 6. Documentation Updates
+
+#### 6.1 Auto-Generated Documentation
+The following are updated automatically by the update script:
+- [python/README.md](mdc:python/README.md) - Image table with new version
+- Main [README.md](mdc:README.md) tag listings
+- Build matrix configurations for CI
+
+#### 6.2 Manual Documentation (If Needed)
+Update these files only if there are special considerations:
+- [python/README.md.template](mdc:python/README.md.template) - If template changes needed
+- [BUILD_ALL_IMAGES.md](mdc:BUILD_ALL_IMAGES.md) - If build process changes
+
+### 7. Version-Specific Considerations
+
+#### 7.1 Pre-Release Versions
+For alpha/beta/RC versions:
+- May need different Ubuntu release
+- Limited deadsnakes availability
+- Extended testing period required
+- Consider marking as experimental
+
+#### 7.2 Long-Term Support (LTS)
+For LTS versions:
+- Update tag aliases in [scripts/update_python.py](mdc:scripts/update_python.py)
+- Consider making it the new default `latest` tag
+- Plan for extended support lifecycle
+
+#### 7.3 End-of-Life Versions
+When adding new versions, consider removing EOL versions:
+- Update [scripts/utils.py](mdc:scripts/utils.py) to remove old versions
+- Run update script to clean up old directories
+- Update deprecation timeline in documentation
+
+### 8. Deployment and Release
+
+#### 8.1 Create Pull Request
+Include in PR:
+- Configuration changes
+- Generated Dockerfiles
+- Build script updates (if any)
+- Test results and verification
+- Documentation updates
+
+#### 8.2 CI/CD Verification
+Ensure CI pipeline passes:
+- Multi-architecture builds (AMD64, ARM64)
+- All test suites pass
+- Docker Hub publishing works
+- Registry scanning passes
+
+#### 8.3 Release Planning
+Consider release timing:
+- Coordinate with Python release schedule
+- Plan for deadsnakes PPA availability
+- Schedule announcement and documentation updates
+
+## Common Issues and Solutions
+
+### Build Failures
+
+#### Missing Dependencies
+**Error**: Package installation fails
+**Solution**: Check Ubuntu release compatibility and dependency requirements
+
+#### GPG Key Issues
+**Error**: GPG verification fails for deadsnakes PPA
+**Solution**: Verify GPG key handling in build script, may need updates for new Ubuntu releases
+
+### Test Failures
+
+#### Test Module Missing
+**Error**: Python test modules not found
+**Solution**: Update test configuration in [python/test-image.rb](mdc:python/test-image.rb)
+
+#### Version Mismatch
+**Error**: Python version doesn't match expected
+**Solution**: Verify deadsnakes package version and build script logic
+
+### Template Issues
+
+#### Substitution Failures
+**Error**: `%%VARIABLE%%` remains in generated Dockerfiles
+**Solution**: Check variable definitions in [scripts/update_python.py](mdc:scripts/update_python.py)
+
+## Validation Checklist
+
+- [ ] Version added to `python_suites` in [scripts/utils.py](mdc:scripts/utils.py)
+- [ ] Build script logic updated (if needed)
+- [ ] Test configuration updated (if needed)
+- [ ] Update script generates new Dockerfiles successfully
+- [ ] Both stable and unstable variants build successfully
+- [ ] All tests pass for new version
+- [ ] Manual verification completed
+- [ ] Documentation updated automatically
+- [ ] CI/CD pipeline passes
+- [ ] Multi-architecture support verified
+- [ ] No regression in existing versions
+
+## Resources
+
+- **Deadsnakes PPA**: https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
+- **Python Release Schedule**: https://peps.python.org/pep-0537/
+- **Ubuntu Release Info**: https://wiki.ubuntu.com/Releases
+- **Docker Hub Repository**: https://hub.docker.com/r/dockershelf/python

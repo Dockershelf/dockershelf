@@ -1,0 +1,93 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Development Workflow
+
+## Getting Started
+
+### Environment Setup
+1. **Development Environment**: `make image && make start`
+2. **Interactive Shell**: `make console`
+3. **Dependencies**: `make dependencies` (Ruby) or `make virtualenv` (Python)
+
+### Building Images
+
+#### Single Image Build
+```bash
+# Build specific image
+bash build-image.sh dockershelf/python:3.11-bookworm
+
+# Test image
+bash test-image.sh dockershelf/python:3.11-bookworm
+```
+
+#### Batch Operations
+```bash
+# Build all images
+bash build-all-images.sh
+
+# Update all version configurations
+make update-shelves
+```
+
+## Template System
+
+### Dockerfile Templates
+Located in each language directory (e.g., [python/Dockerfile.template](mdc:python/Dockerfile.template)):
+- Use `%%VARIABLE%%` placeholders for substitution
+- Common variables: `%%BASE_IMAGE%%`, `%%VERSION%%`, `%%DEBIAN_RELEASE%%`
+- Generated Dockerfiles are placed in version-specific subdirectories
+
+### Update Scripts
+Each language has an update script (e.g., [scripts/update_python.py](mdc:scripts/update_python.py)):
+- Fetches latest version information
+- Generates Dockerfiles from templates
+- Updates README tables
+- Creates build matrix configurations
+
+## File Organization
+
+### Language Directory Structure
+```
+<language>/
+├── Dockerfile.template      # Template for all versions
+├── build-image.sh          # Language-specific build logic
+├── test-image.rb           # Testing specifications
+├── README.md               # Generated documentation
+└── <version>-<variant>/    # Generated directories
+    └── Dockerfile          # Generated from template
+```
+
+### Key Files in Root
+- [library.sh](mdc:library.sh) - Shared functions (`msginfo`, `msgerror`, `cmdretry`, `sed_inplace`)
+- [docker-compose.yml](mdc:docker-compose.yml) - Development environment
+- [requirements.txt](mdc:requirements.txt) - Python dependencies
+
+## Release Management
+
+### Version Bumping
+```bash
+make release-patch  # Patch version
+make release-minor  # Minor version  
+make release-major  # Major version
+```
+
+### Hotfixes
+```bash
+make hotfix  # Emergency fix workflow
+```
+
+## Testing
+
+### Individual Image Testing
+Each image type includes Ruby-based tests:
+- Tests basic functionality
+- Verifies installed packages and versions
+- Validates environment variables
+
+### CI/CD Integration
+- **GitHub Actions**: Automated weekly builds and testing
+- **Multi-arch**: Builds for both AMD64 and ARM64
+- **Registry**: Automatic publishing to Docker Hub
