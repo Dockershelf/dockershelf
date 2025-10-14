@@ -39,7 +39,7 @@
 ## will be ignored and won't be reported in the changelog.
 ##
 ignore_regexps = [
-    r'^(.{3,3}\s*:)?\s*[Uu]pdating [Cc]hangelog and [Vv]ersion.?\s*$',
+    r'^(.{3,3}\s*:)?\s*(\[[A-Z]+\]\s*)?[Uu]pdating [Cc]hangelog and [Vv]ersion.*$',
     r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
     r'@minor', r'!minor',
     r'@cosmetic', r'!cosmetic',
@@ -117,6 +117,8 @@ body_process = ReSub(r'((^|\n)\[[A-Z]\w+(-\w+)*\] .*(\n\s+.*)*)+$', r'') | strip
 ##
 ## Available constructs are those listed in ``body_process`` doc.
 subject_process = (strip |
+    ReSub(r'^((?:`?\[[A-Z]+\]`?)\s*[^[\]`]*?)(?:\s*(?:`?\[[A-Z]+\]`?).*)?$', r'\1') |
+    ReSub(r'^`?\[[A-Z]+\]`?\s*', r'') |
     ReSub(r'(@[a-z]+\s+)*$', r'') |
     ucfirst | final_dot)
 

@@ -34,10 +34,11 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
 node_suites = ['16', '18', '20', '22', '24']
 
-python_suites = ['3.7', '3.10', '3.11', '3.12', '3.13']
+# https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
+python_suites = ['3.10', '3.11', '3.12', '3.13', '3.14']
 
 go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
-go_suites = ['1.20', '1.21', '1.22', '1.23', '1.24']
+go_suites = ['1.20', '1.21', '1.22', '1.23', '1.24', '1.25']
 
 
 def u(u_string):

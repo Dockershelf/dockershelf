@@ -44,7 +44,7 @@ get_token() {
     local repo=$1
     local response=$(curl -s -u "$USERNAME:$PASSWORD" \
         "https://auth.docker.io/token?service=registry.docker.io&scope=repository:$repo:pull,push,delete")
-    
+
     local token=$(echo "$response" | jq -r .token)
     local expires_in=$(echo "$response" | jq -r .expires_in)
 
@@ -71,7 +71,7 @@ get_token() {
 list_tags() {
     local token=$1
     local repo=$2
-    
+
     local tags=$(curl -s -H "Authorization: Bearer $token" \
         "https://registry-1.docker.io/v2/$repo/tags/list" | jq -r '.tags[]?' 2>/dev/null)
 
@@ -90,6 +90,26 @@ get_digest_for_tag() {
         grep -i docker-content-digest | tr -d '\r' | awk '{print $2}')
 
     echo "$digest"
+}
+
+# Function to check if Docker Hub cookie has expired
+check_cookie_expiration() {
+    local response="$1"
+
+    # Check for indicators of expired cookie/redirect response
+    if echo "$response" | grep -q "SingleFetchRedirect" && echo "$response" | grep -q "/login?returnTo="; then
+        print_error "Docker Hub session cookie has expired!"
+        print_error "The response indicates you need to log in again."
+        print_error ""
+        print_error "To get a new cookie:"
+        print_error "1. Open Docker Hub in your browser and log in"
+        print_error "2. Open Developer Tools (F12)"
+        print_error "3. Go to Network tab and refresh the page"
+        print_error "4. Click on any request to hub.docker.com"
+        print_error "5. In Request Headers, copy the entire 'Cookie:' value"
+        print_error "6. Update your .env file with the new DOCKER_HUB_COOKIE value"
+        exit 1
+    fi
 }
 
 # Function to check rate limits and wait if necessary
@@ -163,6 +183,9 @@ list_all_manifests() {
                 --data-raw "intent=paginate&lastEvaluatedKey=$last_key" \
                 "https://hub.docker.com/repository/docker/$repo/image-management.data?sortField=last_pushed&sortOrder=asc")
         fi
+
+        # Check if cookie has expired
+        check_cookie_expiration "$response"
 
         # Check rate limits and wait if necessary
         check_rate_limit "$headers_file" "$request_num"
@@ -248,7 +271,7 @@ find_untagged_manifests() {
     local limit=${3:-0}
 
     print_status "Getting tagged manifests..."
-    
+
     # Check token before getting tags
     current_time=$(date +%s)
     if [ $current_time -ge $TOKEN_EXPIRES_AT ]; then
@@ -256,7 +279,7 @@ find_untagged_manifests() {
         get_token "$repo"
         token="$CURRENT_TOKEN"
     fi
-    
+
     local tags=$(list_tags "$token" "$repo")
     local tagged_digests=""
 
@@ -270,7 +293,7 @@ find_untagged_manifests() {
                     get_token "$repo"
                     token="$CURRENT_TOKEN"
                 fi
-                
+
                 local digest=$(get_digest_for_tag "$token" "$repo" "$tag")
                 if [ -n "$digest" ]; then
                     tagged_digests="$tagged_digests $digest"
@@ -436,7 +459,7 @@ for current_repo in $REPO; do
             failed_count=0
             total_count=$(echo "$untagged" | wc -w)
             request_num=1
-            
+
             print_status "Deleting $total_count untagged manifest(s) from $current_repo..."
 
             while IFS= read -r digest; do
@@ -447,7 +470,7 @@ for current_repo in $REPO; do
                         print_status "Token expired, refreshing before delete operation"
                         get_token "$current_repo"
                     fi
-                    
+
                     if delete_manifest "$CURRENT_TOKEN" "$current_repo" "$digest"; then
                         deleted_count=$((deleted_count + 1))
                     else

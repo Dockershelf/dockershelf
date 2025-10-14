@@ -5,7 +5,7 @@ ARG UID=1000
 ARG GID=1000
 
 RUN apt-get update && \
-    apt-get install sudo python3.12-venv bundler
+    apt-get install sudo python3.13-venv bundler
 
 ADD requirements.txt /root/
 RUN pip3 install -r /root/requirements.txt

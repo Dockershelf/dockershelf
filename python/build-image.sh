@@ -82,11 +82,10 @@ else
         --recv-keys BA6932366A755776
 fi
 
-UBUNTU_RELEASE="noble"
-if [ "${PYTHON_VER_NUM_MINOR}" == "3.7" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.11" ]; then
+if [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ]; then
     PYTHON_PKGS="${PYTHON_PKGS} ${PYTHON_VER_NUM_MINOR_STR}-distutils lib${PYTHON_VER_NUM_MINOR_STR}-minimal ${PYTHON_VER_NUM_MINOR_STR}-minimal"
-    UBUNTU_RELEASE="focal"
-elif [ "${PYTHON_VER_NUM_MINOR}" == "3.12" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.13" ]; then
+    UBUNTU_RELEASE="noble"
+elif [ "${PYTHON_VER_NUM_MINOR}" == "3.11" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.12" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.13" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.14" ]; then
     UBUNTU_RELEASE="jammy"
 fi
 
@@ -95,31 +94,6 @@ fi
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
 apt-get update
-
-# Python: Install missing dependencies from Bullseye
-# ------------------------------------------------------------------------------
-# Python 3.7, 3.10, and 3.11 require libssl1.1 and libffi7 which are only
-# available in Debian Bullseye. We temporarily add the repository to install them.
-
-if [ "${PYTHON_VER_NUM_MINOR}" == "3.7" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.11" ]; then
-    msginfo "Installing missing dependencies from Debian Bullseye for Python ${PYTHON_VER_NUM_MINOR} ..."
-    
-    # Add Debian Bullseye repository temporarily
-    {
-        echo "deb ${DEBMIRROR} bullseye main"
-    } | tee /etc/apt/sources.list.d/bullseye.list >/dev/null
-    
-    apt-get update
-    
-    # Install the required packages with specific priorities to avoid conflicts
-    apt-get install -y -t bullseye libssl1.1 libffi7
-    
-    # Remove Bullseye repository
-    rm -f /etc/apt/sources.list.d/bullseye.list
-    apt-get update
-    
-    msginfo "Successfully installed missing dependencies from Bullseye"
-fi
 
 # Python: Installation
 # ------------------------------------------------------------------------------
@@ -183,7 +157,7 @@ aptitude install ${PYTHON_PKGS_VER}
 ls -lah /usr/bin/python*
 
 # Create python3 symlink if needed
-if [ "${PYTHON_VER_NUM}" == "3.11" ] || [ "${PYTHON_VER_NUM}" == "3.12" ] || [ "${PYTHON_VER_NUM}" == "3.13" ]; then
+if [ "${PYTHON_VER_NUM}" == "3.11" ] || [ "${PYTHON_VER_NUM}" == "3.12" ] || [ "${PYTHON_VER_NUM}" == "3.13" ] || [ "${PYTHON_VER_NUM}" == "3.14" ]; then
     rm -rf /usr/bin/python3
 fi
 
@@ -197,13 +171,8 @@ fi
 
 msginfo "Installing pip ..."
 
-if [ "${PYTHON_VER_NUM}" == "3.7" ]; then
-    curl -fsSL "https://bootstrap.pypa.io/pip/3.7/get-pip.py" |
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-else
-    curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" |
-        ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
-fi
+curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" |
+    ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
 
 if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
     ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3
