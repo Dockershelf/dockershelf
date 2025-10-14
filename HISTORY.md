@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 3.4.2 (2025-10-14)
+
+### Other
+
+* Removing support for Python 3.7, adding support for Debian Forky, Go 1.25 and Python 3.14. [Luis Alejandro Martínez Faneyth]
+
+
 ## 3.4.1 (2025-06-27)
 
 ### Other
