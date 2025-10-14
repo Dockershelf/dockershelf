@@ -9,7 +9,7 @@ ADD . /tmp/debootstrap
 
 WORKDIR /tmp/debootstrap
 
-RUN bash build-image.sh "trixie" "stable"
+RUN bash build-image.sh "forky" "testing"
 
 # final stage
 # ----------------------------------
@@ -20,8 +20,8 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-      org.label-schema.name="debian-trixie" \
-      org.label-schema.description="A Debian trixie minimal image built from scratch" \
+      org.label-schema.name="debian-forky" \
+      org.label-schema.description="A Debian forky minimal image built from scratch" \
       org.label-schema.url="https://github.com/Dockershelf/dockershelf" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.vcs-url="https://github.com/Dockershelf/dockershelf" \
@@ -29,8 +29,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.version=${VERSION} \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.opencontainers.image.created=${BUILD_DATE} \
-      org.opencontainers.image.title="debian-trixie" \
-      org.opencontainers.image.description="A Debian trixie minimal image built from scratch" \
+      org.opencontainers.image.title="debian-forky" \
+      org.opencontainers.image.description="A Debian forky minimal image built from scratch" \
       org.opencontainers.image.url="https://github.com/Dockershelf/dockershelf" \
       org.opencontainers.image.revision=${VCS_REF} \
       org.opencontainers.image.source="https://github.com/Dockershelf/dockershelf" \
@@ -40,8 +40,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
-    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="trixie" \
-    DEBIAN_SUITE="stable"
+    TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="forky" \
+    DEBIAN_SUITE="testing"
 
 COPY --from=builder /tmp/debootstrap/base /
 

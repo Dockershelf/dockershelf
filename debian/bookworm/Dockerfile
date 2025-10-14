@@ -9,7 +9,7 @@ ADD . /tmp/debootstrap
 
 WORKDIR /tmp/debootstrap
 
-RUN bash build-image.sh "bookworm" "stable"
+RUN bash build-image.sh "bookworm" "oldstable"
 
 # final stage
 # ----------------------------------
@@ -41,7 +41,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     TERM="xterm" DEBIAN_FRONTEND="noninteractive" DEBIAN_RELEASE="bookworm" \
-    DEBIAN_SUITE="stable"
+    DEBIAN_SUITE="oldstable"
 
 COPY --from=builder /tmp/debootstrap/base /
 
