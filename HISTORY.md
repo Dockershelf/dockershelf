@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 3.4.3 (2025-10-15)
+
+### Other
+
+* Updating maintainer notes. [Luis Alejandro Martínez Faneyth]
+
+* Fixing builds for Node, Python and Go images. [Luis Alejandro Martínez Faneyth]
+
+
 ## 3.4.2 (2025-10-14)
 
 ### Other
