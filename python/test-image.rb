@@ -54,6 +54,8 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     def get_tests_list
         case python_version()
+        when "3.14"
+            ['test_builtin', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
         when "3.11", "3.12", "3.13"
             ['test_builtin', 'test_dict', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
         else 
@@ -108,6 +110,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(command("apt-get install git rsync").exit_status).to eq(0)
         expect(command("git clone --branch v#{python_version_long()} --depth 1 https://github.com/python/cpython /tmp/cpython").exit_status).to eq(0)
         expect(command("rsync -avz /tmp/cpython/Lib/test/ /usr/lib/python#{python_version()}/test/").exit_status).to eq(0)
+
         for test_suite in get_tests_list()
             expect(command("python3 -m test.regrtest #{test_suite}").exit_status).to eq(0)
         end

@@ -52,21 +52,14 @@ msginfo "Configuring /etc/apt/sources.list ..."
 
 dirmngr --debug-level guru
 
-if [ "${DEBIAN_RELEASE}" == "sid" ]; then
-    gpg --no-default-keyring \
-        --keyring ./node.gpg \
-        --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys 2F59B5F99B1BE0B4
-    gpg --no-default-keyring \
-        --keyring ./node.gpg \
-        --armor --export "2F59B5F99B1BE0B4" \
-        > /usr/share/keyrings/node.gpg
-else
-    gpg --no-default-keyring \
-        --keyring /usr/share/keyrings/node.gpg \
-        --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys 2F59B5F99B1BE0B4
-fi
+gpg --no-default-keyring \
+    --keyring ./node.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys 2F59B5F99B1BE0B4
+gpg --no-default-keyring \
+    --keyring ./node.gpg \
+    --export "2F59B5F99B1BE0B4" \
+    > /usr/share/keyrings/node.gpg
 
 {
     echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} nodistro main"
