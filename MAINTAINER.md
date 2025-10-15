@@ -5,82 +5,73 @@ reading.
 
 ### Making a new release
 
-1. Start your git flow workflow:
-
-        git flow init
-
-2. Create a new milestone in GitHub. Plan the features of your new release. Assign
+1. Create a new milestone in GitHub. Plan the features of your new release. Assign
 existing bugs to your new milestone.
-3. Start a new feature:
+2. Start a new feature:
 
         git flow feature start <feature name>
 
-4. Code, code and code. More coding. Mess it up several times. Push to feature
+3. Code, code and code. More coding. Mess it up several times. Push to feature
 branch. Watch Travis go red. Write unit tests. Watch Travis go red again. Don't
 leave uncommitted changes.
-5. Finish your feature:
+4. Finish your feature:
 
         git flow feature finish <feature name>
 
-6. Repeat 3-5 for every other feature you have planned for this release.
-7. When you're done with the features and ready to publish, start a new release:
+5. Repeat 2-4 for every other feature you have planned for this release.
+6. When you're done with the features and ready to publish, ensure your working
+directory is clean and you're on the develop branch.
+7. Run the release script:
 
-        git flow release start <release number>
+        make release-<major|minor|patch> [App Name]
 
-8. Bump your version:
+   For example:
+   - `make release-patch` - for a patch release (bug fixes)
+   - `make release-minor` - for a minor release (new features)
+   - `make release-major` - for a major release (breaking changes)
 
-        bumpversion --no-commit <major, minor or patch>
+   This script will automatically:
+   - Initialize git flow if needed
+   - Start the git flow release
+   - Bump the version number
+   - Update the changelog (HISTORY.md)
+   - Commit the changes
+   - Finish the git flow release with signed tags
+   - Push to GitHub
+   - Create a GitHub release (if GitHub CLI is installed and authenticated)
 
-9. Update your changelog:
-
-        gitchangelog > HISTORY.md
-
-10. Commit your changes to version files and changelog:
-
-        git commit -aS -m "Updating Changelog and version."
-
-11. Delete the tag made by bumpversion:
-
-        git tag -d <release number>
-
-12. Finish your release:
-
-        git flow release finish -s -p <release number>
-
-14. Draft a new release in GitHub (based on the new version tag) and include
-a description. Also pick a codename because it makes you cool.
-15. Close the milestone in GitHub.
-16. Write about your new version in your blog. Tweet it, post it on facebook.
+8. Close the milestone in GitHub.
+9. Write about your new version in your blog. Tweet it, post it on facebook.
 
 ### Making a new hotfix
 
 1. Create a new milestone in GitHub. Assign existing bugs to your new milestone.
-2. Start a new hotfix:
+2. If you need to make code changes for the hotfix:
 
-        git flow hotfix start <new version>
+        git flow hotfix start <version>
+        # Make your code changes here
+        git add .
+        git commit -S -m "Fix: description of your fix"
 
-3. Code your hotfix.
-4. Bump your version:
+3. Run the hotfix script (it will start the hotfix if not already started):
 
-        bumpversion --no-commit <major, minor or patch>
+        make hotfix [App Name]
 
-5. Update your changelog:
+   The script will prompt you to confirm the new hotfix version before proceeding.
 
-        gitchangelog > HISTORY.md
+   This script will automatically:
+   - Initialize git flow if needed
+   - Start the git flow hotfix with the new patch version
+   - Bump the patch version number
+   - Update the changelog (HISTORY.md)
+   - Commit the version changes
+   - Finish the git flow hotfix with signed tags
+   - Push to GitHub
+   - Create a GitHub release with "(Hotfix)" suffix (if GitHub CLI is installed and authenticated)
 
-6. Commit your changes to version files and changelog:
+   **Note**: If you've already started the hotfix manually (step 2), the script will fail at
+   the `git flow hotfix start` step. In this case, you'll need to finish manually or modify
+   the script to skip the start step.
 
-        git commit -aS -m "Updating Changelog and version."
-
-7. Delete the tag made by bumpversion:
-
-        git tag -d <new version>
-
-8. Finish your hotfix:
-
-        git flow hotfix finish -s -p <new version>
-
-10. Draft a new release in GitHub (based on the new version tag) and include
-a description. Don't change the codename if it is a hotfix.
-11. Close the milestone in GitHub.
-12. Write about your new version in your blog. Tweet it, post it on facebook.
+4. Close the milestone in GitHub.
+5. Write about your hotfix in your blog (if necessary). Notify users about the critical fix.
