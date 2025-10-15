@@ -66,6 +66,32 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(go_version()).to eq(go_version_container_var())
     end
 
+    it "should support go module management" do
+        expect(command("mkdir -p /tmp/testmod && cd /tmp/testmod && go mod init example.com/test").exit_status).to eq(0)
+        expect(file("/tmp/testmod/go.mod")).to exist
+        expect(file("/tmp/testmod/go.mod")).to contain("module example.com/test")
+    end
+
+    it "should build and execute a simple program" do
+        program = 'package main\nimport "fmt"\nfunc main() { fmt.Println("test-output") }'
+        expect(command("mkdir -p /tmp/testbuild && cd /tmp/testbuild && echo '#{program}' > main.go && go build -o testprog main.go").exit_status).to eq(0)
+        expect(file("/tmp/testbuild/testprog")).to be_executable
+        expect(command("/tmp/testbuild/testprog").stdout.strip).to eq("test-output")
+    end
+
+    it "should have go standard tools available" do
+        expect(command("which gofmt").exit_status).to eq(0)
+        expect(command("go help vet").exit_status).to eq(0)
+        expect(command("go help test").exit_status).to eq(0)
+        expect(command("go help doc").exit_status).to eq(0)
+    end
+
+    it "should have go environment variables properly configured" do
+        expect(command("go env GOROOT").stdout.strip).to eq("/usr/local/go")
+        expect(command("go env GOPATH").stdout.strip).not_to be_empty
+        expect(command("echo $PATH").stdout).to contain("/usr/local/go/bin")
+    end
+
     after(:all) do
         @container.kill
         @container.delete(:force => true)

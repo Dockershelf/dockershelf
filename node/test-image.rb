@@ -71,6 +71,37 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(file('/usr/bin/gulp')).not_to exist
     end
 
+    it "should be able to install and use local packages" do
+        expect(command("mkdir -p /tmp/test-project && cd /tmp/test-project && npm init -y").exit_status).to eq(0)
+        expect(command("cd /tmp/test-project && npm install lodash").exit_status).to eq(0)
+        expect(file('/tmp/test-project/node_modules')).to be_directory
+        expect(file('/tmp/test-project/node_modules/lodash')).to be_directory
+        expect(command("cd /tmp/test-project && node -e \"const _ = require('lodash'); console.log(_.VERSION);\"").exit_status).to eq(0)
+    end
+
+    it "should have npx available and be able to execute packages" do
+        expect(file("/usr/bin/npx")).to exist
+        expect(file("/usr/bin/npx")).to be_executable
+        expect(command("npx --yes cowsay 'Hello Dockershelf'").exit_status).to eq(0)
+    end
+
+    it "should be able to execute Node.js scripts with module loading" do
+        expect(command("node -e \"const fs = require('fs'); const path = require('path'); const http = require('http'); console.log('success');\"").exit_status).to eq(0)
+        expect(command("echo \"console.log('CommonJS works');\" > /tmp/test-cjs.js && node /tmp/test-cjs.js").exit_status).to eq(0)
+        if node_version().to_i >= 14
+            expect(command("echo '{\"type\": \"module\"}' > /tmp/test-esm-package.json && echo \"console.log('ESM works');\" > /tmp/test-esm.mjs && node /tmp/test-esm.mjs").exit_status).to eq(0)
+        end
+    end
+
+    it "should support npm scripts and package.json workflow" do
+        expect(command("mkdir -p /tmp/test-npm-scripts && cd /tmp/test-npm-scripts && npm init -y").exit_status).to eq(0)
+        expect(command("cd /tmp/test-npm-scripts && echo \"console.log('App started');\" > index.js").exit_status).to eq(0)
+        expect(command("cd /tmp/test-npm-scripts && npm pkg set scripts.start=\"node index.js\"").exit_status).to eq(0)
+        expect(command("cd /tmp/test-npm-scripts && npm pkg set scripts.test=\"echo 'test passed'\"").exit_status).to eq(0)
+        expect(command("cd /tmp/test-npm-scripts && npm run start").exit_status).to eq(0)
+        expect(command("cd /tmp/test-npm-scripts && npm test").exit_status).to eq(0)
+    end
+
     after(:all) do
         @container.kill
         @container.delete(:force => true)

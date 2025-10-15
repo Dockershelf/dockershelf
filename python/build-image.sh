@@ -66,21 +66,14 @@ msginfo "Using Ubuntu release 'noble' for Python ${PYTHON_VER_NUM_MINOR} on Debi
 
 dirmngr --debug-level guru
 
-if [ "${DEBIAN_RELEASE}" == "sid" ]; then
-    gpg --no-default-keyring \
-        --keyring ./python.gpg \
-        --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys BA6932366A755776
-    gpg --no-default-keyring \
-        --keyring ./python.gpg \
-        --armor --export "BA6932366A755776" \
-        > /usr/share/keyrings/python.gpg
-else
-    gpg --no-default-keyring \
-        --keyring /usr/share/keyrings/python.gpg \
-        --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys BA6932366A755776
-fi
+gpg --no-default-keyring \
+    --keyring ./python.gpg \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys BA6932366A755776
+gpg --no-default-keyring \
+    --keyring ./python.gpg \
+    --export "BA6932366A755776" \
+    > /usr/share/keyrings/python.gpg
 
 if [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ]; then
     PYTHON_PKGS="${PYTHON_PKGS} ${PYTHON_VER_NUM_MINOR_STR}-distutils lib${PYTHON_VER_NUM_MINOR_STR}-minimal ${PYTHON_VER_NUM_MINOR_STR}-minimal"
@@ -114,23 +107,23 @@ for PKG in ${PYTHON_PKGS}; do
 done
 
 # Handle potential conflicts with system packages on sid
-if [ "${DEBIAN_RELEASE}" == "sid" ]; then
-    # Install media-types first (replaces mime-support in sid)
-    aptitude install -y media-types || true
+# Install media-types first (replaces mime-support in sid)
+aptitude install -y media-types || true
+
+# Create a dummy mime-support package to satisfy deadsnakes PPA dependencies
+# This is needed because deadsnakes packages still depend on mime-support
+# but Debian sid replaced it with media-types
+# We use dpkg-deb directly instead of equivs to avoid dependency issues
+
+mkdir -p /tmp/mime-support-dummy/DEBIAN
     
-    # Create a dummy mime-support package to satisfy deadsnakes PPA dependencies
-    # This is needed because deadsnakes packages still depend on mime-support
-    # but Debian sid replaced it with media-types
-    apt-get install -y equivs
-    
-    cat > /tmp/mime-support-dummy.control << 'EOF'
-Section: misc
-Priority: optional
-Standards-Version: 3.9.2
+cat > /tmp/mime-support-dummy/DEBIAN/control << 'EOF'
 Package: mime-support
 Version: 999.999.999
-Maintainer: Dockershelf <dockershelf@dockershelf.com>
+Section: misc
+Priority: optional
 Architecture: all
+Maintainer: Dockershelf <dockershelf@dockershelf.com>
 Provides: mime-support
 Replaces: mime-support
 Conflicts: mime-support
@@ -142,14 +135,11 @@ Description: Dummy package to replace mime-support
  packages that still depend on the old mime-support package name.
 EOF
 
-    equivs-build /tmp/mime-support-dummy.control
-    dpkg -i mime-support*.deb
-    
-    # Clean up
-    rm -f /tmp/mime-support-dummy.control /tmp/mime-support*.deb
-    apt-get purge -y equivs
-    apt-get autoremove -y
-fi
+dpkg-deb --build /tmp/mime-support-dummy
+dpkg -i /tmp/mime-support-dummy.deb
+
+# Clean up
+rm -rf /tmp/mime-support-dummy /tmp/mime-support-dummy.deb
 
 # Install Python packages
 aptitude install ${PYTHON_PKGS_VER}
