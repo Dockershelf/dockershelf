@@ -80,3 +80,8 @@ node/*/*.sh
 # Environment files and build logs
 .env
 build-logs/
+
+# Rosey Agentic Environment
+docs/plans/
+docs/designs/
+.cursor/
