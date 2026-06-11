@@ -58,6 +58,41 @@ bash build-image.sh <image>
 
 <sup><code>&lt;image&gt;</code> is the desired image to build, for example <code>dockershelf/node:16-bookworm</code>.</sup>
 
+## Maintainer development
+
+Docker-backed workflow for regenerating shelves and running maintenance tools:
+
+```bash
+cp .env.example .env   # when using build-all-images.sh or delete-stale.sh
+make image
+make start
+make console           # shell inside dev container
+make update-shelves    # regenerate Dockerfiles, README tables, CI matrices
+make discover-shelves  # list upstream shelf versions
+make dependencies      # install Ruby test gems (vendor/bundle)
+```
+
+Host-only Python (no Docker):
+
+```bash
+make virtualenv
+./virtualenv/bin/python3 update.py
+```
+
+## Testing
+
+Pull requests run `python3 update.py` across Python 3.9–3.12 (see `.github/workflows/pr.yml`). After shelf changes, run `make update-shelves` or `python3 update.py` locally and confirm it completes without errors.
+
+Image specs use Ruby (RSpec) in shelf `test-image.rb` files; run relevant tests when changing Docker recipes.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Report issues at [github.com/LuisAlejandro/dockershelf/issues](https://github.com/LuisAlejandro/dockershelf/issues).
+
+## Releases
+
+Changelog: [HISTORY.md](HISTORY.md). GitHub release blurbs: [RELEASE_DESCRIPTION.md](RELEASE_DESCRIPTION.md). Maintainers use `make release-patch`, `make release-minor`, `make release-major`, and `make hotfix` (see [MAINTAINER.md](MAINTAINER.md)).
+
 ## Shelves
 
 ### Debian

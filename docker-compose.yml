@@ -6,3 +6,4 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/home/dockershelf/app
+      - ~/Library/Caches/pip:/home/dockershelf/.cache/pip

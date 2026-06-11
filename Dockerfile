@@ -5,7 +5,8 @@ ARG UID=1000
 ARG GID=1000
 
 RUN apt-get update && \
-    apt-get install sudo python3.13-venv bundler
+    apt-get install -y --no-install-recommends sudo python3.13-venv bundler && \
+    rm -rf /var/lib/apt/lists/*
 
 ADD requirements.txt /root/
 RUN pip3 install -r /root/requirements.txt
@@ -24,8 +25,8 @@ RUN echo "dockershelf ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dockershelf
 
 USER dockershelf
 
-RUN mkdir -p /home/dockershelf/app
+RUN mkdir -p /home/dockershelf/app /home/dockershelf/.cache/pip
 
 WORKDIR /home/dockershelf/app
 
-CMD tail -f /dev/null
+CMD ["tail", "-f", "/dev/null"]

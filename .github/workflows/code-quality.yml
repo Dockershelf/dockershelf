@@ -2,7 +2,7 @@ name: Code Quality
 
 on:
   schedule:
-    - cron: 00 6 * * 4
+    - cron: 00 6 * * 2
 
 jobs:
   build:
@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
-        with:
-          ref: develop
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4

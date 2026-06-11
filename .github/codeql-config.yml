@@ -1,4 +1,5 @@
 name: CodeQL config
 
-paths-ignore: 
+paths-ignore:
   - virtualenv
+  - node_modules

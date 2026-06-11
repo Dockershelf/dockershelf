@@ -8,46 +8,68 @@ on:
 jobs:
   keepalive:
     runs-on: ubuntu-22.04
+    permissions:
+      actions: write
     steps:
       - name: Disable workflows
         uses: actions/github-script@v9
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
+            const shouldManage = (workflow) => workflow.path.startsWith('.github/workflows/');
+
             const workflows = await github.rest.actions.listRepoWorkflows({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
 
             for (const workflow of workflows.data.workflows) {
-              if (workflow.path === 'dynamic/dependabot/dependabot-updates' || workflow.state !== 'active') {
+              if (!shouldManage(workflow) || workflow.state !== 'active') {
                 continue;
               }
-              console.log(`Disabling workflow: ${workflow.name}`);
-              await github.rest.actions.disableWorkflow({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: workflow.id,
-              });
+              console.log(`Disabling workflow: ${workflow.name} (${workflow.path})`);
+              try {
+                await github.rest.actions.disableWorkflow({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: workflow.id,
+                });
+              } catch (error) {
+                if (error.status === 422) {
+                  console.log(`Skipping workflow (cannot be disabled): ${workflow.name} (${workflow.path})`);
+                  continue;
+                }
+                throw error;
+              }
             }
       - name: Enable workflows
         uses: actions/github-script@v9
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
+            const shouldManage = (workflow) => workflow.path.startsWith('.github/workflows/');
+
             const workflows = await github.rest.actions.listRepoWorkflows({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
 
             for (const workflow of workflows.data.workflows) {
-              if (workflow.path === 'dynamic/dependabot/dependabot-updates' || workflow.state === 'active') {
+              if (!shouldManage(workflow) || workflow.state === 'active') {
                 continue;
               }
-              console.log(`Enabling workflow: ${workflow.name}`);
-              await github.rest.actions.enableWorkflow({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: workflow.id,
-              });
+              console.log(`Enabling workflow: ${workflow.name} (${workflow.path})`);
+              try {
+                await github.rest.actions.enableWorkflow({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: workflow.id,
+                });
+              } catch (error) {
+                if (error.status === 422) {
+                  console.log(`Skipping workflow (cannot be enabled): ${workflow.name} (${workflow.path})`);
+                  continue;
+                }
+                throw error;
+              }
             }
