@@ -26,7 +26,7 @@ This script automates the process of building and testing all supported Dockersh
 
 2. **Make the script executable** (if not already):
    ```bash
-   chmod +x build-all-images.sh
+   chmod +x scripts/build-all-images.sh
    ```
 
 ## Usage
@@ -34,22 +34,22 @@ This script automates the process of building and testing all supported Dockersh
 ### Basic Usage
 ```bash
 # Build all images on develop branch with tests
-./build-all-images.sh
+./scripts/build-all-images.sh
 
 # Show help
-./build-all-images.sh --help
+./scripts/build-all-images.sh --help
 ```
 
 ### Advanced Usage
 ```bash
 # Build specific branch
-./build-all-images.sh main
+./scripts/build-all-images.sh main
 
 # Build without tests
-./build-all-images.sh develop true
+./scripts/build-all-images.sh develop true
 
 # Build main branch without tests
-./build-all-images.sh main true
+./scripts/build-all-images.sh main true
 ```
 
 ## Supported Images
@@ -101,6 +101,7 @@ The script automatically discovers and builds all supported image combinations:
 ### LaTeX Images
 - `dockershelf/latex:basic`
 - `dockershelf/latex:full`
+- `dockershelf/latex:extras`
 
 ## Features
 
@@ -232,5 +233,5 @@ export DH_PASSWORD=$DOCKER_HUB_PASSWORD
 echo "DH_USERNAME=$DH_USERNAME" > .env
 echo "DH_PASSWORD=$DH_PASSWORD" >> .env
 
-./build-all-images.sh main true  # Build main branch, skip tests
+./scripts/build-all-images.sh main true  # Build main branch, skip tests
 ``` 

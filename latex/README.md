@@ -10,6 +10,7 @@
 |-------|------------|--------|------|
 |[`dockershelf/latex:basic`](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/latex/basic/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/docker/image-size/dockershelf/latex/basic.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|
 |[`dockershelf/latex:full`](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/latex/full/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/docker/image-size/dockershelf/latex/full.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|
+|[`dockershelf/latex:extras`](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/latex/extras/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/docker/image-size/dockershelf/latex/extras.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
@@ -72,6 +73,13 @@ The Latex full image is a debian stable image with the following packages instal
 - `vprerex`
 
 Check out the [Dockerfile](https://github.com/Dockershelf/dockershelf/blob/master/latex/full/Dockerfile) for details.
+
+The Latex extras image includes all packages from the full image, plus:
+
+- `inkscape`
+- `texlive-fonts-extra`
+
+Check out the [Dockerfile](https://github.com/Dockershelf/dockershelf/blob/master/latex/extras/Dockerfile) for details.
 
 ## Made with 💖 and 🍔
 

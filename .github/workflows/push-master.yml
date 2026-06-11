@@ -29,6 +29,8 @@ jobs:
             docker-image-extra-tags: "dockershelf/latex:basic-stable dockershelf/latex:latest-stable dockershelf/latex:latest"
           - docker-image-name: "dockershelf/latex:full"
             docker-image-extra-tags: "dockershelf/latex:full-stable"
+          - docker-image-name: "dockershelf/latex:extras"
+            docker-image-extra-tags: "dockershelf/latex:extras-stable"
           - docker-image-name: "dockershelf/python:3.10-trixie"
             docker-image-extra-tags: "dockershelf/python:3.10-stable"
           - docker-image-name: "dockershelf/python:3.10-sid"
@@ -96,7 +98,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 0

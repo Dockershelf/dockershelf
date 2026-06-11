@@ -27,7 +27,7 @@ jobs:
             toxenv: "py312"
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
@@ -68,7 +68,7 @@ jobs:
     if: github.actor == github.repository_owner || github.actor == 'dependabot[bot]'
     steps:
       - name: Merge
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.PERSONAL_ACCESS_TOKEN }}"
           script: |

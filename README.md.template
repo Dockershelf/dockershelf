@@ -100,7 +100,7 @@ These are debian stable/unstable images with go version downloaded directly from
 
 ### Latex
 
-These are debian stable images that come with a set of latex (basic or full) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
+These are debian stable images that come with a set of latex (basic, full, or extras) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|

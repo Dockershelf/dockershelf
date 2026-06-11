@@ -27,6 +27,9 @@ start:
 console: start
 	@$(exec_on_docker) bash
 
+discover-shelves:
+	@python3 -m scripts.discover_shelf_versions
+
 update-shelves: start
 	@$(exec_on_docker) python3 update.py
 

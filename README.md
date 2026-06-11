@@ -20,7 +20,7 @@ The list of available images is shown below.
 |[dockershelf/python](#python)|`3.10-trixie`, `3.10-stable`, `3.10-sid`, `3.10-unstable`, `3.10`, `3.11-trixie`, `3.11-stable`, `3.11-sid`, `3.11-unstable`, `3.11`, `3.12-trixie`, `3.12-stable`, `3.12-sid`, `3.12-unstable`, `3.12`, `3.13-trixie`, `3.13-stable`, `3.13-sid`, `3.13-unstable`, `3.13`, `3.14-trixie`, `3.14-stable`, `3-stable`, `3-trixie`, `latest-stable`, `latest-trixie`, `3.14-sid`, `3.14-unstable`, `3.14`, `3-unstable`, `3-sid`, `3`, `latest-unstable`, `latest-sid`, `latest`|
 |[dockershelf/node](#node)|`16-trixie`, `16-stable`, `16-sid`, `16-unstable`, `16`, `18-trixie`, `18-stable`, `18-sid`, `18-unstable`, `18`, `20-trixie`, `20-stable`, `20-sid`, `20-unstable`, `20`, `22-trixie`, `22-stable`, `22-sid`, `22-unstable`, `22`, `24-trixie`, `24-stable`, `latest-stable`, `latest-trixie`, `24-sid`, `24-unstable`, `24`, `latest-unstable`, `latest-sid`, `latest`|
 |[dockershelf/go](#go)|`1.20-trixie`, `1.20-stable`, `1.20-sid`, `1.20-unstable`, `1.20`, `1.21-trixie`, `1.21-stable`, `1.21-sid`, `1.21-unstable`, `1.21`, `1.22-trixie`, `1.22-stable`, `1.22-sid`, `1.22-unstable`, `1.22`, `1.23-trixie`, `1.23-stable`, `1.23-sid`, `1.23-unstable`, `1.23`, `1.24-trixie`, `1.24-stable`, `1.24-sid`, `1.24-unstable`, `1.24`, `1.25-trixie`, `1.25-stable`, `latest-stable`, `latest-trixie`, `1.25-sid`, `1.25-unstable`, `1.25`, `latest-unstable`, `latest-sid`, `latest`|
-|[dockershelf/latex](#latex)|`basic`, `basic-stable`, `latest-stable`, `latest`, `full`, `full-stable`|
+|[dockershelf/latex](#latex)|`basic`, `basic-stable`, `latest-stable`, `latest`, `full`, `full-stable`, `extras`, `extras-stable`|
 
 ## How to use
 
@@ -132,12 +132,13 @@ These are debian stable/unstable images with go version downloaded directly from
 
 ### Latex
 
-These are debian stable images that come with a set of latex (basic or full) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
+These are debian stable images that come with a set of latex (basic, full, or extras) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
 |[`dockershelf/latex:basic`](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/latex/basic/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/docker/image-size/dockershelf/latex/basic.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|
 |[`dockershelf/latex:full`](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/latex/full/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/docker/image-size/dockershelf/latex/full.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|
+|[`dockershelf/latex:extras`](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/latex/extras/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|[![](https://img.shields.io/docker/image-size/dockershelf/latex/extras.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/latex)|
 
 ![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
