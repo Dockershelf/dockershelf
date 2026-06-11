@@ -35,7 +35,7 @@ def update_latex(basedir):
     latex_readme_template = os.path.join(latexdir, 'README.md.template')
     latex_readme = os.path.join(latexdir, 'README.md')
 
-    base_image = 'dockershelf/debian:bookworm'
+    base_image = 'dockershelf/debian:stable'
     docker_tag_holder = 'dockershelf/latex:{0}'
     docker_url = 'https://hub.docker.com/r/dockershelf/latex'
     dockerfile_badge_holder = ('https://img.shields.io/badge/'
@@ -88,8 +88,8 @@ def update_latex(basedir):
             tag_matrix.extend([latex_version_long, 'basic-stable', 'latest-stable', 'latest'])
         else:
             matrix.append(
-                matrix_str.format(latex_version_long, "full-stable"))
-            tag_matrix.extend([latex_version_long, "full-stable"])
+                matrix_str.format(latex_version_long, f"{latex_version_long}-stable"))
+            tag_matrix.extend([latex_version_long, f"{latex_version_long}-stable"])
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
@@ -107,7 +107,7 @@ def update_latex(basedir):
                                           base_image,
                                           latex_dockerfile_content)
         latex_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                          'sid',
+                                          'stable',
                                           latex_dockerfile_content)
         latex_dockerfile_content = re.sub('%%LATEX_VERSION%%',
                                           latex_version_long,

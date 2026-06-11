@@ -26,20 +26,24 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 
 # Latex packages
+FULL_LATEX_PKGS="asymptote biber chktex cm-super context dvidvi dvipng \
+    feynmf fragmaster info lacheck latex-cjk-all latexdiff \
+    latexmk lcdf-typetools lmodern prerex psutils purifyeps \
+    t1utils tex-gyre texinfo texlive-base texlive-bibtex-extra \
+    texlive-binaries texlive-extra-utils texlive-formats-extra \
+    texlive-games texlive-humanities texlive-lang-english \
+    texlive-latex-base texlive-latex-extra texlive-latex-recommended \
+    texlive-luatex texlive-metapost texlive-music texlive-pictures \
+    texlive-plain-generic texlive-pstricks texlive-publishers \
+    texlive-science texlive-xetex tipa vprerex"
+
 if [ "${LATEX_VER_NUM}" == "basic" ]; then
     LATEX_PKGS="texlive-fonts-recommended texlive-latex-base texlive-latex-extra \
         texlive-latex-recommended"
+elif [ "${LATEX_VER_NUM}" == "extras" ]; then
+    LATEX_PKGS="${FULL_LATEX_PKGS} inkscape texlive-fonts-extra"
 else
-    LATEX_PKGS="asymptote biber chktex cm-super context dvidvi dvipng \
-        feynmf fragmaster info lacheck latex-cjk-all latexdiff \
-        latexmk lcdf-typetools lmodern prerex psutils purifyeps \
-        t1utils tex-gyre texinfo texlive-base texlive-bibtex-extra \
-        texlive-binaries texlive-extra-utils texlive-formats-extra \
-        texlive-games texlive-humanities texlive-lang-english \
-        texlive-latex-base texlive-latex-extra texlive-latex-recommended \
-        texlive-luatex texlive-metapost texlive-music texlive-pictures \
-        texlive-plain-generic texlive-pstricks texlive-publishers \
-        texlive-science texlive-xetex tipa vprerex"
+    LATEX_PKGS="${FULL_LATEX_PKGS}"
 fi
 
 # Load helper functions

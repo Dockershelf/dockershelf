@@ -28,6 +28,8 @@ jobs:
             docker-image-extra-tags: "dockershelf/latex:basic-stable dockershelf/latex:latest-stable dockershelf/latex:latest"
           - docker-image-name: "dockershelf/latex:full"
             docker-image-extra-tags: "dockershelf/latex:full-stable"
+          - docker-image-name: "dockershelf/latex:extras"
+            docker-image-extra-tags: "dockershelf/latex:extras-stable"
           - docker-image-name: "dockershelf/python:3.10-trixie"
             docker-image-extra-tags: "dockershelf/python:3.10-stable"
           - docker-image-name: "dockershelf/python:3.10-sid"
@@ -95,16 +97,16 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 0
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@v3
 
       - uses: ruby/setup-ruby@v1
         with:

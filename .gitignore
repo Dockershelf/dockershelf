@@ -84,4 +84,8 @@ build-logs/
 # Rosey Agentic Environment
 docs/plans/
 docs/designs/
+.cursor/docs/brainstorms/
+docs/solutions/
+docs/insights/
 .cursor/
+docs/brainstorms/

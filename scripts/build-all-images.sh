@@ -16,8 +16,9 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Some initial configuration
-BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Some initial configuration (script lives in scripts/, repo root is parent)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASEDIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 ENV_FILE="${BASEDIR}/.env"
 LOG_DIR="${BASEDIR}/build-logs"
 FAILED_BUILDS=()

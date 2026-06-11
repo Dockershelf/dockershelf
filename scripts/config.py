@@ -19,7 +19,7 @@
 from .utils import get_debian_versions, get_node_versions, \
     get_python_versions, get_go_versions
 
-latex_versions = ['basic', 'full']
+latex_versions = ['basic', 'full', 'extras']
 debian_versions = get_debian_versions()
 node_versions = get_node_versions()
 python_versions = get_python_versions()
