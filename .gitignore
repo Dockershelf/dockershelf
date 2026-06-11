@@ -82,10 +82,15 @@ node/*/*.sh
 build-logs/
 
 # Rosey Agentic Environment
-docs/plans/
-docs/designs/
-.cursor/docs/brainstorms/
-docs/solutions/
-docs/insights/
 .cursor/
-docs/brainstorms/
+rosey/brainstorms/
+rosey/plans/
+rosey/designs/
+rosey/solutions/
+rosey/insights/
+rosey/design-system/
+rosey/qa/
+rosey/deepening/
+rosey/agentic-env.json
+AGENTS.md
+DESIGN.md
