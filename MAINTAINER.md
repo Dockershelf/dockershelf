@@ -5,28 +5,59 @@ reading.
 
 ### Making a new release
 
-1. Create a new milestone in GitHub. Plan the features of your new release. Assign
-existing bugs to your new milestone.
-2. Start a new feature:
+1. Plan work from open issues. The release milestone is created later as
+   retroactive documentation for the version that ships.
+2. Start a feature branch from an up-to-date `develop`:
 
+        git checkout develop
+        git pull
         git flow feature start <feature name>
 
-3. Code, code and code. More coding. Mess it up several times. Push to feature
-branch. Watch Travis go red. Write unit tests. Watch Travis go red again. Don't
-leave uncommitted changes.
-4. Finish your feature:
+   (`git flow feature start` creates and checks out `feature/<feature name>` from
+   `develop`. Equivalent: `git checkout -b feature/<feature name>`.)
 
-        git flow feature finish <feature name>
+3. Implement the feature on that branch. Commit often. Do not leave uncommitted
+   changes when you push.
 
-5. Repeat 2-4 for every other feature you have planned for this release.
-6. When you're done with the features and ready to publish, ensure your working
-directory is clean and you're on the develop branch.
-7. Run the release script:
+4. Push the branch and open a pull request against `develop`:
 
-        make release-<major|minor|patch> [App Name]
+        git push -u origin feature/<feature name>
+        gh pr create --base develop --head feature/<feature name> --title "..." --body "..."
 
-   For example:
-   - `make release-patch` - for a patch release (bug fixes)
+   CI runs via `.github/workflows/pr.yml`. Fix failures on the feature branch;
+   the PR updates automatically on push. Rosey skills stop at PR create/update;
+   owner PRs are auto-approved and auto-merged by CI when configured.
+   Consumers report `pr_opened`; task completion is recorded only after the
+   linked GitHub issue closes on merge.
+
+5. After the PR auto-merges into `develop`, sync locally:
+
+        git checkout develop
+        git pull
+        git branch -d feature/<feature name>
+
+6. Repeat steps 2-5 for every other feature you have planned for this release.
+7. When you're done with the features and ready to publish, ensure your working
+directory is clean and you're on the `develop` branch.
+8. For the Rosey weekly release, the Linux CodeCandidates producer posts a
+   `versionpromote` YAML message to `#rosey`. The macOS `versionpromote`
+   consumer runs `rosey-release` and reports `versionpromote_result` to
+   `#rosey-releases`.
+
+   The release creates a retroactive milestone for the next patch version,
+   assigns eligible parent issues (plus standalone issues with no parent/sub
+   relationship) closed since the previous closed milestone, and runs the patch
+   release script:
+
+        make release-patch
+
+   `APP_NAME` is set in each repository's `Makefile` and passed to the release
+   script automatically for the GitHub release title. If there are no eligible
+   parent or standalone issues for the week, do not create an empty milestone
+   and do not publish a release. Sub-task issues close through PR merge
+   (`Closes #N`) and are not assigned to release milestones directly.
+
+   Manual maintainer releases may still use:
    - `make release-minor` - for a minor release (new features)
    - `make release-major` - for a major release (breaking changes)
 
@@ -40,8 +71,8 @@ directory is clean and you're on the develop branch.
    - Push to GitHub
    - Create a GitHub release (if GitHub CLI is installed and authenticated)
 
-8. Close the milestone in GitHub.
-9. Write about your new version in your blog. Tweet it, post it on facebook.
+9. Close the milestone in GitHub on the same date as the release.
+10. Write about your new version in your blog. Tweet it, post it on facebook.
 
 ### Making a new hotfix
 
@@ -55,7 +86,10 @@ directory is clean and you're on the develop branch.
 
 3. Run the hotfix script (it will start the hotfix if not already started):
 
-        make hotfix [App Name]
+        make hotfix
+
+   `APP_NAME` is set in the repository's `Makefile` and passed to the hotfix
+   script automatically for the GitHub release title.
 
    The script will prompt you to confirm the new hotfix version before proceeding.
 

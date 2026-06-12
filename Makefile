@@ -11,26 +11,8 @@ exec_on_docker = docker compose \
 VERSION_TYPE ?= patch
 APP_NAME ?= Dockershelf
 
-start-app:
-	@if [ -z "$(img_hash)" ]; then\
-		make image;\
-	fi
-	@make start
-
-console: start-app
-	@$(exec_on_docker) bash
-
 discover-shelves:
 	@python3 -m scripts.discover_shelf_versions
-
-update-shelves: start-app
-	@$(exec_on_docker) python3 update.py
-
-dependencies: start-app
-	@$(exec_on_docker) bundle config set --local path 'vendor/bundle'
-	@$(exec_on_docker) bundle lock --add-platform x86_64-linux
-	@$(exec_on_docker) bundle lock --add-platform aarch64-linux
-	@$(exec_on_docker) bundle install
 
 virtualenv:
 	@python3 -m venv --clear ./virtualenv
@@ -87,6 +69,18 @@ cataplum:
 	@docker system prune -a -f --volumes
 # <<< rosey-maintainer:ops-docker END
 
+console: start
+	@$(exec_on_docker) bash
+
+update-shelves: start
+	@$(exec_on_docker) python3 update.py
+
+dependencies: start
+	@$(exec_on_docker) bundle config set --local path 'vendor/bundle'
+	@$(exec_on_docker) bundle lock --add-platform x86_64-linux
+	@$(exec_on_docker) bundle lock --add-platform aarch64-linux
+	@$(exec_on_docker) bundle install
+
 # >>> rosey-maintainer:ops-release BEGIN
 # Managed by rosey-maintainer-tools 0.1.0. Do not edit directly.
 
@@ -106,6 +100,6 @@ hotfix:
 	@./scripts/hotfix.sh $${APP_NAME}
 # <<< rosey-maintainer:ops-release END
 
-.PHONY: start-app console discover-shelves update-shelves dependencies virtualenv \
+.PHONY: discover-shelves virtualenv console update-shelves dependencies \
 	image start stop down destroy cataplum \
 	release release-patch release-minor release-major hotfix
