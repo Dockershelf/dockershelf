@@ -91,7 +91,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Report issues at [github.com/LuisAlejand
 
 ## Releases
 
-Changelog: [HISTORY.md](HISTORY.md). GitHub release blurbs: [RELEASE_DESCRIPTION.md](RELEASE_DESCRIPTION.md). Maintainers use `make release-patch`, `make release-minor`, `make release-major`, and `make hotfix` (see [MAINTAINER.md](MAINTAINER.md)).
+Changelog: [HISTORY.md](HISTORY.md). GitHub release blurbs: [RELEASE_DESCRIPTION.md](RELEASE_DESCRIPTION.md). Maintainers use `make release-patch`, `make release-minor`, `make release-major`, and `make undo-release` (see [MAINTAINER.md](MAINTAINER.md)).
 
 ## Shelves
 

@@ -4,9 +4,9 @@ LABEL maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 ARG UID=1000
 ARG GID=1000
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends sudo python3.13-venv bundler && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sudo python3.13-venv bundler \
+    && rm -rf /var/lib/apt/lists/*
 
 ADD requirements.txt /root/
 RUN pip3 install -r /root/requirements.txt
@@ -20,7 +20,6 @@ RUN EXISTGROUP=$(getent group | awk -F':' '$3 == '$GID' {print $1}') && \
 
 RUN groupadd -g "${GID}" dockershelf || true
 RUN useradd -u "${UID}" -g "${GID}" -ms /bin/bash dockershelf
-
 RUN echo "dockershelf ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dockershelf
 
 USER dockershelf

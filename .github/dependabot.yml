@@ -4,11 +4,12 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
-    day: thursday
+    day: tuesday
     time: "01:00"
+
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
     interval: weekly
-    day: thursday
+    day: tuesday
     time: "01:00"

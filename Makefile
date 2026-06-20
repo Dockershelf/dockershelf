@@ -22,7 +22,7 @@ virtualenv:
 	@./virtualenv/bin/python3 -m pip install -r requirements.txt
 
 # >>> rosey-maintainer:ops-docker BEGIN
-# Managed by rosey-maintainer-tools 0.1.0. Do not edit directly.
+# Managed by rosey-maintainer-tools 0.2.0. Do not edit directly.
 
 PROJECT_NAME ?= dockershelf
 all_ps_hashes = $(shell docker ps -q)
@@ -82,7 +82,7 @@ dependencies: start
 	@$(exec_on_docker) bundle install
 
 # >>> rosey-maintainer:ops-release BEGIN
-# Managed by rosey-maintainer-tools 0.1.0. Do not edit directly.
+# Managed by rosey-maintainer-tools 0.2.0. Do not edit directly.
 
 release:
 	@./scripts/release.sh $${VERSION_TYPE}
@@ -96,10 +96,21 @@ release-minor:
 release-major:
 	@./scripts/release.sh major $${APP_NAME}
 
-hotfix:
-	@./scripts/hotfix.sh $${APP_NAME}
+
+release-preflight: start
+
+
+	@$(exec_on_docker) tox -e lint
+
+	@$(exec_on_docker) tox -e coverage
+
+
+
+undo-release:
+	@: "$${VERSION:?Set VERSION=x.y.z before running make undo-release}"
+	@VERSION=$${VERSION} ./scripts/rollback.sh release
 # <<< rosey-maintainer:ops-release END
 
 .PHONY: discover-shelves virtualenv console update-shelves dependencies \
 	image start stop down destroy cataplum \
-	release release-patch release-minor release-major hotfix
+	release release-patch release-minor release-major release-preflight undo-release

@@ -5,11 +5,12 @@ on:
     branches:
       - develop
       - master
+      - "release/**"
 
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         include:
@@ -44,3 +45,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 update.py
+  release-gate:
+    name: Release Gate
+    runs-on: ubuntu-24.04
+    needs: [build]
+    steps:
+      - name: Confirm all release checks passed
+        run: |
+          echo "Release gate passed for ${{ github.ref_name }}"
+

@@ -1,0 +1,36 @@
+name: Publish Release
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: publish-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  verify-release-tag:
+    name: Verify release tag
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r requirements-dev.txt
+
+      - name: Run lint
+        run: tox -e lint
+
+      - name: Run unit tests
+        run: tox -e coverage
+

@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         include:
@@ -52,7 +52,7 @@ jobs:
 
   approve:
     name: Approve pull request
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build
     if: github.actor == github.repository_owner || github.actor == 'dependabot[bot]'
     steps:
@@ -63,7 +63,7 @@ jobs:
 
   merge:
     name: Merge pull request
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: approve
     if: github.actor == github.repository_owner || github.actor == 'dependabot[bot]'
     steps:

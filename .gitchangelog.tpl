@@ -12,7 +12,7 @@
 % for commit in section["commits"]:
 % if commit["author"] != "dependabot[bot]":
 <%
-author = commit["author"].replace('_', '\_')
+author = commit["author"].replace('_', r'\_')
 subject = "%s [%s]" % (commit["subject"], author)
 entry = indent(subject, first=" * ").strip()
 %>${entry}

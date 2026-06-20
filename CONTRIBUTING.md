@@ -94,6 +94,6 @@ CI runs the same functional check via `python3 update.py` on pull requests.
 
 ## Maintainer Notes
 
-Releases are handled by maintainers using the git-flow release scripts (`make release-patch`, `make release-minor`, `make release-major`, and `make hotfix`). Contributors should not publish Docker images, push release tags, or cut GitHub releases unless asked to do so by a maintainer.
+Releases are handled by maintainers using the git-flow release scripts (`make release-patch`, `make release-minor`, `make release-major`, and `make undo-release`). Contributors should not publish Docker images, push release tags, or cut GitHub releases unless asked to do so by a maintainer.
 
 See [MAINTAINER.md](MAINTAINER.md) for maintainer release workflow details.

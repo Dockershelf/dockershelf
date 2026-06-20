@@ -1,111 +1,61 @@
-## Maintainer Notes
+# Maintainer Guide
 
-If you are reading this, you probably forgot how to release a new version. Keep
-reading.
+Rosey maintainer workflow for Dockershelf. Each step is a skill invocation; details
+live in the skill files under `.cursor/skills/`.
 
-### Making a new release
+## Workflow overview
 
-1. Plan work from open issues. The release milestone is created later as
-   retroactive documentation for the version that ships.
-2. Start a feature branch from an up-to-date `develop`:
+For each feature:
 
-        git checkout develop
-        git pull
-        git flow feature start <feature name>
+1. `rosey-lfg-code` — brainstorm requirements, create a plan, implement on a
+   feature branch (via `rosey-brainstorm`, `rosey-plan`, `rosey-work`).
+2. `rosey-lfg-quality` — QA review, lint/build after fixes, open or update PR
+   (via `rosey-qa`, `rosey-pr`). PRs target `develop`; CI auto-merges when
+   configured.
 
-   (`git flow feature start` creates and checks out `feature/<feature name>` from
-   `develop`. Equivalent: `git checkout -b feature/<feature name>`.)
+Repeat 1–2 for every feature in the release.
 
-3. Implement the feature on that branch. Commit often. Do not leave uncommitted
-   changes when you push.
+When `develop` is ready to ship:
 
-4. Push the branch and open a pull request against `develop`:
+3. `rosey-release` — publish a **release** (patch, minor, or major). Runs five
+   gates: Docker preflight, `release/<version>` branch CI, tag and GitHub
+   release, then PyPI verify. Creates a retroactive milestone for patch
+   releases. On failure, rolls back with `VERSION=<version> make undo-release`
+   and halts.
 
-        git push -u origin feature/<feature name>
-        gh pr create --base develop --head feature/<feature name> --title "..." --body "..."
+## Skill reference
 
-   CI runs via `.github/workflows/pr.yml`. Fix failures on the feature branch;
-   the PR updates automatically on push. Rosey skills stop at PR create/update;
-   owner PRs are auto-approved and auto-merged by CI when configured.
-   Consumers report `pr_opened`; task completion is recorded only after the
-   linked GitHub issue closes on merge.
+### `rosey-lfg-code`
 
-5. After the PR auto-merges into `develop`, sync locally:
+Autonomous code stage: requirements → plan → implementation and lint/build.
+Emits `ROSEY_LFG_QUALITY_HANDOFF` for the quality stage.
 
-        git checkout develop
-        git pull
-        git branch -d feature/<feature name>
+### `rosey-lfg-quality`
 
-6. Repeat steps 2-5 for every other feature you have planned for this release.
-7. When you're done with the features and ready to publish, ensure your working
-directory is clean and you're on the `develop` branch.
-8. For the Rosey weekly release, the Linux CodeCandidates producer posts a
-   `versionpromote` YAML message to `#rosey`. The macOS `versionpromote`
-   consumer runs `rosey-release` and reports `versionpromote_result` to
-   `#rosey-releases`.
+Autonomous quality stage: QA autofix, post-review lint, PR create/update.
+Emits `<promise>DONE</promise>` when the PR is ready. Does not merge or
+publish releases.
 
-   The release creates a retroactive milestone for the next patch version,
-   assigns eligible parent issues (plus standalone issues with no parent/sub
-   relationship) closed since the previous closed milestone, and runs the patch
-   release script:
+### `rosey-release`
 
-        make release-patch
+Release only: `patch` (default), `minor`, or `major`. Invoke from clean
+`develop`. Arguments: `[mode:interactive|mode:non-interactive] [patch|minor|major]`.
 
-   `APP_NAME` is set in each repository's `Makefile` and passed to the release
-   script automatically for the GitHub release title. If there are no eligible
-   parent or standalone issues for the week, do not create an empty milestone
-   and do not publish a release. Sub-task issues close through PR merge
-   (`Closes #N`) and are not assigned to release milestones directly.
+## Prerequisites (checked by release script)
 
-   Manual maintainer releases may still use:
-   - `make release-minor` - for a minor release (new features)
-   - `make release-major` - for a major release (breaking changes)
+- `git`, `git flow`, `docker` (daemon running), `make`, `gh` (authenticated),
+  `bumpversion`, `gpg`
+- `user.signingkey` configured with secret key available locally
+- Clean working tree (no modified or untracked files)
 
-   This script will automatically:
-   - Initialize git flow if needed
-   - Start the git flow release
-   - Bump the version number
-   - Update the changelog (HISTORY.md)
-   - Commit the changes
-   - Finish the git flow release with signed tags
-   - Push to GitHub
-   - Create a GitHub release (if GitHub CLI is installed and authenticated)
+## GitHub branch protection (configure once)
 
-9. Close the milestone in GitHub on the same date as the release.
-10. Write about your new version in your blog. Tweet it, post it on facebook.
+**`develop`** — require PR; status checks: Linting, Integration Tests, Unit
+tests, Documentation, Finish.
 
-### Making a new hotfix
+**`master`** — restrict pushes; disallow force pushes.
 
-1. Create a new milestone in GitHub. Assign existing bugs to your new milestone.
-2. If you need to make code changes for the hotfix:
+**`release/*`** — Push workflow runs; script waits for Release Gate before tagging.
 
-        git flow hotfix start <version>
-        # Make your code changes here
-        git add .
-        git commit -S -m "Fix: description of your fix"
-
-3. Run the hotfix script (it will start the hotfix if not already started):
-
-        make hotfix
-
-   `APP_NAME` is set in the repository's `Makefile` and passed to the hotfix
-   script automatically for the GitHub release title.
-
-   The script will prompt you to confirm the new hotfix version before proceeding.
-
-   This script will automatically:
-   - Initialize git flow if needed
-   - Start the git flow hotfix with the new patch version
-   - Bump the patch version number
-   - Update the changelog (HISTORY.md)
-   - Commit the version changes
-   - Finish the git flow hotfix with signed tags
-   - Push to GitHub
-   - Create a GitHub release with "(Hotfix)" suffix (if GitHub CLI is installed and authenticated)
-
-   **Note**: If you've already started the hotfix manually (step 2), the script will fail at
-   the `git flow hotfix start` step. In this case, you'll need to finish manually or modify
-   the script to skip the start step.
-
-4. Close the milestone in GitHub.
-5. Write about your hotfix in your blog (if necessary). Notify users about the critical fix.
+**Version tags** — restrict creation to maintainers; prevent tag deletion except
+by admins.
