@@ -78,7 +78,7 @@ git flow release start "$NEW_VERSION"
 print_step "Bumping version to $NEW_VERSION"
 bumpversion --no-commit "$VERSION_TYPE"
 
-
+release_run_post_bump_commands
 
 print_step "Updating changelog"
 if command -v gitchangelog >/dev/null 2>&1; then

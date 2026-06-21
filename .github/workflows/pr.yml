@@ -1,7 +1,7 @@
 name: Pull Request
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - ready_for_review
@@ -29,7 +29,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
@@ -46,34 +45,6 @@ jobs:
         env:
           TOXENV: ${{ matrix.toxenv }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 update.py
 
-  approve:
-    name: Approve pull request
-    runs-on: ubuntu-24.04
-    needs: build
-    if: github.actor == github.repository_owner || github.actor == 'dependabot[bot]'
-    steps:
-      - name: Approve
-        uses: hmarr/auto-approve-action@v4.0.0
-        with:
-          github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
-
-  merge:
-    name: Merge pull request
-    runs-on: ubuntu-24.04
-    needs: approve
-    if: github.actor == github.repository_owner || github.actor == 'dependabot[bot]'
-    steps:
-      - name: Merge
-        uses: actions/github-script@v9
-        with:
-          github-token: "${{ github.actor == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
-          script: |
-            await github.rest.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            })

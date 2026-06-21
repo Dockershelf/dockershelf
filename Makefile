@@ -81,6 +81,15 @@ dependencies: start
 	@$(exec_on_docker) bundle lock --add-platform aarch64-linux
 	@$(exec_on_docker) bundle install
 
+lint: start
+	@$(exec_on_docker) tox -e lint
+
+format: start
+	@$(exec_on_docker) bash -c 'pip install --quiet autopep8 && autopep8 --in-place --recursive --aggressive --aggressive scripts update.py tests'
+
+test: start
+	@$(exec_on_docker) tox -e coverage
+
 # >>> rosey-maintainer:ops-release BEGIN
 # Managed by rosey-maintainer-tools 0.2.0. Do not edit directly.
 
@@ -100,9 +109,11 @@ release-major:
 release-preflight: start
 
 
-	@$(exec_on_docker) tox -e lint
+	@make lint
 
-	@$(exec_on_docker) tox -e coverage
+	@make format
+
+	@make test
 
 
 
@@ -111,6 +122,6 @@ undo-release:
 	@VERSION=$${VERSION} ./scripts/rollback.sh release
 # <<< rosey-maintainer:ops-release END
 
-.PHONY: discover-shelves virtualenv console update-shelves dependencies \
+.PHONY: discover-shelves virtualenv console update-shelves dependencies lint format test \
 	image start stop down destroy cataplum \
 	release release-patch release-minor release-major release-preflight undo-release

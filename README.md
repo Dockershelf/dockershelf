@@ -81,7 +81,15 @@ make virtualenv
 
 ## Testing
 
-Pull requests run `python3 update.py` across Python 3.9–3.12 (see `.github/workflows/pr.yml`). After shelf changes, run `make update-shelves` or `python3 update.py` locally and confirm it completes without errors.
+**Unit tests and style (Docker):**
+
+```bash
+make lint
+make format
+make test
+```
+
+**Shelf regeneration:** pull requests run `python3 update.py` across Python 3.9–3.12 (see `.github/workflows/pr.yml`). After shelf changes, run `make update-shelves` or `python3 update.py` locally and confirm it completes without errors.
 
 Image specs use Ruby (RSpec) in shelf `test-image.rb` files; run relevant tests when changing Docker recipes.
 

@@ -76,13 +76,25 @@ Copy `.env.example` to `.env` when running `scripts/build-all-images.sh` or `scr
 
 ## Quality Checks
 
-This repository does not define `make lint` or `make test` targets. Before opening a pull request:
+With the development container running (`make start`), run:
+
+```bash
+make lint
+make format
+make test
+```
+
+- `make lint` runs `flake8` on `scripts/`, `update.py`, and `tests/` via tox.
+- `make format` applies `autopep8` to the same paths (write mode).
+- `make test` runs unit tests with coverage via `tox -e coverage`.
+
+Before opening a pull request, also:
 
 - Run `python3 update.py` (or `make update-shelves`) and confirm it completes without errors.
 - Run the relevant image test scripts when you change Docker recipes.
 - Keep generated files consistent when your change affects shelves, tags, or CI matrices.
 
-CI runs the same functional check via `python3 update.py` on pull requests.
+CI runs `python3 update.py` on pull requests (see `.github/workflows/pr.yml`).
 
 ## Pull Request Guidelines
 
