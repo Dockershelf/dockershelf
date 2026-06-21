@@ -85,7 +85,7 @@ make test
 ```
 
 - `make lint` runs `flake8` on `scripts/`, `update.py`, and `tests/` via tox.
-- `make format` applies `autopep8` to the same paths (write mode).
+- `make format` applies `autoflake` and `autopep8` to the same paths (write mode).
 - `make test` runs unit tests with coverage via `tox -e coverage`.
 
 Before opening a pull request, also:

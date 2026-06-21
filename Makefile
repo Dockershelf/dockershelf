@@ -85,7 +85,7 @@ lint: start
 	@$(exec_on_docker) tox -e lint
 
 format: start
-	@$(exec_on_docker) bash -c 'pip install --quiet autopep8 && autopep8 --in-place --recursive --aggressive --aggressive scripts update.py tests'
+	@$(exec_on_docker) bash -c 'pip install --quiet autopep8 autoflake && autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports scripts update.py tests && autopep8 --in-place --recursive --aggressive --aggressive scripts update.py tests'
 
 test: start
 	@$(exec_on_docker) tox -e coverage

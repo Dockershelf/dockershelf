@@ -7,20 +7,24 @@ on:
     types:
       - completed
     branches:
-      - develop
+      - 'feature/**'
+      - 'dependabot/**'
+      - '!release/**'
 
 jobs:
-  approve:
-    name: Approve pull request
+  gate:
+    name: Verify PR checks passed
     runs-on: ubuntu-24.04
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       (github.event.workflow_run.actor.login == 'dependabot[bot]' ||
        github.event.workflow_run.actor.login == github.repository_owner)
     permissions:
-      pull-requests: write
+      actions: read
+      pull-requests: read
     outputs:
       pull_number: ${{ steps.resolve_pr.outputs.pull_number }}
+      eligible: ${{ steps.resolve_pr.outputs.eligible }}
     steps:
       - name: Resolve pull request
         id: resolve_pr
@@ -29,6 +33,10 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             const run = context.payload.workflow_run;
+            const integrationBranch = 'develop';
+            const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
+            core.setOutput('eligible', 'false');
+
             let pullNumber = run.pull_requests?.[0]?.number;
 
             if (!pullNumber) {
@@ -46,14 +54,126 @@ jobs:
               pullNumber = match.number;
             }
 
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullNumber,
+            });
+
+            if (pull.base.ref !== integrationBranch) {
+              core.notice(
+                `PR #${pullNumber} targets ${pull.base.ref}, not ${integrationBranch}; skipping auto-merge`,
+              );
+              return;
+            }
+
+            if (!eligibleHeadPatterns.some((pattern) => pattern.test(pull.head.ref))) {
+              core.notice(
+                `PR #${pullNumber} head branch ${pull.head.ref} is not eligible for auto-merge (expected feature/* or dependabot/*)`,
+              );
+              return;
+            }
+
+            core.setOutput('eligible', 'true');
             core.setOutput('pull_number', String(pullNumber));
 
+      - name: Verify required workflow runs
+        if: steps.resolve_pr.outputs.eligible == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            const run = context.payload.workflow_run;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const headSha = run.head_sha;
+            const pollIntervalMs = 30_000;
+            const pollTimeoutMs = 30 * 60 * 1000;
+
+            async function listWorkflowRuns() {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                head_sha: headSha,
+                per_page: 100,
+              });
+              return data.workflow_runs;
+            }
+
+            function latestRun(workflowRuns, workflowName) {
+              const matches = workflowRuns.filter(
+                (item) => item.name === workflowName && item.event === 'pull_request',
+              );
+              return matches.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at),
+              )[0];
+            }
+
+            async function requireSuccess(workflowName, { poll = false } = {}) {
+              const deadline = Date.now() + (poll ? pollTimeoutMs : 0);
+
+              while (true) {
+                const runs = await listWorkflowRuns();
+                const latest = latestRun(runs, workflowName);
+
+                if (!latest) {
+                  if (!poll || Date.now() >= deadline) {
+                    core.setFailed(`Missing workflow run: ${workflowName}`);
+                    return false;
+                  }
+                } else if (latest.conclusion === 'success') {
+                  return true;
+                } else if (
+                  latest.conclusion === 'failure' ||
+                  latest.conclusion === 'cancelled'
+                ) {
+                  core.setFailed(
+                    `Workflow ${workflowName} conclusion is ${latest.conclusion}`,
+                  );
+                  return false;
+                } else if (!poll || Date.now() >= deadline) {
+                  core.setFailed(
+                    `Workflow ${workflowName} conclusion is ${latest.conclusion ?? 'pending'}`,
+                  );
+                  return false;
+                }
+
+                core.info(
+                  `Waiting for ${workflowName} to complete (latest: ${latest?.conclusion ?? 'missing'})`,
+                );
+                await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+              }
+            }
+
+            if (!(await requireSuccess('Pull Request'))) {
+              return;
+            }
+
+            if (!(await requireSuccess('Code Quality', { poll: true }))) {
+              return;
+            }
+
+
+  approve:
+    name: Approve pull request
+    runs-on: ubuntu-24.04
+    needs: gate
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      needs.gate.outputs.eligible == 'true' &&
+      (github.event.workflow_run.actor.login == 'dependabot[bot]' ||
+       github.event.workflow_run.actor.login == github.repository_owner)
+    permissions:
+      pull-requests: write
+    outputs:
+      pull_number: ${{ needs.gate.outputs.pull_number }}
+    steps:
       - name: Approve
         uses: actions/github-script@v9
         with:
           github-token: "${{ github.event.workflow_run.actor.login == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
           script: |
-            const pullNumber = Number('${{ steps.resolve_pr.outputs.pull_number }}');
+            const pullNumber = Number('${{ needs.gate.outputs.pull_number }}');
             await github.rest.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,

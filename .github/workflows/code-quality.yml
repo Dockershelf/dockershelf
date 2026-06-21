@@ -1,16 +1,26 @@
 name: Code Quality
 
 on:
-  schedule:
-    - cron: 00 6 * * 2
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - synchronize
+      - reopened
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
-  build:
-    name: Generating code quality report
+  code-quality:
+    name: Code Quality
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v7
+        uses: actions/checkout@v6
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -20,3 +30,5 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        with:
+          wait-for-processing: true
