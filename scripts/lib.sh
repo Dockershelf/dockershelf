@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Shared release gates for release scripts.
-# Managed by rosey-maintainer-tools 0.2.0. Do not edit directly.
+# Managed by rosey-maintainer-tools 0.3.0. Do not edit directly.
 
 RELEASE_CI_WORKFLOW=${RELEASE_CI_WORKFLOW:-push.yml}
 RELEASE_CI_TIMEOUT_SECONDS=${RELEASE_CI_TIMEOUT_SECONDS:-2700}
