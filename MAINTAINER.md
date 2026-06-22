@@ -37,22 +37,28 @@ When `develop` is ready to ship:
 
 - **`pr.yml`** — repo-specific CI on `pull_request` to `develop`. Each job's
   `name:` field becomes a candidate required status check on `develop`. Static sync
-  does not rewrite `pr.yml`; fleet sync may patch trigger/checkout security only
-  (remove `pull_request_target`, PR-head checkout, and in-file approve/merge jobs).
-- **`code-quality.yml`** — static-synced Semgrep OSS on `pull_request` to `develop`
-  (job name **Code Quality**). Fails the PR check when Semgrep reports findings in
-  the PR diff (`p/ci` + language ruleset, baseline scan). No SARIF upload to GitHub
-  Security; gating is via the required **Code Quality** status check.
+  injects a managed **Code Quality** Semgrep job block when the quality bundle is
+  present; it may also strip legacy `push` backup triggers and `concurrency`. The
+  dynamic phase may patch trigger/checkout security only (remove `pull_request_target`,
+  PR-head checkout, and in-file approve/merge jobs).
 - **`pr-auto-merge.yml`** — static-synced. Triggers on `workflow_run` after **Pull Request**
-  completes on an eligible **head** branch (`feature/**` or `dependabot/**`; not
-  `release/**`). A gate job verifies the PR targets `develop`, required workflow runs
-  succeeded for the PR `head_sha` (polling for **Code Quality** when the quality bundle
-  is present), then approve/merge via the GitHub API (no checkout of PR code). Limited
-  to `dependabot[bot]` and `github.repository_owner`. Integration PRs use
-  `feature/<slug>` from git-flow (`rosey-work` / `rosey-pr`). Configure
-  `REPO_PERSONAL_ACCESS_TOKEN` when owner merges need permissions beyond
-  `GITHUB_TOKEN`. Post-PR CI failures are handled outside the LFG skills (e.g.
-  Cursor Bugbot).
+  completes successfully on an eligible **head** branch (`feature/**` or `dependabot/**`;
+  not `release/**`). A gate job verifies the PR targets `develop` and head branch
+  eligibility, then approve/merge via the GitHub API (no checkout of PR code). All jobs
+  in **Pull Request** (including **Code Quality**) must be green before the workflow
+  completes. Limited to `dependabot[bot]`, `cursor[bot]` (Cursor PR automation), and
+  `github.repository_owner`. Integration PRs use `feature/<slug>` from git-flow
+  (`rosey-work` / `rosey-pr`). Configure `REPO_PERSONAL_ACCESS_TOKEN` when Dependabot
+  merges need permissions beyond `GITHUB_TOKEN`.
+- **Cursor PR CI automation** — one Cursor automation per repo (fleet prompts in
+  **rosey-maintainer-tools** `docs/cursor-automations/<repo>.md`; setup in
+  `docs/cursor-pr-ci-automation.md`). Triggers on **failed PR checks** for
+  owner/Dependabot PRs targeting `develop` on `feature/**` or `dependabot/**`
+  (not on direct `develop` pushes). The agent pushes fixes to the **PR head
+  branch** only; it does not approve or merge. When the **Pull Request** workflow
+  succeeds (all jobs green, including **Code Quality** when present),
+  `pr-auto-merge.yml` completes the merge. `rosey-lfg-quality` and `rosey-pr` do not
+  fix CI or merge.
 
   Auto-merge eligibility:
 
@@ -61,7 +67,7 @@ When `develop` is ready to ship:
   | Head branch | `feature/**` or `dependabot/**` |
   | Base branch | `develop` (gate) |
   | Actor | repo owner or Dependabot |
-  | Required workflows | Pull Request (+ Code Quality when bundle present) on same `head_sha` |
+  | Required workflows | **Pull Request** workflow on same `head_sha` (includes **Code Quality** when bundle present) |
   | Excluded | `release/**`, PRs not targeting `develop`, external contributors |
 
 ## Skill reference
@@ -95,10 +101,10 @@ verified by the skill after the Make target succeeds.
 ## GitHub branch protection (configure once)
 
 **`develop`** — require PR; required status checks must match job `name:` fields in
-`.github/workflows/pr.yml` **plus** **Code Quality** from static-synced
-`code-quality.yml` when present. Run `rosey-maintain protect-github --apply` (after
-GitHub Pro on private repos) to create the `Rosey: develop` ruleset with those
-checks (including matrix-expanded job names where applicable).
+`.github/workflows/pr.yml` (including **Code Quality** when the managed block is
+present). Run `rosey-maintain protect-github --apply` (after GitHub Pro on private
+repos) to create the `Rosey: develop` ruleset with those checks (including
+matrix-expanded job names where applicable).
 
 **`master`** — restrict pushes; disallow force pushes.
 
