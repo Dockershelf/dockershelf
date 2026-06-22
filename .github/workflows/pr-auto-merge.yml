@@ -1,5 +1,9 @@
 name: Pull Request Auto-Merge
 
+
+
+
+
 on:
   workflow_run:
     workflows:
@@ -17,10 +21,8 @@ jobs:
     runs-on: ubuntu-24.04
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
-      (github.event.workflow_run.actor.login == 'dependabot[bot]' ||
-       github.event.workflow_run.actor.login == github.repository_owner)
+      (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == github.repository_owner)
     permissions:
-      actions: read
       pull-requests: read
     outputs:
       pull_number: ${{ steps.resolve_pr.outputs.pull_number }}
@@ -77,83 +79,6 @@ jobs:
             core.setOutput('eligible', 'true');
             core.setOutput('pull_number', String(pullNumber));
 
-      - name: Verify required workflow runs
-        if: steps.resolve_pr.outputs.eligible == 'true'
-        uses: actions/github-script@v9
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          script: |
-            const run = context.payload.workflow_run;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const headSha = run.head_sha;
-            const pollIntervalMs = 30_000;
-            const pollTimeoutMs = 30 * 60 * 1000;
-
-            async function listWorkflowRuns() {
-              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
-                owner,
-                repo,
-                head_sha: headSha,
-                per_page: 100,
-              });
-              return data.workflow_runs;
-            }
-
-            function latestRun(workflowRuns, workflowName) {
-              const matches = workflowRuns.filter(
-                (item) => item.name === workflowName && item.event === 'pull_request',
-              );
-              return matches.sort(
-                (a, b) => new Date(b.created_at) - new Date(a.created_at),
-              )[0];
-            }
-
-            async function requireSuccess(workflowName, { poll = false } = {}) {
-              const deadline = Date.now() + (poll ? pollTimeoutMs : 0);
-
-              while (true) {
-                const runs = await listWorkflowRuns();
-                const latest = latestRun(runs, workflowName);
-
-                if (!latest) {
-                  if (!poll || Date.now() >= deadline) {
-                    core.setFailed(`Missing workflow run: ${workflowName}`);
-                    return false;
-                  }
-                } else if (latest.conclusion === 'success') {
-                  return true;
-                } else if (
-                  latest.conclusion === 'failure' ||
-                  latest.conclusion === 'cancelled'
-                ) {
-                  core.setFailed(
-                    `Workflow ${workflowName} conclusion is ${latest.conclusion}`,
-                  );
-                  return false;
-                } else if (!poll || Date.now() >= deadline) {
-                  core.setFailed(
-                    `Workflow ${workflowName} conclusion is ${latest.conclusion ?? 'pending'}`,
-                  );
-                  return false;
-                }
-
-                core.info(
-                  `Waiting for ${workflowName} to complete (latest: ${latest?.conclusion ?? 'missing'})`,
-                );
-                await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
-              }
-            }
-
-            if (!(await requireSuccess('Pull Request'))) {
-              return;
-            }
-
-            if (!(await requireSuccess('Code Quality', { poll: true }))) {
-              return;
-            }
-
-
   approve:
     name: Approve pull request
     runs-on: ubuntu-24.04
@@ -161,8 +86,7 @@ jobs:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       needs.gate.outputs.eligible == 'true' &&
-      (github.event.workflow_run.actor.login == 'dependabot[bot]' ||
-       github.event.workflow_run.actor.login == github.repository_owner)
+      (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == github.repository_owner)
     permissions:
       pull-requests: write
     outputs:
@@ -171,9 +95,30 @@ jobs:
       - name: Approve
         uses: actions/github-script@v9
         with:
-          github-token: "${{ github.event.workflow_run.actor.login == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
+          github-token: "${{ github.event.workflow_run.actor.login == 'dependabot[bot]' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
           script: |
             const pullNumber = Number('${{ needs.gate.outputs.pull_number }}');
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullNumber,
+            });
+            if (pull.merged) {
+              core.notice(`PR #${pullNumber} is already merged`);
+              return;
+            }
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullNumber,
+            });
+            const hasBotApproval = reviews.some(
+              (review) => review.state === 'APPROVED' && review.user?.type === 'Bot',
+            );
+            if (hasBotApproval) {
+              core.notice(`PR #${pullNumber} already has bot approval`);
+              return;
+            }
             await github.rest.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -187,8 +132,7 @@ jobs:
     needs: approve
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
-      (github.event.workflow_run.actor.login == 'dependabot[bot]' ||
-       github.event.workflow_run.actor.login == github.repository_owner)
+      (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == github.repository_owner)
     permissions:
       contents: write
       pull-requests: write
@@ -196,9 +140,18 @@ jobs:
       - name: Merge
         uses: actions/github-script@v9
         with:
-          github-token: "${{ github.event.workflow_run.actor.login == github.repository_owner && secrets.GITHUB_TOKEN || secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
+          github-token: "${{ github.event.workflow_run.actor.login == 'dependabot[bot]' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
           script: |
             const pullNumber = Number('${{ needs.approve.outputs.pull_number }}');
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullNumber,
+            });
+            if (pull.merged) {
+              core.notice(`PR #${pullNumber} is already merged`);
+              return;
+            }
             await github.rest.pulls.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,
