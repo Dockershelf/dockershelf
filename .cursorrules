@@ -1,0 +1,43 @@
+## Cursor Cloud specific instructions
+
+Dockershelf is a Python tooling repo that generates the shelf `Dockerfile`s, the
+top-level `README.md` tables, and the GitHub Actions matrices for a family of
+Docker base images (`debian`, `python`, `node`, `go`, `latex`). There is no
+long-running service; the "application" is the generator `update.py` plus the
+maintenance scripts in `scripts/`.
+
+### Environment
+
+- Docker is **not** available in the Cursor Cloud environment, so the
+  Docker-based `make` targets (`make image`, `make start`, `make console`, and
+  therefore `make lint`/`make format`/`make test`, which all depend on `start`)
+  cannot run here. Use the host-only Python path instead (this is the officially
+  supported alternative; see `README.md` "Host-only Python").
+- The startup update script installs the Python tooling
+  (`requirements.txt` plus `tox`, `flake8`, `autopep8`, `coverage`) into
+  `~/.local/bin`, which is added to `PATH` via `~/.bashrc`. If
+  `tox`/`flake8`/`coverage` are not found, either start a login shell or invoke
+  them as `python3 -m tox` etc.
+
+### Lint / Test / Run (host Python)
+
+Run these from the repo root (they mirror what the Docker `make` targets execute
+inside the container, per `tox.ini`):
+
+- Lint: `tox -e lint` (flake8 over `scripts update.py tests`).
+- Tests: `tox -e coverage` (unittest discovery under `tests/` with coverage).
+- Run the generator (core functionality): `python3 update.py`.
+
+Note: `tox -e lint` currently reports a pre-existing `E722` (bare `except`) in
+`scripts/utils.py`; this is an existing code finding, not an environment problem.
+
+### Generator behavior gotcha
+
+`update.py` fetches **live** upstream data (Debian `Release` files, the Go
+telemetry version config) and regenerates files from the `*.template` files.
+Running it can therefore produce a non-empty `git diff` even with no source
+changes — both because upstream versions move and because some committed
+generated files (e.g. `README.md`, `.github/workflows/*.yml`) have drifted from
+their templates (e.g. dependabot bumped action versions only in the generated
+files). A non-empty diff after `python3 update.py` does not by itself indicate a
+bug; review the diff before committing regenerated output.
