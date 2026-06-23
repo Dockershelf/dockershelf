@@ -265,7 +265,16 @@ release_read_post_bump_commands() {
     awk '
         /^\[rosey-maintainer\]/ { in_section=1; next }
         /^\[/ && in_section { exit }
-        in_section && /^post_bump_commands[[:space:]]*=/ { collecting=1; next }
+        in_section && /^post_bump_commands[[:space:]]*=/ {
+            line = $0
+            sub(/^post_bump_commands[[:space:]]*=[[:space:]]*/, "", line)
+            if (length(line) > 0) {
+                print line
+            } else {
+                collecting = 1
+            }
+            next
+        }
         collecting && /^[[:space:]]+/ {
             sub(/^[[:space:]]+/, "")
             if (length($0) > 0) {

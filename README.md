@@ -154,7 +154,7 @@ These are debian stable/unstable images with node versions built using the [node
 
 ### Go
 
-These are debian stable/unstable images with go version downloaded directly from the [official website](https://go.dev/dl/). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
+These are debian stable/unstable images with go version downloaded directly from the [official website](https://go.dev/dl/). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
