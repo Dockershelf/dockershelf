@@ -27,6 +27,8 @@ jobs:
     outputs:
       pull_number: ${{ steps.resolve_pr.outputs.pull_number }}
       eligible: ${{ steps.resolve_pr.outputs.eligible }}
+      head_ref: ${{ steps.resolve_pr.outputs.head_ref }}
+      use_dependabot_pat: ${{ steps.resolve_pr.outputs.use_dependabot_pat }}
     steps:
       - name: Resolve pull request
         id: resolve_pr
@@ -38,6 +40,8 @@ jobs:
             const integrationBranch = 'develop';
             const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
             core.setOutput('eligible', 'false');
+            core.setOutput('head_ref', '');
+            core.setOutput('use_dependabot_pat', 'false');
 
             let pullNumber = run.pull_requests?.[0]?.number;
 
@@ -46,7 +50,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 state: 'open',
-                head: `${context.repo.owner}:${run.head_branch}`,
+                per_page: 100,
               });
               const match = pulls.find((pull) => pull.head.sha === run.head_sha);
               if (!match) {
@@ -78,6 +82,8 @@ jobs:
 
             core.setOutput('eligible', 'true');
             core.setOutput('pull_number', String(pullNumber));
+            core.setOutput('head_ref', pull.head.ref);
+            core.setOutput('use_dependabot_pat', String(/^dependabot\//.test(pull.head.ref)));
 
   approve:
     name: Approve pull request
@@ -95,7 +101,7 @@ jobs:
       - name: Approve
         uses: actions/github-script@v9
         with:
-          github-token: "${{ github.event.workflow_run.actor.login == 'dependabot[bot]' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
+          github-token: "${{ needs.gate.outputs.use_dependabot_pat == 'true' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
           script: |
             const pullNumber = Number('${{ needs.gate.outputs.pull_number }}');
             const { data: pull } = await github.rest.pulls.get({
@@ -129,9 +135,10 @@ jobs:
   merge:
     name: Merge pull request
     runs-on: ubuntu-24.04
-    needs: approve
+    needs: [gate, approve]
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
+      needs.gate.outputs.eligible == 'true' &&
       (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == github.repository_owner)
     permissions:
       contents: write
@@ -140,9 +147,9 @@ jobs:
       - name: Merge
         uses: actions/github-script@v9
         with:
-          github-token: "${{ github.event.workflow_run.actor.login == 'dependabot[bot]' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
+          github-token: "${{ needs.gate.outputs.use_dependabot_pat == 'true' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
           script: |
-            const pullNumber = Number('${{ needs.approve.outputs.pull_number }}');
+            const pullNumber = Number('${{ needs.gate.outputs.pull_number }}');
             const { data: pull } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
