@@ -14,7 +14,7 @@ You can help by:
 
 ## Report Bugs
 
-Report bugs through [GitHub Issues](https://github.com/LuisAlejandro/dockershelf/issues).
+Report bugs through [GitHub Issues](https://github.com/Dockershelf/dockershelf/issues).
 
 Please include:
 

@@ -95,7 +95,7 @@ Image specs use Ruby (RSpec) in shelf `test-image.rb` files; run relevant tests 
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Report issues at [github.com/LuisAlejandro/dockershelf/issues](https://github.com/LuisAlejandro/dockershelf/issues).
+See [CONTRIBUTING.md](CONTRIBUTING.md). Report issues at [github.com/Dockershelf/dockershelf/issues](https://github.com/Dockershelf/dockershelf/issues).
 
 ## Releases
 

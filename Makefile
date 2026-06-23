@@ -123,5 +123,5 @@ undo-release:
 # <<< rosey-maintainer:ops-release END
 
 .PHONY: discover-shelves virtualenv console update-shelves dependencies lint format test \
-	image start stop down destroy cataplum \
-	release release-patch release-minor release-major release-preflight undo-release
+	image start stop down destroy cataplum release release-patch release-minor \
+	release-major release-preflight undo-release

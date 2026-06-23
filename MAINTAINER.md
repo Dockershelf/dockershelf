@@ -55,7 +55,8 @@ When `develop` is ready to ship:
   `docs/cursor-pr-ci-automation.md`). Triggers on **failed PR checks** for
   owner/Dependabot PRs targeting `develop` on `feature/**` or `dependabot/**`
   (not on direct `develop` pushes). The agent pushes fixes to the **PR head
-  branch** only; it does not approve or merge. When the **Pull Request** workflow
+  branch** only; CI retriggers via `pull_request` `synchronize` (not workflow
+  dispatch). It does not approve or merge. When the **Pull Request** workflow
   succeeds (all jobs green, including **Code Quality** when present),
   `pr-auto-merge.yml` completes the merge. `rosey-lfg-quality` and `rosey-pr` do not
   fix CI or merge.
