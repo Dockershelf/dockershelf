@@ -2,6 +2,7 @@
 # -*- makefile -*-
 
 SHELL = bash -e
+export BASH_ENV := $(HOME)/.bash_env
 img_hash = $(shell docker images -q dockershelf/dockershelf:latest)
 exec_on_docker = docker compose \
 	-p dockershelf -f docker-compose.yml exec \
