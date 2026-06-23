@@ -270,19 +270,9 @@ release_read_post_bump_commands() {
             sub(/^post_bump_commands[[:space:]]*=[[:space:]]*/, "", line)
             if (length(line) > 0) {
                 print line
-            } else {
-                collecting = 1
             }
-            next
+            exit
         }
-        collecting && /^[[:space:]]+/ {
-            sub(/^[[:space:]]+/, "")
-            if (length($0) > 0) {
-                print
-            }
-            next
-        }
-        collecting && /^[^[:space:]]/ { exit }
     ' .bumpversion.cfg
 }
 
