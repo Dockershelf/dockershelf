@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo python3.13-venv bundler \
     && rm -rf /var/lib/apt/lists/*
 
-ADD requirements.txt /root/
-RUN pip3 install -r /root/requirements.txt
-RUN rm -rf /root/requirements.txt
+ADD requirements.txt requirements-dev.txt /root/
+RUN pip3 install -r /root/requirements.txt -r /root/requirements-dev.txt
+RUN rm -rf /root/requirements.txt /root/requirements-dev.txt
 
 RUN EXISTUSER=$(getent passwd | awk -F':' '$3 == '$UID' {print $1}') && \
     [ -n "${EXISTUSER}" ] && deluser ${EXISTUSER} || true

@@ -71,10 +71,44 @@ release_check_host_tools() {
 
 
 release_run_preflight() {
+    local preflight_snapshot
+    local command
+
     print_step "Running release preflight (Docker)"
     release_require_command docker
     release_require_command make
-    make release-preflight
+    release_require_clean_worktree
+
+
+
+    print_step "Preflight: make format"
+    preflight_snapshot=$(git status --porcelain)
+    make format
+    if [[ "$(git status --porcelain)" != "$preflight_snapshot" ]]; then
+        print_error "make format changed files; run make format and commit on develop before releasing"
+        git status --short >&2
+        exit 1
+    fi
+
+
+
+    print_step "Preflight: make lint"
+    if ! make lint; then
+        print_error "make lint failed; fix lint errors on develop before releasing"
+        exit 1
+    fi
+
+
+
+    print_step "Preflight: make test"
+    if ! make test; then
+        print_error "Preflight command failed: make test"
+        exit 1
+    fi
+
+
+
+    print_step "Release preflight passed"
 }
 
 

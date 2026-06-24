@@ -86,7 +86,8 @@ lint: start
 	@$(exec_on_docker) tox -e lint
 
 format: start
-	@$(exec_on_docker) bash -c 'pip install --quiet autopep8 autoflake && autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports scripts update.py tests && autopep8 --in-place --recursive --aggressive --aggressive scripts update.py tests'
+	@$(exec_on_docker) autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports scripts update.py tests
+	@$(exec_on_docker) autopep8 --in-place --recursive --aggressive --aggressive scripts update.py tests
 
 test: start
 	@$(exec_on_docker) tox -e coverage
@@ -108,15 +109,9 @@ release-major:
 
 
 release-preflight: start
-
-
-	@make lint
-
 	@make format
-
+	@make lint
 	@make test
-
-
 
 undo-release:
 	@: "$${VERSION:?Set VERSION=x.y.z before running make undo-release}"
