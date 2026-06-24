@@ -129,7 +129,7 @@ def get_go_versions():
     for v in go_versions:
         try:
             parsedv = Version(v)
-        except:
+        except Exception:
             parsedv = Version('0.0')
         go_version_minor = f'{parsedv.major}.{parsedv.minor}'
         if go_version_minor not in go_suites:
