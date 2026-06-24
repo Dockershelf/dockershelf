@@ -59,7 +59,7 @@ gpg --no-default-keyring \
 gpg --no-default-keyring \
     --keyring ./node.gpg \
     --export "2F59B5F99B1BE0B4" \
-    > /usr/share/keyrings/node.gpg
+    >/usr/share/keyrings/node.gpg
 
 {
     echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} nodistro main"
@@ -74,7 +74,7 @@ apt-get update
 msginfo "Installing Node ..."
 for PKG in ${NODE_PKGS}; do
     PKG_VER="$(apt-cache madison ${PKG} | grep Packages |
-        grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs)"
+        grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs || true)"
     NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 

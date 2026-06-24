@@ -46,6 +46,24 @@ DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 # Load helper functions
 source "${BASEDIR}/library.sh"
 
+# Debian trixie+ verifies apt repos with sqv, which rejects SHA1-signed keys
+# since 2026-02-01. deadsnakes PPA still uses SHA1 until Ubuntu updates it.
+configure_apt_sequoia_legacy_ppa_keys() {
+    local config_src=/usr/share/apt/default-sequoia.config
+    local config_dst=/etc/crypto-policies/back-ends/apt-sequoia.config
+
+    if [ ! -f "${config_src}" ]; then
+        return 0
+    fi
+
+    mkdir -p "$(dirname "${config_dst}")"
+    if [ ! -f "${config_dst}" ]; then
+        cp "${config_src}" "${config_dst}"
+    fi
+    sed -i 's/sha1.second_preimage_resistance = 2026-02-01/sha1.second_preimage_resistance = 2028-02-01/' \
+        "${config_dst}"
+}
+
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
@@ -73,7 +91,7 @@ gpg --no-default-keyring \
 gpg --no-default-keyring \
     --keyring ./python.gpg \
     --export "BA6932366A755776" \
-    > /usr/share/keyrings/python.gpg
+    >/usr/share/keyrings/python.gpg
 
 if [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ]; then
     PYTHON_PKGS="${PYTHON_PKGS} ${PYTHON_VER_NUM_MINOR_STR}-distutils lib${PYTHON_VER_NUM_MINOR_STR}-minimal ${PYTHON_VER_NUM_MINOR_STR}-minimal"
@@ -86,6 +104,7 @@ fi
     echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} ${UBUNTU_RELEASE} main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
+configure_apt_sequoia_legacy_ppa_keys
 apt-get update
 
 # Python: Installation
@@ -116,8 +135,8 @@ aptitude install -y media-types || true
 # We use dpkg-deb directly instead of equivs to avoid dependency issues
 
 mkdir -p /tmp/mime-support-dummy/DEBIAN
-    
-cat > /tmp/mime-support-dummy/DEBIAN/control << 'EOF'
+
+cat >/tmp/mime-support-dummy/DEBIAN/control <<'EOF'
 Package: mime-support
 Version: 999.999.999
 Section: misc
