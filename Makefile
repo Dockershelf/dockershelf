@@ -23,7 +23,7 @@ virtualenv:
 	@./virtualenv/bin/python3 -m pip install -r requirements.txt
 
 # >>> rosey-maintainer:ops-docker BEGIN
-# Managed by rosey-maintainer-tools 0.4.3. Do not edit directly.
+# Managed by rosey-maintainer-tools 0.4.4. Do not edit directly.
 
 PROJECT_NAME ?= dockershelf
 all_ps_hashes = $(shell docker ps -q)
@@ -93,7 +93,7 @@ test: start
 	@$(exec_on_docker) tox -e coverage
 
 # >>> rosey-maintainer:ops-release BEGIN
-# Managed by rosey-maintainer-tools 0.4.3. Do not edit directly.
+# Managed by rosey-maintainer-tools 0.4.4. Do not edit directly.
 
 release:
 	@./scripts/release.sh $${VERSION_TYPE}
