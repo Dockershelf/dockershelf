@@ -82,8 +82,7 @@ lint: start
 	@$(exec_on_docker) tox -e lint
 
 format: start
-	@$(exec_on_docker) autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports scripts update.py tests
-	@$(exec_on_docker) autopep8 --in-place --recursive --aggressive --aggressive scripts update.py tests
+	@$(exec_on_docker) tox -e format
 
 test: start
 	@$(exec_on_docker) tox -e coverage

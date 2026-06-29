@@ -139,7 +139,7 @@ setup_logging() {
 discover_images() {
     local images=()
 
-    print_color $BLUE "🔍 Discovering supported images..."
+    print_color $BLUE "🔍 Discovering supported images..." >&2
 
     # Debian base images
     for debian_dir in "${BASEDIR}/debian"/*/; do
