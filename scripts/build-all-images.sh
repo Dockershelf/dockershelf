@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Build All Dockershelf Images Script
-# 
+#
 # This script builds and tests all supported Dockershelf images locally.
 # It automatically discovers supported image combinations and handles
 # the build/test process with proper error handling and progress tracking.
@@ -28,8 +28,42 @@ CURRENT_IMAGE=0
 
 # Default values
 DEFAULT_BRANCH="develop"
-BRANCH="${1:-$DEFAULT_BRANCH}"
-SKIP_TESTS="${2:-false}"
+BRANCH="${DEFAULT_BRANCH}"
+SKIP_TESTS="false"
+NO_PUSH="false"
+ASSUME_YES="false"
+WANT_HELP="false"
+POSITIONAL=()
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+        --no-push)
+            NO_PUSH="true"
+            shift
+            ;;
+        --yes | -y)
+            ASSUME_YES="true"
+            shift
+            ;;
+        --help | -h)
+            WANT_HELP="true"
+            shift
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift
+            ;;
+        esac
+    done
+
+    if [ ${#POSITIONAL[@]} -gt 0 ]; then
+        BRANCH="${POSITIONAL[0]}"
+    fi
+    if [ ${#POSITIONAL[@]} -gt 1 ]; then
+        SKIP_TESTS="${POSITIONAL[1]}"
+    fi
+}
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -45,7 +79,7 @@ print_color() {
 create_env_template() {
     if [ ! -f "${ENV_FILE}" ]; then
         print_color $YELLOW "Creating .env file template..."
-        cat > "${ENV_FILE}" << 'EOF'
+        cat >"${ENV_FILE}" <<'EOF'
 # Docker Hub Credentials
 # Replace with your actual credentials
 DH_USERNAME=your_dockerhub_username
@@ -65,6 +99,13 @@ EOF
 
 # Function to load environment variables
 load_env() {
+    if [ "${NO_PUSH}" = "true" ]; then
+        DH_USERNAME="${DH_USERNAME:-build-only}"
+        DH_PASSWORD="${DH_PASSWORD:-build-only}"
+        export DOCKERSHELF_BUILD_ONLY=1
+        return
+    fi
+
     if [ -f "${ENV_FILE}" ]; then
         # Export variables from .env file
         set -a
@@ -74,14 +115,14 @@ load_env() {
         print_color $RED "❌ .env file not found!"
         exit 1
     fi
-    
+
     # Validate required variables
     if [ -z "${DH_USERNAME:-}" ] || [ -z "${DH_PASSWORD:-}" ]; then
         print_color $RED "❌ Docker Hub credentials not properly set in .env file!"
         print_color $BLUE "📝 Please edit: ${ENV_FILE}"
         exit 1
     fi
-    
+
     if [ "${DH_USERNAME}" = "your_dockerhub_username" ]; then
         print_color $RED "❌ Please replace placeholder credentials in .env file!"
         exit 1
@@ -97,9 +138,9 @@ setup_logging() {
 # Function to discover all supported images
 discover_images() {
     local images=()
-    
+
     print_color $BLUE "🔍 Discovering supported images..."
-    
+
     # Debian base images
     for debian_dir in "${BASEDIR}/debian"/*/; do
         if [ -d "${debian_dir}" ] && [ -f "${debian_dir}/Dockerfile" ]; then
@@ -107,7 +148,7 @@ discover_images() {
             images+=("dockershelf/debian:${debian_version}")
         fi
     done
-    
+
     # Python images
     for python_dir in "${BASEDIR}/python"/*/; do
         if [ -d "${python_dir}" ] && [ -f "${python_dir}/Dockerfile" ]; then
@@ -115,7 +156,7 @@ discover_images() {
             images+=("dockershelf/python:${python_version}")
         fi
     done
-    
+
     # Node images
     for node_dir in "${BASEDIR}/node"/*/; do
         if [ -d "${node_dir}" ] && [ -f "${node_dir}/Dockerfile" ]; then
@@ -123,7 +164,7 @@ discover_images() {
             images+=("dockershelf/node:${node_version}")
         fi
     done
-    
+
     # Go images
     for go_dir in "${BASEDIR}/go"/*/; do
         if [ -d "${go_dir}" ] && [ -f "${go_dir}/Dockerfile" ]; then
@@ -131,7 +172,7 @@ discover_images() {
             images+=("dockershelf/go:${go_version}")
         fi
     done
-    
+
     # LaTeX images
     for latex_dir in "${BASEDIR}/latex"/*/; do
         if [ -d "${latex_dir}" ] && [ -f "${latex_dir}/Dockerfile" ]; then
@@ -139,7 +180,7 @@ discover_images() {
             images+=("dockershelf/latex:${latex_version}")
         fi
     done
-    
+
     echo "${images[@]}"
 }
 
@@ -147,40 +188,40 @@ discover_images() {
 get_debian_suite() {
     local image_name=$1
     local image_tag="${image_name##*:}"
-    
+
     case "${image_tag}" in
-        *sid*)
-            echo "unstable"
-            ;;
-        *bookworm*)
-            echo "stable"
-            ;;
-        *bullseye*)
-            echo "oldstable"
-            ;;
-        *trixie*)
-            echo "testing"
-            ;;
-        sid)
-            echo "unstable"
-            ;;
-        bookworm)
-            echo "stable"
-            ;;
-        bullseye)
-            echo "oldstable"
-            ;;
-        trixie)
-            echo "testing"
-            ;;
-        basic|full)
-            # LaTeX images are based on bookworm
-            echo "stable"
-            ;;
-        *)
-            # Default to stable for other cases
-            echo "stable"
-            ;;
+    *sid*)
+        echo "unstable"
+        ;;
+    *bookworm*)
+        echo "stable"
+        ;;
+    *bullseye*)
+        echo "oldstable"
+        ;;
+    *trixie*)
+        echo "testing"
+        ;;
+    sid)
+        echo "unstable"
+        ;;
+    bookworm)
+        echo "stable"
+        ;;
+    bullseye)
+        echo "oldstable"
+        ;;
+    trixie)
+        echo "testing"
+        ;;
+    basic | full)
+        # LaTeX images are based on bookworm
+        echo "stable"
+        ;;
+    *)
+        # Default to stable for other cases
+        echo "stable"
+        ;;
     esac
 }
 
@@ -189,14 +230,14 @@ build_image() {
     local image_name=$1
     local debian_suite=$(get_debian_suite "${image_name}")
     local log_file="${LOG_DIR}/build-$(echo ${image_name} | tr '/:' '_').log"
-    
+
     CURRENT_IMAGE=$((CURRENT_IMAGE + 1))
-    
+
     print_color $BLUE "🔨 Building [${CURRENT_IMAGE}/${TOTAL_IMAGES}]: ${image_name}"
     print_color $BLUE "   Debian suite: ${debian_suite}"
     print_color $BLUE "   Branch: ${BRANCH}"
     print_color $BLUE "   Log: ${log_file}"
-    
+
     # Run the build with logging
     if bash "${BASEDIR}/build-image.sh" \
         "${image_name}" \
@@ -204,8 +245,8 @@ build_image() {
         "${DH_USERNAME}" \
         "${DH_PASSWORD}" \
         "${BRANCH}" \
-        > "${log_file}" 2>&1; then
-        
+        >"${log_file}" 2>&1; then
+
         print_color $GREEN "✅ Successfully built: ${image_name}"
         SUCCESSFUL_BUILDS+=("${image_name}")
     else
@@ -219,12 +260,12 @@ build_image() {
 test_image() {
     local image_name=$1
     local log_file="${LOG_DIR}/test-$(echo ${image_name} | tr '/:' '_').log"
-    
+
     print_color $BLUE "🧪 Testing: ${image_name}"
     print_color $BLUE "   Log: ${log_file}"
-    
+
     # Run the test with logging
-    if bash "${BASEDIR}/test-image.sh" "${image_name}" "${BRANCH}" > "${log_file}" 2>&1; then
+    if bash "${BASEDIR}/test-image.sh" "${image_name}" "${BRANCH}" >"${log_file}" 2>&1; then
         print_color $GREEN "✅ Successfully tested: ${image_name}"
     else
         print_color $RED "❌ Failed to test: ${image_name}"
@@ -239,14 +280,14 @@ print_summary() {
     print_color $GREEN "✅ Successful builds: ${#SUCCESSFUL_BUILDS[@]}"
     print_color $RED "❌ Failed builds: ${#FAILED_BUILDS[@]}"
     print_color $BLUE "📊 Total images: ${TOTAL_IMAGES}"
-    
+
     if [ ${#SUCCESSFUL_BUILDS[@]} -gt 0 ]; then
         print_color $GREEN "\n✅ Successfully built images:"
         for image in "${SUCCESSFUL_BUILDS[@]}"; do
             print_color $GREEN "   - ${image}"
         done
     fi
-    
+
     if [ ${#FAILED_BUILDS[@]} -gt 0 ]; then
         print_color $RED "\n❌ Failed to build images:"
         for image in "${FAILED_BUILDS[@]}"; do
@@ -258,147 +299,158 @@ print_summary() {
 
 # Function to show usage
 show_usage() {
-    echo "Usage: $0 [BRANCH] [SKIP_TESTS]"
+    echo "Usage: $0 [BRANCH] [SKIP_TESTS] [--no-push] [--yes]"
     echo ""
     echo "Parameters:"
     echo "  BRANCH      Git branch to build (default: develop)"
     echo "  SKIP_TESTS  Skip testing phase (default: false)"
     echo ""
+    echo "Options:"
+    echo "  --no-push   Build images locally without pushing to Docker Hub"
+    echo "  --yes, -y   Skip interactive confirmation prompt"
+    echo ""
     echo "Examples:"
-    echo "  $0                    # Build develop branch with tests"
-    echo "  $0 main               # Build main branch with tests"
-    echo "  $0 develop true       # Build develop branch, skip tests"
+    echo "  $0                              # Build develop branch with tests"
+    echo "  $0 main                         # Build main branch with tests"
+    echo "  $0 develop true                 # Build develop branch, skip tests"
+    echo "  $0 develop true --no-push --yes # Preflight/CI build-only mode"
     echo ""
     echo "Configuration:"
-    echo "  Edit .env file to set Docker Hub credentials"
+    echo "  Edit .env file to set Docker Hub credentials (not required with --no-push)"
     echo ""
 }
 
 # Function to check prerequisites
 check_prerequisites() {
     print_color $BLUE "🔍 Checking prerequisites..."
-    
+
     # Check if docker is installed and running
-    if ! command -v docker &> /dev/null; then
+    if ! command -v docker &>/dev/null; then
         print_color $RED "❌ Docker is not installed!"
         exit 1
     fi
-    
+
     # Check if docker buildx is available
-    if ! docker buildx version &> /dev/null; then
+    if ! docker buildx version &>/dev/null; then
         print_color $RED "❌ Docker buildx is not available!"
         exit 1
     fi
-    
+
     # Check if we're in the right directory
     if [ ! -f "${BASEDIR}/build-image.sh" ]; then
         print_color $RED "❌ build-image.sh not found. Are you in the dockershelf directory?"
         exit 1
     fi
-    
+
     # Check if bundle (ruby) is available for tests
-    if [ "${SKIP_TESTS}" != "true" ] && ! command -v bundle &> /dev/null; then
+    if [ "${SKIP_TESTS}" != "true" ] && ! command -v bundle &>/dev/null; then
         print_color $YELLOW "⚠️  Bundle (Ruby) not found. Tests will be skipped."
         SKIP_TESTS="true"
     fi
-    
+
     print_color $GREEN "✅ Prerequisites check passed!"
 }
 
 # Main execution
 main() {
-    print_color $BLUE "🚀 Dockershelf Build All Images Script"
-    print_color $BLUE "======================================="
-    
-    # Show usage if help requested
-    if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
+    parse_args "$@"
+
+    if [ "${WANT_HELP}" = "true" ]; then
         show_usage
         exit 0
     fi
-    
+
+    print_color $BLUE "🚀 Dockershelf Build All Images Script"
+    print_color $BLUE "======================================="
+
     # Check prerequisites
     check_prerequisites
-    
-    # Create .env template if needed
-    create_env_template
-    
+
+    if [ "${NO_PUSH}" != "true" ]; then
+        # Create .env template if needed
+        create_env_template
+    fi
+
     # Load environment variables
     load_env
-    
+
     # Setup logging
     setup_logging
-    
+
     # Discover all supported images
     local all_images=($(discover_images))
     TOTAL_IMAGES=${#all_images[@]}
-    
+
     if [ ${TOTAL_IMAGES} -eq 0 ]; then
         print_color $RED "❌ No supported images found!"
         exit 1
     fi
-    
+
     print_color $GREEN "✅ Found ${TOTAL_IMAGES} supported images"
     print_color $BLUE "📋 Branch: ${BRANCH}"
     print_color $BLUE "🧪 Skip tests: ${SKIP_TESTS}"
+    print_color $BLUE "📦 Push to registry: $([ "${NO_PUSH}" = "true" ] && echo "no" || echo "yes")"
     print_color $BLUE ""
-    
+
     # List all images to be built
     print_color $BLUE "📋 Images to build:"
     for image in "${all_images[@]}"; do
         print_color $BLUE "   - ${image}"
     done
     print_color $BLUE ""
-    
+
     # Ask for confirmation
-    read -p "Do you want to proceed with building all images? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_color $YELLOW "⏹️  Build cancelled by user"
-        exit 0
+    if [ "${ASSUME_YES}" != "true" ]; then
+        read -p "Do you want to proceed with building all images? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_color $YELLOW "⏹️  Build cancelled by user"
+            exit 0
+        fi
     fi
-    
+
     # Build phase
     print_color $BLUE "\n🔨 STARTING BUILD PHASE"
     print_color $BLUE "========================"
-    
+
     local start_time=$(date +%s)
-    
+
     # Build all images
     for image in "${all_images[@]}"; do
         build_image "${image}"
-        sleep 2  # Brief pause between builds
+        sleep 2 # Brief pause between builds
     done
-    
+
     local build_end_time=$(date +%s)
     local build_duration=$((build_end_time - start_time))
-    
+
     print_color $GREEN "✅ Build phase completed in ${build_duration} seconds"
-    
+
     # Test phase (only if not skipped and we have successful builds)
     if [ "${SKIP_TESTS}" != "true" ] && [ ${#SUCCESSFUL_BUILDS[@]} -gt 0 ]; then
         print_color $BLUE "\n🧪 STARTING TEST PHASE"
         print_color $BLUE "======================="
-        
+
         # Test only successfully built images
         for image in "${SUCCESSFUL_BUILDS[@]}"; do
             test_image "${image}"
-            sleep 1  # Brief pause between tests
+            sleep 1 # Brief pause between tests
         done
-        
+
         local test_end_time=$(date +%s)
         local test_duration=$((test_end_time - build_end_time))
         print_color $GREEN "✅ Test phase completed in ${test_duration} seconds"
     else
         print_color $YELLOW "⏭️  Test phase skipped"
     fi
-    
+
     local total_end_time=$(date +%s)
     local total_duration=$((total_end_time - start_time))
-    
+
     # Print final summary
     print_summary
     print_color $BLUE "\n⏱️  Total execution time: ${total_duration} seconds"
-    
+
     # Exit with error code if any builds failed
     if [ ${#FAILED_BUILDS[@]} -gt 0 ]; then
         exit 1
@@ -409,4 +461,4 @@ main() {
 }
 
 # Run main function with all arguments
-main "$@" 
+main "$@"

@@ -108,31 +108,47 @@ else
     PLATFORMS="linux/arm64"
 fi
 
-# workaround to exporting the multi-arch image from buildkit to docker
-# we push the image to dockerhub with a -test suffix and then we
-# pull it into docker and rename it
-docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
+BUILD_ONLY="${DOCKERSHELF_BUILD_ONLY:-0}"
+if [ "${BUILD_ONLY}" = "1" ]; then
+    # buildx --load supports a single platform only
+    if [ "$IS_CI" = true ]; then
+        PLATFORMS="linux/amd64"
+    fi
 
-# Build the docker image
-cd "${DOCKER_IMAGE_DIR}" &&
-    docker buildx build --push \
-        --platform ${PLATFORMS} \
-        --build-arg BUILD_DATE="${BUILD_DATE}" \
-        --build-arg VCS_REF="${VCS_REF}" \
-        --build-arg VERSION="${VERSION}" \
-        -t ${DOCKER_TEST_IMAGE_NAME} .
-
-if [ "$IS_CI" = true ]; then
-    # In CI, pull and tag both architectures
-    docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
-    docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
-
-    docker pull --platform linux/amd64 ${DOCKER_TEST_IMAGE_NAME}
-    docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-amd64
+    cd "${DOCKER_IMAGE_DIR}" &&
+        docker buildx build --load \
+            --platform ${PLATFORMS} \
+            --build-arg BUILD_DATE="${BUILD_DATE}" \
+            --build-arg VCS_REF="${VCS_REF}" \
+            --build-arg VERSION="${VERSION}" \
+            -t ${DOCKER_TEST_IMAGE_NAME} .
 else
-    # Locally, only pull and tag ARM64
-    docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
-    docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
+    # workaround to exporting the multi-arch image from buildkit to docker
+    # we push the image to dockerhub with a -test suffix and then we
+    # pull it into docker and rename it
+    docker login --username ${DH_USERNAME} --password ${DH_PASSWORD}
+
+    # Build the docker image
+    cd "${DOCKER_IMAGE_DIR}" &&
+        docker buildx build --push \
+            --platform ${PLATFORMS} \
+            --build-arg BUILD_DATE="${BUILD_DATE}" \
+            --build-arg VCS_REF="${VCS_REF}" \
+            --build-arg VERSION="${VERSION}" \
+            -t ${DOCKER_TEST_IMAGE_NAME} .
+
+    if [ "$IS_CI" = true ]; then
+        # In CI, pull and tag both architectures
+        docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
+        docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
+
+        docker pull --platform linux/amd64 ${DOCKER_TEST_IMAGE_NAME}
+        docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-amd64
+    else
+        # Locally, only pull and tag ARM64
+        docker pull --platform linux/arm64 ${DOCKER_TEST_IMAGE_NAME}
+        docker tag ${DOCKER_TEST_IMAGE_NAME} ${DOCKER_TEST_IMAGE_NAME}-arm64
+    fi
 fi
 
 # Undo the -dev suffix modification to restore original Dockerfile

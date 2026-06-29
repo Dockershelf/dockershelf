@@ -11,44 +11,40 @@ on:
       - develop
 
 jobs:
-  build:
-    name: Build
+  production-build:
+    name: Production Build
     runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        include:
-          - python-version: "3.9"
-            toxenv: "py39"
-          - python-version: "3.10"
-            toxenv: "py310"
-          - python-version: "3.11"
-            toxenv: "py311"
-          - python-version: "3.12"
-            toxenv: "py312"
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Installing dependencies
+      - name: Set environment variables
         run: |
-          sudo apt-get install -y libxml2-dev libxslt-dev
-          python3 -m pip install -r requirements.txt
+          echo "UID=$(id -u)" >> $GITHUB_ENV
+          echo "GID=$(id -g)" >> $GITHUB_ENV
+          echo "PROJECT_NAME=dockershelf" >> $GITHUB_ENV
 
-      - name: Functional test
-        env:
-          TOXENV: ${{ matrix.toxenv }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
+      - name: Prepare CI environment file
         run: |
-          python3 update.py
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          fi
 
-  # >>> rosey-maintainer:ci-quality BEGIN
+      - name: Build Docker image
+        run: make image
+
+      - name: Install dependencies in container
+        run: make dependencies
+
+      - name: Build production artifacts
+        run: make build
+
+      - name: Tear down Docker
+        if: always()
+        run: make down
+
   code-quality:
     name: Code Quality
     runs-on: ubuntu-24.04
@@ -69,4 +65,3 @@ jobs:
             --baseline-commit "${BASELINE}" \
             --metrics=off \
             --error
-  # <<< rosey-maintainer:ci-quality END

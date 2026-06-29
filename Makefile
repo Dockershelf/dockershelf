@@ -22,9 +22,6 @@ virtualenv:
 	@./virtualenv/bin/python3 -m pip install --upgrade wheel
 	@./virtualenv/bin/python3 -m pip install -r requirements.txt
 
-# >>> rosey-maintainer:ops-docker BEGIN
-# Managed by rosey-maintainer-tools 0.4.4. Do not edit directly.
-
 PROJECT_NAME ?= dockershelf
 all_ps_hashes = $(shell docker ps -q)
 
@@ -68,7 +65,6 @@ cataplum:
 	@docker compose -p $(PROJECT_NAME) -f docker-compose.yml down \
 		--rmi all --remove-orphans --volumes
 	@docker system prune -a -f --volumes
-# <<< rosey-maintainer:ops-docker END
 
 console: start
 	@$(exec_on_docker) bash
@@ -92,8 +88,8 @@ format: start
 test: start
 	@$(exec_on_docker) tox -e coverage
 
-# >>> rosey-maintainer:ops-release BEGIN
-# Managed by rosey-maintainer-tools 0.4.4. Do not edit directly.
+build: update-shelves
+	@bash scripts/build-all-images.sh develop true --no-push --yes
 
 release:
 	@./scripts/release.sh $${VERSION_TYPE}
@@ -108,7 +104,10 @@ release-major:
 	@./scripts/release.sh major $${APP_NAME}
 
 
-release-preflight: start
+release-preflight:
+	@make image
+	@make dependencies
+	@make build
 	@make format
 	@make lint
 	@make test
@@ -116,8 +115,7 @@ release-preflight: start
 undo-release:
 	@: "$${VERSION:?Set VERSION=x.y.z before running make undo-release}"
 	@VERSION=$${VERSION} ./scripts/rollback.sh release
-# <<< rosey-maintainer:ops-release END
 
-.PHONY: discover-shelves virtualenv console update-shelves dependencies lint format test \
+.PHONY: discover-shelves virtualenv console update-shelves dependencies lint format test build \
 	image start stop down destroy cataplum release release-patch release-minor \
 	release-major release-preflight undo-release

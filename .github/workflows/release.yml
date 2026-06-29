@@ -19,18 +19,34 @@ jobs:
           ref: ${{ github.event.release.tag_name }}
 
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
+      - name: Set environment variables
         run: |
-          python3 -m pip install -r requirements-dev.txt
+          echo "UID=$(id -u)" >> $GITHUB_ENV
+          echo "GID=$(id -g)" >> $GITHUB_ENV
+          echo "PROJECT_NAME=dockershelf" >> $GITHUB_ENV
+
+      - name: Prepare CI environment file
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          fi
+
+      - name: Build Docker image
+        run: make image
+
+      - name: Install dependencies in container
+        run: make dependencies
+
+      - name: Build production artifacts
+        run: make build
 
       - name: Run lint
-        run: tox -e lint
+        run: make lint
 
-      - name: Run unit tests
-        run: tox -e coverage
+      - name: Run tests
+        run: make test
+
+      - name: Tear down Docker
+        if: always()
+        run: make down
 
