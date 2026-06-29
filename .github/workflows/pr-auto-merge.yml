@@ -66,6 +66,13 @@ jobs:
               pull_number: pullNumber,
             });
 
+            if (pull.draft) {
+              core.notice(
+                `PR #${pullNumber} is still a draft; skipping auto-merge until marked ready for review`,
+              );
+              return;
+            }
+
             if (pull.base.ref !== integrationBranch) {
               core.notice(
                 `PR #${pullNumber} targets ${pull.base.ref}, not ${integrationBranch}; skipping auto-merge`,
@@ -157,6 +164,10 @@ jobs:
             });
             if (pull.merged) {
               core.notice(`PR #${pullNumber} is already merged`);
+              return;
+            }
+            if (pull.draft) {
+              core.notice(`PR #${pullNumber} is still a draft; skipping merge`);
               return;
             }
             await github.rest.pulls.merge({
