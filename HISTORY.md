@@ -1,6 +1,63 @@
 # Changelog
 
 
+## 3.4.4 (2026-07-04)
+
+### Other
+
+* Fix: sync generator templates with committed develop output. [Luis Alejandro Martínez Faneyth]
+
+* Fix: skip auto-merge for draft pull requests. [Luis Alejandro Martínez Faneyth]
+
+* Refactor: route format through tox and quiet image discovery stdout. [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync maintainer ops from rosey-maintainer-sync. [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync maintainer ops from fleet-wide rosey-maintainer-sync. [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync maintainer release workflow (checkout@v7) [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync maintainer ops and align format preflight tooling. [Luis Alejandro Martínez Faneyth]
+
+* Fixing build. [Luis Alejandro Martínez Faneyth]
+
+* Fix bare except in go version parsing for flake8 E722. [Luis Alejandro Martínez Faneyth]
+
+* Chore: export BASH_ENV in Makefile for bash recipe env. [Luis Alejandro Martínez Faneyth]
+
+* Fix: one-line post_bump_commands for bumpversion compatibility. [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync maintainer ops and inline post_bump_commands parser. [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync maintainer release scripts and CI workflows. [Luis Alejandro Martínez Faneyth]
+
+* Chore: maintainer sync toolkit 0.4.3. [Luis Alejandro Martínez Faneyth]
+
+* Add Cursor Cloud dev environment notes to .cursorrules. [Cursor Agent]
+
+* Update. [Luis Alejandro Martínez Faneyth]
+
+* Chore: maintainer sync toolkit 0.4.2 — PR CI + auto-merge. [Luis Alejandro Martínez Faneyth]
+
+* Chore: sync PR auto-merge, CodeQL PR gate, and maintainer files from rosey-maintain. [Luis Alejandro Martínez Faneyth]
+
+* Chore: Rosey maintainer fleet sync — release tooling, CI security, preflight. [Luis Alejandro Martínez Faneyth]
+
+* Chore: fleet release parity — gates, dependabot, hotfix removal. [Luis Alejandro Martínez Faneyth]
+
+* Apply rosey maintainer fleet sync. [Luis Alejandro Martínez Faneyth]
+
+* Apply rosey maintainer fleet sync. [Luis Alejandro Martínez Faneyth]
+
+* Adding auto discovery script. [Luis Alejandro Martínez Faneyth]
+
+* Adding latex extras image. [Luis Alejandro Martínez Faneyth]
+
+* Improving gitignore. [Luis Alejandro Martínez Faneyth]
+
+* Adding bumpversion config. [Luis Alejandro Martínez Faneyth]
+
+
 ## 3.4.3 (2025-10-15)
 
 ### Other
