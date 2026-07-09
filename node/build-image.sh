@@ -57,7 +57,7 @@ if [ "${DEBIAN_SUITE}" = "sid" ]; then
     DEBIAN_SUITE="unstable"
 fi
 
-curl -fsSL "${NODEMIRROR}/key.gpg" \
+curl -fsSL "${NODEMIRROR}/dockershelf-apt-signing.pub" \
     | gpg --dearmor > /usr/share/keyrings/node.gpg
 
 {

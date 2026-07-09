@@ -28,12 +28,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
-    if: >
-      (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
-      (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
-      (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
-      (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
-      (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
     strategy:
       fail-fast: false
       matrix:
@@ -118,24 +112,55 @@ jobs:
             docker-image-extra-tags: "dockershelf/go:1.25-unstable dockershelf/go:1.25 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
 
     steps:
+      # matrix is unavailable in job-level if; filter per step instead
       - name: Checkout repo
+        if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         uses: actions/checkout@v7
         with:
           ref: develop
           fetch-depth: 0
 
       - name: Set up QEMU
+        if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
+        if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         uses: docker/setup-buildx-action@v4
 
-      - uses: ruby/setup-ruby@v1
+      - if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.1"
           bundler-cache: true
 
       - name: Building docker image
+        if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DEBIAN_SUITE: ${{ matrix.debian-suite }}
@@ -145,6 +170,12 @@ jobs:
           bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "develop"
 
       - name: Testing docker image
+        if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
@@ -152,6 +183,12 @@ jobs:
           bash test-image.sh "${DOCKER_IMAGE_NAME}" "develop"
 
       - name: Pushing docker image
+        if: >
+          (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/latex:') && inputs.latex) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/python:') && inputs.python) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
+          (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
