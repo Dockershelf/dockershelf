@@ -1,4 +1,4 @@
-name: Trigger (develop branch)
+name: Trigger (master branch)
 
 on:
   workflow_dispatch:
@@ -44,7 +44,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v7
         with:
-          ref: develop
+          ref: master
           fetch-depth: 0
 
       - name: Set up QEMU
@@ -65,14 +65,14 @@ jobs:
           DH_USERNAME: ${{ secrets.DH_USERNAME }}
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
-          bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "develop"
+          bash build-image.sh "${DOCKER_IMAGE_NAME}" "${DEBIAN_SUITE}" "${DH_USERNAME}" "${DH_PASSWORD}" "master"
 
       - name: Testing docker image
         env:
           DOCKER_IMAGE_NAME: ${{ matrix.docker-image-name }}
           DOCKER_IMAGE_EXTRA_TAGS: ${{ matrix.docker-image-extra-tags }}
         run: |
-          bash test-image.sh "${DOCKER_IMAGE_NAME}" "develop"
+          bash test-image.sh "${DOCKER_IMAGE_NAME}" "master"
 
       - name: Pushing docker image
         env:
@@ -81,4 +81,4 @@ jobs:
           DH_USERNAME: ${{ secrets.DH_USERNAME }}
           DH_PASSWORD: ${{ secrets.DH_PASSWORD }}
         run: |
-          bash push-image.sh "${DOCKER_IMAGE_NAME}" "${DH_USERNAME}" "${DH_PASSWORD}" "${DOCKER_IMAGE_EXTRA_TAGS}" "develop"
+          bash push-image.sh "${DOCKER_IMAGE_NAME}" "${DH_USERNAME}" "${DH_PASSWORD}" "${DOCKER_IMAGE_EXTRA_TAGS}" "master"

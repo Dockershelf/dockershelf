@@ -22,11 +22,11 @@ set -exuo pipefail
 # Some default values.
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-NODEMIRROR="https://deb.nodesource.com/node_${NODE_VER_NUM}.x"
+NODEMIRROR="https://apt.dockershelf.com/dockershelf"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
-NODE_PKGS="nodejs"
+NODE_PKGS="nodejs-${NODE_VER_NUM}"
 NODE_PKGS_VER=""
 
 # Load helper functions
@@ -45,36 +45,36 @@ apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Node: Configure sources
 # ------------------------------------------------------------------------------
-# We will use Nodesource's official repository to install the different versions
-# of Node.
+# We will use the Dockershelf APT repository at apt.dockershelf.com to
+# install the different versions of Node.
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
-dirmngr --debug-level guru
+# Detect the Debian suite at runtime and map sid -> unstable, as the
+# Dockershelf APT repo uses "unstable" as the codename for sid packages.
+DEBIAN_SUITE="$(. /etc/os-release && echo "${VERSION_CODENAME}")"
+if [ "${DEBIAN_SUITE}" = "sid" ]; then
+    DEBIAN_SUITE="unstable"
+fi
 
-gpg --no-default-keyring \
-    --keyring ./node.gpg \
-    --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv-keys 2F59B5F99B1BE0B4
-gpg --no-default-keyring \
-    --keyring ./node.gpg \
-    --export "2F59B5F99B1BE0B4" \
-    >/usr/share/keyrings/node.gpg
+curl -fsSL "${NODEMIRROR}/key.gpg" \
+    | gpg --dearmor > /usr/share/keyrings/node.gpg
 
 {
-    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} nodistro main"
+    echo "deb [signed-by=/usr/share/keyrings/node.gpg] ${NODEMIRROR} ${DEBIAN_SUITE} main"
 } | tee /etc/apt/sources.list.d/node.list >/dev/null
 
 apt-get update
 
 # Node: Installation
 # ------------------------------------------------------------------------------
-# We will use the nodesource script to install node.
+# We will install the versioned nodejs-XX package from the Dockershelf APT
+# repository.
 
 msginfo "Installing Node ..."
 for PKG in ${NODE_PKGS}; do
     PKG_VER="$(apt-cache madison ${PKG} | grep Packages |
-        grep deb.nodesource.com | head -n1 | awk -F'|' '{print $2}' | xargs || true)"
+        grep apt.dockershelf.com | head -n1 | awk -F'|' '{print $2}' | xargs || true)"
     NODE_PKGS_VER="${NODE_PKGS_VER} ${PKG}=${PKG_VER}"
 done
 

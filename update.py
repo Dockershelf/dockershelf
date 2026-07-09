@@ -36,6 +36,8 @@ if __name__ == '__main__':
         workflowsdir, 'trigger-develop.yml.template')
     gha_develop_clean_template = os.path.join(
         workflowsdir, 'clean-develop.yml.template')
+    gha_trigger_master_template = os.path.join(
+        workflowsdir, 'trigger-master.yml.template')
     gha_master_template = os.path.join(
         workflowsdir, 'push-master.yml.template')
     gha_master_clean_template = os.path.join(
@@ -44,6 +46,7 @@ if __name__ == '__main__':
         workflowsdir, 'schedule-master.yml.template')
     gha_develop = os.path.join(workflowsdir, 'trigger-develop.yml')
     gha_develop_clean = os.path.join(workflowsdir, 'clean-develop.yml')
+    gha_trigger_master = os.path.join(workflowsdir, 'trigger-master.yml')
     gha_master = os.path.join(workflowsdir, 'push-master.yml')
     gha_master_clean = os.path.join(workflowsdir, 'clean-master.yml')
     gha_schedule = os.path.join(workflowsdir, 'schedule-master.yml')
@@ -72,6 +75,8 @@ if __name__ == '__main__':
         gha_develop_template_content = gdt.read()
     with open(gha_develop_clean_template, 'r') as gdct:
         gha_develop_clean_template_content = gdct.read()
+    with open(gha_trigger_master_template, 'r') as gtmt:
+        gha_trigger_master_template_content = gtmt.read()
     with open(gha_master_template, 'r') as gmt:
         gha_master_template_content = gmt.read()
     with open(gha_master_clean_template, 'r') as gmct:
@@ -83,6 +88,8 @@ if __name__ == '__main__':
         '%%MATRIX%%', gha_matrix, gha_develop_template_content)
     gha_develop_clean_template_content = re.sub(
         '%%MATRIX%%', gha_matrix, gha_develop_clean_template_content)
+    gha_trigger_master_template_content = re.sub(
+        '%%MATRIX%%', gha_matrix, gha_trigger_master_template_content)
     gha_master_template_content = re.sub(
         '%%MATRIX%%', gha_matrix, gha_master_template_content)
     gha_master_clean_template_content = re.sub(
@@ -94,6 +101,8 @@ if __name__ == '__main__':
         t.write(gha_develop_template_content)
     with open(gha_develop_clean, 'w') as t:
         t.write(gha_develop_clean_template_content)
+    with open(gha_trigger_master, 'w') as t:
+        t.write(gha_trigger_master_template_content)
     with open(gha_master, 'w') as t:
         t.write(gha_master_template_content)
     with open(gha_master_clean, 'w') as t:

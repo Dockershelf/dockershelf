@@ -21,17 +21,16 @@ set -exuo pipefail
 
 # Some default values.
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ARCHITECTURE="$(dpkg --print-architecture)"
 
-GO_VER_NUM_PATCH="$(echo ${GO_VER_NUM} | awk -F'.' '{print $1"."$2"."$3}')"
 GO_VER_NUM_MINOR="$(echo ${GO_VER_NUM} | awk -F'.' '{print $1"."$2}')"
-GO_VER_NUM_PATCH_STR="go${GO_VER_NUM_PATCH}"
 GO_VER_NUM_MINOR_STR="go${GO_VER_NUM_MINOR}"
 
-GO_DOWNLOAD_URL="https://go.dev/dl/${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz"
+GOMIRROR="https://apt.dockershelf.com/dockershelf"
 
 # Some tools are needed.
 DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
+GO_PKGS="golang-${GO_VER_NUM_MINOR}-go"
+GO_PKGS_VER=""
 
 # Load helper functions
 source "${BASEDIR}/library.sh"
@@ -47,19 +46,44 @@ apt-get update
 apt-get upgrade
 apt-get install ${DPKG_TOOLS_DEPENDS}
 
+# Go: Configure sources
+# ------------------------------------------------------------------------------
+# We will use the Dockershelf APT repository at apt.dockershelf.com to
+# install the different versions of Go.
+
+msginfo "Configuring /etc/apt/sources.list ..."
+
+# Detect the Debian suite at runtime and map sid -> unstable, as the
+# Dockershelf APT repo uses "unstable" as the codename for sid packages.
+DEBIAN_SUITE="${GO_DEBIAN_SUITE}"
+if [ "${DEBIAN_SUITE}" = "sid" ]; then
+    DEBIAN_SUITE="unstable"
+fi
+
+curl -fsSL "${GOMIRROR}/dockershelf-apt-signing.pub" \
+    | gpg --dearmor > /usr/share/keyrings/go.gpg
+
+{
+    echo "deb [signed-by=/usr/share/keyrings/go.gpg] ${GOMIRROR} ${DEBIAN_SUITE} main"
+} | tee /etc/apt/sources.list.d/go.list >/dev/null
+
+apt-get update
+
 # Go: Installation
 # ------------------------------------------------------------------------------
-# We will install the packages listed in ${GO_PKGS}
+# We will install the versioned golang-X.Y-go package from the Dockershelf
+# APT repository. The package installs Go to /usr/lib/go-X.Y/ and provides
+# /usr/bin/go and /usr/bin/gofmt symlinks.
 
 msginfo "Installing Go ..."
-curl -L "${GO_DOWNLOAD_URL}" -o ${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz
-tar -C /usr/local -xzf ${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz
-ls -lah /usr/local/go/bin/
-rm -rf ${GO_VER_NUM_PATCH_STR}.linux-${ARCHITECTURE}.tar.gz
-
-if [ ! -f "/usr/bin/go" ] && [ -f "/usr/local/go/bin/go" ]; then
-    ln -s /usr/local/go/bin/go /usr/bin/go
+GO_PKGS_VER="$(apt-cache madison ${GO_PKGS} | grep Packages |
+    grep apt.dockershelf.com | awk -F'|' '{print $2}' | xargs -n1 |
+    awk -v version="${GO_VER_NUM}" 'index($0, version) == 1 {print; exit}' || true)"
+if [ -z "${GO_PKGS_VER}" ]; then
+    msgerror "Could not find ${GO_PKGS} package matching Go ${GO_VER_NUM}"
+    exit 1
 fi
+aptitude install "${GO_PKGS}=${GO_PKGS_VER}"
 
 # Apt: Remove unnecessary packages
 # ------------------------------------------------------------------------------

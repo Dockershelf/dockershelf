@@ -56,9 +56,9 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should have a go interpreter" do
-        expect(file("/usr/local/go/bin/go")).to be_executable
+        expect(file("/usr/lib/go#{go_version_short()}/bin/go")).to be_executable
         expect(file("/usr/bin/go")).to be_symlink
-        expect(file("/usr/bin/go")).to be_linked_to("/usr/local/go/bin/go")
+        expect(file("/usr/bin/go")).to be_linked_to("/usr/lib/go#{go_version_short()}/bin/go")
     end
 
     it "should have the correct go version" do
@@ -87,9 +87,9 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should have go environment variables properly configured" do
-        expect(command("go env GOROOT").stdout.strip).to eq("/usr/local/go")
+        expect(command("go env GOROOT").stdout.strip).to eq("/usr/lib/go#{go_version_short()}")
         expect(command("go env GOPATH").stdout.strip).not_to be_empty
-        expect(command("echo $PATH").stdout).to contain("/usr/local/go/bin")
+        expect(command("which go").stdout.strip).to eq("/usr/bin/go")
     end
 
     after(:all) do

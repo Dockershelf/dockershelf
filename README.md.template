@@ -115,7 +115,7 @@ These images are similar to the official ones, but with some opinionated configu
 
 ### Python
 
-These are debian stable/unstable images with python versions installed from the [deadsnakes ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
+These are debian stable/unstable images with python versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
@@ -125,7 +125,7 @@ These are debian stable/unstable images with python versions installed from the 
 
 ### Node
 
-These are debian stable/unstable images with node versions built using the [nodesource installation script](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
+These are debian stable/unstable images with node versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
@@ -133,7 +133,7 @@ These are debian stable/unstable images with node versions built using the [node
 
 ### Go
 
-These are debian stable/unstable images with go version downloaded directly from the [official website](https://go.dev/dl/). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
+These are debian stable/unstable images with go versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|

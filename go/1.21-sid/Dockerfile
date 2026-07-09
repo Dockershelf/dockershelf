@@ -24,8 +24,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
-ENV GO_VER_NUM="1.21.13" GO_DEBIAN_SUITE="sid" \
-    PATH="${PATH}:/usr/local/go/bin"
+ENV GO_VER_NUM="1.21.13" GO_DEBIAN_SUITE="sid"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/go/
 RUN bash /usr/share/dockershelf/go/build-image.sh

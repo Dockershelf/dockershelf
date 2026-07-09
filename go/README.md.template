@@ -16,7 +16,7 @@
 
 The Go images are built using a bash script [`go/build-image.sh`](https://github.com/Dockershelf/dockershelf/blob/master/go/build-image.sh), you can check it out for details.
 
-Each python release is downloaded and installed from the [official website](https://go.dev/dl/).
+Each go release is installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf) as a versioned ``golang-X.Y-go`` package.
 
 We'll explain the overall process here:
 

@@ -16,14 +16,14 @@
 
 The Python images are built using a bash script [`python/build-image.sh`](https://github.com/Dockershelf/dockershelf/blob/master/python/build-image.sh), you can check it out for details.
 
-Each python release is downloaded and installed from the [deadsnakes ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa).
+Each python release is installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf) as a versioned ``python3.X`` package.
 
 We'll explain the overall process here:
 
 1. Built `FROM dockershelf/debian:<release>`.
 2. Labelled according to [label-schema.org](http://label-schema.org) and [opencontainers specification](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
 3. Install developer tools to handle the package installation.
-4. Configure deadsnakes repository.
+4. Configure the Dockershelf APT repository.
 5. Install Python.
 6. Uninstall developer tools and orphan packages.
 7. Install `pip`.

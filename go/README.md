@@ -8,8 +8,6 @@
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
-|[`dockershelf/go:1.20-trixie`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.20-trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.20-trixie.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
-|[`dockershelf/go:1.20-sid`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.20-sid/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.20-sid.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
 |[`dockershelf/go:1.21-trixie`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.21-trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.21-trixie.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
 |[`dockershelf/go:1.21-sid`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.21-sid/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.21-sid.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
 |[`dockershelf/go:1.22-trixie`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.22-trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.22-trixie.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
@@ -27,7 +25,7 @@
 
 The Go images are built using a bash script [`go/build-image.sh`](https://github.com/Dockershelf/dockershelf/blob/master/go/build-image.sh), you can check it out for details.
 
-Each python release is downloaded and installed from the [official website](https://go.dev/dl/).
+Each go release is installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf) as a versioned ``golang-X.Y-go`` package.
 
 We'll explain the overall process here:
 

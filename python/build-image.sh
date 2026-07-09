@@ -27,8 +27,7 @@ PYTHON_VER_NUM_MAJOR="$(echo ${PYTHON_VER_NUM} | awk -F'.' '{print $1}')"
 PYTHON_VER_NUM_MINOR_STR="python${PYTHON_VER_NUM_MINOR}"
 PYTHON_VER_NUM_MAJOR_STR="python${PYTHON_VER_NUM_MAJOR}"
 
-DEBMIRROR="http://deb.debian.org/debian"
-DEADSNAKESPPA="http://ppa.launchpad.net/deadsnakes/ppa/ubuntu"
+PYTHONMIRROR="https://apt.dockershelf.com/dockershelf"
 
 # This is the list of python packages from debian that make up a minimal
 # python installation. We will use them later.
@@ -46,24 +45,6 @@ DPKG_TOOLS_DEPENDS="sudo aptitude gnupg dirmngr"
 # Load helper functions
 source "${BASEDIR}/library.sh"
 
-# Debian trixie+ verifies apt repos with sqv, which rejects SHA1-signed keys
-# since 2026-02-01. deadsnakes PPA still uses SHA1 until Ubuntu updates it.
-configure_apt_sequoia_legacy_ppa_keys() {
-    local config_src=/usr/share/apt/default-sequoia.config
-    local config_dst=/etc/crypto-policies/back-ends/apt-sequoia.config
-
-    if [ ! -f "${config_src}" ]; then
-        return 0
-    fi
-
-    mkdir -p "$(dirname "${config_dst}")"
-    if [ ! -f "${config_dst}" ]; then
-        cp "${config_src}" "${config_dst}"
-    fi
-    sed -i 's/sha1.second_preimage_resistance = 2026-02-01/sha1.second_preimage_resistance = 2028-02-01/' \
-        "${config_dst}"
-}
-
 # Apt: Install tools
 # ------------------------------------------------------------------------------
 # We need to install the packages defined at ${DPKG_TOOLS_DEPENDS} because
@@ -77,46 +58,39 @@ apt-get install ${DPKG_TOOLS_DEPENDS}
 
 # Python: Configure sources
 # ------------------------------------------------------------------------------
-# We will use deadsnakes PPA to install the different versions of Python.
+# We will use the Dockershelf APT repository at apt.dockershelf.com to
+# install the different versions of Python.
 
 msginfo "Configuring /etc/apt/sources.list ..."
-msginfo "Using Ubuntu release 'noble' for Python ${PYTHON_VER_NUM_MINOR} on Debian ${PYTHON_DEBIAN_SUITE} ..."
+msginfo "Using Dockershelf APT repo for Python ${PYTHON_VER_NUM_MINOR} on Debian ${PYTHON_DEBIAN_SUITE} ..."
 
-dirmngr --debug-level guru
-
-gpg --no-default-keyring \
-    --keyring ./python.gpg \
-    --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv-keys BA6932366A755776
-gpg --no-default-keyring \
-    --keyring ./python.gpg \
-    --export "BA6932366A755776" \
-    >/usr/share/keyrings/python.gpg
-
-if [ "${PYTHON_VER_NUM_MINOR}" == "3.10" ]; then
-    PYTHON_PKGS="${PYTHON_PKGS} ${PYTHON_VER_NUM_MINOR_STR}-distutils lib${PYTHON_VER_NUM_MINOR_STR}-minimal ${PYTHON_VER_NUM_MINOR_STR}-minimal"
-    UBUNTU_RELEASE="noble"
-elif [ "${PYTHON_VER_NUM_MINOR}" == "3.11" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.12" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.13" ] || [ "${PYTHON_VER_NUM_MINOR}" == "3.14" ]; then
-    UBUNTU_RELEASE="jammy"
+# Detect the Debian suite at runtime and map sid -> unstable, as the
+# Dockershelf APT repo uses "unstable" as the codename for sid packages.
+DEBIAN_SUITE="${PYTHON_DEBIAN_SUITE}"
+if [ "${DEBIAN_SUITE}" = "sid" ]; then
+    DEBIAN_SUITE="unstable"
 fi
 
+curl -fsSL "${PYTHONMIRROR}/dockershelf-apt-signing.pub" \
+    | gpg --dearmor > /usr/share/keyrings/python.gpg
+
 {
-    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${DEADSNAKESPPA} ${UBUNTU_RELEASE} main"
+    echo "deb [signed-by=/usr/share/keyrings/python.gpg] ${PYTHONMIRROR} ${DEBIAN_SUITE} main"
 } | tee /etc/apt/sources.list.d/python.list >/dev/null
 
-configure_apt_sequoia_legacy_ppa_keys
 apt-get update
 
 # Python: Installation
 # ------------------------------------------------------------------------------
-# We will use deadsnakes PPA to install Python binary packages.
+# We will install the versioned python3.X packages from the Dockershelf APT
+# repository.
 
 msginfo "Installing Python ${PYTHON_VER_NUM} ..."
 
-# Get specific package versions from deadsnakes PPA
+# Get specific package versions from the Dockershelf APT repository
 for PKG in ${PYTHON_PKGS}; do
     PKG_VER="$(apt-cache madison ${PKG} | grep Packages |
-        grep ppa.launchpad.net | head -n1 | awk -F'|' '{print $2}' | xargs || true)"
+        grep apt.dockershelf.com | head -n1 | awk -F'|' '{print $2}' | xargs || true)"
     if [ -n "${PKG_VER}" ]; then
         PYTHON_PKGS_VER="${PYTHON_PKGS_VER} ${PKG}=${PKG_VER}"
     else
@@ -125,54 +99,13 @@ for PKG in ${PYTHON_PKGS}; do
     fi
 done
 
-# Handle potential conflicts with system packages on sid
-# Install media-types first (replaces mime-support in sid)
-aptitude install -y media-types || true
-
-# Create a dummy mime-support package to satisfy deadsnakes PPA dependencies
-# This is needed because deadsnakes packages still depend on mime-support
-# but Debian sid replaced it with media-types
-# We use dpkg-deb directly instead of equivs to avoid dependency issues
-
-mkdir -p /tmp/mime-support-dummy/DEBIAN
-
-cat >/tmp/mime-support-dummy/DEBIAN/control <<'EOF'
-Package: mime-support
-Version: 999.999.999
-Section: misc
-Priority: optional
-Architecture: all
-Maintainer: Dockershelf <dockershelf@dockershelf.com>
-Provides: mime-support
-Replaces: mime-support
-Conflicts: mime-support
-Description: Dummy package to replace mime-support
- This is a dummy package that provides mime-support functionality
- through the media-types package that is already installed.
- .
- This package is created to satisfy dependencies from deadsnakes PPA
- packages that still depend on the old mime-support package name.
-EOF
-
-dpkg-deb --build /tmp/mime-support-dummy
-dpkg -i /tmp/mime-support-dummy.deb
-
-# Clean up
-rm -rf /tmp/mime-support-dummy /tmp/mime-support-dummy.deb
-
 # Install Python packages
 aptitude install ${PYTHON_PKGS_VER}
 
 ls -lah /usr/bin/python*
 
-# Create python3 symlink if needed
-if [ "${PYTHON_VER_NUM}" == "3.11" ] || [ "${PYTHON_VER_NUM}" == "3.12" ] || [ "${PYTHON_VER_NUM}" == "3.13" ] || [ "${PYTHON_VER_NUM}" == "3.14" ]; then
-    rm -rf /usr/bin/python3
-fi
-
-if [ ! -f "/usr/bin/python3" ] && [ -f "/usr/bin/${PYTHON_VER_NUM_MINOR_STR}" ]; then
-    ln -s /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
-fi
+# Create python3 symlink
+ln -sf /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
 
 # Pip: Installation
 # ------------------------------------------------------------------------------

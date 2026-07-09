@@ -16,14 +16,11 @@ from urllib.request import Request, urlopen
 
 from packaging.version import Version
 
-from .utils import go_versions_list_file
-
-NODE_INDEX_URL = 'https://nodejs.org/dist/index.json'
-NODE_REPO_URL = 'https://deb.nodesource.com/node_{major}.x/dists/nodistro/Release'
-DEADSNAKES_PACKAGES_URL = (
-    'http://ppa.launchpad.net/deadsnakes/ppa/ubuntu/dists/{suite}/main/binary-amd64/Packages.gz'
+DOCKERSHELF_APT_URL = 'https://apt.dockershelf.com/dockershelf'
+DOCKERSHELF_APT_PACKAGES_URL = (
+    DOCKERSHELF_APT_URL + '/dists/{suite}/main/binary-amd64/Packages.gz'
 )
-DEADSNAKES_SUITES = ('jammy', 'noble')
+DOCKERSHELF_APT_SUITES = ('trixie', 'unstable')
 MIN_NODE_MAJOR = 16
 MIN_PYTHON_MINOR = Version('3.10')
 
@@ -65,20 +62,26 @@ def load_utils_lists(utils_path):
     }
 
 
-def buildable_python_minors(repo_root):
-    build_script = os.path.join(repo_root, 'python', 'build-image.sh')
-    with open(build_script, 'r') as handle:
-        content = handle.read()
-    minors = set(re.findall(r'== "(\d+\.\d+)"', content))
-    return sorted(minors, key=lambda value: Version(value))
+def discover_dockershelf_python_minors():
+    """Discover Python minor versions available as versioned packages
+    (``python3.X``) in the Dockershelf APT repository.
 
-
-def discover_deadsnakes_python_minors():
+    Scans the ``Packages.gz`` index of each configured suite and extracts
+    ``python3.X`` package names. Only versions ``>= MIN_PYTHON_MINOR`` are
+    returned.
+    """
     available = set()
     pattern = re.compile(r'^Package: (python3\.\d+)$', re.MULTILINE)
-    for suite in DEADSNAKES_SUITES:
-        packages = gzip.decompress(_fetch(DEADSNAKES_PACKAGES_URL.format(suite=suite)))
-        for package in pattern.findall(packages.decode('utf-8', errors='replace')):
+    for suite in DOCKERSHELF_APT_SUITES:
+        try:
+            packages = gzip.decompress(
+                _fetch(DOCKERSHELF_APT_PACKAGES_URL.format(suite=suite))
+            )
+        except (HTTPError, URLError):
+            continue
+        for package in pattern.findall(
+            packages.decode('utf-8', errors='replace')
+        ):
             available.add(package.replace('python', ''))
     return sorted(
         [v for v in available if Version(v) >= MIN_PYTHON_MINOR],
@@ -87,47 +90,60 @@ def discover_deadsnakes_python_minors():
 
 
 def discover_python_versions(repo_root):
-    deadsnakes = discover_deadsnakes_python_minors()
-    buildable = set(buildable_python_minors(repo_root))
-    needs_build_script = sorted(
-        [v for v in deadsnakes if v not in buildable],
-        key=lambda value: Version(value),
-    )
-    return deadsnakes, needs_build_script
+    available = discover_dockershelf_python_minors()
+    return available, []
 
 
 def discover_node_majors():
-    index = json.loads(_fetch(NODE_INDEX_URL).decode('utf-8'))
-    majors = set()
-    for entry in index:
-        version = entry.get('version', '').lstrip('v')
+    """Discover Node major versions available as versioned packages
+    (``nodejs-XX``) in the Dockershelf APT repository.
+
+    Scans the ``Packages.gz`` index of each configured suite and extracts
+    ``nodejs-XX`` package names. Only even majors ``>= MIN_NODE_MAJOR`` are
+    returned, matching Dockershelf's LTS-eligible policy.
+    """
+    pattern = re.compile(r'^Package: nodejs-(\d+)$', re.MULTILINE)
+    available_majors = set()
+    for suite in DOCKERSHELF_APT_SUITES:
         try:
-            parsed = Version(version)
-        except Exception:
+            packages = gzip.decompress(
+                _fetch(DOCKERSHELF_APT_PACKAGES_URL.format(suite=suite))
+            )
+        except (HTTPError, URLError):
             continue
-        if parsed.major < MIN_NODE_MAJOR:
-            continue
-        if parsed.major % 2 != 0:
-            continue
-        majors.add(str(parsed.major))
-    available = []
-    for major in sorted(majors, key=lambda value: int(value)):
-        if _head_ok(NODE_REPO_URL.format(major=major)):
-            available.append(major)
-    return available
+        for major in pattern.findall(
+            packages.decode('utf-8', errors='replace')
+        ):
+            if int(major) < MIN_NODE_MAJOR:
+                continue
+            if int(major) % 2 != 0:
+                continue
+            available_majors.add(major)
+
+    return sorted(available_majors, key=lambda value: int(value))
 
 
 def discover_go_minors():
-    content = json.loads(_fetch(go_versions_list_file).decode('utf-8'))
-    minors = set()
-    for version in content.get('GoVersion', []):
-        version = version.removeprefix('go')
+    """Discover Go minor versions available as versioned packages
+    (``golang-X.Y-go``) in the Dockershelf APT repository.
+
+    Scans the ``Packages.gz`` index of each configured suite and extracts
+    ``golang-X.Y-go`` package names.
+    """
+    pattern = re.compile(r'^Package: golang-(\d+\.\d+)-go$', re.MULTILINE)
+    available = set()
+    for suite in DOCKERSHELF_APT_SUITES:
         try:
-            parsed = Version(version)
-        except Exception:
+            packages = gzip.decompress(
+                _fetch(DOCKERSHELF_APT_PACKAGES_URL.format(suite=suite))
+            )
+        except (HTTPError, URLError):
             continue
-        minors.add('{0}.{1}'.format(parsed.major, parsed.minor))
-    return sorted(minors, key=lambda value: Version(value))
+        for minor in pattern.findall(
+            packages.decode('utf-8', errors='replace')
+        ):
+            available.add(minor)
+    return sorted(available, key=lambda value: Version(value))
 
 
 def recommend_list(current, upstream_available, cap):
@@ -208,48 +224,6 @@ def apply_utils_lists(utils_path, reports):
         handle.write(content)
 
 
-def ensure_python_build_support(repo_root, new_minors):
-    if not new_minors:
-        return False
-    build_script = os.path.join(repo_root, 'python', 'build-image.sh')
-    with open(build_script, 'r') as handle:
-        content = handle.read()
-    original = content
-
-    for minor in new_minors:
-        if minor in buildable_python_minors(repo_root):
-            continue
-        jammy_chain = re.search(
-            r'(elif \[ "\$\{PYTHON_VER_NUM_MINOR\}" == "3\.11" )(.*?)( \]; then)',
-            content,
-            re.DOTALL,
-        )
-        if not jammy_chain:
-            raise ValueError('Could not find Python jammy elif chain in build-image.sh')
-        inner = jammy_chain.group(2)
-        if minor not in inner:
-            inner = inner + ' || [ "${{PYTHON_VER_NUM_MINOR}}" == "{0}" ]'.format(minor)
-            content = content[:jammy_chain.start(2)] + inner + content[jammy_chain.end(2):]
-
-        ver_chain = re.search(
-            r'(if \[ "\$\{PYTHON_VER_NUM\}" == "3\.11" )(.*?)( \]; then)',
-            content,
-            re.DOTALL,
-        )
-        if not ver_chain:
-            raise ValueError('Could not find Python symlink if chain in build-image.sh')
-        inner = ver_chain.group(2)
-        if minor not in inner:
-            inner = inner + ' || [ "${{PYTHON_VER_NUM}}" == "{0}" ]'.format(minor)
-            content = content[:ver_chain.start(2)] + inner + content[ver_chain.end(2):]
-
-    if content != original:
-        with open(build_script, 'w') as handle:
-            handle.write(content)
-        return True
-    return False
-
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Discover Dockershelf shelf version updates')
     parser.add_argument(
@@ -258,11 +232,6 @@ def main(argv=None):
     )
     parser.add_argument('--json', action='store_true', help='Print JSON report')
     parser.add_argument('--apply', action='store_true', help='Write recommended lists to scripts/utils.py')
-    parser.add_argument(
-        '--skip-python-build-script',
-        action='store_true',
-        help='Do not extend python/build-image.sh for newly discovered Python minors',
-    )
     args = parser.parse_args(argv)
 
     reports = discover_all(args.repo_root)
@@ -290,8 +259,6 @@ def main(argv=None):
         if not any_changed:
             print('No shelf list changes to apply.', file=sys.stderr)
             return 0
-        if not args.skip_python_build_script:
-            ensure_python_build_support(args.repo_root, reports['python']['add'])
         apply_utils_lists(os.path.join(args.repo_root, 'scripts', 'utils.py'), reports)
         print('Applied recommended lists to scripts/utils.py', file=sys.stderr)
 

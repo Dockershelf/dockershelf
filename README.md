@@ -19,7 +19,7 @@ The list of available images is shown below.
 |[dockershelf/debian](#debian)|`bookworm`, `oldstable`, `trixie`, `stable`, `forky`, `testing`, `sid`, `unstable`, `latest`|
 |[dockershelf/python](#python)|`3.10-trixie`, `3.10-stable`, `3.10-sid`, `3.10-unstable`, `3.10`, `3.11-trixie`, `3.11-stable`, `3.11-sid`, `3.11-unstable`, `3.11`, `3.12-trixie`, `3.12-stable`, `3.12-sid`, `3.12-unstable`, `3.12`, `3.13-trixie`, `3.13-stable`, `3.13-sid`, `3.13-unstable`, `3.13`, `3.14-trixie`, `3.14-stable`, `3-stable`, `3-trixie`, `latest-stable`, `latest-trixie`, `3.14-sid`, `3.14-unstable`, `3.14`, `3-unstable`, `3-sid`, `3`, `latest-unstable`, `latest-sid`, `latest`|
 |[dockershelf/node](#node)|`16-trixie`, `16-stable`, `16-sid`, `16-unstable`, `16`, `18-trixie`, `18-stable`, `18-sid`, `18-unstable`, `18`, `20-trixie`, `20-stable`, `20-sid`, `20-unstable`, `20`, `22-trixie`, `22-stable`, `22-sid`, `22-unstable`, `22`, `24-trixie`, `24-stable`, `latest-stable`, `latest-trixie`, `24-sid`, `24-unstable`, `24`, `latest-unstable`, `latest-sid`, `latest`|
-|[dockershelf/go](#go)|`1.20-trixie`, `1.20-stable`, `1.20-sid`, `1.20-unstable`, `1.20`, `1.21-trixie`, `1.21-stable`, `1.21-sid`, `1.21-unstable`, `1.21`, `1.22-trixie`, `1.22-stable`, `1.22-sid`, `1.22-unstable`, `1.22`, `1.23-trixie`, `1.23-stable`, `1.23-sid`, `1.23-unstable`, `1.23`, `1.24-trixie`, `1.24-stable`, `1.24-sid`, `1.24-unstable`, `1.24`, `1.25-trixie`, `1.25-stable`, `latest-stable`, `latest-trixie`, `1.25-sid`, `1.25-unstable`, `1.25`, `latest-unstable`, `latest-sid`, `latest`|
+|[dockershelf/go](#go)|`1.21-trixie`, `1.21-stable`, `1.21-sid`, `1.21-unstable`, `1.21`, `1.22-trixie`, `1.22-stable`, `1.22-sid`, `1.22-unstable`, `1.22`, `1.23-trixie`, `1.23-stable`, `1.23-sid`, `1.23-unstable`, `1.23`, `1.24-trixie`, `1.24-stable`, `1.24-sid`, `1.24-unstable`, `1.24`, `1.25-trixie`, `1.25-stable`, `latest-stable`, `latest-trixie`, `1.25-sid`, `1.25-unstable`, `1.25`, `latest-unstable`, `latest-sid`, `latest`|
 |[dockershelf/latex](#latex)|`basic`, `basic-stable`, `latest-stable`, `latest`, `full`, `full-stable`, `extras`, `extras-stable`|
 
 ## How to use
@@ -118,7 +118,7 @@ These images are similar to the official ones, but with some opinionated configu
 
 ### Python
 
-These are debian stable/unstable images with python versions installed from the [deadsnakes ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
+These are debian stable/unstable images with python versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
@@ -137,7 +137,7 @@ These are debian stable/unstable images with python versions installed from the 
 
 ### Node
 
-These are debian stable/unstable images with node versions built using the [nodesource installation script](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
+These are debian stable/unstable images with node versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
@@ -154,12 +154,10 @@ These are debian stable/unstable images with node versions built using the [node
 
 ### Go
 
-These are debian stable/unstable images with go version downloaded directly from the [official website](https://go.dev/dl/). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
+These are debian stable/unstable images with go versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
 
 |Image  |Dockerfile  |Pulls   |Size  |
 |-------|------------|--------|------|
-|[`dockershelf/go:1.20-trixie`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.20-trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.20-trixie.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
-|[`dockershelf/go:1.20-sid`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.20-sid/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.20-sid.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
 |[`dockershelf/go:1.21-trixie`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.21-trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.21-trixie.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
 |[`dockershelf/go:1.21-sid`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.21-sid/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.21-sid.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|
 |[`dockershelf/go:1.22-trixie`](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](https://github.com/Dockershelf/dockershelf/blob/master/go/1.22-trixie/Dockerfile)|[![](https://img.shields.io/docker/pulls/dockershelf/go?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|[![](https://img.shields.io/docker/image-size/dockershelf/go/1.22-trixie.svg?colorA=22313f&colorB=4a637b)](https://hub.docker.com/r/dockershelf/go)|

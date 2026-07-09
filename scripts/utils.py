@@ -18,11 +18,12 @@
 
 import os
 import re
-import json
+import gzip
 import fnmatch
 from contextlib import closing
 
 from urllib.request import urlopen, Request
+from urllib.error import HTTPError, URLError
 
 from packaging.version import Version
 
@@ -34,11 +35,15 @@ debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
 node_suites = ['16', '18', '20', '22', '24']
 
-# https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
+# https://apt.dockershelf.com/dockershelf
 python_suites = ['3.10', '3.11', '3.12', '3.13', '3.14']
 
-go_versions_list_file = "https://raw.githubusercontent.com/golang/telemetry/master/config/config.json"
-go_suites = ['1.20', '1.21', '1.22', '1.23', '1.24', '1.25']
+dockershelf_apt_url = 'https://apt.dockershelf.com/dockershelf'
+dockershelf_apt_packages_url = (
+    dockershelf_apt_url + '/dists/{suite}/main/binary-amd64/Packages.gz'
+)
+dockershelf_apt_suites = ('trixie', 'unstable')
+go_suites = ['1.21', '1.22', '1.23', '1.24', '1.25']
 
 
 def u(u_string):
@@ -117,27 +122,52 @@ def get_python_versions():
     return sorted(python_versions, key=lambda x: Version(x))
 
 
+def _fetch_apt_packages(suite, timeout=60):
+    request = Request(
+        dockershelf_apt_packages_url.format(suite=suite),
+        headers={'User-Agent': 'dockershelf-discover/1.0'},
+    )
+    with closing(urlopen(request, timeout=timeout)) as response:
+        return response.read()
+
+
 def get_go_versions():
     logger.info('Getting Go versions')
 
-    with closing(urlopen(go_versions_list_file)) as n:
-        go_versions_list_content = json.loads(n.read())
-
     go_versions_index = {}
-    go_versions = [u(v).removeprefix("go") for v in go_versions_list_content['GoVersion']]
+    package_pattern = re.compile(r'^Package: golang-(\d+\.\d+)-go$', re.MULTILINE)
+    version_pattern = re.compile(r'^Version: (\d+\.\d+\.\d+)', re.MULTILINE)
 
-    for v in go_versions:
+    for suite in dockershelf_apt_suites:
         try:
-            parsedv = Version(v)
-        except Exception:
-            parsedv = Version('0.0')
-        go_version_minor = f'{parsedv.major}.{parsedv.minor}'
-        if go_version_minor not in go_suites:
+            packages = gzip.decompress(
+                _fetch_apt_packages(suite)
+            ).decode('utf-8', errors='replace')
+        except (HTTPError, URLError):
             continue
-        if go_version_minor not in go_versions_index.keys():
-            go_versions_index[go_version_minor] = Version('0.0')
-        if parsedv > go_versions_index[go_version_minor]:
-            go_versions_index[go_version_minor] = parsedv
 
-    go_versions = [f'{v.major}.{v.minor}.{v.micro}' for v in go_versions_index.values()]
+        # Split into stanzas and extract Package + Version for golang-X.Y-go.
+        for stanza in packages.strip().split('\n\n'):
+            pkg_match = package_pattern.search(stanza)
+            if not pkg_match:
+                continue
+            minor = pkg_match.group(1)
+            if minor not in go_suites:
+                continue
+            ver_match = version_pattern.search(stanza)
+            if not ver_match:
+                continue
+            upstream = ver_match.group(1)
+            try:
+                parsedv = Version(upstream)
+            except Exception:
+                continue
+            if minor not in go_versions_index:
+                go_versions_index[minor] = Version('0.0')
+            if parsedv > go_versions_index[minor]:
+                go_versions_index[minor] = parsedv
+
+    go_versions = [
+        f'{v.major}.{v.minor}.{v.micro}' for v in go_versions_index.values()
+    ]
     return sorted(set(go_versions), key=lambda x: Version(x))
