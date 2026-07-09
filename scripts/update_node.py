@@ -147,6 +147,9 @@ def update_node(basedir):
             node_dockerfile_content = re.sub('%%NODE_VERSION%%',
                                              node_version_long,
                                              node_dockerfile_content)
+            node_dockerfile_content = re.sub('%%NODE_DEBIAN_SUITE%%',
+                                             debian_version,
+                                             node_dockerfile_content)
 
             with open(node_dockerfile, 'w') as pd:
                 pd.write(node_dockerfile_content)

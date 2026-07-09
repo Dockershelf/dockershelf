@@ -50,9 +50,9 @@ apt-get install ${DPKG_TOOLS_DEPENDS}
 
 msginfo "Configuring /etc/apt/sources.list ..."
 
-# Detect the Debian suite at runtime and map sid -> unstable, as the
-# Dockershelf APT repo uses "unstable" as the codename for sid packages.
-DEBIAN_SUITE="$(. /etc/os-release && echo "${VERSION_CODENAME}")"
+# Use the suite baked into the image by update.py and map sid -> unstable,
+# as the Dockershelf APT repo uses "unstable" as the codename for sid packages.
+DEBIAN_SUITE="${NODE_DEBIAN_SUITE}"
 if [ "${DEBIAN_SUITE}" = "sid" ]; then
     DEBIAN_SUITE="unstable"
 fi

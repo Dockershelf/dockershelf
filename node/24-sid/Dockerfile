@@ -24,7 +24,7 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
       org.opencontainers.image.licenses="GPL-3.0" \
       maintainer="Luis Alejandro Martínez Faneyth <luis@luisalejandro.org>"
 
-ENV NODE_VER_NUM="24"
+ENV NODE_VER_NUM="24" NODE_DEBIAN_SUITE="sid"
 
 COPY build-image.sh library.sh /usr/share/dockershelf/node/
 RUN bash /usr/share/dockershelf/node/build-image.sh
