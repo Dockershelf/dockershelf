@@ -97,3 +97,10 @@ DESIGN.md
 
 # Rosey Maintainer Tools
 rosey/maintainer-manifest.json
+rosey/hindsight-pin
+.github/copilot-instructions.md
+.github/instructions/
+.github/skills/
+.github/agents/
+.github/hooks/
+.vscode/mcp.json
