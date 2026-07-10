@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # debootstrap stage
 # ----------------------------------
 FROM debian:stable AS builder
@@ -9,7 +10,8 @@ ADD . /tmp/debootstrap
 
 WORKDIR /tmp/debootstrap
 
-RUN bash build-image.sh "bookworm" "oldstable"
+# security.insecure: debootstrap must mount /proc for systemd 261+ postinsts
+RUN --security=insecure bash build-image.sh "bookworm" "oldstable"
 
 # final stage
 # ----------------------------------

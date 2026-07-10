@@ -109,6 +109,21 @@ else
 fi
 
 BUILD_ONLY="${DOCKERSHELF_BUILD_ONLY:-0}"
+
+# Debian bootstrap needs RUN --security=insecure (mount /proc). That requires a
+# BuildKit builder with the security.insecure entitlement plus --allow on build.
+BUILDX_EXTRA_ARGS=()
+if [ "${DOCKER_IMAGE_TYPE}" = "debian" ]; then
+    DEBIAN_BUILDER="dockershelf-debian"
+    if ! docker buildx inspect "${DEBIAN_BUILDER}" >/dev/null 2>&1; then
+        docker buildx create --name "${DEBIAN_BUILDER}" \
+            --driver docker-container \
+            --buildkitd-flags '--allow-insecure-entitlement security.insecure'
+    fi
+    docker buildx inspect "${DEBIAN_BUILDER}" --bootstrap >/dev/null
+    BUILDX_EXTRA_ARGS=(--builder "${DEBIAN_BUILDER}" --allow security.insecure)
+fi
+
 if [ "${BUILD_ONLY}" = "1" ]; then
     # buildx --load supports a single platform only
     if [ "$IS_CI" = true ]; then
@@ -117,6 +132,7 @@ if [ "${BUILD_ONLY}" = "1" ]; then
 
     cd "${DOCKER_IMAGE_DIR}" &&
         docker buildx build --load \
+            "${BUILDX_EXTRA_ARGS[@]}" \
             --platform ${PLATFORMS} \
             --build-arg BUILD_DATE="${BUILD_DATE}" \
             --build-arg VCS_REF="${VCS_REF}" \
@@ -131,6 +147,7 @@ else
     # Build the docker image
     cd "${DOCKER_IMAGE_DIR}" &&
         docker buildx build --push \
+            "${BUILDX_EXTRA_ARGS[@]}" \
             --platform ${PLATFORMS} \
             --build-arg BUILD_DATE="${BUILD_DATE}" \
             --build-arg VCS_REF="${VCS_REF}" \

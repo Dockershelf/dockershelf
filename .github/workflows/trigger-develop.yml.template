@@ -65,6 +65,9 @@ jobs:
           (startsWith(matrix.docker-image-name, 'dockershelf/node:') && inputs.node) ||
           (startsWith(matrix.docker-image-name, 'dockershelf/go:') && inputs.go)
         uses: docker/setup-buildx-action@v4
+        with:
+          # Debian images need RUN --security=insecure (debootstrap mounts /proc)
+          buildkitd-flags: --allow-insecure-entitlement security.insecure
 
       - if: >
           (startsWith(matrix.docker-image-name, 'dockershelf/debian:') && inputs.debian) ||
