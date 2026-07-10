@@ -33,7 +33,7 @@ from .logger import logger
 debian_release_url_holder = 'http://deb.debian.org/debian/dists/{0}/Release'
 debian_suites = ['oldstable', 'stable', 'testing', 'unstable']
 
-node_suites = ['16', '18', '20', '22', '24']
+node_suites = ['18', '20', '22', '24', '26']
 
 # https://apt.dockershelf.com/dockershelf
 python_suites = ['3.10', '3.11', '3.12', '3.13', '3.14']
