@@ -43,7 +43,7 @@ dockershelf_apt_packages_url = (
     dockershelf_apt_url + '/dists/{suite}/main/binary-amd64/Packages.gz'
 )
 dockershelf_apt_suites = ('trixie', 'unstable')
-go_suites = ['1.21', '1.22', '1.23', '1.24', '1.25']
+go_suites = ['1.22', '1.23', '1.24', '1.25', '1.26']
 
 
 def u(u_string):

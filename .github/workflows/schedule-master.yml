@@ -70,10 +70,6 @@ jobs:
             docker-image-extra-tags: "dockershelf/node:24-stable dockershelf/node:latest-stable dockershelf/node:latest-trixie"
           - docker-image-name: "dockershelf/node:24-sid"
             docker-image-extra-tags: "dockershelf/node:24-unstable dockershelf/node:24 dockershelf/node:latest-unstable dockershelf/node:latest-sid dockershelf/node:latest"
-          - docker-image-name: "dockershelf/go:1.21-trixie"
-            docker-image-extra-tags: "dockershelf/go:1.21-stable"
-          - docker-image-name: "dockershelf/go:1.21-sid"
-            docker-image-extra-tags: "dockershelf/go:1.21-unstable dockershelf/go:1.21"
           - docker-image-name: "dockershelf/go:1.22-trixie"
             docker-image-extra-tags: "dockershelf/go:1.22-stable"
           - docker-image-name: "dockershelf/go:1.22-sid"
@@ -87,9 +83,13 @@ jobs:
           - docker-image-name: "dockershelf/go:1.24-sid"
             docker-image-extra-tags: "dockershelf/go:1.24-unstable dockershelf/go:1.24"
           - docker-image-name: "dockershelf/go:1.25-trixie"
-            docker-image-extra-tags: "dockershelf/go:1.25-stable dockershelf/go:latest-stable dockershelf/go:latest-trixie"
+            docker-image-extra-tags: "dockershelf/go:1.25-stable"
           - docker-image-name: "dockershelf/go:1.25-sid"
-            docker-image-extra-tags: "dockershelf/go:1.25-unstable dockershelf/go:1.25 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
+            docker-image-extra-tags: "dockershelf/go:1.25-unstable dockershelf/go:1.25"
+          - docker-image-name: "dockershelf/go:1.26-trixie"
+            docker-image-extra-tags: "dockershelf/go:1.26-stable dockershelf/go:latest-stable dockershelf/go:latest-trixie"
+          - docker-image-name: "dockershelf/go:1.26-sid"
+            docker-image-extra-tags: "dockershelf/go:1.26-unstable dockershelf/go:1.26 dockershelf/go:latest-unstable dockershelf/go:latest-sid dockershelf/go:latest"
 
     steps:
       - name: Checkout repo
