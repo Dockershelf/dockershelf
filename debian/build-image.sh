@@ -53,15 +53,47 @@ if [ -d "${TARGET}" ]; then
     rm -rf "${TARGET}"
 fi
 
-msginfo "Downloading packages for base filesystem ..."
+# Docker BuildKit cannot mount /proc into the bootstrap root (permission
+# denied). systemd 261+ and libselinux1 postinsts run systemd-tmpfiles,
+# which hard-fails without /proc under set -e. debootstrap --second-stage
+# re-unpacks systemd from the cached .deb and would overwrite a tree stub,
+# so patch the .deb itself, then restore the real binary after configure.
+msginfo "Downloading and unpacking base filesystem (debootstrap --foreign) ..."
 debootstrap --verbose --variant "${VARIANT}" \
-    --download-only --no-check-gpg --no-check-certificate --merged-usr \
+    --foreign --no-check-gpg --no-check-certificate --merged-usr \
     "${DEBIAN_RELEASE}" "${TARGET}"
 
-msginfo "Building base filesystem ..."
-debootstrap --verbose --variant "${VARIANT}" \
-    --no-check-gpg --no-check-certificate --merged-usr \
-    "${DEBIAN_RELEASE}" "${TARGET}"
+SYSTEMD_DEB="$(ls "${TARGET}/var/cache/apt/archives"/systemd_*.deb 2>/dev/null | head -1 || true)"
+SYSTEMD_TMPFILES_REAL="${BASEDIR}/.systemd-tmpfiles.real"
+if [ -n "${SYSTEMD_DEB}" ]; then
+    msginfo "Patching systemd.deb systemd-tmpfiles for Docker bootstrap (no /proc) ..."
+    SYSTEMD_STAGING="$(mktemp -d)"
+    dpkg-deb -R "${SYSTEMD_DEB}" "${SYSTEMD_STAGING}"
+    cp -a "${SYSTEMD_STAGING}/usr/bin/systemd-tmpfiles" \
+        "${SYSTEMD_TMPFILES_REAL}"
+    cat >"${SYSTEMD_STAGING}/usr/bin/systemd-tmpfiles" <<'EOF'
+#!/bin/sh
+# Dockershelf bootstrap stub: real binary needs /proc in the chroot.
+exit 0
+EOF
+    chmod 755 "${SYSTEMD_STAGING}/usr/bin/systemd-tmpfiles"
+    if [ -f "${SYSTEMD_STAGING}/DEBIAN/md5sums" ]; then
+        NEW_MD5="$(md5sum "${SYSTEMD_STAGING}/usr/bin/systemd-tmpfiles" | awk '{print $1}')"
+        sed -i "s|^[0-9a-f]*  usr/bin/systemd-tmpfiles\$|${NEW_MD5}  usr/bin/systemd-tmpfiles|" \
+            "${SYSTEMD_STAGING}/DEBIAN/md5sums"
+    fi
+    dpkg-deb -b "${SYSTEMD_STAGING}" "${SYSTEMD_DEB}.new"
+    mv "${SYSTEMD_DEB}.new" "${SYSTEMD_DEB}"
+    rm -rf "${SYSTEMD_STAGING}"
+fi
+
+msginfo "Configuring base filesystem (debootstrap --second-stage) ..."
+chroot "${TARGET}" /debootstrap/debootstrap --second-stage
+
+if [ -e "${SYSTEMD_TMPFILES_REAL}" ]; then
+    cp -a "${SYSTEMD_TMPFILES_REAL}" "${TARGET}/usr/bin/systemd-tmpfiles"
+    rm -f "${SYSTEMD_TMPFILES_REAL}"
+fi
 
 msginfo "Configuring base filesystem ..."
 cat >"${TARGET}/etc/resolv.conf" <<EOF
