@@ -1,15 +1,22 @@
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: "/"
-  schedule:
-    interval: weekly
-    day: tuesday
-    time: "01:00"
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "01:00"
 
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: weekly
-    day: tuesday
-    time: "01:00"
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "01:00"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "01:00"
