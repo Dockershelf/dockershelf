@@ -170,6 +170,18 @@ jobs:
               core.notice(`PR #${pullNumber} is still a draft; skipping merge`);
               return;
             }
+            if (pull.mergeable_state === 'behind') {
+              core.info(`PR #${pullNumber} is behind base branch; updating...`);
+              await github.rest.pulls.updateBranch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullNumber,
+              });
+              core.notice(
+                `PR #${pullNumber} branch updated; merge will complete on next workflow_run trigger`,
+              );
+              return;
+            }
             await github.rest.pulls.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,

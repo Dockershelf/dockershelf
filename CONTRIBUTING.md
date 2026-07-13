@@ -84,8 +84,8 @@ make format
 make test
 ```
 
-- `make lint` runs `flake8` on `scripts/`, `update.py`, and `tests/` via tox.
-- `make format` applies `autoflake` and `autopep8` to the same paths (write mode).
+- `make lint` runs Ruff (format check + lint), Bandit, and Pyright on `scripts/`, `update.py`, and `tests/` via tox.
+- `make format` applies Ruff format and unused-import cleanup to the same paths (write mode).
 - `make test` runs unit tests with coverage via `tox -e coverage`.
 
 Before opening a pull request, also:
@@ -94,7 +94,7 @@ Before opening a pull request, also:
 - Run the relevant image test scripts when you change Docker recipes.
 - Keep generated files consistent when your change affects shelves, tags, or CI matrices.
 
-CI runs `python3 update.py` on pull requests (see `.github/workflows/pr.yml`).
+CI builds the development image and runs `make dependencies` and `make build` on pull requests (see `.github/workflows/pr.yml`).
 
 ## Pull Request Guidelines
 
