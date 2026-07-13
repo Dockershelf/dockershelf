@@ -23,7 +23,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         Docker.options[:write_timeout] = 1200
 
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => ['bash'])
         @container.start
 
         set :backend, :docker
@@ -56,9 +56,9 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should have a go interpreter" do
-        expect(file("/usr/lib/go#{go_version_short()}/bin/go")).to be_executable
+        expect(file("/usr/lib/go-#{go_version_short()}/bin/go")).to be_executable
         expect(file("/usr/bin/go")).to be_symlink
-        expect(file("/usr/bin/go")).to be_linked_to("/usr/lib/go#{go_version_short()}/bin/go")
+        expect(file("/usr/bin/go")).to be_linked_to("../lib/go-#{go_version_short()}/bin/go")
     end
 
     it "should have the correct go version" do
@@ -87,9 +87,64 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should have go environment variables properly configured" do
-        expect(command("go env GOROOT").stdout.strip).to eq("/usr/lib/go#{go_version_short()}")
+        expect(command("go env GOROOT").stdout.strip).to eq("/usr/lib/go-#{go_version_short()}")
         expect(command("go env GOPATH").stdout.strip).not_to be_empty
         expect(command("which go").stdout.strip).to eq("/usr/bin/go")
+    end
+
+    it "should compile and run a program using the standard library" do
+        program = 'package main\nimport ("fmt";"os")\nfunc main() { fmt.Println(os.Getenv("HOME")) }'
+        expect(command("mkdir -p /tmp/teststdlib && cd /tmp/teststdlib && echo '#{program}' > main.go && go build -o teststdlib main.go").exit_status).to eq(0)
+        expect(file("/tmp/teststdlib/teststdlib")).to be_executable
+        expect(command("/tmp/teststdlib/teststdlib").stdout.strip).to eq("/root")
+    end
+
+    it "should report CGO status correctly" do
+        expect(command("go env CGO_ENABLED").stdout.strip).to match(/^[01]$/)
+    end
+
+    it "should run go test and report results" do
+        test_program = 'package main\nimport "testing"\nfunc TestAdd(t *testing.T) { if 1+1 != 2 { t.Fatal("math is broken") } }'
+        expect(command("mkdir -p /tmp/testunit && cd /tmp/testunit && go mod init example.com/testunit && echo '#{test_program}' > main_test.go && go test -v .").exit_status).to eq(0)
+        expect(command("cd /tmp/testunit && go test -v .").stdout.strip).to match(/PASS/)
+    end
+
+    it "should build a static binary" do
+        program = 'package main\nimport "fmt"\nfunc main() { fmt.Println("static") }'
+        expect(command("mkdir -p /tmp/teststatic && cd /tmp/teststatic && go mod init example.com/teststatic && echo '#{program}' > main.go && CGO_ENABLED=0 go build -ldflags='-extldflags=-static' -o teststatic main.go").exit_status).to eq(0)
+        expect(file("/tmp/teststatic/teststatic")).to be_executable
+        expect(command("/tmp/teststatic/teststatic").stdout.strip).to eq("static")
+    end
+
+    it "should support cross-compilation for another OS" do
+        program = 'package main\nimport "fmt"\nfunc main() { fmt.Println("cross") }'
+        expect(command("mkdir -p /tmp/testcross && cd /tmp/testcross && echo '#{program}' > main.go && GOOS=windows GOARCH=amd64 go build -o testcross.exe main.go").exit_status).to eq(0)
+        expect(file("/tmp/testcross/testcross.exe")).to exist
+    end
+
+    it "should have go vet run without crashing" do
+        program = 'package main\nimport "fmt"\nfunc main() { fmt.Println("vet-me") }'
+        expect(command("mkdir -p /tmp/testvet && cd /tmp/testvet && go mod init example.com/testvet && echo '#{program}' > main.go && go vet ./...").exit_status).to eq(0)
+    end
+
+    it "should compile a program using goroutines and channels" do
+        program = 'package main\nimport "fmt"\nfunc main() { ch := make(chan string); go func() { ch <- "concurrent" }(); fmt.Println(<-ch) }'
+        expect(command("mkdir -p /tmp/testconcurrent && cd /tmp/testconcurrent && echo '#{program}' > main.go && go build -o testconcurrent main.go").exit_status).to eq(0)
+        expect(file("/tmp/testconcurrent/testconcurrent")).to be_executable
+        expect(command("/tmp/testconcurrent/testconcurrent").stdout.strip).to eq("concurrent")
+    end
+
+    it "should have gofmt produce expected output" do
+        unformatted = 'package main\nimport "fmt"\nfunc main(){fmt.Println("fmt")}'
+        expect(command("mkdir -p /tmp/testfmt && cd /tmp/testfmt && echo '#{unformatted}' > main.go && gofmt -w main.go").exit_status).to eq(0)
+        expect(file("/tmp/testfmt/main.go")).to contain("func main() {")
+    end
+
+    it "should compile a program with the net/http package" do
+        program = 'package main\nimport ("fmt";"net/http")\nfunc main() { fmt.Println(http.StatusOK) }'
+        expect(command("mkdir -p /tmp/testnet && cd /tmp/testnet && echo '#{program}' > main.go && go build -o testnet main.go").exit_status).to eq(0)
+        expect(file("/tmp/testnet/testnet")).to be_executable
+        expect(command("/tmp/testnet/testnet").stdout.strip).to eq("200")
     end
 
     after(:all) do

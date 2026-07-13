@@ -7,7 +7,7 @@ describe "%s %s container (%s)" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_T
         Docker.options[:write_timeout] = 1200
 
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => ['bash'])
         @container.start
 
         set :backend, :docker
@@ -50,6 +50,13 @@ describe "%s %s container (%s)" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_T
 
     it "shouldn't have invalid users" do
         expect(user('invalid-user')).not_to exist
+    end
+
+    it "should have userdel and groupdel commands available" do
+        expect(command("which userdel").exit_status).to eq(0)
+        expect(command("which groupdel").exit_status).to eq(0)
+        expect(command("userdel --help").exit_status).to eq(0)
+        expect(command("groupdel --help").exit_status).to eq(0)
     end
 
     it "should have a proper /etc/passwd file" do
@@ -133,6 +140,72 @@ describe "%s %s container (%s)" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_T
         expect(command("ls -1 /usr/share/man").stdout).to be_empty
         expect(command("ls -1 /var/cache/apt").stdout).to be_empty
         expect(command("ls -1 /var/cache/debconf").stdout).to be_empty
+    end
+
+    it "should have clean-apt.sh and clean-dpkg.sh executable" do
+        expect(file("/usr/share/dockershelf/clean-apt.sh")).to be_executable
+        expect(file("/usr/share/dockershelf/clean-dpkg.sh")).to be_executable
+    end
+
+    it "should have no broken packages according to dpkg" do
+        expect(command("dpkg --audit").exit_status).to eq(0)
+        expect(command("dpkg --audit").stdout).to be_empty
+    end
+
+    it "should not have apt or dpkg lock files" do
+        expect(file("/var/lib/dpkg/lock")).not_to exist
+        expect(file("/var/lib/dpkg/lock-frontend")).not_to exist
+        expect(file("/var/cache/apt/archives/lock")).not_to exist
+    end
+
+    it "should have proper permissions on critical directories and files" do
+        expect(file("/tmp")).to be_mode 1777
+        expect(file("/root")).to be_mode 700
+        expect(file("/etc/shadow")).to exist
+        expect(file("/etc/shadow")).to be_mode 640
+        expect(file("/etc/shadow")).to be_owned_by 'root'
+    end
+
+    it "should have essential system packages installed" do
+        expect(package("apt")).to be_installed
+        expect(package("dpkg")).to be_installed
+        expect(package("libc6")).to be_installed
+        expect(package("coreutils")).to be_installed
+    end
+
+    it "should have a working /bin/bash" do
+        expect(file("/bin/bash")).to exist
+        expect(file("/bin/bash")).to be_executable
+    end
+
+    it "should report the correct dpkg architecture" do
+        case ENV['DOCKER_IMAGE_ARCH']
+        when "amd64"
+            expect(command("dpkg --print-architecture").stdout.strip).to eq("amd64")
+        when "arm64"
+            expect(command("dpkg --print-architecture").stdout.strip).to eq("arm64")
+        end
+    end
+
+    it "should be able to resolve DNS" do
+        expect(command("getent hosts deb.debian.org").exit_status).to eq(0)
+    end
+
+    it "should be able to fetch an HTTPS resource with curl" do
+        expect(command("curl -fsSL -o /dev/null https://deb.debian.org/").exit_status).to eq(0)
+    end
+
+    it "should have an empty or minimal /var/log" do
+        log_files = command("ls -1A /var/log").stdout.split("\n").reject { |f| f.empty? }
+        allowed = ["apt", "dpkg.log", "alternatives.log", "lastlog", "wtmp", "btmp"]
+        unexpected = log_files.reject { |f| allowed.include?(f) }
+        expect(unexpected).to be_empty, "Unexpected log files: #{unexpected.join(', ')}"
+    end
+
+    it "should support UTF-8 filenames" do
+        expect(command("touch /tmp/ñ_test_文件").exit_status).to eq(0)
+        expect(file("/tmp/ñ_test_文件")).to exist
+        expect(command("rm -f /tmp/ñ_test_文件").exit_status).to eq(0)
     end
 
     after(:all) do

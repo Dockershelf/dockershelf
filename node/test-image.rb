@@ -23,7 +23,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         Docker.options[:write_timeout] = 1200
 
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => ['bash'])
         @container.start
 
         set :backend, :docker
@@ -59,6 +59,10 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     it "should have the correct node version" do
         expect(node_version()).to eq(ENV["DOCKER_IMAGE_TYPE_VERSION"])
         expect(node_version()).to eq(node_version_container_var())
+    end
+
+    it "should have a clean npm cache on a fresh image" do
+        expect(command("npm cache ls 2>/dev/null | wc -l").stdout.strip).to eq("0")
     end
 
     it "should be able to install a npm package" do
@@ -100,6 +104,67 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         expect(command("cd /tmp/test-npm-scripts && npm pkg set scripts.test=\"echo 'test passed'\"").exit_status).to eq(0)
         expect(command("cd /tmp/test-npm-scripts && npm run start").exit_status).to eq(0)
         expect(command("cd /tmp/test-npm-scripts && npm test").exit_status).to eq(0)
+    end
+
+    it "should have core Node.js modules functional" do
+        expect(command("node -e \"const fs = require('fs'); fs.writeFileSync('/tmp/core-test', 'ok'); console.log(fs.readFileSync('/tmp/core-test', 'utf8'));\"").exit_status).to eq(0)
+        expect(command("node -e \"const path = require('path'); console.log(path.join('/tmp', 'test'));\"").stdout.strip).to eq("/tmp/test")
+        expect(command("node -e \"const os = require('os'); console.log(typeof os.platform());\"").stdout.strip).to eq("string")
+    end
+
+    it "should support crypto operations" do
+        expect(command("node -e \"const crypto = require('crypto'); console.log(crypto.createHash('sha256').update('test').digest('hex'));\"").exit_status).to eq(0)
+        expect(command("node -e \"const crypto = require('crypto'); console.log(crypto.randomBytes(16).length);\"").stdout.strip).to eq("16")
+    end
+
+    it "should be able to start an HTTP server and respond" do
+        server_script = 'const http = require("http"); const server = http.createServer((req, res) => { res.end("ok"); server.close(); }); server.listen(8765, () => { console.log("ready"); });'
+        expect(command("node -e '#{server_script}' &").exit_status).to eq(0)
+        expect(command("sleep 1 && curl -s http://localhost:8765/").stdout.strip).to eq("ok")
+    end
+
+    it "should support Buffer and stream operations" do
+        expect(command("node -e \"const buf = Buffer.from('hello'); console.log(buf.toString());\"").stdout.strip).to eq("hello")
+        expect(command("node -e \"const fs = require('fs'); const stream = fs.createReadStream('/etc/os-release'); stream.on('data', () => {}); stream.on('end', () => console.log('done'));\"").stdout.strip).to eq("done")
+    end
+
+    it "should support child process execution" do
+        expect(command("node -e \"const { execSync } = require('child_process'); console.log(execSync('echo child').toString().trim());\"").stdout.strip).to eq("child")
+    end
+
+    it "should support DNS resolution" do
+        expect(command("node -e \"const dns = require('dns'); dns.lookup('deb.debian.org', (err, addr) => { if (err) throw err; console.log(addr); });\"").exit_status).to eq(0)
+    end
+
+    it "should be able to make an HTTPS request" do
+        expect(command("node -e \"const https = require('https'); https.get('https://deb.debian.org/', (res) => { console.log(res.statusCode); });\"").stdout.strip).to eq("200")
+    end
+
+    it "should have npm config pointing to the official registry" do
+        expect(command("npm config get registry").stdout.strip).to eq("https://registry.npmjs.org/")
+    end
+
+    it "should have node-gyp available for native addon builds" do
+        expect(command("which node-gyp || ls /usr/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js").exit_status).to eq(0)
+    end
+
+    it "should run npm audit without crashing" do
+        expect(command("mkdir -p /tmp/test-audit && cd /tmp/test-audit && npm init -y && npm audit --audit-level=critical").exit_status).to be_between(0, 1)
+    end
+
+    it "should support timers and the event loop" do
+        expect(command("node -e \"setTimeout(() => { console.log('timer'); }, 10);\"").stdout.strip).to eq("timer")
+        expect(command("node -e \"let i = 0; const id = setInterval(() => { i++; if (i === 3) { clearInterval(id); console.log('interval'); } }, 5);\"").stdout.strip).to eq("interval")
+    end
+
+    it "should evaluate expressions via node -p" do
+        expect(command("node -p \"1 + 1\"").stdout.strip).to eq("2")
+        expect(command("node -p \"process.version\"").stdout.strip).to match(/^v/)
+    end
+
+    it "should resolve packages correctly" do
+        expect(command("mkdir -p /tmp/test-resolve && cd /tmp/test-resolve && npm init -y && npm install lodash").exit_status).to eq(0)
+        expect(command("cd /tmp/test-resolve && node -e \"console.log(require.resolve('lodash'));\"").stdout.strip).to match(%r{lodash/lodash\.js})
     end
 
     after(:all) do
