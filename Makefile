@@ -3,15 +3,19 @@
 
 SHELL = bash -e
 export BASH_ENV := $(HOME)/.bash_env
-img_hash = $(shell docker images -q dockershelf/dockershelf:latest)
-exec_on_docker = docker compose \
-	-p dockershelf -f docker-compose.yml exec \
-	--user dockershelf app
 
 # Release configuration
 VERSION_TYPE ?= patch
 APP_NAME ?= Dockershelf
+PROJECT_NAME ?= dockershelf
 
+img_hash = $(shell docker images -q dockershelf/dockershelf:latest)
+all_ps_hashes = $(shell docker ps -q)
+exec_on_docker = docker compose \
+	-p dockershelf -f docker-compose.yml exec \
+	--user dockershelf app
+
+# Repo-specific targets
 discover-shelves:
 	@python3 -m scripts.discover_shelf_versions
 
@@ -22,9 +26,28 @@ virtualenv:
 	@./virtualenv/bin/python3 -m pip install --upgrade wheel
 	@./virtualenv/bin/python3 -m pip install -r requirements.txt
 
-PROJECT_NAME ?= dockershelf
-all_ps_hashes = $(shell docker ps -q)
+update-shelves: start
+	@$(exec_on_docker) python3 update.py
 
+dependencies: start
+	@$(exec_on_docker) bundle config set --local path 'vendor/bundle'
+	@$(exec_on_docker) bundle lock --add-platform x86_64-linux
+	@$(exec_on_docker) bundle lock --add-platform aarch64-linux
+	@$(exec_on_docker) bundle install
+
+build: update-shelves
+	@bash scripts/build-all-images.sh develop true --no-push --yes
+
+lint: start
+	@$(exec_on_docker) tox -e lint
+
+format: start
+	@$(exec_on_docker) tox -e format
+
+test: start
+	@$(exec_on_docker) tox -e coverage
+
+# Docker lifecycle
 image:
 	@docker compose -p $(PROJECT_NAME) -f docker-compose.yml build \
 		--build-arg UID=$(shell id -u) \
@@ -66,30 +89,11 @@ cataplum:
 		--rmi all --remove-orphans --volumes
 	@docker system prune -a -f --volumes
 
+# Docker consumers
 console: start
 	@$(exec_on_docker) bash
 
-update-shelves: start
-	@$(exec_on_docker) python3 update.py
-
-dependencies: start
-	@$(exec_on_docker) bundle config set --local path 'vendor/bundle'
-	@$(exec_on_docker) bundle lock --add-platform x86_64-linux
-	@$(exec_on_docker) bundle lock --add-platform aarch64-linux
-	@$(exec_on_docker) bundle install
-
-lint: start
-	@$(exec_on_docker) tox -e lint
-
-format: start
-	@$(exec_on_docker) tox -e format
-
-test: start
-	@$(exec_on_docker) tox -e coverage
-
-build: update-shelves
-	@bash scripts/build-all-images.sh develop true --no-push --yes
-
+# Release
 release:
 	@./scripts/release.sh $${VERSION_TYPE}
 
@@ -101,7 +105,6 @@ release-minor:
 
 release-major:
 	@./scripts/release.sh major $${APP_NAME}
-
 
 release-preflight:
 	@make image
@@ -115,6 +118,6 @@ undo-release:
 	@: "$${VERSION:?Set VERSION=x.y.z before running make undo-release}"
 	@VERSION=$${VERSION} ./scripts/rollback.sh release
 
-.PHONY: discover-shelves virtualenv console update-shelves dependencies lint format test build \
-	image start stop down destroy cataplum release release-patch release-minor \
+.PHONY: discover-shelves virtualenv update-shelves dependencies build lint format test \
+	image start stop down destroy cataplum console release release-patch release-minor \
 	release-major release-preflight undo-release
