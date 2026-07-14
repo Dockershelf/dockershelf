@@ -3,4 +3,4 @@ coverage==7.15.0
 packaging==26.2
 pyright==1.1.411
 ruff==0.15.20
-tox==4.56.1
+tox==4.56.4
