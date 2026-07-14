@@ -2,5 +2,5 @@ bandit==1.9.4
 coverage==7.15.1
 packaging==26.2
 pyright==1.1.411
-ruff==0.15.20
+ruff==0.15.21
 tox==4.56.4
