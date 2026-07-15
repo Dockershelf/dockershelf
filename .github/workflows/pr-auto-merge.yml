@@ -23,8 +23,7 @@ jobs:
     outputs:
       pull_number: ${{ steps.resolve_pr.outputs.pull_number }}
       eligible: ${{ steps.resolve_pr.outputs.eligible }}
-      head_ref: ${{ steps.resolve_pr.outputs.head_ref }}
-      use_dependabot_pat: ${{ steps.resolve_pr.outputs.use_dependabot_pat }}
+      expected_head_sha: ${{ steps.resolve_pr.outputs.expected_head_sha }}
     steps:
       - name: Resolve pull request
         id: resolve_pr
@@ -35,151 +34,448 @@ jobs:
             const run = context.payload.workflow_run;
             const integrationBranch = 'develop';
             const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
+            const expectedHeadSha = run.head_sha;
             core.setOutput('eligible', 'false');
-            core.setOutput('head_ref', '');
-            core.setOutput('use_dependabot_pat', 'false');
+            core.setOutput('pull_number', '');
+            core.setOutput('expected_head_sha', expectedHeadSha || '');
 
-            let pullNumber = run.pull_requests?.[0]?.number;
+            const isEligibleHead = (ref) =>
+              eligibleHeadPatterns.some((pattern) => pattern.test(ref));
 
-            if (!pullNumber) {
+            const classifyPull = (pull) => {
+              if (pull.state !== 'open' || pull.merged) {
+                return `PR #${pull.number} is closed or merged; skipping auto-merge`;
+              }
+              if (pull.draft) {
+                return `PR #${pull.number} is still a draft; skipping auto-merge until marked ready for review`;
+              }
+              if (pull.base.ref !== integrationBranch) {
+                return `PR #${pull.number} targets ${pull.base.ref}, not ${integrationBranch}; skipping auto-merge`;
+              }
+              if (!isEligibleHead(pull.head.ref)) {
+                return `PR #${pull.number} head branch ${pull.head.ref} is not eligible for auto-merge (expected feature/* or dependabot/*)`;
+              }
+              if (pull.head.sha !== expectedHeadSha) {
+                return `PR #${pull.number} head ${pull.head.sha} does not match workflow run head ${expectedHeadSha}; stale event, skipping`;
+              }
+              return null;
+            };
+
+            let candidates = [];
+            const associatedNumber = run.pull_requests?.[0]?.number;
+            if (associatedNumber) {
+              try {
+                const { data: pull } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: associatedNumber,
+                });
+                candidates = [pull];
+              } catch (error) {
+                const status = error.status || error.response?.status;
+                if (status === 404) {
+                  core.notice(
+                    `No open pull request found for workflow run (PR #${associatedNumber} missing)`,
+                  );
+                  return;
+                }
+                throw error;
+              }
+            } else {
               const { data: pulls } = await github.rest.pulls.list({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 state: 'open',
                 per_page: 100,
               });
-              const match = pulls.find((pull) => pull.head.sha === run.head_sha);
-              if (!match) {
-                core.setFailed('No open pull request found for workflow run');
+              candidates = pulls.filter((pull) => pull.head.sha === expectedHeadSha);
+              if (candidates.length === 0) {
+                core.notice('No open pull request found for workflow run');
                 return;
               }
-              pullNumber = match.number;
+              if (candidates.length > 1) {
+                core.setFailed(
+                  `Multiple open pull requests share workflow run head ${expectedHeadSha}: ${candidates
+                    .map((pull) => `#${pull.number}`)
+                    .join(', ')}`,
+                );
+                return;
+              }
             }
 
-            const { data: pull } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullNumber,
-            });
-
-            if (pull.draft) {
-              core.notice(
-                `PR #${pullNumber} is still a draft; skipping auto-merge until marked ready for review`,
-              );
-              return;
-            }
-
-            if (pull.base.ref !== integrationBranch) {
-              core.notice(
-                `PR #${pullNumber} targets ${pull.base.ref}, not ${integrationBranch}; skipping auto-merge`,
-              );
-              return;
-            }
-
-            if (!eligibleHeadPatterns.some((pattern) => pattern.test(pull.head.ref))) {
-              core.notice(
-                `PR #${pullNumber} head branch ${pull.head.ref} is not eligible for auto-merge (expected feature/* or dependabot/*)`,
-              );
+            const pull = candidates[0];
+            const skipReason = classifyPull(pull);
+            if (skipReason) {
+              core.notice(skipReason);
               return;
             }
 
             core.setOutput('eligible', 'true');
-            core.setOutput('pull_number', String(pullNumber));
-            core.setOutput('head_ref', pull.head.ref);
-            core.setOutput('use_dependabot_pat', String(/^dependabot\//.test(pull.head.ref)));
+            core.setOutput('pull_number', String(pull.number));
+            core.setOutput('expected_head_sha', expectedHeadSha);
 
-  approve:
-    name: Approve pull request
+  mutate:
+    name: Coordinate pull request merge
     runs-on: ubuntu-24.04
     needs: gate
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       needs.gate.outputs.eligible == 'true' &&
       (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == 'LuisAlejandro' || github.event.workflow_run.actor.login == github.repository_owner)
-    permissions:
-      pull-requests: write
-    outputs:
-      pull_number: ${{ needs.gate.outputs.pull_number }}
-    steps:
-      - name: Approve
-        uses: actions/github-script@v9
-        with:
-          github-token: "${{ needs.gate.outputs.use_dependabot_pat == 'true' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
-          script: |
-            const pullNumber = Number('${{ needs.gate.outputs.pull_number }}');
-            const { data: pull } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullNumber,
-            });
-            if (pull.merged) {
-              core.notice(`PR #${pullNumber} is already merged`);
-              return;
-            }
-            const { data: reviews } = await github.rest.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullNumber,
-            });
-            const hasBotApproval = reviews.some(
-              (review) => review.state === 'APPROVED' && review.user?.type === 'Bot',
-            );
-            if (hasBotApproval) {
-              core.notice(`PR #${pullNumber} already has bot approval`);
-              return;
-            }
-            await github.rest.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullNumber,
-              event: 'APPROVE',
-            });
-
-  merge:
-    name: Merge pull request
-    runs-on: ubuntu-24.04
-    needs: [gate, approve]
-    if: >-
-      github.event.workflow_run.conclusion == 'success' &&
-      needs.gate.outputs.eligible == 'true' &&
-      (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == 'LuisAlejandro' || github.event.workflow_run.actor.login == github.repository_owner)
+    concurrency:
+      group: pr-auto-merge-${{ needs.gate.outputs.pull_number }}
+      cancel-in-progress: false
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Merge
+      - name: Coordinate merge
+        id: coordinate
         uses: actions/github-script@v9
+        env:
+          PULL_NUMBER: ${{ needs.gate.outputs.pull_number }}
+          EXPECTED_HEAD_SHA: ${{ needs.gate.outputs.expected_head_sha }}
         with:
-          github-token: "${{ needs.gate.outputs.use_dependabot_pat == 'true' && secrets.REPO_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
-            const pullNumber = Number('${{ needs.gate.outputs.pull_number }}');
+            const pullNumber = Number(process.env.PULL_NUMBER);
+            const expectedHeadSha = process.env.EXPECTED_HEAD_SHA;
+            const integrationBranch = 'develop';
+            const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
+
+            core.setOutput('update_branch', 'false');
+
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            const fetchPull = async () => {
+              const { data: pull } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullNumber,
+              });
+              return pull;
+            };
+
+            const terminalSkip = (pull) => {
+              if (pull.merged) {
+                return `PR #${pullNumber} is already merged`;
+              }
+              if (pull.state !== 'open') {
+                return `PR #${pullNumber} is closed; skipping auto-merge`;
+              }
+              if (pull.draft) {
+                return `PR #${pullNumber} is still a draft; skipping merge`;
+              }
+              if (pull.base.ref !== integrationBranch) {
+                return `PR #${pullNumber} targets ${pull.base.ref}, not ${integrationBranch}; skipping auto-merge`;
+              }
+              if (!eligibleHeadPatterns.some((pattern) => pattern.test(pull.head.ref))) {
+                return `PR #${pullNumber} head branch ${pull.head.ref} is not eligible for auto-merge`;
+              }
+              if (pull.head.sha !== expectedHeadSha) {
+                return `PR #${pullNumber} head ${pull.head.sha} does not match expected ${expectedHeadSha}; stale event, skipping`;
+              }
+              return null;
+            };
+
+            const noticeAndReturn = (reason) => {
+              if (!reason) {
+                return false;
+              }
+              core.notice(reason);
+              return true;
+            };
+
+            const requestBranchUpdate = () => {
+              core.setOutput('update_branch', 'true');
+            };
+
+            const armBehindAndUpdate = async (pullNode) => {
+              await ensureNativeAutoMerge(pullNode);
+              requestBranchUpdate();
+            };
+
+            const reclassifyOrThrow = async (error, action) => {
+              const pull = await fetchPull();
+              const skipReason = terminalSkip(pull);
+              if (skipReason) {
+                core.notice(`${action} raced with PR state change: ${skipReason}`);
+                return true;
+              }
+              throw error;
+            };
+
+            const queryAutoMergeState = async () => {
+              const query = `
+                query($owner: String!, $repo: String!, $number: Int!) {
+                  repository(owner: $owner, name: $repo) {
+                    pullRequest(number: $number) {
+                      id
+                      headRefOid
+                      mergeStateStatus
+                      autoMergeRequest {
+                        enabledAt
+                      }
+                      reviewDecision
+                    }
+                  }
+                }
+              `;
+              const response = await github.graphql(query, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                number: pullNumber,
+              });
+              return response.repository.pullRequest;
+            };
+
+            const waitForKnownMergeState = async () => {
+              let pull = await fetchPull();
+              if (noticeAndReturn(terminalSkip(pull))) {
+                return null;
+              }
+
+              let node = null;
+              for (let attempt = 0; attempt < 3; attempt += 1) {
+                node = await queryAutoMergeState();
+                if (node.mergeStateStatus !== 'UNKNOWN') {
+                  break;
+                }
+                await sleep(2000);
+                pull = await fetchPull();
+                if (noticeAndReturn(terminalSkip(pull))) {
+                  return null;
+                }
+              }
+
+              // Refresh REST pull after GraphQL settles so behind/clean steering matches.
+              pull = await fetchPull();
+              if (noticeAndReturn(terminalSkip(pull))) {
+                return null;
+              }
+
+              if (node.mergeStateStatus === 'UNKNOWN') {
+                throw new Error(`PR #${pullNumber} merge state remained UNKNOWN after retries`);
+              }
+
+              return { pull, node };
+            };
+
+            const ensureNativeAutoMerge = async (pullNode) => {
+              if (pullNode.autoMergeRequest) {
+                core.notice(`PR #${pullNumber} already has native auto-merge enabled`);
+                return;
+              }
+              const mutation = `
+                mutation($pullRequestId: ID!, $expectedHeadOid: GitObjectID!, $mergeMethod: PullRequestMergeMethod!) {
+                  enablePullRequestAutoMerge(input: {
+                    pullRequestId: $pullRequestId,
+                    expectedHeadOid: $expectedHeadOid,
+                    mergeMethod: $mergeMethod
+                  }) {
+                    pullRequest {
+                      autoMergeRequest {
+                        enabledAt
+                      }
+                    }
+                  }
+                }
+              `;
+              try {
+                await github.graphql(mutation, {
+                  pullRequestId: pullNode.id,
+                  expectedHeadOid: expectedHeadSha,
+                  mergeMethod: 'MERGE',
+                });
+                core.notice(`Enabled native auto-merge for PR #${pullNumber} at ${expectedHeadSha}`);
+              } catch (error) {
+                const refreshed = await queryAutoMergeState();
+                if (refreshed.autoMergeRequest) {
+                  core.notice(
+                    `PR #${pullNumber} gained native auto-merge concurrently; continuing`,
+                  );
+                  return;
+                }
+                await reclassifyOrThrow(error, 'enablePullRequestAutoMerge');
+              }
+            };
+
+            const ensureApproval = async () => {
+              const { data: reviews } = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullNumber,
+              });
+              const hasBotApproval = reviews.some(
+                (review) =>
+                  review.state === 'APPROVED' &&
+                  review.user?.type === 'Bot' &&
+                  review.commit_id === expectedHeadSha,
+              );
+              if (hasBotApproval) {
+                core.notice(`PR #${pullNumber} already has bot approval for ${expectedHeadSha}`);
+                return;
+              }
+              try {
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                  event: 'APPROVE',
+                  commit_id: expectedHeadSha,
+                });
+                core.notice(`Approved PR #${pullNumber} at ${expectedHeadSha}`);
+              } catch (error) {
+                await reclassifyOrThrow(error, 'createReview');
+                return;
+              }
+              const after = await fetchPull();
+              const postSkip = terminalSkip(after);
+              if (postSkip) {
+                core.notice(`Post-approval head check: ${postSkip}`);
+              }
+            };
+
+            const mergeApprovedCleanHead = async () => {
+              try {
+                const { data: result } = await github.rest.pulls.merge({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                  merge_method: 'merge',
+                  sha: expectedHeadSha,
+                });
+                if (!result.merged) {
+                  throw new Error(
+                    `Merge API returned merged=false for PR #${pullNumber}: ${result.message || 'unknown'}`,
+                  );
+                }
+                core.notice(
+                  `Merged PR #${pullNumber} via SHA-guarded direct fallback at ${expectedHeadSha}`,
+                );
+              } catch (error) {
+                const status = error.status || error.response?.status;
+                if (status === 405 || status === 409 || status === 422) {
+                  const current = await fetchPull();
+                  const raceSkip = terminalSkip(current);
+                  if (raceSkip) {
+                    core.notice(`Direct merge raced: ${raceSkip}`);
+                    return;
+                  }
+                  if (current.mergeable_state === 'behind') {
+                    core.notice(
+                      `Direct merge blocked because PR #${pullNumber} became behind; arming update path`,
+                    );
+                    const settled = await waitForKnownMergeState();
+                    if (!settled) {
+                      return;
+                    }
+                    await armBehindAndUpdate(settled.node);
+                    return;
+                  }
+                }
+                await reclassifyOrThrow(error, 'merge');
+              }
+            };
+
+            const settled = await waitForKnownMergeState();
+            if (!settled) {
+              return;
+            }
+            const { pull, node } = settled;
+
+            if (node.mergeStateStatus === 'DIRTY') {
+              core.notice(`PR #${pullNumber} has merge conflicts; skipping auto-merge`);
+              return;
+            }
+
+            if (pull.mergeable_state === 'behind' || node.mergeStateStatus === 'BEHIND') {
+              await armBehindAndUpdate(node);
+              return;
+            }
+
+            const immediatelyMergeable =
+              pull.mergeable === true &&
+              pull.mergeable_state === 'clean' &&
+              node.mergeStateStatus === 'CLEAN';
+
+            if (immediatelyMergeable && node.reviewDecision === 'APPROVED') {
+              await mergeApprovedCleanHead();
+              return;
+            }
+
+            // Native-first path for blocked/unstable/unapproved current heads.
+            await ensureNativeAutoMerge(node);
+            const afterArm = await fetchPull();
+            if (noticeAndReturn(terminalSkip(afterArm))) {
+              return;
+            }
+            await ensureApproval();
+
+      - name: Update behind branch
+        if: steps.coordinate.outputs.update_branch == 'true'
+        uses: actions/github-script@v9
+        env:
+          REPO_PERSONAL_ACCESS_TOKEN: ${{ secrets.REPO_PERSONAL_ACCESS_TOKEN }}
+          PULL_NUMBER: ${{ needs.gate.outputs.pull_number }}
+          EXPECTED_HEAD_SHA: ${{ needs.gate.outputs.expected_head_sha }}
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            const pullNumber = Number(process.env.PULL_NUMBER);
+            const expectedHeadSha = process.env.EXPECTED_HEAD_SHA;
+            const pat = process.env.REPO_PERSONAL_ACCESS_TOKEN;
+            if (!pat) {
+              throw new Error(
+                'REPO_PERSONAL_ACCESS_TOKEN is required to update behind PR branches and re-trigger CI',
+              );
+            }
+
             const { data: pull } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: pullNumber,
             });
-            if (pull.merged) {
-              core.notice(`PR #${pullNumber} is already merged`);
+            if (pull.merged || pull.state !== 'open') {
+              core.notice(`PR #${pullNumber} no longer open for updateBranch; skipping`);
               return;
             }
-            if (pull.draft) {
-              core.notice(`PR #${pullNumber} is still a draft; skipping merge`);
-              return;
-            }
-            if (pull.mergeable_state === 'behind') {
-              core.info(`PR #${pullNumber} is behind base branch; updating...`);
-              await github.rest.pulls.updateBranch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pullNumber,
-              });
+            if (pull.head.sha !== expectedHeadSha) {
               core.notice(
-                `PR #${pullNumber} branch updated; merge will complete on next workflow_run trigger`,
+                `PR #${pullNumber} head ${pull.head.sha} does not match expected ${expectedHeadSha}; stale event, skipping`,
               );
               return;
             }
-            await github.rest.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullNumber,
-            });
+
+            const patGithub = github.getOctokit(pat);
+            try {
+              await patGithub.rest.pulls.updateBranch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullNumber,
+                expected_head_sha: expectedHeadSha,
+              });
+              core.notice(
+                `PR #${pullNumber} branch updated at ${expectedHeadSha}; waiting for fresh Pull Request CI`,
+              );
+            } catch (error) {
+              const status = error.status || error.response?.status;
+              if (status === 422) {
+                const { data: current } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                });
+                if (current.head.sha !== expectedHeadSha) {
+                  core.notice(
+                    `updateBranch 422 with changed head ${current.head.sha}; stale event, skipping`,
+                  );
+                  return;
+                }
+                core.notice(
+                  `updateBranch 422 with unchanged head ${expectedHeadSha}; already up to date, skipping`,
+                );
+                return;
+              }
+              throw error;
+            }
