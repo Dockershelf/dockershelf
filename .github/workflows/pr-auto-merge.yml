@@ -1,9 +1,5 @@
 name: Pull Request Auto-Merge
 
-
-
-
-
 on:
   workflow_run:
     workflows:
@@ -11,9 +7,9 @@ on:
     types:
       - completed
     branches:
-      - 'feature/**'
-      - 'dependabot/**'
-      - '!release/**'
+      - "feature/**"
+      - "dependabot/**"
+      - "!release/**"
 
 jobs:
   gate:
