@@ -5,7 +5,7 @@ ARG UID=1000
 ARG GID=1000
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    sudo python3.13-venv bundler \
+    sudo python3.13-venv bundler libatomic1 \
     && rm -rf /var/lib/apt/lists/*
 
 ADD requirements.txt requirements-dev.txt /root/
