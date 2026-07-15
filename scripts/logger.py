@@ -22,18 +22,18 @@ All modules use the same global logging object. No messages will be emitted
 until the logger is started.
 """
 
-import sys
 import logging
+import sys
 from typing import cast
 
 levelNames = {
-    'CRITICAL': 50,
-    'ERROR': 40,
-    'WARN': 30,
-    'WARNING': 30,
-    'INFO': 20,
-    'DEBUG': 10,
-    'NOTSET': 0,
+    "CRITICAL": 50,
+    "ERROR": 40,
+    "WARN": 30,
+    "WARNING": 30,
+    "INFO": 20,
+    "DEBUG": 10,
+    "NOTSET": 0,
 }
 
 
@@ -45,7 +45,7 @@ class ControlableLogger(logging.Logger):
     The stop method halts output.
     """
 
-    def __init__(self, name=''):
+    def __init__(self, name=""):
         """
         Initialize this ``ControlableLogger``.
 
@@ -70,7 +70,7 @@ class ControlableLogger(logging.Logger):
 
         #: Attribute ``formatstring`` (string): Stores the string that
         #: will be used to format the logger output.
-        self.formatstring = '[%(levelname)s] %(message)s'
+        self.formatstring = "[%(levelname)s] %(message)s"
 
     def start(self, filename=None):
         """
@@ -86,7 +86,7 @@ class ControlableLogger(logging.Logger):
             sh.setFormatter(logging.Formatter(self.formatstring))
             self.addHandler(sh)
             if filename:
-                fh = logging.FileHandler(filename, mode='w')
+                fh = logging.FileHandler(filename, mode="w")
                 fh.setFormatter(logging.Formatter(self.formatstring))
                 self.addHandler(fh)
             self.disabled = False
@@ -104,7 +104,7 @@ class ControlableLogger(logging.Logger):
                 self.removeHandler(h)
             self.disabled = True
 
-    def loglevel(self, level='INFO'):
+    def loglevel(self, level="INFO"):
         """
         Set the log level for this logger.
 
@@ -131,4 +131,4 @@ class ControlableLogger(logging.Logger):
 
 
 logging.setLoggerClass(ControlableLogger)
-logger = cast(ControlableLogger, logging.getLogger(__name__.split('.')[0]))
+logger = cast(ControlableLogger, logging.getLogger(__name__.split(".")[0]))

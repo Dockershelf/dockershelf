@@ -16,10 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .utils import get_debian_versions, get_node_versions, \
-    get_python_versions, get_go_versions
+from .utils import get_debian_versions, get_go_versions, get_node_versions, get_python_versions
 
-latex_versions = ['basic', 'full', 'extras']
+latex_versions = ["basic", "full", "extras"]
 debian_versions = get_debian_versions()
 node_versions = get_node_versions()
 python_versions = get_python_versions()
