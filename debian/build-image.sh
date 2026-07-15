@@ -171,6 +171,7 @@ cat >"${TARGET}/usr/share/dockershelf/clean-apt.sh" <<'EOF'
 #!/usr/bin/env bash
 # Dockershelf post hook for apt
 rm -rf /var/cache/apt/*
+rm -f /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend /var/cache/apt/archives/lock
 EOF
 
 touch "${TARGET}/usr/share/dockershelf/clean-dpkg.sh"
@@ -181,7 +182,8 @@ cat >"${TARGET}/usr/share/dockershelf/clean-dpkg.sh" <<'EOF'
 find /usr -name "*.py[co]" -print0 | xargs -0r rm -rf
 find /usr -name "__pycache__" -type d -print0 | xargs -0r rm -rf
 rm -rf /usr/share/doc/* /usr/share/locale/* \
-       /var/cache/debconf/* /var/cache/apt/* 
+       /var/cache/debconf/* /var/cache/apt/*
+rm -f /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend /var/cache/apt/archives/lock
 EOF
 
 cat >>"${TARGET}/etc/bash.bashrc" <<'EOF'
@@ -218,14 +220,14 @@ EOF
 
 cat >"${TARGET}/etc/motd" <<'EOF'
 
-         This image was built using         
- ,-.          .               .       .     
- |  \         |               |       |  ,- 
- |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |  
- |  / | | |   |<  |-´ |   `-. | | |-´ |  |- 
- `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |  
-                                        -´  
-        For more information, visit         
+         This image was built using
+ ,-.          .               .       .
+ |  \         |               |       |  ,-
+ |  | ,-. ,-. | , ,-. ;-. ,-. |-. ,-. |  |
+ |  / | | |   |<  |-´ |   `-. | | |-´ |  |-
+ `-´  `-´ `-´ ‘ ` `-´ ‘   `-´ ‘ ‘ `-´ ‘  |
+                                        -´
+        For more information, visit
 https://github.com/Dockershelf/dockershelf
 
 EOF
@@ -249,3 +251,5 @@ rm -rfv "${TARGET}/tmp/"* "${TARGET}/usr/share/doc/"* \
     "${TARGET}/var/cache/debconf/"* "${TARGET}/var/cache/apt/"* \
     "${TARGET}/var/tmp/"* "${TARGET}/var/log/"* \
     "${TARGET}/var/lib/apt/lists/"*
+rm -fv "${TARGET}/var/lib/dpkg/lock" "${TARGET}/var/lib/dpkg/lock-frontend" \
+    "${TARGET}/var/cache/apt/archives/lock"

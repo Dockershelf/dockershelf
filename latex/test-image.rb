@@ -23,7 +23,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         Docker.options[:write_timeout] = 1200
 
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => ['bash'])
         @container.start
 
         set :backend, :docker

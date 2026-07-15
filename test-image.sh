@@ -45,26 +45,29 @@ DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TARGET%%:*}"
 DOCKER_IMAGE_TYPE_VERSION="${DOCKER_IMAGE_TAG%%-*}"
 DOCKER_TEST_IMAGE_NAME="${DOCKER_IMAGE_NAME}-test${DOCKER_IMAGE_NAME_SUFFIX}"
 
-# Execute rspec for our test suite (amd64)
-DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
-    DOCKER_IMAGE_NAME="${DOCKER_TEST_IMAGE_NAME}-amd64" \
-    DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
-    DOCKER_IMAGE_TYPE_VERSION="${DOCKER_IMAGE_TYPE_VERSION}" \
-    DOCKER_IMAGE_ARCH="amd64" \
-    bundle exec rspec \
-    --color \
-    --backtrace \
-    --format documentation \
-    "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
+# Architectures to test (comma-separated). Defaults to both.
+# Set TEST_ARCHES="arm64" to skip amd64, "amd64" to skip arm64, etc.
+TEST_ARCHES="${TEST_ARCHES:-amd64,arm64}"
 
-# Execute rspec for our test suite (arm64)
-DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
-    DOCKER_IMAGE_NAME="${DOCKER_TEST_IMAGE_NAME}-arm64" \
-    DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
-    DOCKER_IMAGE_TYPE_VERSION="${DOCKER_IMAGE_TYPE_VERSION}" \
-    DOCKER_IMAGE_ARCH="arm64" \
-    bundle exec rspec \
-    --color \
-    --backtrace \
-    --format documentation \
-    "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
+run_rspec() {
+    local arch="${1}"
+    DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}" \
+        DOCKER_IMAGE_NAME="${DOCKER_TEST_IMAGE_NAME}-${arch}" \
+        DOCKER_IMAGE_TYPE="${DOCKER_IMAGE_TYPE}" \
+        DOCKER_IMAGE_TYPE_VERSION="${DOCKER_IMAGE_TYPE_VERSION}" \
+        DOCKER_IMAGE_ARCH="${arch}" \
+        bundle exec rspec \
+        --color \
+        --backtrace \
+        --format documentation \
+        "${BASEDIR}/${DOCKER_IMAGE_TYPE}/test-image.rb"
+}
+
+# Execute rspec for each requested architecture
+IFS=',' read -ra ARCHES <<< "${TEST_ARCHES}"
+for arch in "${ARCHES[@]}"; do
+    arch="${arch// /}"
+    if [ -n "${arch}" ]; then
+        run_rspec "${arch}"
+    fi
+done

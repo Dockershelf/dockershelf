@@ -36,7 +36,8 @@ PYTHON_PKGS=" \
     lib${PYTHON_VER_NUM_MINOR_STR}-dev \
     lib${PYTHON_VER_NUM_MINOR_STR} \
     ${PYTHON_VER_NUM_MINOR_STR}-dev \
-    ${PYTHON_VER_NUM_MINOR_STR}"
+    ${PYTHON_VER_NUM_MINOR_STR} \
+    ${PYTHON_VER_NUM_MINOR_STR}-venv"
 PYTHON_PKGS_VER=""
 
 # Some tools are needed.
@@ -109,15 +110,20 @@ ln -sf /usr/bin/${PYTHON_VER_NUM_MINOR_STR} /usr/bin/python3
 
 # Pip: Installation
 # ------------------------------------------------------------------------------
-# Let's bring in the old reliable pip guy.
+# Bootstrap pip via ensurepip (bundled with python3.X-venv) and upgrade to latest.
 
 msginfo "Installing pip ..."
 
-curl -fsSL "https://bootstrap.pypa.io/pip/get-pip.py" |
-    ${PYTHON_VER_NUM_MINOR_STR} - 'setuptools'
+${PYTHON_VER_NUM_MINOR_STR} -m ensurepip --upgrade
+${PYTHON_VER_NUM_MINOR_STR} -m pip install --upgrade pip setuptools
 
 if [ ! -f "/usr/bin/pip3" ] && [ -f "/usr/bin/pip${PYTHON_VER_NUM_MINOR}" ]; then
     ln -s /usr/bin/pip${PYTHON_VER_NUM_MINOR} /usr/bin/pip3
+fi
+
+# Ensure 'pip' command exists (ensurepip only creates pip3/pip3.X)
+if [ ! -f "/usr/local/bin/pip" ] && [ -f "/usr/local/bin/pip3" ]; then
+    ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 fi
 
 # Apt: Remove unnecessary packages

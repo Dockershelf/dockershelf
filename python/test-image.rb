@@ -23,7 +23,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         Docker.options[:write_timeout] = 1200
 
         @image = Docker::Image.get(ENV["DOCKER_IMAGE_NAME"])
-        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => 'bash')
+        @container = Docker::Container.create('Image' => @image.id, 'Tty' => true, 'Cmd' => ['bash'])
         @container.start
 
         set :backend, :docker
@@ -58,7 +58,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
             ['test_builtin', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
         when "3.11", "3.12", "3.13"
             ['test_builtin', 'test_dict', 'test_doctest.test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
-        else 
+        else
             ['test_builtin', 'test_dict', 'test_doctest2', 'test_grammar', 'test_opcodes', 'test_types']
         end
     end
@@ -114,6 +114,93 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         for test_suite in get_tests_list()
             expect(command("python3 -m test.regrtest #{test_suite}").exit_status).to eq(0)
         end
+    end
+
+    it "should create and activate a virtual environment" do
+        expect(command("python3 -m venv /tmp/test-venv").exit_status).to eq(0)
+        expect(file("/tmp/test-venv/bin/python3")).to be_executable
+        expect(command("/tmp/test-venv/bin/python3 -c 'import sys; print(sys.prefix)'").stdout.strip).to eq("/tmp/test-venv")
+    end
+
+    it "should have core standard library modules functional" do
+        expect(command("python3 -c 'import json; print(json.dumps({\"a\": 1}))'").stdout.strip).to eq('{"a": 1}')
+        expect(command("python3 -c 'import re; print(re.match(\"^test\", \"test\").group())'").stdout.strip).to eq("test")
+        expect(command("python3 -c 'import datetime; print(datetime.date.today().year)'").stdout.strip).to match(/^\d{4}$/)
+        expect(command("python3 -c 'import math; print(math.sqrt(4))'").stdout.strip).to eq("2.0")
+    end
+
+    it "should support hashlib and secrets" do
+        expect(command("python3 -c 'import hashlib; print(hashlib.sha256(b\"test\").hexdigest())'").exit_status).to eq(0)
+        expect(command("python3 -c 'import secrets; print(len(secrets.token_hex(16)))'").stdout.strip).to eq("32")
+    end
+
+    it "should support sqlite3" do
+        script = 'import sqlite3; conn = sqlite3.connect(":memory:"); conn.execute("CREATE TABLE t (c TEXT)"); conn.execute("INSERT INTO t VALUES (?)", ("ok",)); print(conn.execute("SELECT * FROM t").fetchone()[0]); conn.close()'
+        expect(command("python3 -c '#{script}'").stdout.strip).to eq("ok")
+    end
+
+    it "should support pathlib and file I/O" do
+        script = %q(from pathlib import Path; p = Path("/tmp/test-pathlib"); p.write_text("hello"); print(p.read_text()))
+        expect(command(%Q(python3 -c '#{script}')).stdout.strip).to eq("hello")
+    end
+
+    it "should support subprocess execution" do
+        expect(command("python3 -c 'import subprocess; result = subprocess.run([\"echo\", \"child\"], capture_output=True, text=True); print(result.stdout.strip())'").stdout.strip).to eq("child")
+    end
+
+    it "should support threading" do
+        script = 'import threading; result = []\ndef worker(): result.append("thread")\nt = threading.Thread(target=worker); t.start(); t.join(); print(result[0])'
+        expect(command("echo '#{script}' | python3").stdout.strip).to eq("thread")
+    end
+
+    it "should support urllib and make an HTTPS request" do
+        expect(command("python3 -c 'import urllib.request; response = urllib.request.urlopen(\"https://deb.debian.org/\"); print(response.status)'").stdout.strip).to eq("200")
+    end
+
+    it "should support socket and ssl modules" do
+        expect(command("python3 -c 'import socket; print(socket.gethostname())'").stdout.strip).not_to be_empty
+        expect(command("python3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'").stdout.strip).to match(/^OpenSSL/)
+    end
+
+    it "should support UTF-8 filenames and string operations" do
+        expect(command("python3 -c 'open(\"/tmp/ñ_test_文件\", \"w\").write(\"ok\")'").exit_status).to eq(0)
+        expect(command("python3 -c 'print(open(\"/tmp/ñ_test_文件\").read())'").stdout.strip).to eq("ok")
+    end
+
+    it "should install packages using wheels" do
+        expect(command("pip3 install requests").exit_status).to eq(0)
+        expect(command("python3 -c 'import requests; print(requests.__version__)'").stdout.strip).to match(/^\d+\.\d+/)
+    end
+
+    it "should compile a package with C extensions" do
+        expect(command("pip3 install --no-binary :all: markupsafe").exit_status).to eq(0)
+        expect(command("python3 -c 'import markupsafe; print(markupsafe.__version__)'").stdout.strip).to match(/^\d+\.\d+/)
+    end
+
+    it "should have pip cache cleanable" do
+        expect(command("pip3 cache purge").exit_status).to eq(0)
+    end
+
+    it "should have pip configured for the official PyPI index" do
+        expect(command("pip3 config get global.index-url 2>/dev/null || echo https://pypi.org/simple").stdout.strip).to match(/pypi\.org/)
+    end
+
+    it "should support environment variable access" do
+        expect(command("python3 -c 'import os; print(os.environ.get(\"HOME\"))'").stdout.strip).to eq("/root")
+    end
+
+    it "should support compression modules" do
+        expect(command("python3 -c 'import gzip; import io; buf = io.BytesIO(); f = gzip.GzipFile(fileobj=buf, mode=\"wb\"); f.write(b\"compressed\"); f.close(); buf.seek(0); print(gzip.GzipFile(fileobj=buf).read().decode())'").stdout.strip).to eq("compressed")
+    end
+
+    it "should support csv and xml modules" do
+        expect(command("python3 -c 'import csv; import io; f = io.StringIO(); w = csv.writer(f); w.writerow([\"a\", \"b\"]); print(f.getvalue().strip())'").stdout.strip).to eq("a,b")
+        expect(command("python3 -c 'import xml.etree.ElementTree as ET; e = ET.Element(\"root\"); print(e.tag)'").stdout.strip).to eq("root")
+    end
+
+    it "should support typing and dataclasses" do
+        script = "from dataclasses import dataclass\n@dataclass\nclass Point:\n    x: int\n    y: int\np = Point(1, 2); print(p.x + p.y)"
+        expect(command("echo '#{script}' | python3").stdout.strip).to eq("3")
     end
 
     after(:all) do

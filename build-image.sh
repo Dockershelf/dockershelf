@@ -132,7 +132,7 @@ if [ "${BUILD_ONLY}" = "1" ]; then
 
     cd "${DOCKER_IMAGE_DIR}" &&
         docker buildx build --load \
-            "${BUILDX_EXTRA_ARGS[@]}" \
+            ${BUILDX_EXTRA_ARGS[@]+"${BUILDX_EXTRA_ARGS[@]}"} \
             --platform ${PLATFORMS} \
             --build-arg BUILD_DATE="${BUILD_DATE}" \
             --build-arg VCS_REF="${VCS_REF}" \
@@ -147,7 +147,7 @@ else
     # Build the docker image
     cd "${DOCKER_IMAGE_DIR}" &&
         docker buildx build --push \
-            "${BUILDX_EXTRA_ARGS[@]}" \
+            ${BUILDX_EXTRA_ARGS[@]+"${BUILDX_EXTRA_ARGS[@]}"} \
             --platform ${PLATFORMS} \
             --build-arg BUILD_DATE="${BUILD_DATE}" \
             --build-arg VCS_REF="${VCS_REF}" \
