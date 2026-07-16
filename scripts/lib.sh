@@ -139,7 +139,7 @@ release_wait_for_branch_ci() {
             exit 1
         fi
 
-        if (( $(date +%s) - start_time > RELEASE_CI_TIMEOUT_SECONDS )); then
+        if (($(date +%s) - start_time > RELEASE_CI_TIMEOUT_SECONDS)); then
             print_error "Timed out waiting for GitHub Actions run on $branch_name"
             print_error "Workflow: $RELEASE_CI_WORKFLOW; commit: $commit_sha"
             exit 1
@@ -193,7 +193,7 @@ release_build_notes() {
     fi
 
     if [[ -f "HISTORY.md" ]]; then
-        release_content=$(awk "/^$new_version \(/ { flag=1; next } flag && /^[0-9]+\.[0-9]+\.[0-9]+ \(/ { exit } flag" HISTORY.md)
+        release_content=$(awk "/^#+ *$new_version \(/ { flag=1; next } flag && /^#+ *[0-9]+\.[0-9]+\.[0-9]+ \(/ { exit } flag" HISTORY.md)
         printf '%s\n\n## What'\''s new in %s\n%s\n\nRead [HISTORY](HISTORY.md) for more info.\n\n**Full Changelog**: https://github.com/%s/compare/%s...%s' \
             "$description_text" \
             "$new_version" \

@@ -8,6 +8,21 @@ on:
       - "release/**"
 
 jobs:
+  ruby-bundle-check:
+    name: Ruby bundle (publish runtime)
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Verify bundle matches publish runtime
+        run: bundle check
+
   production-build:
     name: Production Build
     runs-on: ubuntu-24.04
@@ -51,7 +66,7 @@ jobs:
   release-gate:
     name: Release Gate
     runs-on: ubuntu-24.04
-    needs: [production-build]
+    needs: [production-build, ruby-bundle-check]
     steps:
       - name: Confirm all release checks passed
         run: |
