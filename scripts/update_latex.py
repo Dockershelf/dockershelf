@@ -21,8 +21,8 @@ import re
 import shutil
 
 from .config import latex_versions
-from .utils import find_dirs
 from .logger import logger
+from .utils import find_dirs
 
 
 def update_latex(basedir):
@@ -30,49 +30,41 @@ def update_latex(basedir):
     matrix = []
     tag_matrix = []
     latex_readme_tablelist = []
-    latexdir = os.path.join(basedir, 'latex')
-    latex_dockerfile_template = os.path.join(latexdir, 'Dockerfile.template')
-    latex_readme_template = os.path.join(latexdir, 'README.md.template')
-    latex_readme = os.path.join(latexdir, 'README.md')
+    latexdir = os.path.join(basedir, "latex")
+    latex_dockerfile_template = os.path.join(latexdir, "Dockerfile.template")
+    latex_readme_template = os.path.join(latexdir, "README.md.template")
+    latex_readme = os.path.join(latexdir, "README.md")
 
-    base_image = 'dockershelf/debian:stable'
-    docker_tag_holder = 'dockershelf/latex:{0}'
-    docker_url = 'https://hub.docker.com/r/dockershelf/latex'
-    dockerfile_badge_holder = ('https://img.shields.io/badge/'
-                               '-Dockerfile-blue.svg'
-                               '?colorA=22313f&colorB=4a637b'
-                               '&logo=docker')
-    dockerfile_url_holder = ('https://github.com/Dockershelf/dockershelf/'
-                             'blob/master/latex/{0}/Dockerfile')
-    pulls_badge_holder = ('https://img.shields.io/docker/pulls/dockershelf/'
-                          'latex?colorA=22313f&colorB=4a637b'
-                          '')
-    pulls_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
-    size_badge_holder = ('https://img.shields.io/docker/image-size/'
-                         'dockershelf/latex/{0}.svg'
-                         '?colorA=22313f&colorB=4a637b')
-    size_url_holder = ('https://hub.docker.com/r/dockershelf/latex')
+    base_image = "dockershelf/debian:stable"
+    docker_tag_holder = "dockershelf/latex:{0}"
+    docker_url = "https://hub.docker.com/r/dockershelf/latex"
+    dockerfile_badge_holder = (
+        "https://img.shields.io/badge/-Dockerfile-blue.svg?colorA=22313f&colorB=4a637b&logo=docker"
+    )
+    dockerfile_url_holder = "https://github.com/Dockershelf/dockershelf/blob/master/latex/{0}/Dockerfile"
+    pulls_badge_holder = "https://img.shields.io/docker/pulls/dockershelf/latex?colorA=22313f&colorB=4a637b"
+    pulls_url_holder = "https://hub.docker.com/r/dockershelf/latex"
+    size_badge_holder = "https://img.shields.io/docker/image-size/dockershelf/latex/{0}.svg?colorA=22313f&colorB=4a637b"
+    size_url_holder = "https://hub.docker.com/r/dockershelf/latex"
     matrix_str = (
         '          - docker-image-name: "dockershelf/latex:{0}"'
-        '\n            docker-image-extra-tags: "dockershelf/latex:{1}"')
+        '\n            docker-image-extra-tags: "dockershelf/latex:{1}"'
+    )
     matrix_str_main = (
         '          - docker-image-name: "dockershelf/latex:{0}"'
         '\n            docker-image-extra-tags: "dockershelf/latex:{1} '
-        'dockershelf/latex:{2} dockershelf/latex:{3}"')
-    latex_readme_tablelist_holder = ('|[`{0}`]({1})'
-                                     '|[![]({2})]({3})'
-                                     '|[![]({4})]({5})'
-                                     '|[![]({6})]({7})'
-                                     '|')
+        'dockershelf/latex:{2} dockershelf/latex:{3}"'
+    )
+    latex_readme_tablelist_holder = "|[`{0}`]({1})|[![]({2})]({3})|[![]({4})]({5})|[![]({6})]({7})|"
 
-    logger.info('Erasing current Latex folders')
+    logger.info("Erasing current Latex folders")
     for deldir in find_dirs(latexdir):
         shutil.rmtree(deldir)
 
     for latex_version_long in latex_versions:
-        logger.info('Processing Latex {0}'.format(latex_version_long))
+        logger.info("Processing Latex {0}".format(latex_version_long))
         latex_version_dir = os.path.join(latexdir, latex_version_long)
-        latex_dockerfile = os.path.join(latex_version_dir, 'Dockerfile')
+        latex_dockerfile = os.path.join(latex_version_dir, "Dockerfile")
 
         docker_tag = docker_tag_holder.format(latex_version_long)
         dockerfile_badge = dockerfile_badge_holder.format(latex_version_long)
@@ -82,57 +74,47 @@ def update_latex(basedir):
         size_badge = size_badge_holder.format(latex_version_long)
         size_url = size_url_holder.format(latex_version_long)
 
-        if latex_version_long == 'basic':
-            matrix.append(
-                matrix_str_main.format(latex_version_long, 'basic-stable', 'latest-stable', 'latest'))
-            tag_matrix.extend([latex_version_long, 'basic-stable', 'latest-stable', 'latest'])
+        if latex_version_long == "basic":
+            matrix.append(matrix_str_main.format(latex_version_long, "basic-stable", "latest-stable", "latest"))
+            tag_matrix.extend([latex_version_long, "basic-stable", "latest-stable", "latest"])
         else:
-            matrix.append(
-                matrix_str.format(latex_version_long, f"{latex_version_long}-stable"))
+            matrix.append(matrix_str.format(latex_version_long, f"{latex_version_long}-stable"))
             tag_matrix.extend([latex_version_long, f"{latex_version_long}-stable"])
 
         latex_readme_tablelist.append(
             latex_readme_tablelist_holder.format(
-                docker_tag, docker_url, dockerfile_badge,
-                dockerfile_url, pulls_badge, pulls_url,
-                size_badge, size_url))
+                docker_tag, docker_url, dockerfile_badge, dockerfile_url, pulls_badge, pulls_url, size_badge, size_url
+            )
+        )
 
         os.makedirs(latex_version_dir)
 
-        with open(latex_dockerfile_template, 'r') as ldt:
+        with open(latex_dockerfile_template, "r") as ldt:
             latex_dockerfile_template_content = ldt.read()
 
         latex_dockerfile_content = latex_dockerfile_template_content
-        latex_dockerfile_content = re.sub('%%BASE_IMAGE%%',
-                                          base_image,
-                                          latex_dockerfile_content)
-        latex_dockerfile_content = re.sub('%%DEBIAN_RELEASE%%',
-                                          'stable',
-                                          latex_dockerfile_content)
-        latex_dockerfile_content = re.sub('%%LATEX_VERSION%%',
-                                          latex_version_long,
-                                          latex_dockerfile_content)
+        latex_dockerfile_content = re.sub("%%BASE_IMAGE%%", base_image, latex_dockerfile_content)
+        latex_dockerfile_content = re.sub("%%DEBIAN_RELEASE%%", "stable", latex_dockerfile_content)
+        latex_dockerfile_content = re.sub("%%LATEX_VERSION%%", latex_version_long, latex_dockerfile_content)
 
-        with open(latex_dockerfile, 'w') as ld:
+        with open(latex_dockerfile, "w") as ld:
             ld.write(latex_dockerfile_content)
 
-    logger.info('Writing Latex Readme')
-    with open(latex_readme_template, 'r') as lrt:
+    logger.info("Writing Latex Readme")
+    with open(latex_readme_template, "r") as lrt:
         latex_readme_template_content = lrt.read()
 
-    latex_readme_table = '\n'.join(latex_readme_tablelist)
-    latex_readme_table_tags = '|[dockershelf/latex](#latex)|{0}|'.format(', '.join([f'`{tag}`' for tag in tag_matrix]))
+    latex_readme_table = "\n".join(latex_readme_tablelist)
+    latex_readme_table_tags = "|[dockershelf/latex](#latex)|{0}|".format(", ".join([f"`{tag}`" for tag in tag_matrix]))
 
-    latex_readme_content = re.sub('%%LATEX_TABLE%%',
-                                  latex_readme_table,
-                                  latex_readme_template_content)
+    latex_readme_content = re.sub("%%LATEX_TABLE%%", latex_readme_table, latex_readme_template_content)
 
-    with open(latex_readme, 'w') as lr:
+    with open(latex_readme, "w") as lr:
         lr.write(latex_readme_content)
 
     return matrix, latex_readme_table, latex_readme_table_tags
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     update_latex(basedir)

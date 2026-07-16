@@ -1,6 +1,53 @@
 # Changelog
 
 
+## 4.0.0 (2026-07-15)
+
+### Other
+
+* Fix: install libatomic1 so pyright's node runs in lint container. [Luis Alejandro Martínez Faneyth]
+
+* Chore: apply ruff format to scripts and update.py. [Luis Alejandro Martínez Faneyth]
+
+* Upgrade PR auto-merge to SHA-bound native-first controller. [Luis Alejandro Martínez Faneyth]
+
+* Fix: clean up pr-auto-merge workflow formatting. [Luis Alejandro Martínez Faneyth]
+
+* Fix: add LuisAlejandro to PR auto-merge actor allowlist. [Luis Alejandro Martínez Faneyth]
+
+* Chore: retrigger CI. [Luis Alejandro Martínez Faneyth]
+
+* Fix: add LuisAlejandro to PR auto-merge actor allowlist. [Luis Alejandro Martínez Faneyth]
+
+* Fix: add Dependabot cooldown for bundler ecosystem (Semgrep) [Cursor Agent]
+
+* Fix: replace deluser/delgroup with userdel/groupdel in Dockerfiles. [Luis Alejandro Martínez Faneyth]
+
+* Chore: apply rosey-maintainer fleet sync. [Luis Alejandro Martínez Faneyth]
+
+* Fix: pin gem versions and add bundler to Dependabot. [Luis Alejandro Martínez Faneyth]
+
+* Fix: replace get-pip.py with ensurepip in Python builds. [Luis Alejandro Martínez Faneyth]
+
+* Fix: expand and fix Serverspec tests for all image types. [Luis Alejandro Martínez Faneyth]
+
+* Ignore Rosey IDE tooling paths in .gitignore. [Luis Alejandro Martínez Faneyth]
+
+* Use BuildKit security.insecure for debian debootstrap /proc mounts. [Luis Alejandro Martínez Faneyth]
+
+* Fix debian:sid debootstrap under Docker BuildKit without /proc. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for Node 26. Removing support for Node 16. [Luis Alejandro Martínez Faneyth]
+
+* Adding support for Go 1.26. Removing support for Go 1.21. [Luis Alejandro Martínez Faneyth]
+
+* Use NODE_DEBIAN_SUITE for Node APT suite selection. [Luis Alejandro Martínez Faneyth]
+
+* Fix Node APT signing key URL and trigger workflow matrix filters. [Luis Alejandro Martínez Faneyth]
+
+* Adding Dockershelf APT runtime package discovery. Removing support for Go 1.20. [Luis Alejandro Martínez Faneyth]
+
+
 ## 3.4.4 (2026-07-04)
 
 ### Other

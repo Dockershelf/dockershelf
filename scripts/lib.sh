@@ -139,7 +139,7 @@ release_wait_for_branch_ci() {
             exit 1
         fi
 
-        if (( $(date +%s) - start_time > RELEASE_CI_TIMEOUT_SECONDS )); then
+        if (($(date +%s) - start_time > RELEASE_CI_TIMEOUT_SECONDS)); then
             print_error "Timed out waiting for GitHub Actions run on $branch_name"
             print_error "Workflow: $RELEASE_CI_WORKFLOW; commit: $commit_sha"
             exit 1
