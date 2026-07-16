@@ -5,7 +5,16 @@
 ##
 ## ACTION is one of '[REF]', '[FIX]', '[ADD]', '[DEL]'.
 ##
-
+## HISTORY sections (from ACTION):
+##   [ADD] → Added   — new user-facing capability
+##   [FIX] → Fixed   — bug or broken behavior
+##   [REF] → Changed — behavior change that is not a new feature
+##   [DEL] → Removed
+##
+## Omit from HISTORY: append !cosmetic / !refactor / !wip / !minor,
+## or use a CI: subject prefix (see ignore_regexps below).
+## Untagged subjects land in Other — prefer a tag or an ignore marker.
+##
 ignore_regexps = [
     r'^(.{3,3}\s*:)?\s*(\[[A-Z]+\]\s*)?[Uu]pdating [Cc]hangelog and [Vv]ersion.*$',
     r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
