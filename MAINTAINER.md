@@ -9,6 +9,19 @@ Quick reminders for Dockershelf.
 
 Repeat until ready to ship.
 
+## Commit messages
+
+Subjects feed `HISTORY.md` via gitchangelog, then GitHub release notes on `make release-*`.
+
+| Tag | Section | Use for |
+| --- | ------- | ------- |
+| `[ADD]` | Added | New user-facing capability |
+| `[FIX]` | Fixed | Bug or broken behavior |
+| `[REF]` | Changed | Behavior change that is not a new feature |
+| `[DEL]` | Removed | Removal |
+
+Format: `[TAG] Imperative user-facing summary.` Non-user-facing work (deps, lint, sync, CI): append `!cosmetic` / `!refactor` / `!wip`, or use a `CI:` prefix, so it is omitted from HISTORY. PR titles may stay Conventional-style; only commit subjects use these tags.
+
 ## Release
 
 From **clean** `develop`:

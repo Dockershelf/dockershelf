@@ -447,7 +447,7 @@ jobs:
               return;
             }
 
-            const patGithub = github.getOctokit(pat);
+            const patGithub = getOctokit(pat);
             try {
               await patGithub.rest.pulls.updateBranch({
                 owner: context.repo.owner,
