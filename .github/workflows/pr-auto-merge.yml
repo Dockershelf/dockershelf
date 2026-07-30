@@ -39,6 +39,47 @@ jobs:
             core.setOutput('pull_number', '');
             core.setOutput('expected_head_sha', expectedHeadSha || '');
 
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            const isTransientApiError = (error) => {
+              const status = error.status || error.response?.status;
+              if (status === 429 || (typeof status === 'number' && status >= 500 && status <= 599)) {
+                return true;
+              }
+              if (!status) {
+                const code = error.code || error.cause?.code;
+                if (code === 'ECONNRESET' || code === 'ETIMEDOUT' || code === 'ECONNREFUSED') {
+                  return true;
+                }
+                const message = String(error.message || '');
+                if (message.includes('fetch failed') || message.includes('network')) {
+                  return true;
+                }
+              }
+              return false;
+            };
+
+            const withRetry = async (label, fn, { attempts = 5, baseDelayMs = 1000 } = {}) => {
+              let lastError;
+              for (let attempt = 1; attempt <= attempts; attempt += 1) {
+                try {
+                  return await fn();
+                } catch (error) {
+                  lastError = error;
+                  if (!isTransientApiError(error) || attempt === attempts) {
+                    throw error;
+                  }
+                  const status = error.status || error.response?.status || 'network';
+                  const delayMs = baseDelayMs * 2 ** (attempt - 1);
+                  core.notice(
+                    `${label} transient GitHub API error (${status}); retry ${attempt}/${attempts} after ${delayMs}ms`,
+                  );
+                  await sleep(delayMs);
+                }
+              }
+              throw lastError;
+            };
+
             const isEligibleHead = (ref) =>
               eligibleHeadPatterns.some((pattern) => pattern.test(ref));
 
@@ -65,10 +106,13 @@ jobs:
             const associatedNumber = run.pull_requests?.[0]?.number;
             if (associatedNumber) {
               try {
-                const { data: pull } = await github.rest.pulls.get({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: associatedNumber,
+                const pull = await withRetry(`pulls.get #${associatedNumber}`, async () => {
+                  const { data } = await github.rest.pulls.get({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: associatedNumber,
+                  });
+                  return data;
                 });
                 candidates = [pull];
               } catch (error) {
@@ -82,11 +126,14 @@ jobs:
                 throw error;
               }
             } else {
-              const { data: pulls } = await github.rest.pulls.list({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open',
-                per_page: 100,
+              const pulls = await withRetry('pulls.list', async () => {
+                const { data } = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open',
+                  per_page: 100,
+                });
+                return data;
               });
               candidates = pulls.filter((pull) => pull.head.sha === expectedHeadSha);
               if (candidates.length === 0) {
@@ -147,14 +194,54 @@ jobs:
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-            const fetchPull = async () => {
-              const { data: pull } = await github.rest.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pullNumber,
-              });
-              return pull;
+            const isTransientApiError = (error) => {
+              const status = error.status || error.response?.status;
+              if (status === 429 || (typeof status === 'number' && status >= 500 && status <= 599)) {
+                return true;
+              }
+              if (!status) {
+                const code = error.code || error.cause?.code;
+                if (code === 'ECONNRESET' || code === 'ETIMEDOUT' || code === 'ECONNREFUSED') {
+                  return true;
+                }
+                const message = String(error.message || '');
+                if (message.includes('fetch failed') || message.includes('network')) {
+                  return true;
+                }
+              }
+              return false;
             };
+
+            const withRetry = async (label, fn, { attempts = 5, baseDelayMs = 1000 } = {}) => {
+              let lastError;
+              for (let attempt = 1; attempt <= attempts; attempt += 1) {
+                try {
+                  return await fn();
+                } catch (error) {
+                  lastError = error;
+                  if (!isTransientApiError(error) || attempt === attempts) {
+                    throw error;
+                  }
+                  const status = error.status || error.response?.status || 'network';
+                  const delayMs = baseDelayMs * 2 ** (attempt - 1);
+                  core.notice(
+                    `${label} transient GitHub API error (${status}); retry ${attempt}/${attempts} after ${delayMs}ms`,
+                  );
+                  await sleep(delayMs);
+                }
+              }
+              throw lastError;
+            };
+
+            const fetchPull = async () =>
+              withRetry(`pulls.get #${pullNumber}`, async () => {
+                const { data: pull } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                });
+                return pull;
+              });
 
             const terminalSkip = (pull) => {
               if (pull.merged) {
@@ -205,29 +292,30 @@ jobs:
               throw error;
             };
 
-            const queryAutoMergeState = async () => {
-              const query = `
-                query($owner: String!, $repo: String!, $number: Int!) {
-                  repository(owner: $owner, name: $repo) {
-                    pullRequest(number: $number) {
-                      id
-                      headRefOid
-                      mergeStateStatus
-                      autoMergeRequest {
-                        enabledAt
+            const queryAutoMergeState = async () =>
+              withRetry(`pullRequest graphql #${pullNumber}`, async () => {
+                const query = `
+                  query($owner: String!, $repo: String!, $number: Int!) {
+                    repository(owner: $owner, name: $repo) {
+                      pullRequest(number: $number) {
+                        id
+                        headRefOid
+                        mergeStateStatus
+                        autoMergeRequest {
+                          enabledAt
+                        }
+                        reviewDecision
                       }
-                      reviewDecision
                     }
                   }
-                }
-              `;
-              const response = await github.graphql(query, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                number: pullNumber,
+                `;
+                const response = await github.graphql(query, {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  number: pullNumber,
+                });
+                return response.repository.pullRequest;
               });
-              return response.repository.pullRequest;
-            };
 
             const waitForKnownMergeState = async () => {
               let pull = await fetchPull();
@@ -301,10 +389,13 @@ jobs:
             };
 
             const ensureApproval = async () => {
-              const { data: reviews } = await github.rest.pulls.listReviews({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pullNumber,
+              const reviews = await withRetry(`pulls.listReviews #${pullNumber}`, async () => {
+                const { data } = await github.rest.pulls.listReviews({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                });
+                return data;
               });
               const hasBotApproval = reviews.some(
                 (review) =>
@@ -431,11 +522,58 @@ jobs:
               );
             }
 
-            const { data: pull } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullNumber,
-            });
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            const isTransientApiError = (error) => {
+              const status = error.status || error.response?.status;
+              if (status === 429 || (typeof status === 'number' && status >= 500 && status <= 599)) {
+                return true;
+              }
+              if (!status) {
+                const code = error.code || error.cause?.code;
+                if (code === 'ECONNRESET' || code === 'ETIMEDOUT' || code === 'ECONNREFUSED') {
+                  return true;
+                }
+                const message = String(error.message || '');
+                if (message.includes('fetch failed') || message.includes('network')) {
+                  return true;
+                }
+              }
+              return false;
+            };
+
+            const withRetry = async (label, fn, { attempts = 5, baseDelayMs = 1000 } = {}) => {
+              let lastError;
+              for (let attempt = 1; attempt <= attempts; attempt += 1) {
+                try {
+                  return await fn();
+                } catch (error) {
+                  lastError = error;
+                  if (!isTransientApiError(error) || attempt === attempts) {
+                    throw error;
+                  }
+                  const status = error.status || error.response?.status || 'network';
+                  const delayMs = baseDelayMs * 2 ** (attempt - 1);
+                  core.notice(
+                    `${label} transient GitHub API error (${status}); retry ${attempt}/${attempts} after ${delayMs}ms`,
+                  );
+                  await sleep(delayMs);
+                }
+              }
+              throw lastError;
+            };
+
+            const fetchPull = async () =>
+              withRetry(`pulls.get #${pullNumber}`, async () => {
+                const { data: pull } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                });
+                return pull;
+              });
+
+            const pull = await fetchPull();
             if (pull.merged || pull.state !== 'open') {
               core.notice(`PR #${pullNumber} no longer open for updateBranch; skipping`);
               return;
@@ -449,11 +587,13 @@ jobs:
 
             const patGithub = getOctokit(pat);
             try {
-              await patGithub.rest.pulls.updateBranch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pullNumber,
-                expected_head_sha: expectedHeadSha,
+              await withRetry(`updateBranch #${pullNumber}`, async () => {
+                await patGithub.rest.pulls.updateBranch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullNumber,
+                  expected_head_sha: expectedHeadSha,
+                });
               });
               core.notice(
                 `PR #${pullNumber} branch updated at ${expectedHeadSha}; waiting for fresh Pull Request CI`,
@@ -461,11 +601,7 @@ jobs:
             } catch (error) {
               const status = error.status || error.response?.status;
               if (status === 422) {
-                const { data: current } = await github.rest.pulls.get({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: pullNumber,
-                });
+                const current = await fetchPull();
                 if (current.head.sha !== expectedHeadSha) {
                   core.notice(
                     `updateBranch 422 with changed head ${current.head.sha}; stale event, skipping`,
