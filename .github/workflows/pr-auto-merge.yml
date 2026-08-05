@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows:
       - Pull Request
+      - E2E and User Manual
     types:
       - completed
     branches:
