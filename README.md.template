@@ -42,6 +42,56 @@ RUN apt-get update \
 ENTRYPOINT ["mysql"]
 ```
 
+## Shelves
+
+### Debian
+
+These images are similar to the official ones, but with some opinionated configurations. Check out [debian/README.md](https://github.com/Dockershelf/dockershelf/blob/master/debian/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%DEBIAN_TABLE%%
+
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
+
+### Python
+
+These are debian stable/unstable images with python versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%PYTHON_TABLE%%
+
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
+
+### Node
+
+These are debian stable/unstable images with node versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%NODE_TABLE%%
+
+### Go
+
+These are debian stable/unstable images with go versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%GO_TABLE%%
+
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
+
+### Latex
+
+These are debian stable images that come with a set of latex (basic, full, or extras) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
+
+|Image  |Dockerfile  |Pulls   |Size  |
+|-------|------------|--------|------|
+%%LATEX_TABLE%%
+
+![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
+
 ## How to build locally
 
 Clone this repository to your machine.
@@ -100,56 +150,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Report issues at [github.com/Dockershelf
 ## Releases
 
 Changelog: [HISTORY.md](HISTORY.md). GitHub release blurbs: [RELEASE_DESCRIPTION.md](RELEASE_DESCRIPTION.md). Maintainers use `make release-patch`, `make release-minor`, `make release-major`, and `make undo-release` (see [MAINTAINER.md](MAINTAINER.md)).
-
-## Shelves
-
-### Debian
-
-These images are similar to the official ones, but with some opinionated configurations. Check out [debian/README.md](https://github.com/Dockershelf/dockershelf/blob/master/debian/README.md) for more details.
-
-|Image  |Dockerfile  |Pulls   |Size  |
-|-------|------------|--------|------|
-%%DEBIAN_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### Python
-
-These are debian stable/unstable images with python versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [python/README.md](https://github.com/Dockershelf/dockershelf/blob/master/python/README.md) for more details.
-
-|Image  |Dockerfile  |Pulls   |Size  |
-|-------|------------|--------|------|
-%%PYTHON_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### Node
-
-These are debian stable/unstable images with node versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [node/README.md](https://github.com/Dockershelf/dockershelf/blob/master/node/README.md) for more details.
-
-|Image  |Dockerfile  |Pulls   |Size  |
-|-------|------------|--------|------|
-%%NODE_TABLE%%
-
-### Go
-
-These are debian stable/unstable images with go versions installed from the [Dockershelf APT repository](https://apt.dockershelf.com/dockershelf). Check out [go/README.md](https://github.com/Dockershelf/dockershelf/blob/master/go/README.md) for more details.
-
-|Image  |Dockerfile  |Pulls   |Size  |
-|-------|------------|--------|------|
-%%GO_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
-
-### Latex
-
-These are debian stable images that come with a set of latex (basic, full, or extras) packages installed. Check out [latex/README.md](https://github.com/Dockershelf/dockershelf/blob/master/latex/README.md) for more details.
-
-|Image  |Dockerfile  |Pulls   |Size  |
-|-------|------------|--------|------|
-%%LATEX_TABLE%%
-
-![](https://raw.githubusercontent.com/Dockershelf/dockershelf/develop/images/table.svg)
 
 ## Made with 💖 and 🍔
 
