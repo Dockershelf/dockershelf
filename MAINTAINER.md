@@ -9,6 +9,19 @@ Quick reminders for Dockershelf.
 
 Repeat until ready to ship.
 
+## Commit messages
+
+Subjects feed `HISTORY.md` via gitchangelog, then GitHub release notes on `make release-*`.
+
+| Tag | Section | Use for |
+| --- | ------- | ------- |
+| `[ADD]` | Added | New user-facing capability |
+| `[FIX]` | Fixed | Bug or broken behavior |
+| `[REF]` | Changed | Behavior change that is not a new feature |
+| `[DEL]` | Removed | Removal |
+
+Format: `[TAG] Imperative user-facing summary.` Non-user-facing work (deps, lint, sync, CI): append `!cosmetic` / `!refactor` / `!wip`, or use a `CI:` prefix, so it is omitted from HISTORY. PR titles may stay Conventional-style; only commit subjects use these tags.
+
 ## Release
 
 From **clean** `develop`:
@@ -33,6 +46,8 @@ Post-bump hooks: `.bumpversion.cfg` → `[rosey-maintainer]`.
 ### Auto-merge behavior
 
 - Binds mutations to `workflow_run.head_sha`. Stale events exit with a notice.
+- Retries transient GitHub API errors (HTTP 429/5xx, network) on PR reads and
+  `updateBranch` with exponential backoff before failing the mutate job.
 - Behind base: arms native auto-merge, updates the branch with
   `REPO_PERSONAL_ACCESS_TOKEN` + `expected_head_sha`, then waits for fresh CI.
 - Current head: native auto-merge + bot approval via `GITHUB_TOKEN`. If already
