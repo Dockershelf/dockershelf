@@ -89,12 +89,12 @@ elif [ "${DEBIAN_RELEASE}" == "experimental" ]; then
 deb ${DEBMIRROR} sid main
 deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 EOF
-elif [ "${DEBIAN_SUITE}" == "testing" ] || [ "${DEBIAN_SUITE}" == "stable" ]; then
+elif [ "${DEBIAN_SUITE}" == "oldstable" ] || [ "${DEBIAN_SUITE}" == "testing" ] || [ "${DEBIAN_SUITE}" == "stable" ]; then
     cat >"${TARGET}/etc/apt/sources.list" <<EOF
 # Dockershelf configuration for apt sources
 deb ${DEBMIRROR} ${DEBIAN_RELEASE} main
 deb ${DEBMIRROR} ${DEBIAN_RELEASE}-updates main
-deb ${SECMIRROR} ${DEBIAN_SUITE}-security/updates main
+deb ${SECMIRROR} ${DEBIAN_RELEASE}-security/updates main
 EOF
 fi
 
