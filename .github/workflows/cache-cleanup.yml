@@ -1,0 +1,86 @@
+name: Purge stale Actions caches
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 */3 * *
+
+jobs:
+  purge-caches:
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+    steps:
+      - name: Delete caches last accessed over 3 days ago
+        uses: actions/github-script@v9
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            const maxAgeDays = 3;
+            const cutoffMs = Date.now() - maxAgeDays * 24 * 60 * 60 * 1000;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            let deleted = 0;
+            let bytesFreed = 0;
+
+            while (true) {
+              const { data } = await github.rest.actions.getActionsCacheList({
+                owner,
+                repo,
+                per_page: 100,
+                sort: 'last_accessed_at',
+                direction: 'asc',
+              });
+
+              const caches = data.actions_caches || [];
+              if (caches.length === 0) {
+                break;
+              }
+
+              let deletedThisPage = 0;
+              for (const cache of caches) {
+                const lastAccessed = Date.parse(cache.last_accessed_at || '');
+                if (Number.isNaN(lastAccessed) || lastAccessed >= cutoffMs) {
+                  console.log(
+                    `summary: deleted=${deleted} ` +
+                      `freed_mb=${(bytesFreed / 1024 / 1024).toFixed(1)} ` +
+                      `max_age_days=${maxAgeDays}`,
+                  );
+                  return;
+                }
+
+                console.log(
+                  `Deleting cache id=${cache.id} key=${cache.key} ref=${cache.ref} ` +
+                    `last_accessed_at=${cache.last_accessed_at} ` +
+                    `size_mb=${(cache.size_in_bytes / 1024 / 1024).toFixed(1)}`,
+                );
+                try {
+                  await github.rest.actions.deleteActionsCacheById({
+                    owner,
+                    repo,
+                    cache_id: cache.id,
+                  });
+                  deleted += 1;
+                  deletedThisPage += 1;
+                  bytesFreed += cache.size_in_bytes || 0;
+                } catch (error) {
+                  if (error.status === 404) {
+                    console.log(`Skipping missing cache id=${cache.id}`);
+                    continue;
+                  }
+                  throw error;
+                }
+              }
+
+              // Deleting shifts later pages forward; re-read the oldest page.
+              if (deletedThisPage === 0) {
+                break;
+              }
+            }
+
+            console.log(
+              `summary: deleted=${deleted} ` +
+                `freed_mb=${(bytesFreed / 1024 / 1024).toFixed(1)} ` +
+                `max_age_days=${maxAgeDays}`,
+            );
