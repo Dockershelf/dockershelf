@@ -10,10 +10,15 @@ on:
     branches:
       - develop
 
+concurrency:
+  group: pull-request-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ruby-bundle-check:
     name: Ruby bundle (publish runtime)
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
@@ -29,6 +34,7 @@ jobs:
   production-build:
     name: Production Build
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
@@ -63,6 +69,7 @@ jobs:
   code-quality:
     name: Code Quality
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     container:
       image: semgrep/semgrep
     steps:
