@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Shared release gates for release scripts.
-# Managed by rosey-maintainer-tools 0.4.8. Do not edit directly.
+# Managed by rosey-maintainer-tools 0.4.9. Do not edit directly.
 
 RELEASE_CI_WORKFLOW=${RELEASE_CI_WORKFLOW:-push.yml}
 RELEASE_CI_TIMEOUT_SECONDS=${RELEASE_CI_TIMEOUT_SECONDS:-2700}
@@ -146,6 +146,56 @@ release_wait_for_branch_ci() {
         fi
 
         sleep "$RELEASE_CI_POLL_SECONDS"
+    done
+}
+
+release_cancel_matching_runs() {
+    local branch_name=$1
+    local version=$2
+    local workflow
+    local ref
+    local run_id
+    local status
+    local run_ids=""
+    local start_time
+
+    release_require_command gh
+    for workflow in "Push" "Publish Release" "Artifacts"; do
+        for ref in "$branch_name" "$version"; do
+            while IFS= read -r run_id; do
+                [[ -z "$run_id" ]] && continue
+                if [[ " $run_ids " != *" $run_id "* ]]; then
+                    run_ids+=" $run_id"
+                fi
+            done < <(
+                gh run list \
+                    --workflow "$workflow" \
+                    --branch "$ref" \
+                    --limit 100 \
+                    --json databaseId,status \
+                    --jq '.[] | select(.status != "completed") | .databaseId' 2>/dev/null || true
+            )
+        done
+    done
+
+    for run_id in $run_ids; do
+        print_step "Cancelling release workflow run $run_id"
+        gh run cancel "$run_id" 2>/dev/null || true
+    done
+
+    for run_id in $run_ids; do
+        start_time=$(date +%s)
+        while true; do
+            status=$(gh run view "$run_id" --json status --jq '.status')
+            if [[ "$status" == "completed" ]]; then
+                break
+            fi
+            if (( $(date +%s) - start_time > RELEASE_CI_TIMEOUT_SECONDS )); then
+                print_error "Timed out waiting for cancelled workflow run $run_id"
+                exit 1
+            fi
+            sleep "$RELEASE_CI_POLL_SECONDS"
+        done
     done
 }
 

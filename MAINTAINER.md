@@ -59,22 +59,14 @@ Post-bump hooks: `.bumpversion.cfg` → `[rosey-maintainer]`.
 - Tools: `git`, git-flow, Docker (running), `make`, `gh`, bumpversion, GPG (`user.signingkey`).
 - Clean working tree (release stops if format mutates files).
 
-## Docker Hub publish
-
-Public images rebuild **weekly** on Thursday via `schedule-master.yml` (06:00 UTC). That is the product offer.
-
-- **Manual family rebuild:** `trigger-master.yml` (`workflow_dispatch`).
-- **Tag cleanup:** `clean-master.yml` (first Thursday of the month, 08:00 UTC + manual).
-- Recipe merges to `master` update git immediately; Hub waits until Thursday unless someone runs Trigger.
-- There is no `*-dev` Hub pipeline. PRs already build locally via `make build` (`--no-push`).
-- Leftover `*-dev` Hub tags: `./scripts/delete-dev-tags.sh` (dry-run) then `--apply`.
-- `push.yml` is **release-gate only** (`release/**`). It does not publish Hub images.
-
-`update.py` fills `%%MATRIX%%` in `trigger-master.yml.template`, `clean-master.yml.template`, and `schedule-master.yml.template`. Do not hand-edit the generated YAML and expect it to stay.
-
 ## One-time GitHub setup
 
 - `develop` — PR + checks from `pr.yml`.
-- `master` — restrict pushes. Hub publish is Thursday `schedule-master` or manual `trigger-master`, not a push matrix.
-- `release/*` — `push.yml` lists `release/**` and ends with **Release Gate** (manual patch).
+- `master` — restrict pushes.
+- `release/*` — `push.yml` lists `release/**`; release tooling waits for the whole **Push** workflow at the exact branch SHA.
 - Tags — restrict creation to maintainers.
+
+For Tetra cutovers, run `rosey-maintain protect-github --repo <repo> --trust-preflight`,
+open the check window with `--window open --apply`, then close it after a probe with
+one `--observed-check <context>` per live check-run name. Rollback cancels matching
+Push, Publish Release, and Artifacts runs, waits for terminal state, then deletes refs.

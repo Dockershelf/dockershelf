@@ -20,6 +20,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       (github.event.workflow_run.actor.login == 'dependabot[bot]' || github.event.workflow_run.actor.login == 'cursor[bot]' || github.event.workflow_run.actor.login == 'LuisAlejandro' || github.event.workflow_run.actor.login == github.repository_owner)
     permissions:
+      actions: read
       pull-requests: read
     outputs:
       pull_number: ${{ steps.resolve_pr.outputs.pull_number }}
@@ -28,14 +29,39 @@ jobs:
     steps:
       - name: Resolve pull request
         id: resolve_pr
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             const run = context.payload.workflow_run;
             const integrationBranch = 'develop';
             const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
+            const e2eGlobs = [];
             const expectedHeadSha = run.head_sha;
+            const globToRegExp = (glob) => {
+              let i = 0;
+              let out = '^';
+              const meta = '.+^${}()|[]\\';
+              while (i < glob.length) {
+                if (glob.startsWith('**/', i)) {
+                  out += '(?:.*/)?';
+                  i += 3;
+                } else if (glob.startsWith('**', i)) {
+                  out += '.*';
+                  i += 2;
+                } else if (glob[i] === '*') {
+                  out += '[^/]*';
+                  i += 1;
+                } else if (meta.includes(glob[i])) {
+                  out += `\\${glob[i]}`;
+                  i += 1;
+                } else {
+                  out += glob[i];
+                  i += 1;
+                }
+              }
+              return new RegExp(`${out}$`);
+            };
             core.setOutput('eligible', 'false');
             core.setOutput('pull_number', '');
             core.setOutput('expected_head_sha', expectedHeadSha || '');
@@ -158,6 +184,40 @@ jobs:
               return;
             }
 
+            const files = await withRetry(`pulls.listFiles #${pull.number}`, async () => {
+              return await github.paginate(github.rest.pulls.listFiles, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pull.number,
+                per_page: 100,
+              });
+            });
+            const e2eRequired = e2eGlobs.some((glob) => {
+              const pattern = globToRegExp(glob);
+              return files.some((file) => pattern.test(file.filename));
+            });
+            const requiredWorkflows = ['Pull Request'];
+            if (e2eRequired) requiredWorkflows.push('E2E and User Manual');
+            for (const workflowName of requiredWorkflows) {
+              const workflowRuns = await withRetry(`actions.listWorkflowRuns ${workflowName}`, async () => {
+                const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  head_sha: expectedHeadSha,
+                  status: 'completed',
+                  per_page: 100,
+                });
+                return data;
+              });
+              const matchingRun = workflowRuns.workflow_runs.find(
+                (candidate) => candidate.name === workflowName && candidate.head_sha === expectedHeadSha,
+              );
+              if (!matchingRun || matchingRun.conclusion !== 'success') {
+                core.notice(`${workflowName} has not succeeded for current SHA ${expectedHeadSha}`);
+                return;
+              }
+            }
+
             core.setOutput('eligible', 'true');
             core.setOutput('pull_number', String(pull.number));
             core.setOutput('expected_head_sha', expectedHeadSha);
@@ -179,7 +239,7 @@ jobs:
     steps:
       - name: Coordinate merge
         id: coordinate
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           PULL_NUMBER: ${{ needs.gate.outputs.pull_number }}
           EXPECTED_HEAD_SHA: ${{ needs.gate.outputs.expected_head_sha }}
@@ -506,7 +566,7 @@ jobs:
 
       - name: Update behind branch
         if: steps.coordinate.outputs.update_branch == 'true'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           REPO_PERSONAL_ACCESS_TOKEN: ${{ secrets.REPO_PERSONAL_ACCESS_TOKEN }}
           PULL_NUMBER: ${{ needs.gate.outputs.pull_number }}

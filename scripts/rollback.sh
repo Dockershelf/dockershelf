@@ -103,6 +103,9 @@ if [[ "$NON_INTERACTIVE" != "true" ]]; then
     fi
 fi
 
+print_step "Cancelling matching Push, Publish Release, and Artifacts runs"
+release_cancel_matching_runs "$BRANCH_NAME" "$VERSION"
+
 rollback_in_progress() {
     print_step "Undoing in-progress release branch $BRANCH_NAME"
 
