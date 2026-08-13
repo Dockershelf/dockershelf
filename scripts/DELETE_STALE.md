@@ -1,6 +1,6 @@
 # Docker Hub untagged image cleanup
 
-Manual operator script (`scripts/delete-stale.sh`) for listing and deleting **untagged manifests** on Docker Hub. It is not wired into CI. Weekly cleanup of leftover **named** tags (`*-test`, `*-amd64`, `*-arm64`) is `.github/workflows/clean-master.yml`.
+Manual operator script (`scripts/delete-stale.sh`) for listing and deleting **untagged manifests** on Docker Hub. It is not wired into CI. Monthly cleanup of leftover **named** tags (`*-test`, `*-amd64`, `*-arm64`) is `.github/workflows/clean-master.yml` (first Thursday).
 
 There is still no official Hub “prune untagged” API. Listing untagged manifests uses Hub’s undocumented Image Management endpoint (session cookie). Deleting a known digest uses the official OCI Registry API.
 
@@ -72,11 +72,12 @@ Quote `DOCKER_HUB_COOKIE`. Prefer a personal access token as `DH_PASSWORD`.
 
 Order of work for **each** repo:
 
-1. Fetch the digest of **every tagged image** (Registry API)
-2. Paginate **all** manifests (`Request 1:`, `Request 2:`, …) until Hub is done or `MAX_PAGINATION_REQUESTS`
-3. Diff: manifests whose digest is not in the tagged set
-4. `list-untagged`: print the first `MAX_UNTAGGED_LIMIT` of those  
-   `delete-untagged`: delete **all** of those (no preview, no list cap)
+1. Fetch the digest of **every tagged image** (Registry API). Multi-arch tags resolve to the **index** (manifest list).
+2. Expand each tagged index: keep every child digest it lists (linux/amd64, linux/arm64, attestations). Those have no tag of their own but are not stale.
+3. Paginate **all** manifests (`Request 1:`, `Request 2:`, …) until Hub is done or `MAX_PAGINATION_REQUESTS`
+4. Diff: manifests whose digest is not in the keep set (tagged indexes **and** their children)
+5. `list-untagged`: print the first `MAX_UNTAGGED_LIMIT` of those
+   `delete-untagged`: delete **all** of those (no preview, no list cap). First pass deletes leftover indexes; manifests Hub still reports as referenced are retried once, then skipped (not a failure).
 
 A small `MAX_UNTAGGED_LIMIT` (for example `5`) does **not** make listing stop after five Hub pages. To bound crawl cost, lower `MAX_PAGINATION_REQUESTS` (incomplete inventory) or wait out the full pagination.
 
@@ -90,7 +91,7 @@ bash scripts/delete-stale.sh list-untagged
 bash scripts/delete-stale.sh delete-untagged
 ```
 
-`delete-untagged` does not show a capped preview first. It crawls, then deletes every untagged digest it found.
+`delete-untagged` does not show a capped preview first. It crawls, then deletes every digest in the stale set (not live multi-arch children). Hub `403 referenced by other images` is retried after parent indexes are gone, then skipped.
 
 ## Rate limiting
 
@@ -108,9 +109,13 @@ The script watches Hub `x-ratelimit-remaining` headers, waits when remaining ≤
 
 **Long waits:** rate limit, not a hang. Lower `MAX_PAGINATION_REQUESTS` only if a partial crawl is acceptable.
 
+**`403 referenced by other images`:** the digest is a platform image still pointed at by an index. Live children of tagged indexes are kept and never queued. Leftover children of untagged indexes are retried after the parent list is deleted; if Hub still refuses, the script skips them.
+
+**HTTP 000:** curl failed (timeout/connection), not Hub policy. Re-run.
+
 ## Warnings
 
 - Deleted manifests cannot be recovered.
-- Untagged is not the same as unused; some digests may still be referenced.
+- Stop a run of the old script (`Ctrl+C`) before using this version; the running process does not pick up the new keep set.
 - Test on a non-production repository first.
 - Cookie and Hub password/token belong in `.env` (gitignored). Do not commit them.

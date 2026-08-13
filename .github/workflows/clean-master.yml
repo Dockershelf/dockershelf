@@ -3,7 +3,7 @@ name: Clean unused tags (master branch)
 on:
   workflow_dispatch:
   schedule:
-    - cron: 00 8 * * 4
+    - cron: 00 8 1-7 * 4
 
 jobs:
   tags-cleanup:

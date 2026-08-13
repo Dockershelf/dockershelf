@@ -14,6 +14,8 @@ REPO=${REPO:-""}
 DOCKER_HUB_COOKIE=${DOCKER_HUB_COOKIE:-""}
 MAX_UNTAGGED_LIMIT=${MAX_UNTAGGED_LIMIT:-100}
 MAX_PAGINATION_REQUESTS=${MAX_PAGINATION_REQUESTS:-150}
+# Prefer indexes/lists so multi-arch tags resolve to the fat manifest, not one platform.
+MANIFEST_ACCEPT="application/vnd.oci.image.index.v1+json,application/vnd.docker.distribution.manifest.list.v2+json,application/vnd.oci.image.manifest.v1+json,application/vnd.docker.distribution.manifest.v2+json"
 
 # Token management
 CURRENT_TOKEN=""
@@ -85,11 +87,23 @@ get_digest_for_tag() {
     local tag=$3
 
     local digest=$(curl -sI -H "Authorization: Bearer $token" \
-        -H "Accept: application/vnd.docker.distribution.manifest.v2+json,application/vnd.oci.image.manifest.v1+json,application/vnd.oci.image.index.v1+json" \
+        -H "Accept: $MANIFEST_ACCEPT" \
         "https://registry-1.docker.io/v2/$repo/manifests/$tag" |
         grep -i docker-content-digest | tr -d '\r' | awk '{print $2}')
 
     echo "$digest"
+}
+
+# Child digests listed by an index/manifest list. Empty for a platform image.
+list_child_digests() {
+    local token=$1
+    local repo=$2
+    local digest=$3
+
+    curl -s -H "Authorization: Bearer $token" \
+        -H "Accept: $MANIFEST_ACCEPT" \
+        "https://registry-1.docker.io/v2/$repo/manifests/$digest" |
+        jq -r '.manifests[]?.digest // empty'
 }
 
 # Function to check if Docker Hub cookie has expired
@@ -251,17 +265,22 @@ delete_manifest() {
     if [ "$http_code" = "202" ] || [ "$http_code" = "204" ]; then
         print_status "Successfully deleted manifest: $digest"
         return 0
-    else
-        print_error "Failed to delete manifest: $digest"
-        print_error "HTTP Status Code: $http_code"
-        print_error "Repository: $repo"
-        print_error "Digest: $digest"
-        if [ -n "$response_body" ]; then
-            print_error "Response Body: $response_body"
-        fi
-        print_error "Delete URL: https://registry-1.docker.io/v2/$repo/manifests/$digest"
-        return 1
     fi
+
+    # Platform images still pointed at by an index (tagged or leftover).
+    if [ "$http_code" = "403" ] && echo "$response_body" | grep -q "referenced by other images"; then
+        return 2
+    fi
+
+    print_error "Failed to delete manifest: $digest"
+    print_error "HTTP Status Code: $http_code"
+    print_error "Repository: $repo"
+    print_error "Digest: $digest"
+    if [ -n "$response_body" ]; then
+        print_error "Response Body: $response_body"
+    fi
+    print_error "Delete URL: https://registry-1.docker.io/v2/$repo/manifests/$digest"
+    return 1
 }
 
 # Function to find untagged manifests
@@ -281,7 +300,8 @@ find_untagged_manifests() {
     fi
 
     local tags=$(list_tags "$token" "$repo")
-    local tagged_digests=""
+    local keep_file
+    keep_file=$(mktemp)
 
     if [ -n "$tags" ]; then
         while IFS= read -r tag; do
@@ -296,7 +316,12 @@ find_untagged_manifests() {
 
                 local digest=$(get_digest_for_tag "$token" "$repo" "$tag")
                 if [ -n "$digest" ]; then
-                    tagged_digests="$tagged_digests $digest"
+                    printf '%s\n' "$digest" >>"$keep_file"
+                    local children
+                    children=$(list_child_digests "$token" "$repo" "$digest")
+                    if [ -n "$children" ]; then
+                        printf '%s\n' "$children" >>"$keep_file"
+                    fi
                 fi
             fi
         done <<<"$tags"
@@ -311,7 +336,7 @@ find_untagged_manifests() {
 
     while IFS= read -r manifest; do
         if [ -n "$manifest" ]; then
-            if ! echo "$tagged_digests" | grep -q "$manifest"; then
+            if ! grep -Fxq "$manifest" "$keep_file" 2>/dev/null; then
                 untagged_manifests="$untagged_manifests $manifest"
                 count=$((count + 1))
 
@@ -324,6 +349,7 @@ find_untagged_manifests() {
         fi
     done <<<"$all_manifests"
 
+    rm -f "$keep_file"
     echo "$untagged_manifests" | tr ' ' '\n' | grep -v '^$'
 }
 
@@ -462,17 +488,22 @@ for current_repo in $REPO; do
 
             print_status "Deleting $total_count untagged manifest(s) from $current_repo..."
 
+            retry_list=""
+            skipped_count=0
+
             while IFS= read -r digest; do
                 if [ -n "$digest" ]; then
-                    # Get fresh token before each delete operation if needed
                     current_time=$(date +%s)
                     if [ $current_time -ge $TOKEN_EXPIRES_AT ]; then
                         print_status "Token expired, refreshing before delete operation"
                         get_token "$current_repo"
                     fi
 
-                    if delete_manifest "$CURRENT_TOKEN" "$current_repo" "$digest"; then
+                    delete_manifest "$CURRENT_TOKEN" "$current_repo" "$digest" && rc=0 || rc=$?
+                    if [ "$rc" -eq 0 ]; then
                         deleted_count=$((deleted_count + 1))
+                    elif [ "$rc" -eq 2 ]; then
+                        retry_list="$retry_list $digest"
                     else
                         failed_count=$((failed_count + 1))
                     fi
@@ -480,7 +511,32 @@ for current_repo in $REPO; do
                 fi
             done <<<"$untagged"
 
-            print_status "Deletion complete for $current_repo. Deleted: $deleted_count, Failed: $failed_count"
+            retry_list=$(echo "$retry_list" | tr ' ' '\n' | grep -v '^$')
+            if [ -n "$retry_list" ]; then
+                retry_count=$(echo "$retry_list" | wc -w)
+                print_status "Retrying $retry_count manifest(s) that were still referenced (after parent indexes)..."
+                while IFS= read -r digest; do
+                    if [ -n "$digest" ]; then
+                        current_time=$(date +%s)
+                        if [ $current_time -ge $TOKEN_EXPIRES_AT ]; then
+                            print_status "Token expired, refreshing before delete operation"
+                            get_token "$current_repo"
+                        fi
+
+                        delete_manifest "$CURRENT_TOKEN" "$current_repo" "$digest" && rc=0 || rc=$?
+                        if [ "$rc" -eq 0 ]; then
+                            deleted_count=$((deleted_count + 1))
+                        elif [ "$rc" -eq 2 ]; then
+                            print_warning "Still referenced by other images, skipping: $digest"
+                            skipped_count=$((skipped_count + 1))
+                        else
+                            failed_count=$((failed_count + 1))
+                        fi
+                    fi
+                done <<<"$retry_list"
+            fi
+
+            print_status "Deletion complete for $current_repo. Deleted: $deleted_count, Skipped (still referenced): $skipped_count, Failed: $failed_count"
         else
             print_warning "No untagged manifests found to delete in $current_repo."
         fi

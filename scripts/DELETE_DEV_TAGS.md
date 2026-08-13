@@ -4,7 +4,7 @@ Manual operator script (`scripts/delete-dev-tags.sh`) for listing and deleting l
 
 Those tags were published by the old develop Hub pipeline (`trigger-develop` / `clean-develop`), which has been removed. Nothing in current CI publishes `*-dev` tags. PRs build locally via `make build` (`--no-push`).
 
-This script deletes **tag names** via the official Hub v2 API. It does **not** prune untagged manifests. For that, use `scripts/delete-stale.sh` (see `DELETE_STALE.md`). Weekly cleanup of leftover **named** test tags (`*-test`, `*-amd64`, `*-arm64`) is `.github/workflows/clean-master.yml`.
+This script deletes **tag names** via the official Hub v2 API. It does **not** prune untagged manifests. For that, use `scripts/delete-stale.sh` (see `DELETE_STALE.md`). Monthly cleanup of leftover **named** test tags (`*-test`, `*-amd64`, `*-arm64`) is `.github/workflows/clean-master.yml` (first Thursday).
 
 ## Commands
 

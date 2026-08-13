@@ -64,7 +64,7 @@ Post-bump hooks: `.bumpversion.cfg` → `[rosey-maintainer]`.
 Public images rebuild **weekly** on Thursday via `schedule-master.yml` (06:00 UTC). That is the product offer.
 
 - **Manual family rebuild:** `trigger-master.yml` (`workflow_dispatch`).
-- **Tag cleanup:** `clean-master.yml` (Thursday 08:00 UTC + manual).
+- **Tag cleanup:** `clean-master.yml` (first Thursday of the month, 08:00 UTC + manual).
 - Recipe merges to `master` update git immediately; Hub waits until Thursday unless someone runs Trigger.
 - There is no `*-dev` Hub pipeline. PRs already build locally via `make build` (`--no-push`).
 - Leftover `*-dev` Hub tags: `./scripts/delete-dev-tags.sh` (dry-run) then `--apply`.
