@@ -262,12 +262,15 @@ jobs:
             const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
             const touchesWorkflows = process.env.TOUCHES_WORKFLOWS === 'true';
             const pat = process.env.REPO_PERSONAL_ACCESS_TOKEN;
-            if (touchesWorkflows && !pat) {
+            if (!pat) {
               throw new Error(
-                'REPO_PERSONAL_ACCESS_TOKEN is required to merge pull requests that change workflow files',
+                'REPO_PERSONAL_ACCESS_TOKEN is required to merge pull requests',
               );
             }
-            const tokenForMutate = touchesWorkflows ? getOctokit(pat) : github;
+            const tokenForMutate = getOctokit(pat);
+            if (touchesWorkflows) {
+              core.notice('PR changes workflow files; merging with PAT');
+            }
 
             core.setOutput('update_branch', 'false');
 
