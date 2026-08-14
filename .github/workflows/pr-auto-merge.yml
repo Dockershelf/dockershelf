@@ -26,6 +26,7 @@ jobs:
       pull_number: ${{ steps.resolve_pr.outputs.pull_number }}
       eligible: ${{ steps.resolve_pr.outputs.eligible }}
       expected_head_sha: ${{ steps.resolve_pr.outputs.expected_head_sha }}
+      touches_workflows: ${{ steps.resolve_pr.outputs.touches_workflows }}
     steps:
       - name: Resolve pull request
         id: resolve_pr
@@ -65,6 +66,7 @@ jobs:
             core.setOutput('eligible', 'false');
             core.setOutput('pull_number', '');
             core.setOutput('expected_head_sha', expectedHeadSha || '');
+            core.setOutput('touches_workflows', 'false');
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -192,6 +194,12 @@ jobs:
                 per_page: 100,
               });
             });
+            const isWorkflowPath = (name) =>
+              typeof name === 'string' && name.startsWith('.github/workflows/');
+            const touchesWorkflows = files.some(
+              (file) => isWorkflowPath(file.filename) || isWorkflowPath(file.previous_filename),
+            );
+            core.setOutput('touches_workflows', String(touchesWorkflows));
             const e2eRequired = e2eGlobs.some((glob) => {
               const pattern = globToRegExp(glob);
               return files.some((file) => pattern.test(file.filename));
@@ -243,6 +251,8 @@ jobs:
         env:
           PULL_NUMBER: ${{ needs.gate.outputs.pull_number }}
           EXPECTED_HEAD_SHA: ${{ needs.gate.outputs.expected_head_sha }}
+          TOUCHES_WORKFLOWS: ${{ needs.gate.outputs.touches_workflows }}
+          REPO_PERSONAL_ACCESS_TOKEN: ${{ secrets.REPO_PERSONAL_ACCESS_TOKEN }}
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
@@ -250,6 +260,14 @@ jobs:
             const expectedHeadSha = process.env.EXPECTED_HEAD_SHA;
             const integrationBranch = 'develop';
             const eligibleHeadPatterns = [/^feature\//, /^dependabot\//];
+            const touchesWorkflows = process.env.TOUCHES_WORKFLOWS === 'true';
+            const pat = process.env.REPO_PERSONAL_ACCESS_TOKEN;
+            if (touchesWorkflows && !pat) {
+              throw new Error(
+                'REPO_PERSONAL_ACCESS_TOKEN is required to merge pull requests that change workflow files',
+              );
+            }
+            const tokenForMutate = touchesWorkflows ? getOctokit(pat) : github;
 
             core.setOutput('update_branch', 'false');
 
@@ -431,7 +449,7 @@ jobs:
                 }
               `;
               try {
-                await github.graphql(mutation, {
+                await tokenForMutate.graphql(mutation, {
                   pullRequestId: pullNode.id,
                   expectedHeadOid: expectedHeadSha,
                   mergeMethod: 'MERGE',
@@ -490,7 +508,7 @@ jobs:
 
             const mergeApprovedCleanHead = async () => {
               try {
-                const { data: result } = await github.rest.pulls.merge({
+                const { data: result } = await tokenForMutate.rest.pulls.merge({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   pull_number: pullNumber,
@@ -538,6 +556,48 @@ jobs:
 
             if (node.mergeStateStatus === 'DIRTY') {
               core.notice(`PR #${pullNumber} has merge conflicts; skipping auto-merge`);
+              if (!pat) {
+                throw new Error(
+                  'REPO_PERSONAL_ACCESS_TOKEN is required to post @cursor fix on conflicted PRs',
+                );
+              }
+              const dirtyWakeMarker = `rosey-pr-auto-merge:dirty-wake:${expectedHeadSha}`;
+              const comments = await withRetry(`issues.listComments #${pullNumber}`, async () => {
+                return await github.paginate(github.rest.issues.listComments, {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pullNumber,
+                  per_page: 100,
+                });
+              });
+              const alreadyPosted = comments.some((comment) =>
+                String(comment.body || '').includes(dirtyWakeMarker),
+              );
+              if (alreadyPosted) {
+                core.notice(
+                  `PR #${pullNumber} already has a dirty-wake comment for ${expectedHeadSha}`,
+                );
+                return;
+              }
+              const patGithub = getOctokit(pat);
+              await withRetry(`issues.createComment #${pullNumber}`, async () => {
+                await patGithub.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pullNumber,
+                  body: [
+                    `@cursor fix`,
+                    '',
+                    `This PR has merge conflicts with \`${integrationBranch}\`.`,
+                    `Merge or rebase \`${integrationBranch}\` onto the PR head and push.`,
+                    '',
+                    `<!-- ${dirtyWakeMarker} -->`,
+                  ].join('\n'),
+                });
+              });
+              core.notice(
+                `Posted @cursor fix dirty-wake comment for PR #${pullNumber} at ${expectedHeadSha}`,
+              );
               return;
             }
 
@@ -563,6 +623,17 @@ jobs:
               return;
             }
             await ensureApproval();
+            const afterApprove = await waitForKnownMergeState();
+            if (!afterApprove) {
+              return;
+            }
+            const approvedClean =
+              afterApprove.pull.mergeable === true &&
+              afterApprove.pull.mergeable_state === 'clean' &&
+              afterApprove.node.mergeStateStatus === 'CLEAN';
+            if (approvedClean) {
+              await mergeApprovedCleanHead();
+            }
 
       - name: Update behind branch
         if: steps.coordinate.outputs.update_branch == 'true'
