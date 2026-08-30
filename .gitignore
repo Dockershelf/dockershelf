@@ -104,3 +104,9 @@ rosey/hindsight-pin
 .github/agents/
 .github/hooks/
 .vscode/mcp.json
+.opencode/
+.pi/
+.opencode/skills/
+.opencode/agents/
+.pi/skills/
+.pi/agents/
