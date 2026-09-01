@@ -138,6 +138,17 @@ if [ "${BUILD_ONLY}" = "1" ]; then
             --build-arg VCS_REF="${VCS_REF}" \
             --build-arg VERSION="${VERSION}" \
             -t ${DOCKER_TEST_IMAGE_NAME} .
+
+    # PR CI uses --no-push; develop *-dev base images are no longer on Hub.
+    # Dependent Dockerfiles on develop expect FROM dockershelf/debian:<tag>-dev.
+    if [ "${BRANCH}" == "develop" ] && [ "${DOCKER_IMAGE_TYPE}" = "debian" ]; then
+        docker tag "${DOCKER_TEST_IMAGE_NAME}" \
+            "${DOCKER_IMAGE_NAME}${DOCKER_IMAGE_NAME_SUFFIX}"
+        if [ "${DOCKER_IMAGE_TAG}" = "bookworm" ]; then
+            docker tag "${DOCKER_TEST_IMAGE_NAME}" \
+                "dockershelf/debian:stable${DOCKER_IMAGE_NAME_SUFFIX}"
+        fi
+    fi
 else
     # workaround to exporting the multi-arch image from buildkit to docker
     # we push the image to dockerhub with a -test suffix and then we
