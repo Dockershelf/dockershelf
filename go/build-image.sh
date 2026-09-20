@@ -72,15 +72,15 @@ apt-get update
 # Go: Installation
 # ------------------------------------------------------------------------------
 # We will install the versioned golang-X.Y-go package from the Dockershelf
-# APT repository. The package installs Go to /usr/lib/go-X.Y/ and provides
-# /usr/bin/go and /usr/bin/gofmt symlinks.
+# APT repository (latest patch for that minor, same as Python/Node). The
+# package installs Go to /usr/lib/go-X.Y/ and provides /usr/bin/go and
+# /usr/bin/gofmt symlinks.
 
 msginfo "Installing Go ..."
 GO_PKGS_VER="$(apt-cache madison ${GO_PKGS} | grep Packages |
-    grep apt.dockershelf.com | awk -F'|' '{print $2}' | xargs -n1 |
-    awk -v version="${GO_VER_NUM}" 'index($0, version) == 1 {print; exit}' || true)"
+    grep apt.dockershelf.com | head -n1 | awk -F'|' '{print $2}' | xargs || true)"
 if [ -z "${GO_PKGS_VER}" ]; then
-    msgerror "Could not find ${GO_PKGS} package matching Go ${GO_VER_NUM}"
+    msgerror "Could not find ${GO_PKGS} package in Dockershelf APT"
     exit 1
 fi
 aptitude install "${GO_PKGS}=${GO_PKGS_VER}"

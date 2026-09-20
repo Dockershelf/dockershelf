@@ -42,6 +42,10 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
         command("echo $GO_VER_NUM").stdout.strip
     end
 
+    def go_version_container_minor
+        go_version_container_var().split(".")[0..1].join(".")
+    end
+
     it "should exist" do
         expect(@container).not_to be_nil
     end
@@ -63,7 +67,7 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
 
     it "should have the correct go version" do
         expect(go_version_short()).to eq(ENV["DOCKER_IMAGE_TYPE_VERSION"])
-        expect(go_version()).to eq(go_version_container_var())
+        expect(go_version_short()).to eq(go_version_container_minor())
     end
 
     it "should support go module management" do
