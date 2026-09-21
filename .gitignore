@@ -81,33 +81,8 @@ node/*/*.sh
 .env
 build-logs/
 
-# Rosey Agentic Environment
+# Scoped IDE trees (local untracked skills)
 .cursor/
-rosey/brainstorms/
-rosey/plans/
-rosey/designs/
-rosey/solutions/
-rosey/insights/
-rosey/design-system/
-rosey/qa/
-rosey/deepening/
-rosey/agentic-env.json
-AGENTS.md
-DESIGN.md
-
-# Rosey Maintainer Tools
-rosey/maintainer-manifest.json
-rosey/hindsight-pin
-.github/copilot-instructions.md
-.github/instructions/
-.github/skills/
-.github/agents/
-.github/hooks/
-.vscode/mcp.json
 .opencode/
 .pi/
-.opencode/skills/
-.opencode/agents/
-.pi/skills/
-.pi/agents/
-opencode.json
+.agents/
