@@ -39,20 +39,6 @@ Post-bump hooks: `.bumpversion.cfg` → `[rosey-maintainer]`.
 ## PR CI (pointers)
 
 - **Pull Request** — `.github/workflows/pr.yml` on PRs to `develop`.
-- **Auto-merge** — `pr-auto-merge.yml` after that workflow succeeds; head
-  `feature/**` or `dependabot/**` only. Actor allowlist: `dependabot[bot]`,
-  `cursor[bot]`, `LuisAlejandro`, repository owner.
-
-### Auto-merge behavior
-
-- Binds mutations to `workflow_run.head_sha`. Stale events exit with a notice.
-- Retries transient GitHub API errors (HTTP 429/5xx, network) on PR reads and
-  `updateBranch` with exponential backoff before failing the mutate job.
-- Behind base: arms native auto-merge, updates the branch with
-  `REPO_PERSONAL_ACCESS_TOKEN` + `expected_head_sha`, then waits for fresh CI.
-- Current head: native auto-merge + bot approval via `GITHUB_TOKEN`. If already
-  approved and REST+GraphQL report clean, uses SHA-guarded REST merge fallback.
-- Token boundary: PAT only on the `Update behind branch` step.
 
 ## Before `make release-*`
 
