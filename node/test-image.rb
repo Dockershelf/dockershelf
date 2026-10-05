@@ -66,13 +66,13 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to install a npm package" do
-        expect(command("npm install -g gulp").exit_status).to eq(0)
-        expect(file('/usr/bin/gulp')).to be_executable
+        expect(command("npm install -g cowsay").exit_status).to eq(0)
+        expect(file('/usr/bin/cowsay')).to be_executable
     end
 
     it "should be able to uninstall a npm package" do
-        expect(command("npm uninstall -g gulp").exit_status).to eq(0)
-        expect(file('/usr/bin/gulp')).not_to exist
+        expect(command("npm uninstall -g cowsay").exit_status).to eq(0)
+        expect(file('/usr/bin/cowsay')).not_to exist
     end
 
     it "should be able to install and use local packages" do
