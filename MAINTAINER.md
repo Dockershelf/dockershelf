@@ -34,7 +34,7 @@ From **clean** `develop`:
 
 Preflight: `make image`, `make dependencies`, `make build`, `make format`, `make lint`, `make test` (`test` = coverage).
 Release flow: `scripts/release.sh` (via Makefile `release-*` targets).
-Post-bump hooks: `.bumpversion.cfg` → `[rosey-maintainer]`.
+Post-bump hooks: `.bumpversion.cfg` → `[maintainer-tools]`.
 
 ## PR CI (pointers)
 
