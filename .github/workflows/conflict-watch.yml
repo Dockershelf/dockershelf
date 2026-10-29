@@ -1,0 +1,115 @@
+name: Nudge merge conflicts
+
+# A PR that went green and *then* became conflicting emits no event: GitHub cannot
+# build refs/pull/N/merge, so no pull_request run starts, "Checks completed" never
+# fires again, and the PR CI fixer never wakes. It sits CONFLICTING with auto-merge
+# armed forever. The only reliable signal is the base branch moving, so this
+# workflow watches that push and nudges the fixer with the comment its gate reads.
+#
+# The comment must be authored by the maintainer handle, which the fixer's comment
+# gate requires. A `secrets.GITHUB_TOKEN` comment posts as github-actions[bot] and is
+# silently rejected, so the token below has to be a personal access token owned by
+# the maintainer. Without that secret the job warns and does nothing.
+
+on:
+  push:
+    branches: [develop, master]
+  workflow_dispatch:
+
+concurrency:
+  group: nudge-merge-conflicts
+  cancel-in-progress: false
+
+jobs:
+  nudge:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Check for the maintainer token
+        id: token
+        env:
+          TOKEN: "${{ secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::warning::REPO_PERSONAL_ACCESS_TOKEN is not set; skipping conflict watch. A GITHUB_TOKEN comment posts as github-actions[bot] and the fixer's comment gate rejects it."
+            echo "present=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comment @cursor fix on open PRs conflicting with the pushed branch
+        if: "${{ steps.token.outputs.present == 'yes' }}"
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: "${{ secrets.REPO_PERSONAL_ACCESS_TOKEN }}"
+          script: |
+            const marker = '<!-- rosey-conflict-watch -->';
+            const base = context.ref.replace('refs/heads/', '');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            // mergeable is computed asynchronously: a PR can read null right after
+            // the base moves. Poll until every open PR has a verdict.
+            let pulls = [];
+            for (let attempt = 1; attempt <= 5; attempt += 1) {
+              pulls = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: 'open',
+                base,
+                per_page: 100,
+              });
+              if (!pulls.some((pull) => pull.mergeable === null)) {
+                break;
+              }
+              console.log(`attempt ${attempt}: mergeable unknown, retrying`);
+              if (attempt < 5) {
+                await sleep(5000);
+              }
+            }
+
+            for (const pull of pulls) {
+              const label = `#${pull.number} (${pull.head.ref})`;
+              if (pull.draft) {
+                console.log(`skip ${label}: draft`);
+                continue;
+              }
+              if (!pull.head.repo || pull.head.repo.full_name !== `${owner}/${repo}`) {
+                console.log(`skip ${label}: fork`);
+                continue;
+              }
+              if (!/^(feature|dependabot)\//.test(pull.head.ref)) {
+                console.log(`skip ${label}: head is not feature/** or dependabot/**`);
+                continue;
+              }
+              if (pull.mergeable !== false) {
+                console.log(`ok ${label}: mergeable=${pull.mergeable}`);
+                continue;
+              }
+
+              // One nudge per head SHA: a conflict the fixer could not resolve must
+              // not re-trigger on every later merge into the base branch.
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner,
+                repo,
+                issue_number: pull.number,
+                per_page: 100,
+              });
+              const key = `${marker} ${pull.head.sha}`;
+              if (comments.some((comment) => (comment.body || '').includes(key))) {
+                console.log(`already nudged ${label} @ ${pull.head.sha.slice(0, 8)}`);
+                continue;
+              }
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pull.number,
+                body: `${key} @cursor fix conflicts against \`${base}\``,
+              });
+              console.log(`nudged ${label} @ ${pull.head.sha.slice(0, 8)}`);
+            }
