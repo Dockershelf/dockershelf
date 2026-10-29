@@ -52,18 +52,32 @@ jobs:
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-            // mergeable is computed asynchronously: a PR can read null right after
+            // pullRequests, not pulls.list: the REST list endpoint omits `mergeable`
+            // entirely, so every PR there reads undefined and every conflict is missed.
+            const query = `
+              query ($owner: String!, $repo: String!, $base: String!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequests(states: OPEN, first: 100, baseRefName: $base) {
+                    nodes {
+                      number
+                      headRefName
+                      headRefOid
+                      isDraft
+                      mergeable
+                      headRepository { nameWithOwner }
+                    }
+                  }
+                }
+              }
+            `;
+
+            // mergeable is computed asynchronously: a PR can read UNKNOWN right after
             // the base moves. Poll until every open PR has a verdict.
             let pulls = [];
             for (let attempt = 1; attempt <= 5; attempt += 1) {
-              pulls = await github.paginate(github.rest.pulls.list, {
-                owner,
-                repo,
-                state: 'open',
-                base,
-                per_page: 100,
-              });
-              if (!pulls.some((pull) => pull.mergeable === null)) {
+              const result = await github.graphql(query, { owner, repo, base });
+              pulls = result.repository.pullRequests.nodes;
+              if (!pulls.some((pull) => pull.mergeable === 'UNKNOWN')) {
                 break;
               }
               console.log(`attempt ${attempt}: mergeable unknown, retrying`);
@@ -73,20 +87,21 @@ jobs:
             }
 
             for (const pull of pulls) {
-              const label = `#${pull.number} (${pull.head.ref})`;
-              if (pull.draft) {
+              const label = `#${pull.number} (${pull.headRefName})`;
+              if (pull.isDraft) {
                 console.log(`skip ${label}: draft`);
                 continue;
               }
-              if (!pull.head.repo || pull.head.repo.full_name !== `${owner}/${repo}`) {
+              if (!pull.headRepository || pull.headRepository.nameWithOwner !== `${owner}/${repo}`) {
                 console.log(`skip ${label}: fork`);
                 continue;
               }
-              if (!/^(feature|dependabot)\//.test(pull.head.ref)) {
+              if (!/^(feature|dependabot)\//.test(pull.headRefName)) {
                 console.log(`skip ${label}: head is not feature/** or dependabot/**`);
                 continue;
               }
-              if (pull.mergeable !== false) {
+              // UNKNOWN after every retry is not a conflict: leave it alone.
+              if (pull.mergeable !== 'CONFLICTING') {
                 console.log(`ok ${label}: mergeable=${pull.mergeable}`);
                 continue;
               }
@@ -99,9 +114,9 @@ jobs:
                 issue_number: pull.number,
                 per_page: 100,
               });
-              const key = `${marker} ${pull.head.sha}`;
+              const key = `${marker} ${pull.headRefOid}`;
               if (comments.some((comment) => (comment.body || '').includes(key))) {
-                console.log(`already nudged ${label} @ ${pull.head.sha.slice(0, 8)}`);
+                console.log(`already nudged ${label} @ ${pull.headRefOid.slice(0, 8)}`);
                 continue;
               }
 
@@ -111,5 +126,5 @@ jobs:
                 issue_number: pull.number,
                 body: `${key} @cursor fix conflicts against \`${base}\``,
               });
-              console.log(`nudged ${label} @ ${pull.head.sha.slice(0, 8)}`);
+              console.log(`nudged ${label} @ ${pull.headRefOid.slice(0, 8)}`);
             }
