@@ -137,7 +137,13 @@ describe "%s %s container" % [ENV["DOCKER_IMAGE_TYPE"], ENV["DOCKER_IMAGE_TAG"]]
     end
 
     it "should be able to make an HTTPS request" do
-        expect(command("node -e \"const https = require('https'); https.get('https://deb.debian.org/', (res) => { console.log(res.statusCode); });\"").stdout.strip).to eq("200")
+        script = 'const https = require("https"); ' \
+                 'const req = https.get("https://deb.debian.org/", (res) => { ' \
+                 'console.log(res.statusCode); res.resume(); ' \
+                 'res.on("end", () => process.exit(0)); }); ' \
+                 'req.setTimeout(60000, () => { console.error("request timed out"); process.exit(1); }); ' \
+                 'req.on("error", (e) => { console.error(e.message); process.exit(1); });'
+        expect(command("node -e '#{script}'").stdout.strip).to eq("200")
     end
 
     it "should have npm config pointing to the official registry" do
