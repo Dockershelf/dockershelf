@@ -86,3 +86,6 @@ build-logs/
 .opencode/
 .pi/
 .agents/
+
+# OS files
+.DS_Store

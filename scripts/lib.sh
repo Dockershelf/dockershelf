@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Shared release gates for release scripts.
-# Managed by rosey-maintainer-tools 0.4.9. Do not edit directly.
+# Managed by maintainer-tools 0.4.9. Do not edit directly.
 
 RELEASE_CI_WORKFLOW=${RELEASE_CI_WORKFLOW:-push.yml}
 RELEASE_CI_TIMEOUT_SECONDS=${RELEASE_CI_TIMEOUT_SECONDS:-2700}
@@ -318,7 +318,7 @@ release_read_post_bump_commands() {
     fi
 
     awk '
-        /^\[rosey-maintainer\]/ { in_section=1; next }
+        /^\[maintainer-tools\]/ { in_section=1; next }
         /^\[/ && in_section { exit }
         in_section && /^post_bump_commands[[:space:]]*=/ {
             line = $0
