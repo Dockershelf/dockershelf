@@ -53,7 +53,7 @@ DEPENDENCIES
   serverspec (~> 2.43.0)
 
 RUBY VERSION
-   ruby 3.2.6p260
+  ruby 3.2.6p260
 
 BUNDLED WITH
-   2.3.15
+  4.0.22
