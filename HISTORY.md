@@ -1,6 +1,61 @@
 # Changelog
 
 
+## 4.0.1 (2026-11-02)
+
+### Added
+
+* Schedule Actions cache purge every 3 days. [Luis Alejandro Martínez Faneyth]
+
+* Document gitchangelog commit tags and fix HISTORY.md release notes awk. [Luis Alejandro Martínez Faneyth]
+
+
+### Changed
+
+* Bump Go to 1.25.14 and 1.26.10. [Luis Alejandro Martínez Faneyth]
+
+* Move shelves section above build instructions in README. [Luis Alejandro Martínez Faneyth]
+
+
+### Fixed
+
+* Build release artifacts on the local Docker image store. [Luis Alejandro Martínez Faneyth]
+
+* Make the Node HTTPS test exit instead of hanging. [Luis Alejandro Martínez Faneyth]
+
+* Use cowsay for Node npm install tests. [Luis Alejandro Martínez Faneyth]
+
+* Install latest Go patch from APT. [Luis Alejandro Martínez Faneyth]
+
+* Tag local debian -dev aliases for PR CI build-only mode. [Cursor Agent]
+
+* Retry transient GitHub API errors in PR auto-merge. [Luis Alejandro Martínez Faneyth]
+
+* Use top-level getOctokit in pr-auto-merge updateBranch step. [Luis Alejandro Martínez Faneyth]
+
+* Fixing oldstable security bug. [Luis Alejandro Martínez Faneyth]
+
+
+### Removed
+
+* Stop automatic pull request merges. [Luis Alejandro Martínez Faneyth]
+
+* Stop publishing develop images to Docker Hub. [Luis Alejandro Martínez Faneyth]
+
+
+### Other
+
+* Chore: ignore scoped IDE trees. [Luis Alejandro Martínez Faneyth]
+
+* Chore: ignore scoped IDE trees. [Luis Alejandro Martínez Faneyth]
+
+* Adding agents to gitignore. [Luis Alejandro Martínez Faneyth]
+
+* Chore(deps-dev): bump ruff from 0.16.2 to 0.16.3. [Cursor Agent]
+
+* Fix(ci): catch Ruby gem/runtime mismatches before master publish. [Luis Alejandro Martínez Faneyth]
+
+
 ## 4.0.0 (2026-07-15)
 
 ### Other
